@@ -2,7 +2,7 @@ organization := "com.phasmidsoftware"
 
 name := "KMLDoc"
 
-version := "1.0.5"
+version := "1.0.6"
 
 scalaVersion := "3.6.2"
 
@@ -10,14 +10,14 @@ Compile / doc / scalacOptions ++= Seq("-explaintypes", "-Vimplicits", "-implicit
 
 lazy val scalaModules = "org.scala-lang.modules"
 
-libraryDependencies += scalaModules %% "scala-xml" % "2.3.0"
+libraryDependencies += scalaModules %% "scala-xml" % "2.4.0"
 
-libraryDependencies += "org.typelevel" %% "cats-effect" % "3.5.7"
+libraryDependencies += "org.typelevel" %% "cats-effect" % "3.7.0"
 
 libraryDependencies ++= Seq(
-  "com.phasmidsoftware" %% "flog" % "1.0.10",
-  "com.phasmidsoftware" % "args_2.13" % "1.0.3",
-  "ch.qos.logback" % "logback-classic" % "1.5.16" % "runtime",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
-  "org.scalatest" %% "scalatest" % "3.2.19" % Test
+  "com.phasmidsoftware" %% "flog" % "1.0.15",
+  "com.phasmidsoftware" %% "args" % "2.0.0",
+  "ch.qos.logback" % "logback-classic" % "1.5.38" % "runtime",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.6",
+  "org.scalatest" %% "scalatest" % "3.2.20" % Test
 )
