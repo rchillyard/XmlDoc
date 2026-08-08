@@ -97,12 +97,12 @@ class ExtractorsSpec extends AnyFlatSpec with should.Matchers with PrivateMethod
     implicit val extractEmpty: Extractor[Empty.type] = extractor0[Empty.type](_ => Empty)
     implicit val extractMultiEmpty: MultiExtractor[Seq[Empty.type]] = multiExtractorBase[Empty.type](Positive)
     implicit val extractJunk: Extractor[Junk] = extractor0[Junk](_ => Junk())
-    implicit val extractDocument1: Extractor[Document1] = extractor01.apply(Document1)
+    implicit val extractDocument1: Extractor[Document1] = extractor01.apply(Document1.apply)
     implicit val extractMultiDocument1: MultiExtractor[Seq[Document1]] = multiExtractorBase[Document1](Positive)
     val makeDocument2A: (CharSequence, Seq[Empty.type]) => Document2A = Document2A.apply
     implicit val extractDocument2A: Extractor[Document2A] = extractor11(makeDocument2A)
-    implicit val extractDocument2: Extractor[Document2] = extractor11.apply(Document2)
-    implicit val extractDocument2B: Extractor[Document2B] = extractor11.apply(Document2B)
+    implicit val extractDocument2: Extractor[Document2] = extractor11.apply(Document2.apply)
+    implicit val extractDocument2B: Extractor[Document2B] = extractor11.apply(Document2B.apply)
   }
 
   behavior of "Extractors$"
@@ -206,7 +206,7 @@ class ExtractorsSpec extends AnyFlatSpec with should.Matchers with PrivateMethod
   it should "extractor10B" in {
     val xml: Elem = <xml id="1"></xml>
     import MyExtractors.*
-    val extracted = extractor10.apply(Simple2).extract(xml)
+    val extracted = extractor10.apply(Simple2.apply).extract(xml)
     extracted shouldBe Success(Simple2("1"))
   }
 
@@ -264,7 +264,7 @@ class ExtractorsSpec extends AnyFlatSpec with should.Matchers with PrivateMethod
     </xml>
     import MyExtractors.*
     implicit val extractMaybeJunk: Extractor[Option[Junk]] = extractorOption
-    implicit val extractDocument3: Extractor[Document3] = extractor21.apply(Document3)
+    implicit val extractDocument3: Extractor[Document3] = extractor21.apply(Document3.apply)
     val extracted = implicitly[Extractor[Document3]].extract(xml)
     extracted shouldBe Success(Document3(1, None, List(Empty, Empty)))
   }
@@ -277,7 +277,7 @@ class ExtractorsSpec extends AnyFlatSpec with should.Matchers with PrivateMethod
     </xml>
     import MyExtractors.*
     implicit val extractMaybeJunk: Extractor[Option[Junk]] = extractorOption
-    implicit val extractDocument3: Extractor[Document3] = extractor21.apply(Document3)
+    implicit val extractDocument3: Extractor[Document3] = extractor21.apply(Document3.apply)
     val extracted = implicitly[Extractor[Document3]].extract(xml)
     extracted shouldBe Success(Document3(1, Some(Junk()), List(Empty, Empty)))
   }
@@ -343,7 +343,7 @@ class ExtractorsSpec extends AnyFlatSpec with should.Matchers with PrivateMethod
     </xml>
     import MyExtractors.*
     implicit val extractMaybeJunk: Extractor[Option[Junk]] = implicitly[Extractor[Junk]].lift
-    implicit val extractDocument3: Extractor[Document3] = extractor21.apply(Document3)
+    implicit val extractDocument3: Extractor[Document3] = extractor21.apply(Document3.apply)
     val extractor = implicitly[Extractor[Document3]]
     extractor.extract(xml) shouldBe Success(Document3(1, None, List(Empty, Empty)))
   }
@@ -354,7 +354,7 @@ class ExtractorsSpec extends AnyFlatSpec with should.Matchers with PrivateMethod
     </xml>
     import MyExtractors.*
     implicit val extractMaybeJunk: Extractor[Option[Junk]] = extractorOption
-    implicit val extractDocument3: Extractor[Document3] = extractor21.apply(Document3)
+    implicit val extractDocument3: Extractor[Document3] = extractor21.apply(Document3.apply)
     val extractor = implicitly[Extractor[Document3]]
     extractor.lift.extract(xml) shouldBe Success(Some(Document3(1, None, List(Empty, Empty))))
   }

@@ -77,7 +77,7 @@ trait Renderers {
    */
   def renderer2[P0: Renderer, P1: Renderer, R <: Product : ClassTag](construct: (P0, P1) => R): Renderer[R] = Renderer {
     (r: R, format, stateR) =>
-      (r.productElement(0), r.productElement(1)) match {
+      ((r.productElement(0), r.productElement(1)): @unchecked) match {
         case (p0: P0 @unchecked, p1: P1 @unchecked) =>
           val constructorInner: P0 => R = construct(_, p1)
           for {wInner <- renderer1(constructorInner).render(constructorInner(p0), format, stateR.recurse)
@@ -99,7 +99,7 @@ trait Renderers {
    */
   def renderer3[P0: Renderer, P1: Renderer, P2: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2) => R): Renderer[R] = Renderer {
     (r: R, format, stateR) => {
-      (r.productElement (0), r.productElement(1), r.productElement(2)) match {
+      ((r.productElement(0), r.productElement(1), r.productElement(2)): @unchecked) match {
         case (p0: P0 @unchecked, p1: P1 @unchecked, p2: P2 @unchecked) =>
           val constructorInner: (P0, P1) => R = construct(_, _, p2)
           for {
@@ -124,7 +124,7 @@ trait Renderers {
    */
   def renderer4[P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3) => R): Renderer[R] = Renderer {
     (r: R, format, stateR) => {
-      (r.productElement(0), r.productElement(1), r.productElement(2), r.productElement(3)) match {
+      ((r.productElement(0), r.productElement(1), r.productElement(2), r.productElement(3)): @unchecked) match {
         case (p0: P0 @unchecked, p1: P1 @unchecked, p2: P2 @unchecked, p3: P3 @unchecked) =>
           val constructorInner: (P0, P1, P2) => R = construct(_, _, _, p3)
           for {wInner <- renderer3(constructorInner).render(constructorInner(p0, p1, p2), format, stateR.recurse)
@@ -151,7 +151,7 @@ trait Renderers {
    */
   def renderer5[P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4) => R): Renderer[R] = Renderer {
     (r: R, format, stateR) =>
-      (r.productElement(0), r.productElement(1), r.productElement(2), r.productElement(3), r.productElement(4)) match {
+      ((r.productElement(0), r.productElement(1), r.productElement(2), r.productElement(3), r.productElement(4)): @unchecked) match {
         case (p0: P0 @unchecked, p1: P1 @unchecked, p2: P2 @unchecked, p3: P3 @unchecked, p4: P4 @unchecked) =>
           val constructorInner: (P0, P1, P2, P3) => R = construct(_, _, _, _, p4)
           for {wInner <- renderer4(constructorInner).render(constructorInner(p0, p1, p2, p3), format, stateR.recurse)
@@ -177,7 +177,7 @@ trait Renderers {
    */
   def renderer6[P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, P5: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5) => R): Renderer[R] = Renderer {
     (r: R, format, stateR) => {
-      (r.productElement(0), r.productElement(1), r.productElement(2), r.productElement(3), r.productElement(4), r.productElement(5)) match {
+      ((r.productElement(0), r.productElement(1), r.productElement(2), r.productElement(3), r.productElement(4), r.productElement(5)): @unchecked) match {
         case (p0: P0 @unchecked, p1: P1 @unchecked, p2: P2 @unchecked, p3: P3 @unchecked, p4: P4 @unchecked, p5: P5 @unchecked) =>
           val constructorInner: (P0, P1, P2, P3, P4) => R = construct(_, _, _, _, _, p5)
           for {wInner <- renderer5(constructorInner).render(constructorInner(p0, p1, p2, p3, p4), format, stateR.recurse)
@@ -206,7 +206,7 @@ trait Renderers {
    */
   def renderer7[P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, P5: Renderer, P6: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6) => R): Renderer[R] = Renderer {
     (r: R, format, stateR) => {
-      (r.productElement(0), r.productElement(1), r.productElement(2), r.productElement(3), r.productElement(4), r.productElement(5), r.productElement(6)) match {
+      ((r.productElement(0), r.productElement(1), r.productElement(2), r.productElement(3), r.productElement(4), r.productElement(5), r.productElement(6)): @unchecked) match {
         case (p0: P0 @unchecked, p1: P1 @unchecked, p2: P2 @unchecked, p3: P3 @unchecked, p4: P4 @unchecked, p5: P5 @unchecked, p6: P6 @unchecked) =>
           val constructorInner: (P0, P1, P2, P3, P4, P5) => R = construct(_, _, _, _, _, _, p6)
           for {wInner <- renderer6(constructorInner).render(constructorInner(p0, p1, p2, p3, p4, p5), format, stateR.recurse)

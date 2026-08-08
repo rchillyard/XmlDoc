@@ -108,7 +108,7 @@ trait Extractors {
    * @return MultiExtractor of `Seq[T]`.
    */
   def subclassExtractor1[T, U <: Product, P0 <: T : {Extractor, ClassTag}](construct: P0 => U, labels: Seq[String]): SubclassExtractor[T] =
-    new SubclassExtractor[T](labels)(multiExtractor1(construct, labels))
+    new SubclassExtractor[T](labels)(using multiExtractor1(construct, labels))
 
   /**
    * Method to yield a MultiExtractor of `Seq[T]` such that T is the super-type of two P-types.

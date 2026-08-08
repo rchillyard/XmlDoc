@@ -30,7 +30,7 @@ class UtilitiesSpec extends AnyFlatSpec with should.Matchers {
         val failure = Failure[Int](new NoSuchElementException)
         val success = Success(1)
         sequence(Seq[Try[Int]]()) shouldBe Success(Seq())
-      sequence(Seq(success)) shouldBe Success(Seq(1))
+        sequence(Seq(success)) shouldBe Success(Seq(1))
         sequence(Seq(success, success)) shouldBe Success(Seq(1, 1))
         sequence(Seq(failure, success)) shouldBe failure
         sequence(Seq(failure)) shouldBe failure
