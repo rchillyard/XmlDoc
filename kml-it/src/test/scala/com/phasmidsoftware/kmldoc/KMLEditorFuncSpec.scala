@@ -12,7 +12,7 @@ class KMLEditorFuncSpec extends AnyFlatSpec with should.Matchers {
 
   val placemark = "Placemark"
   private val triedFilename1: Success[String] = Success("kml/src/main/resources/com/phasmidsoftware/kmldoc/placemarks.kml")
-  private val triedFilename2: Success[String] = Success("kml/src/it/resources/invertedPlacemarks.kml")
+  private val triedFilename2: Success[String] = Success("kml-it/src/test/resources/invertedPlacemarks.kml")
 
   it should "processKMLs join 1" in {
     val editor = KMLEditor(Seq(KmlEdit(KmlEdit.JOIN, 2, Element(placemark, "Salem & Lowell RR (#1)"), Some(Element(placemark, "Salem & Lowell RR (#2)"))), KmlEdit(KmlEdit.DELETE, 1, Element(placemark, "Salem & Lowell RR (#2)"), None)))

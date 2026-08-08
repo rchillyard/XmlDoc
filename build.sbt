@@ -29,15 +29,18 @@ lazy val core = (project in file("core"))
 
 lazy val kml = (project in file("kml"))
   .dependsOn(core)
-  .configs(IntegrationTest)
-  .settings(Defaults.itSettings)
   .settings(commonSettings)
   .settings(
     name := "kmldoc-kml",
-    libraryDependencies ++= Seq(
-      "com.phasmidsoftware" %% "args" % "2.0.0",
-      "org.scalatest" %% "scalatest" % "3.2.20" % IntegrationTest
-    )
+    libraryDependencies += "com.phasmidsoftware" %% "args" % "2.0.0"
+  )
+
+lazy val kmlIt = (project in file("kml-it"))
+  .dependsOn(kml)
+  .settings(commonSettings)
+  .settings(
+    name := "kmldoc-kml-it",
+    publish / skip := true
   )
 
 lazy val root = (project in file("."))
