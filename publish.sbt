@@ -44,3 +44,10 @@ ThisBuild / publishArtifact := true
 
 // Remove all additional repository other than Maven Central from POM
 ThisBuild / pomIncludeRepository := { _ => false }
+
+// These are read directly by sbt's publish/makePom machinery rather than via the settings
+// dependency graph, so lintUnused can't see the usage and flags them as unused.
+Global / excludeLintKeys ++= Set(
+  publishMavenStyle,
+  pomIncludeRepository
+)
