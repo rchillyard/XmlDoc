@@ -1,6 +1,6 @@
 // Optional but useful
-ThisBuild / description := "This project is a Scala library for reading, writing, and manipulating KML files."
-ThisBuild / homepage := Some(url("https://github.com/rchillyard/KmlDoc"))
+ThisBuild / description := "Scala libraries for reading, writing, and manipulating XML-based document formats, including KML."
+ThisBuild / homepage := Some(url("https://github.com/rchillyard/XmlDoc"))
 ThisBuild / organizationName := "Phasmid Software"
 ThisBuild / organizationHomepage := Some(url("https://phasmidsoftware.com/"))
 
@@ -19,8 +19,8 @@ ThisBuild / credentials += Credentials(Path.userHome / ".sbt" / "sonatype_creden
 ThisBuild / licenses := List("MIT" -> url("https://opensource.org/licenses/MIT"))
 ThisBuild / scmInfo := Some(
   ScmInfo(
-    url("https://github.com/rchillyard/KmlDoc"),
-    "scm:git@github.com:rchillyard/KmlDoc.git"
+    url("https://github.com/rchillyard/XmlDoc"),
+    "scm:git@github.com:rchillyard/XmlDoc.git"
   )
 )
 ThisBuild / developers := List(

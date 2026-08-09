@@ -1,6 +1,6 @@
 ThisBuild / organization := "com.phasmidsoftware"
 
-ThisBuild / version := "1.0.7"
+ThisBuild / version := "1.1.0"
 
 ThisBuild / scalaVersion := "3.8.4"
 
@@ -17,7 +17,7 @@ lazy val commonSettings = Seq(
 lazy val core = (project in file("core"))
   .settings(commonSettings)
   .settings(
-    name := "kmldoc-core",
+    name := "xmldoc-core",
     libraryDependencies ++= Seq(
       scalaModules %% "scala-xml" % "2.4.0",
       scalaModules %% "scala-parser-combinators" % "2.4.0",
@@ -31,7 +31,7 @@ lazy val kml = (project in file("kml"))
   .dependsOn(core)
   .settings(commonSettings)
   .settings(
-    name := "kmldoc-kml",
+    name := "xmldoc-kml",
     libraryDependencies += "com.phasmidsoftware" %% "args" % "2.0.0"
   )
 
@@ -39,13 +39,13 @@ lazy val kmlIt = (project in file("kml-it"))
   .dependsOn(kml)
   .settings(commonSettings)
   .settings(
-    name := "kmldoc-kml-it",
+    name := "xmldoc-kml-it",
     publish / skip := true
   )
 
 lazy val root = (project in file("."))
   .aggregate(core, kml)
   .settings(
-    name := "KMLDoc",
+    name := "XmlDoc",
     publish / skip := true
   )
