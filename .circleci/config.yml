@@ -1,18 +1,12 @@
-# Scala CircleCI 2.0 configuration file
+# Scala CircleCI 2.1 configuration file for KmlDoc
 #
 # Check https://circleci.com/docs/2.0/sample-config/ for more details
 #
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:11-jdk
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
+      - image: cimg/openjdk:21.0
 
     working_directory: ~/repo
 
@@ -27,16 +21,39 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "build.sbt" }}
+            - v1-dependencies-{{ checksum "build.sbt" }}-{{ checksum "project/plugins.sbt" }}-{{ checksum "project/build.properties" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: cat /dev/null | sbt test:compile
+      # Compile core + kml (the root-aggregated modules)
+      - run:
+          name: Compile
+          command: cat /dev/null | sbt compile
 
+      # Save dependency cache
       - save_cache:
           paths:
-            - ~/.m2
-          key: v1-dependencies--{{ checksum "build.sbt" }}
+            - ~/.sbt
+            - ~/.ivy2/cache
+            - ~/.cache/coursier
+          key: v1-dependencies-{{ checksum "build.sbt" }}-{{ checksum "project/plugins.sbt" }}-{{ checksum "project/build.properties" }}
 
-      # run tests!
-      - run: cat /dev/null | sbt test:test
+      # Unit tests (core + kml)
+      - run:
+          name: Test
+          command: cat /dev/null | sbt test
+
+      # Integration tests (kml-it is deliberately not aggregated by root, so it's run explicitly)
+      - run:
+          name: Integration test
+          command: cat /dev/null | sbt kmlIt/test
+
+      # Generate scaladoc (catches doc warnings in CI)
+      - run:
+          name: Doc
+          command: cat /dev/null | sbt doc
+
+workflows:
+  build-and-test:
+    jobs:
+      - build
