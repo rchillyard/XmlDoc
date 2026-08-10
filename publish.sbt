@@ -1,8 +1,3 @@
-import xerial.sbt.Sonatype.sonatypeCentralHost
-
-// Target the new Sonatype Central Portal explicitly, rather than legacy OSSRH.
-ThisBuild / sonatypeCredentialHost := sonatypeCentralHost
-
 // Optional but useful
 ThisBuild / description := "Scala libraries for reading, writing, and manipulating XML-based document formats, including KML."
 ThisBuild / homepage := Some(url("https://github.com/rchillyard/XmlDoc"))
