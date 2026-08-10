@@ -1,31 +1,53 @@
-ThisBuild / organization := "com.phasmidsoftware"
+// Optional but useful
+ThisBuild / description := "Scala libraries for reading, writing, and manipulating XML-based document formats, including KML."
+ThisBuild / homepage := Some(url("https://github.com/rchillyard/XmlDoc"))
 ThisBuild / organizationName := "Phasmid Software"
 ThisBuild / organizationHomepage := Some(url("https://phasmidsoftware.com/"))
 
+// Publishing configuration
+ThisBuild / publishTo := {
+  val centralSnapshots = "https://central.sonatype.com/repository/maven-snapshots/"
+  if (isSnapshot.value) Some("central-snapshots" at centralSnapshots)
+  else localStaging.value
+}
+ThisBuild / publishMavenStyle := true
+
+// Credentials
+ThisBuild / credentials += Credentials(Path.userHome / ".sbt" / "sonatype_credentials")
+
+// Required POM metadata for Maven Central
+ThisBuild / licenses := List("MIT" -> url("https://opensource.org/licenses/MIT"))
 ThisBuild / scmInfo := Some(
   ScmInfo(
-    url("https://github.com/rchillyard/KmlDoc"),
-    "scm:git@github.com:rchillyard/KmlDoc.git"
+    url("https://github.com/rchillyard/XmlDoc"),
+    "scm:git@github.com:rchillyard/XmlDoc.git"
   )
-  )
-  ThisBuild / developers := List(
+)
+ThisBuild / developers := List(
   Developer(
-  id    = "rchillyard",
-  name  = "Robin Hillyard",
-  email = "rchillyard@phasmidsoftware.com",
-  url   = url("https://phasmidsoftware.com")
+    id    = "rchillyard",
+    name  = "Robin Hillyard",
+    email = "rchillyard@phasmidsoftware.com",
+    url   = url("https://phasmidsoftware.com")
   )
-  )
+)
 
-  ThisBuild / description := "This project is a Scala library for reading, writing, and manipulating KML files."
-  ThisBuild / licenses := List("Apache-2.0" -> new URL("https://www.apache.org/licenses/LICENSE-2.0.txt"))
-  ThisBuild / homepage := Some(url("https://github.com/rchillyard/KmlDoc"))
+// Optional
 
-  // Remove all additional repository other than Maven Central from POM
-  ThisBuild / pomIncludeRepository := { _ => false }
-  ThisBuild / publishTo := {
-  val nexus = "https://oss.sonatype.org/"
-  if (isSnapshot.value) Some("snapshots" at nexus + "content/repositories/snapshots")
-  else Some("releases" at nexus + "service/local/staging/deploy/maven2")
-  }
-  ThisBuild / publishMavenStyle := true
+// Publishing settings
+ThisBuild / versionScheme := Some("early-semver")
+ThisBuild / publishConfiguration := publishConfiguration.value.withOverwrite(true)
+ThisBuild / publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
+
+// Optional: Skip publishing of docs and sources for snapshot versions
+ThisBuild / publishArtifact := true
+
+// Remove all additional repository other than Maven Central from POM
+ThisBuild / pomIncludeRepository := { _ => false }
+
+// These are read directly by sbt's publish/makePom machinery rather than via the settings
+// dependency graph, so lintUnused can't see the usage and flags them as unused.
+Global / excludeLintKeys ++= Set(
+  publishMavenStyle,
+  pomIncludeRepository
+)

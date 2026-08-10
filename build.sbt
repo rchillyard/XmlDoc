@@ -1,27 +1,51 @@
 ThisBuild / organization := "com.phasmidsoftware"
 
-name := "TableParser"
+ThisBuild / version := "1.1.0"
 
-ThisBuild / version := "1.0.4"
-
-ThisBuild / scalaVersion := "2.13.16"
-
-name := "KMLDoc"
-
-Compile / doc / scalacOptions ++= Seq("-explaintypes", "-Vimplicits", "-implicits-debug", "-implicits-show-all", "-unchecked", "-feature", "-Xcheckinit", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused", "-deprecation")
+ThisBuild / scalaVersion := "3.8.4"
 
 lazy val scalaModules = "org.scala-lang.modules"
 
-resolvers += "Typesafe Repository" at "https://repo.typesafe.com/typesafe/releases/"
-
-libraryDependencies += scalaModules %% "scala-xml" % "2.3.0"
-
-libraryDependencies += "org.typelevel" %% "cats-effect" % "3.5.7"
-
-libraryDependencies ++= Seq(
-  "com.phasmidsoftware" %% "flog" % "1.0.9",
-  "com.phasmidsoftware" %% "args" % "1.0.3",
-  "ch.qos.logback" % "logback-classic" % "1.5.16" % "runtime",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
-  "org.scalatest" %% "scalatest" % "3.2.19" % Test
+lazy val commonSettings = Seq(
+  Compile / doc / scalacOptions ++= Seq("-explaintypes", "-Vimplicits", "-implicits-debug", "-implicits-show-all", "-unchecked", "-feature", "-Xcheckinit", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused", "-Xsource:3", "-deprecation"),
+  libraryDependencies ++= Seq(
+    "ch.qos.logback" % "logback-classic" % "1.6.1" % "runtime",
+    "org.scalatest" %% "scalatest" % "3.2.20" % Test
+  )
 )
+
+lazy val core = (project in file("core"))
+  .settings(commonSettings)
+  .settings(
+    name := "xmldoc-core",
+    libraryDependencies ++= Seq(
+      scalaModules %% "scala-xml" % "2.4.0",
+      scalaModules %% "scala-parser-combinators" % "2.4.0",
+      "org.typelevel" %% "cats-effect" % "3.7.0",
+      "com.phasmidsoftware" %% "flog" % "1.0.15",
+      "com.typesafe.scala-logging" %% "scala-logging" % "3.9.6"
+    )
+  )
+
+lazy val kml = (project in file("kml"))
+  .dependsOn(core)
+  .settings(commonSettings)
+  .settings(
+    name := "xmldoc-kml",
+    libraryDependencies += "com.phasmidsoftware" %% "args" % "2.0.0"
+  )
+
+lazy val kmlIt = (project in file("kml-it"))
+  .dependsOn(kml)
+  .settings(commonSettings)
+  .settings(
+    name := "xmldoc-kml-it",
+    publish / skip := true
+  )
+
+lazy val root = (project in file("."))
+  .aggregate(core, kml)
+  .settings(
+    name := "XmlDoc",
+    publish / skip := true
+  )
