@@ -26,7 +26,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
   }
 
   it should "render Placemark" in {
-    val coordinates1 = Coordinates(Seq(Coordinate("-72", "0", "0"), Coordinate("-71", "1", "1000")))
+    val coordinates1 = Coordinates(Seq(Coordinate("-72", "0", Some("0")), Coordinate("-71", "1", Some("1000"))))
     val point: Point = Point(Seq(coordinates1))(GeometryData(None, None)(KmlData.nemo))
     val featureData: FeatureData = FeatureData(Text("Hello"), None, None, None, None, None, Nil, Nil)(KmlData.nemo)
     val placemark = Placemark(Seq(point))(featureData)
@@ -36,7 +36,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
   }
 
   it should "render Folder" in {
-    val coordinates1 = Coordinates(Seq(Coordinate("-72", "0", "0")))
+    val coordinates1 = Coordinates(Seq(Coordinate("-72", "0", Some("0"))))
     val point: Point = Point(Seq(coordinates1))(GeometryData(None, None)(KmlData.nemo))
     val featureData1: FeatureData = FeatureData(Text("Hello"), None, None, None, None, None, Nil, Nil)(KmlData.nemo)
     val featureData2: FeatureData = FeatureData(Text("Goodbye"), None, None, None, None, None, Nil, Nil)(KmlData.nemo)
@@ -166,7 +166,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
   behavior of "Coordinate"
 
   it should "parse Coordinate pair" in {
-    Coordinate("-71.06992,42.49424,0") shouldBe Coordinate("-71.06992", "42.49424", "0")
+    Coordinate("-71.06992,42.49424,0") shouldBe Coordinate("-71.06992", "42.49424", Some("0"))
   }
 
   behavior of "Coordinates"
@@ -4981,8 +4981,8 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
   val gd: GeometryData = GeometryData(None, None)(kd)
   val fd1: FeatureData = FeatureData(Text("junk"), None, None, None, None, None, Nil, Nil)(kd)
   val fd2: FeatureData = FeatureData(Text("junk junk"), None, None, None, None, None, Nil, Nil)(kd)
-  val cs1: Seq[Coordinate] = Seq(Coordinate("1", "0", "0"), Coordinate("1", "1", "0"))
-  val cs2: Seq[Coordinate] = Seq(Coordinate("1", "1", "0"), Coordinate("1", "2", "0"))
+  val cs1: Seq[Coordinate] = Seq(Coordinate("1", "0", Some("0")), Coordinate("1", "1", Some("0")))
+  val cs2: Seq[Coordinate] = Seq(Coordinate("1", "1", Some("0")), Coordinate("1", "2", Some("0")))
   val cs2a: Seq[Coordinate] = cs2.reverse
   val coordinates1: Seq[Coordinates] = Seq(Coordinates(cs1))
   val coordinates2: Seq[Coordinates] = Seq(Coordinates(cs2))

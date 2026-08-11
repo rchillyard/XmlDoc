@@ -9,7 +9,6 @@ import com.phasmidsoftware.xmldoc.render.Renderers.{booleanRenderer, doubleRende
 import com.phasmidsoftware.xmldoc.xml.*
 import com.phasmidsoftware.xmldoc.xml.MultiExtractorBase.{NonNegative, Positive}
 
-import scala.io.Source
 import scala.util.*
 
 /**
@@ -796,16 +795,17 @@ object Coordinates extends Extractors with Renderers {
   /**
    * Parses a given string representation of coordinates and returns a `Coordinates` instance.
    *
-   * The input string is expected to contain one or more lines, where each non-empty line
-   * represents a coordinate in a format that can be processed to create a `Coordinate` instance.
+   * Per the KML spec, tuples within a `coordinates` element are separated by any number of
+   * spaces or newlines, not necessarily one tuple per line - real-world (tool-generated) KML
+   * commonly packs several tuples onto a single line, so this splits on any run of whitespace
+   * rather than only on line breaks.
    *
-   * @param w a string containing the representation of one or more coordinates, with each
-   *          coordinate on a separate line.
-   *          Empty or whitespace-only lines are ignored.
+   * @param w a string containing the representation of one or more coordinate tuples, separated
+   *          by whitespace (spaces and/or newlines).
    * @return a `Coordinates` instance containing the parsed `Coordinate` objects extracted
    *         from the input string.
    */
-  def parse(w: String): Coordinates = Coordinates((for (line <- Source.fromString(w).getLines(); if line.trim.nonEmpty) yield Coordinate(line)).toSeq)
+  def parse(w: String): Coordinates = Coordinates(w.trim.split("\\s+").filter(_.nonEmpty).map(Coordinate(_)).toSeq)
 
   /**
    * Represents an instance of `Coordinates` without any elements.

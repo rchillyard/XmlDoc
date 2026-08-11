@@ -20,19 +20,22 @@ object Helper
  * Case class Coordinate to represent a three-dimensional point.
  * Although this is part of the KML spec, it is treated somewhat differently than the others.
  *
- * @param long longitude.
- * @param lat  latitude.
- * @param alt  altitude.
+ * @param long     longitude.
+ * @param lat      latitude.
+ * @param maybeAlt altitude: optional per the KML spec (a 2-value "long,lat" tuple is valid KML),
+ *                 kept as Option rather than defaulted so that round-tripping a coordinate that
+ *                 omitted altitude doesn't fabricate an explicit "0" that was never there.
  */
-case class Coordinate(long: String, lat: String, alt: String) {
+case class Coordinate(long: String, lat: String, maybeAlt: Option[String]) {
   /**
    * Represents the Cartesian coordinate of the current instance of `Coordinate`.
    *
-   * This value is lazily computed and will return an `Option[Cartesian]` if the `long`, `lat`, and `alt` fields
-   * of this instance can be successfully converted to `Double`.
-   * If any of these conversions fail, the result is `None`.
+   * This value is lazily computed and will return an `Option[Cartesian]` if the `long` and `lat` fields
+   * of this instance can be successfully converted to `Double` (a missing or unparseable altitude defaults
+   * to 0, per the KML spec).
+   * If either of the other conversions fail, the result is `None`.
    */
-  lazy val geometry: Option[Cartesian] = for (x <- long.toDoubleOption; y <- lat.toDoubleOption; z <- alt.toDoubleOption) yield Cartesian(x, y, z)
+  lazy val geometry: Option[Cartesian] = for (x <- long.toDoubleOption; y <- lat.toDoubleOption) yield Cartesian(x, y, maybeAlt.flatMap(_.toDoubleOption).getOrElse(0.0))
 
   /**
    * Computes the vector difference between the current `Coordinate` instance and another given `Coordinate` instance.
@@ -63,23 +66,27 @@ case class Coordinate(long: String, lat: String, alt: String) {
 object Coordinate {
 
   // CONSIDER using Parser-combinators here.
-  private val longLatAlt: Regex = """^\s*([\d\-\.]+),\s*([\d\-\.]+),\s*([\d\-\.]+)\s*$""".r
+  // NOTE: altitude is optional per the KML spec, so the third group is non-capturing-optional;
+  // when it doesn't participate in the match, the corresponding capture group binds to null,
+  // handled below via Option(alt).
+  private val longLatAlt: Regex = """^\s*([\d\-\.]+),\s*([\d\-\.]+)(?:,\s*([\d\-\.]+))?\s*$""".r
 //    private val longLatAlt: Regex = """^\s*(((-)?(\d+(\.\d*)?)),\s*((-)?(\d+(\.\d*)?)),\s*((-)?(\d+(\.\d*)?)))\s*""".r
 
   /**
    * Parses a coordinate string and converts it into a `Coordinate` instance,
    * if the string matches the expected format.
    *
-   * @param w the input string representing a coordinate in the format "longitude,latitude,altitude".
+   * @param w the input string representing a coordinate in the format "longitude,latitude,altitude"
+   *          or "longitude,latitude" (altitude is optional, per the KML spec).
    * @return a `Coordinate` instance created from the parsed string.
    * @throws KmlException if the input string does not match the expected coordinate format.
    */
   def apply(w: String): Coordinate = w match {
-    case longLatAlt(long, lat, alt) => Coordinate(long, lat, alt)
+    case longLatAlt(long, lat, alt) => Coordinate(long, lat, Option(alt))
     case _ => throw KmlException(s"""bad coordinate string: "$w" """)
   }
 
-  implicit val renderer: Renderer[Coordinate] = Renderer[Coordinate] { (t, _, _) => Success(s"${t.long},${t.lat},${t.alt}") } ^^ "rendererCoordinate"
+  implicit val renderer: Renderer[Coordinate] = Renderer[Coordinate] { (t, _, _) => Success(t.long + "," + t.lat + t.maybeAlt.fold("")("," + _)) } ^^ "rendererCoordinate"
   implicit val rendererSeq: Renderer[Seq[Coordinate]] = sequenceRendererFormatted[Coordinate](KmlRenderers.FormatCoordinate.apply) ^^ "rendererCoordinates1"
 }
 

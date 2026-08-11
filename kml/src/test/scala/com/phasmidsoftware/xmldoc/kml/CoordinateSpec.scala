@@ -16,7 +16,11 @@ class CoordinateSpec extends AnyFlatSpec with should.Matchers {
     }
 
     it should "apply" in {
-        Coordinate("-112.0870267752693,36.0905099328766,0") shouldBe new Coordinate("-112.0870267752693", "36.0905099328766", "0")
+        Coordinate("-112.0870267752693,36.0905099328766,0") shouldBe new Coordinate("-112.0870267752693", "36.0905099328766", Some("0"))
+    }
+
+    it should "apply with no altitude" in {
+        Coordinate("-112.0870267752693,36.0905099328766") shouldBe new Coordinate("-112.0870267752693", "36.0905099328766", None)
     }
 
 }
