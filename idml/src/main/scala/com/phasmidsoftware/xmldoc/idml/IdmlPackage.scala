@@ -1,10 +1,10 @@
 package com.phasmidsoftware.xmldoc.idml
 
-import com.phasmidsoftware.xmldoc.core.FP
+import com.phasmidsoftware.xmldoc.core.{FP, XmlException}
 import com.phasmidsoftware.xmldoc.xml.{GenericElement, Zip}
 
 import java.io.File
-import scala.util.Try
+import scala.util.{Failure, Try}
 
 /**
  * A reference to a package part declared in designmap.xml via an `idPkg:*` element, e.g.
@@ -54,6 +54,29 @@ class IdmlPackage private(file: File, val designmap: GenericElement) {
    */
   def loadParts(partType: String): Try[Seq[GenericElement]] =
     FP.sequence(parts.filter(_.partType == partType).map(p => loadPart(p.src)))
+
+  /**
+   * Method to load a Story part and extract its Self identity and the rest of its content.
+   *
+   * @param src the path of the Story entry within the zip (e.g. "Stories/Story_ue6.xml").
+   * @return a Try of Story.
+   */
+  def loadStory(src: String): Try[Story] =
+    loadPart(src).flatMap {
+      wrapper =>
+        wrapper.childElements.find(_.tag == "Story") match {
+          case Some(e) => Story.fromGenericElement(e)
+          case None => Failure(XmlException(s"IdmlPackage.loadStory: no Story child found in $src"))
+        }
+    }
+
+  /**
+   * Method to load every Story part referenced from designmap.xml.
+   *
+   * @return a Try of Seq[Story], in designmap order.
+   */
+  def loadStories: Try[Seq[Story]] =
+    FP.sequence(parts.filter(_.partType == "Story").map(p => loadStory(p.src)))
 }
 
 object IdmlPackage {

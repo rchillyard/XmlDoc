@@ -27,7 +27,14 @@ case class GenericElement(
   tag: String, // the qualified name as written, e.g. "idPkg:Story" — no namespace-URI decomposition
   attributes: Seq[(String, String)], // ordered, so round-tripping doesn't reshuffle them
   children: Seq[GenericContent]
-) extends GenericContent
+) extends GenericContent {
+
+  /**
+   * The element children only, skipping any interleaved text/CDATA (e.g. whitespace
+   * indentation between sibling elements).
+   */
+  def childElements: Seq[GenericElement] = children.collect { case e: GenericElement => e }
+}
 
 case class GenericText(text: String) extends GenericContent
 
