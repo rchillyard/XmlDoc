@@ -63,6 +63,19 @@ object GenericElement {
     case other => GenericText(other.text)
   }
 
+  /**
+   * As `fromNode`, but for callers that know (as `scala.xml.XML.loadString` callers always do,
+   * since it returns `Elem` specifically, not the more general `Node`) that the result must be
+   * a `GenericElement`, avoiding a cast at every call site.
+   *
+   * @param elem the element to convert.
+   * @return a `GenericElement`.
+   */
+  def fromElem(elem: scala.xml.Elem, inheritedScope: scala.xml.NamespaceBinding = scala.xml.TopScope): GenericElement =
+    (fromNode(elem, inheritedScope): @unchecked) match {
+      case e: GenericElement => e
+    }
+
   // Bindings present in `scope` but not yet in `stopAt` (its enclosing scope), i.e. the ones
   // this specific element introduces. Relies on scala.xml reusing the same NamespaceBinding
   // instance for inherited (unchanged) scope, so recursion terminates via reference equality.
