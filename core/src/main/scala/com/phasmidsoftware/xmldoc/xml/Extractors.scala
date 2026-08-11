@@ -277,6 +277,12 @@ trait Extractors {
    * NOTE: this specific extractor provides logging.
    * CONSIDER adding logging to the other extractors.
    *
+   * NOTE on naming P0's corresponding field in T: unless overridden via `fields`, the field
+   * name is matched against the node according to `fieldExtractor`'s convention - a leading
+   * underscore (e.g. `_id`) means "this is an XML attribute", a plain name means "look for a
+   * child element of that name". Getting this wrong is a common way for extraction to fail
+   * with a `MissingFieldException` that otherwise looks like a real error in the data.
+   *
    * @param construct a function (P0) => T, usually the apply method of a case class.
    * @tparam P0 the (Extractor-enabled) type of the first (only) member of the Product type T.
    * @tparam T  the underlying type of the result, a Product.
