@@ -348,6 +348,28 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     }
   }
 
+  it should "extract MultiGeometry as geometry" in {
+    val xml: Elem = <xml>
+      <MultiGeometry>
+        <Point><coordinates>1,1,0</coordinates></Point>
+        <Point><coordinates>2,2,0</coordinates></Point>
+      </MultiGeometry>
+    </xml>
+    extractAll[Seq[Geometry]](xml) match {
+      case Success(gs) =>
+        gs.size shouldBe 1
+        val multiGeometry = gs.head.asInstanceOf[MultiGeometry]
+        multiGeometry.Geometry.size shouldBe 2
+        multiGeometry.Geometry.foreach(_ shouldBe a[Point])
+        val wy = TryUsing(StateR())(sr => Renderer.render(gs, FormatXML(), sr))
+        wy.isSuccess shouldBe true
+        wy.get should include("<MultiGeometry>")
+        wy.get should include("<Point>\n    <coordinates>\n      1,1,0\n    </coordinates>\n  </Point>")
+        wy.get should include("<Point>\n    <coordinates>\n      2,2,0\n    </coordinates>\n  </Point>")
+      case Failure(x) => fail("could not extract MultiGeometry", x)
+    }
+  }
+
   behavior of "FeatureData"
 
   it should "extract as String" in {

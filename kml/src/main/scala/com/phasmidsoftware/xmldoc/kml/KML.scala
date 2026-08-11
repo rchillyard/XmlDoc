@@ -1182,9 +1182,16 @@ trait Geometry extends KmlObject with Mergeable[Geometry] with Invertible[Geomet
  * - `rendererSeq`: An implicit utility for rendering sequences of `Geometry` instances.
  */
 object Geometry extends Extractors with Renderers {
+  // NOTE: MultiGeometry recursively contains Geometry, so this and MultiGeometry's own
+  // extractor/renderer are mutually dependent implicits - exactly the same shape as
+  // Feature/Container (a Container holds Seq[Feature], and Folder/Document are themselves
+  // Features). Following that precedent: createLazy's argument is by-name, so it's not
+  // evaluated at all until the returned Extractor/Renderer is actually invoked, by which point
+  // both objects are fully constructed.
   implicit val extractorSeq: MultiExtractor[Seq[Geometry]] =
-    multiExtractor4[Geometry, (LineString, Point, Polygon, LinearRing), LineString, Point, Polygon, LinearRing]((ls, pt, pg, lr) => (ls, pt, pg, lr), Seq("LineString", "Point", "Polygon", "LinearRing")) ^^ "multiExtractorGeometry"
-  implicit val renderer: Renderer[Geometry] = rendererSuper4[Geometry, Point, LineString, Polygon, LinearRing] ^^ "rendererGeometry"
+    MultiExtractor.createLazy(multiExtractor5[Geometry, (LineString, Point, Polygon, LinearRing, MultiGeometry), LineString, Point, Polygon, LinearRing, MultiGeometry]((ls, pt, pg, lr, mg) => (ls, pt, pg, lr, mg), Seq("LineString", "Point", "Polygon", "LinearRing", "MultiGeometry")) ^^ "multiExtractorGeometry")
+  implicit val renderer: Renderer[Geometry] =
+    Renderer.createLazy(rendererSuper5[Geometry, Point, LineString, Polygon, LinearRing, MultiGeometry] ^^ "rendererGeometry")
   implicit val rendererSeq: Renderer[Seq[Geometry]] = sequenceRenderer[Geometry] ^^ "rendererGeometrys"
 }
 
@@ -1947,6 +1954,44 @@ object LookAt extends Extractors with Renderers {
     renderer7Super(apply)(_.abstractViewData) ^^ "rendererLookAt"
   implicit val rendererOpt: Renderer[Option[LookAt]] =
     renderer.lift ^^ "rendererOptionLookAt"
+}
+
+/**
+  * Case class MultiGeometry which extends Geometry: a collection of other Geometry elements
+  * (Point, LineString, LinearRing, Polygon, and recursively MultiGeometry itself).
+  *
+  * See [[https://developers.google.com/kml/documentation/kmlreference#multigeometry MultiGeometry]]
+  *
+  * @param Geometry     the child Geometry elements. NOTE: capitalized (matching Placemark's
+  *                     own field of the same type) rather than pluralized ("geometries"): a
+  *                     plural-looking field name triggers extractChildren's stricter,
+  *                     literal-tag-only lookup, which has no fallback to type-based matching -
+  *                     this needs the fallback, since there's no literal "&lt;geometry&gt;" tag.
+  * @param geometryData the other properties of the MultiGeometry.
+  */
+case class MultiGeometry(Geometry: Seq[Geometry])(val geometryData: GeometryData) extends Geometry
+
+/**
+  * Companion object for the case class MultiGeometry.
+  *
+  * This object provides utilities for working with the MultiGeometry type,
+  * including extractors and renderers to handle serialization and parsing.
+  *
+  * Utilities:
+  * - Provides an implicit extractor to parse MultiGeometry objects from GeometryData.
+  * - Provides an implicit renderer for serializing MultiGeometry objects.
+  * - Provides a renderer for sequences of MultiGeometry objects.
+  */
+object MultiGeometry extends Extractors with Renderers {
+  // No deferral needed on this side: by the time anything here runs, Geometry.extractorSeq/
+  // renderer are already fully constructed (see the NOTE there) - simple values holding
+  // undeferred lambdas, safe to fetch eagerly.
+  implicit val extractor: Extractor[MultiGeometry] =
+    extractorPartial[GeometryData, MultiGeometry](extractorPartial01(apply)) ^^ "extractorMultiGeometry"
+  implicit val renderer: Renderer[MultiGeometry] =
+    renderer1Super(apply)(_.geometryData) ^^ "rendererMultiGeometry"
+  implicit val rendererSeq: Renderer[Seq[MultiGeometry]] =
+    sequenceRenderer[MultiGeometry] ^^ "rendererMultiGeometrys"
 }
 
 /**
