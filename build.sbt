@@ -43,8 +43,15 @@ lazy val kmlIt = (project in file("kml-it"))
     publish / skip := true
   )
 
+lazy val idml = (project in file("idml"))
+  .dependsOn(core)
+  .settings(commonSettings)
+  .settings(
+    name := "xmldoc-idml"
+  )
+
 lazy val root = (project in file("."))
-  .aggregate(core, kml)
+  .aggregate(core, kml, idml)
   .settings(
     name := "XmlDoc",
     publish / skip := true
