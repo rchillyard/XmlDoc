@@ -817,6 +817,30 @@ object Coordinates extends Extractors with Renderers {
 }
 
 /**
+ * Case class Data: sub-element of ExtendedData, representing an untyped name/value pair.
+ * See [[https://developers.google.com/kml/documentation/kmlreference#extendeddata Data]]
+ *
+ * @param _name            the name of this Data element (an XML attribute).
+ * @param maybeDisplayName an optional user-friendly display name: Option[Text].
+ * @param value            the value: Text.
+ */
+case class Data(_name: CharSequence, maybeDisplayName: Option[Text], value: Text)
+
+/**
+ * Companion object for the `Data` case class, providing extractors and renderers for `Data`
+ * instances and sequences thereof.
+ */
+object Data extends Extractors with Renderers {
+
+  import Renderers.*
+
+  implicit val extractor: Extractor[Data] = extractor30(apply) ^^ "extractorData"
+  implicit val extractorSeq: MultiExtractor[Seq[Data]] = multiExtractorBase[Data](NonNegative) ^^ "multiExtractorData"
+  implicit val renderer: Renderer[Data] = renderer3(apply) ^^ "rendererData"
+  implicit val rendererSeq: Renderer[Seq[Data]] = sequenceRenderer[Data] ^^ "rendererDatas"
+}
+
+/**
  * DisplayMode represents a display preference in association with the DisplayModeEnum enumeration.
  * See [[https://developers.google.com/kml/documentation/kmlreference#displaymode displayMode]]
  *
@@ -914,6 +938,29 @@ object DrawOrder extends Extractors with Renderers {
 
 
 /**
+ * Case class ExtendedData: optional sub-element of Feature, providing custom data in addition to
+ * the standard KML fields.
+ * See [[https://developers.google.com/kml/documentation/kmlreference#extendeddata ExtendedData]]
+ *
+ * @param Data       a sequence of untyped name/value pairs: Seq[Data].
+ * @param SchemaData a sequence of Schema-typed name/value pairs: Seq[SchemaData].
+ */
+case class ExtendedData(Data: Seq[Data], SchemaData: Seq[SchemaData])
+
+/**
+ * Companion object for the `ExtendedData` case class.
+ * Provides extractor and renderer instances for working with the `ExtendedData` type and
+ * `Option[ExtendedData]`.
+ */
+object ExtendedData extends Extractors with Renderers {
+
+  implicit val extractor: Extractor[ExtendedData] = extractor02(apply) ^^ "extractorExtendedData"
+  implicit val extractorOpt: Extractor[Option[ExtendedData]] = extractor.lift ^^ "extractorOptionExtendedData"
+  implicit val renderer: Renderer[ExtendedData] = renderer2(apply) ^^ "rendererExtendedData"
+  implicit val rendererOpt: Renderer[Option[ExtendedData]] = renderer.lift ^^ "rendererOptionExtendedData"
+}
+
+/**
  * Class Extrude which represents a `Boolean`.
  * Used by `LineString` and `Polygon`.
  * Similar to `Tessellate`--and in fact they often go together.
@@ -1004,10 +1051,11 @@ object Feature extends Extractors with Renderers {
  * @param maybeDescription an optional description: Option[Text].
  * @param maybeStyleUrl    an optional style URL: Option[String].
  * @param maybeOpen        an optional openness designation: Option[Int].
+ * @param maybeExtendedData an optional ExtendedData: Option[ExtendedData].
  * @param StyleSelectors   a sequence of StyleSelectors: Seq[StyleSelector].
  * @param kmlData          (auxiliary) member: KmlData.
  */
-case class FeatureData(name: Text, maybeDescription: Option[Text], maybeStyleUrl: Option[Text], maybeOpen: Option[Open], maybeVisibility: Option[Visibility], StyleSelectors: Seq[StyleSelector], abstractView: Seq[AbstractView])(val kmlData: KmlData) extends Mergeable[FeatureData] with HasName {
+case class FeatureData(name: Text, maybeDescription: Option[Text], maybeStyleUrl: Option[Text], maybeOpen: Option[Open], maybeVisibility: Option[Visibility], maybeExtendedData: Option[ExtendedData], StyleSelectors: Seq[StyleSelector], abstractView: Seq[AbstractView])(val kmlData: KmlData) extends Mergeable[FeatureData] with HasName {
   /**
    * Method to merge FeatureData objects.
    *
@@ -1020,7 +1068,7 @@ case class FeatureData(name: Text, maybeDescription: Option[Text], maybeStyleUrl
       n <- if (mergeName) name merge f.name else Some(name)
       d = mergeOptions(maybeDescription, f.maybeDescription)((t1, t2) => t1 merge t2)
       z <- kmlData merge f.kmlData
-    } yield FeatureData(n, d, maybeStyleUrl, maybeOpen, maybeVisibility, StyleSelectors, abstractView)(z) // TODO: not all fields are properly merged
+    } yield FeatureData(n, d, maybeStyleUrl, maybeOpen, maybeVisibility, maybeExtendedData, StyleSelectors, abstractView)(z) // TODO: not all fields are properly merged
   }
 }
 
@@ -1043,9 +1091,9 @@ object FeatureData extends Extractors with Renderers {
   import Renderers.*
 
   implicit val extractor: Extractor[FeatureData] =
-    extractorPartial[KmlData, FeatureData](extractorPartial52(apply)) ^^ "extractorFeatureData"
+    extractorPartial[KmlData, FeatureData](extractorPartial62(apply)) ^^ "extractorFeatureData"
   implicit val renderer: Renderer[FeatureData] =
-    renderer7Super(apply)(_.kmlData) ^^ "rendererFeatureData"
+    renderer8Super(apply)(_.kmlData) ^^ "rendererFeatureData"
 }
 
 /**
@@ -2721,6 +2769,31 @@ object Scale extends Extractors with Renderers {
 }
 
 /**
+ * Case class SchemaData: sub-element of ExtendedData, providing typed name/value pairs whose
+ * types are defined by a Schema element elsewhere in the document (that Schema definition itself
+ * is not modeled here).
+ * See [[https://developers.google.com/kml/documentation/kmlreference#extendeddata SchemaData]]
+ *
+ * @param _schemaUrl a reference to the Schema which defines this SchemaData's fields (an XML attribute).
+ * @param SimpleData a sequence of typed name/value pairs: Seq[SimpleData].
+ */
+case class SchemaData(_schemaUrl: CharSequence, SimpleData: Seq[SimpleData])
+
+/**
+ * Companion object for the `SchemaData` case class, providing extractors and renderers for
+ * `SchemaData` instances and sequences thereof.
+ */
+object SchemaData extends Extractors with Renderers {
+
+  import Renderers.*
+
+  implicit val extractor: Extractor[SchemaData] = extractor11(apply) ^^ "extractorSchemaData"
+  implicit val extractorSeq: MultiExtractor[Seq[SchemaData]] = multiExtractorBase[SchemaData](NonNegative) ^^ "multiExtractorSchemaData"
+  implicit val renderer: Renderer[SchemaData] = renderer2(apply) ^^ "rendererSchemaData"
+  implicit val rendererSeq: Renderer[Seq[SchemaData]] = sequenceRenderer[SchemaData] ^^ "rendererSchemaDatas"
+}
+
+/**
  * Represents a screen overlay, which combines graphical data with specific positional and rotation details.
  * See [[https://developers.google.com/kml/documentation/kmlreference#screenoverlay ScreenOverlay]]
  *
@@ -2823,6 +2896,30 @@ case class Shape($: ShapeEnum.Value)
 object Shape extends Extractors with Renderers {
   implicit val extractor: Extractor[Shape] = extractor10(apply) ^^ "extractorShape"
   implicit val renderer: Renderer[Shape] = renderer1(apply) ^^ "rendererShape"
+}
+
+/**
+ * Case class SimpleData: sub-element of SchemaData, a single typed name/value pair.
+ * See [[https://developers.google.com/kml/documentation/kmlreference#extendeddata SimpleData]]
+ *
+ * @param _name the name of this SimpleData element, referencing a SimpleField of the
+ *              corresponding Schema (an XML attribute).
+ * @param $     the value, as the text content of this element.
+ */
+case class SimpleData(_name: CharSequence, $: CharSequence)
+
+/**
+ * Companion object for the `SimpleData` case class, providing extractors and renderers for
+ * `SimpleData` instances and sequences thereof.
+ */
+object SimpleData extends Extractors with Renderers {
+
+  import Renderers.*
+
+  implicit val extractor: Extractor[SimpleData] = extractor20(apply) ^^ "extractorSimpleData"
+  implicit val extractorSeq: MultiExtractor[Seq[SimpleData]] = multiExtractorBase[SimpleData](NonNegative) ^^ "multiExtractorSimpleData"
+  implicit val renderer: Renderer[SimpleData] = renderer2(apply) ^^ "rendererSimpleData"
+  implicit val rendererSeq: Renderer[Seq[SimpleData]] = sequenceRenderer[SimpleData] ^^ "rendererSimpleDatas"
 }
 
 /**

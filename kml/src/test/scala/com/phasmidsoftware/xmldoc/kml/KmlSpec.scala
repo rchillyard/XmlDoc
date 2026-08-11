@@ -28,7 +28,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
   it should "render Placemark" in {
     val coordinates1 = Coordinates(Seq(Coordinate("-72", "0", "0"), Coordinate("-71", "1", "1000")))
     val point: Point = Point(Seq(coordinates1))(GeometryData(None, None)(KmlData.nemo))
-    val featureData: FeatureData = FeatureData(Text("Hello"), None, None, None, None, Nil, Nil)(KmlData.nemo)
+    val featureData: FeatureData = FeatureData(Text("Hello"), None, None, None, None, None, Nil, Nil)(KmlData.nemo)
     val placemark = Placemark(Seq(point))(featureData)
     val wy = TryUsing(StateR())(sr => Renderer.render[Placemark](placemark, FormatXML(), sr))
     wy.isSuccess shouldBe true
@@ -38,8 +38,8 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
   it should "render Folder" in {
     val coordinates1 = Coordinates(Seq(Coordinate("-72", "0", "0")))
     val point: Point = Point(Seq(coordinates1))(GeometryData(None, None)(KmlData.nemo))
-    val featureData1: FeatureData = FeatureData(Text("Hello"), None, None, None, None, Nil, Nil)(KmlData.nemo)
-    val featureData2: FeatureData = FeatureData(Text("Goodbye"), None, None, None, None, Nil, Nil)(KmlData.nemo)
+    val featureData1: FeatureData = FeatureData(Text("Hello"), None, None, None, None, None, Nil, Nil)(KmlData.nemo)
+    val featureData2: FeatureData = FeatureData(Text("Goodbye"), None, None, None, None, None, Nil, Nil)(KmlData.nemo)
     val placemark = Placemark(Seq(point))(featureData1)
     val containerData: ContainerData = ContainerData(featureData2)
     val folder = Folder(Seq(placemark))(containerData)
@@ -412,6 +412,110 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     ey.get.maybeDescription shouldBe None
   }
 
+  behavior of "ExtendedData"
+
+  it should "extract and render Data with a displayName" in {
+    val xml: Elem = <Data name="holeNumber">
+      <displayName>Hole Number</displayName>
+      <value>1</value>
+    </Data>
+    Extractor.extract[Data](xml) match {
+      case Success(data) =>
+        data shouldBe Data("holeNumber", Some(Text("Hole Number")), Text("1"))
+        val wy = TryUsing(StateR())(sr => Renderer.render(data, FormatXML(), sr))
+        wy.isSuccess shouldBe true
+        wy.get.replaceAll("\\s+", "") shouldBe """<Dataname="holeNumber"><displayName>HoleNumber</displayName><value>1</value></Data>"""
+      case Failure(x) => fail("could not extract Data", x)
+    }
+  }
+
+  it should "extract and render Data without a displayName" in {
+    val xml: Elem = <Data name="holePar">
+      <value>4</value>
+    </Data>
+    Extractor.extract[Data](xml) match {
+      case Success(data) =>
+        data shouldBe Data("holePar", None, Text("4"))
+        val wy = TryUsing(StateR())(sr => Renderer.render(data, FormatXML(), sr))
+        wy.isSuccess shouldBe true
+        wy.get.replaceAll("\\s+", "") shouldBe """<Dataname="holePar"><value>4</value></Data>"""
+      case Failure(x) => fail("could not extract Data", x)
+    }
+  }
+
+  it should "extract and render SimpleData" in {
+    val xml: Elem = <SimpleData name="TrailHeadName">Pi in the sky</SimpleData>
+    Extractor.extract[SimpleData](xml) match {
+      case Success(simpleData) =>
+        simpleData shouldBe SimpleData("TrailHeadName", "Pi in the sky")
+        val wy = TryUsing(StateR())(sr => Renderer.render(simpleData, FormatXML(), sr))
+        wy.isSuccess shouldBe true
+        wy.get.replaceAll("\\s+", "") shouldBe """<SimpleDataname="TrailHeadName">Piinthesky</SimpleData>"""
+      case Failure(x) => fail("could not extract SimpleData", x)
+    }
+  }
+
+  it should "extract and render SchemaData" in {
+    val xml: Elem = <SchemaData schemaUrl="#TrailHeadTypeId">
+      <SimpleData name="TrailHeadName">Pi in the sky</SimpleData>
+      <SimpleData name="TrailLength">348.6</SimpleData>
+    </SchemaData>
+    Extractor.extract[SchemaData](xml) match {
+      case Success(schemaData) =>
+        schemaData shouldBe SchemaData("#TrailHeadTypeId", Seq(SimpleData("TrailHeadName", "Pi in the sky"), SimpleData("TrailLength", "348.6")))
+        val wy = TryUsing(StateR())(sr => Renderer.render(schemaData, FormatXML(), sr))
+        wy.isSuccess shouldBe true
+        wy.get.replaceAll("\\s+", "") shouldBe """<SchemaDataschemaUrl="#TrailHeadTypeId"><SimpleDataname="TrailHeadName">Piinthesky</SimpleData><SimpleDataname="TrailLength">348.6</SimpleData></SchemaData>"""
+      case Failure(x) => fail("could not extract SchemaData", x)
+    }
+  }
+
+  it should "extract and render ExtendedData with both Data and SchemaData" in {
+    val xml: Elem = <ExtendedData>
+      <Data name="holePar">
+        <value>4</value>
+      </Data>
+      <SchemaData schemaUrl="#TrailHeadTypeId">
+        <SimpleData name="TrailHeadName">Pi in the sky</SimpleData>
+      </SchemaData>
+    </ExtendedData>
+    Extractor.extract[ExtendedData](xml) match {
+      case Success(extendedData) =>
+        extendedData shouldBe ExtendedData(Seq(Data("holePar", None, Text("4"))), Seq(SchemaData("#TrailHeadTypeId", Seq(SimpleData("TrailHeadName", "Pi in the sky")))))
+        val wy = TryUsing(StateR())(sr => Renderer.render(extendedData, FormatXML(), sr))
+        wy.isSuccess shouldBe true
+        wy.get.replaceAll("\\s+", "") shouldBe """<ExtendedData><Dataname="holePar"><value>4</value></Data><SchemaDataschemaUrl="#TrailHeadTypeId"><SimpleDataname="TrailHeadName">Piinthesky</SimpleData></SchemaData></ExtendedData>"""
+      case Failure(x) => fail("could not extract ExtendedData", x)
+    }
+  }
+
+  it should "extract ExtendedData as part of FeatureData" in {
+    val xml: Elem = <xml>
+      <name>Trail Head</name>
+      <ExtendedData>
+        <Data name="holePar">
+          <value>4</value>
+        </Data>
+      </ExtendedData>
+    </xml>
+    Extractor.extract[FeatureData](xml) match {
+      case Success(featureData) =>
+        featureData.maybeExtendedData shouldBe Some(ExtendedData(Seq(Data("holePar", None, Text("4"))), Nil))
+      case Failure(x) => fail("could not extract FeatureData", x)
+    }
+  }
+
+  it should "extract FeatureData with no ExtendedData at all" in {
+    val xml: Elem = <xml>
+      <name>Trail Head</name>
+    </xml>
+    Extractor.extract[FeatureData](xml) match {
+      case Success(featureData) =>
+        featureData.maybeExtendedData shouldBe None
+      case Failure(x) => fail("could not extract FeatureData", x)
+    }
+  }
+
   behavior of "Feature"
 
   it should "extract LookAt" in {
@@ -472,7 +576,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
 
             }
             featureData match {
-              case FeatureData(Text("Wakefield Branch of Eastern RR"), maybeDescription, _, _, _, _, Nil) =>
+              case FeatureData(Text("Wakefield Branch of Eastern RR"), maybeDescription, _, _, _, _, _, Nil) =>
                 println(s"maybeDescription: $maybeDescription")
               case _ => println(s"$featureData did not match the expected result")
             }
@@ -528,7 +632,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
 
             }
             featureData match {
-              case FeatureData(Text("Wakefield Branch of Eastern RR"), maybeDescription, _, _, _, _, Nil) =>
+              case FeatureData(Text("Wakefield Branch of Eastern RR"), maybeDescription, _, _, _, _, _, Nil) =>
                 println(s"maybeDescription: $maybeDescription")
               case _ => println(s"$featureData did not match the expected result")
             }
@@ -4637,7 +4741,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
         containers.head match {
           case document@Document(features) =>
             document.containerData.featureData match {
-              case FeatureData(name, maybeDescription, maybeStyleUrl, maybeOpen, _, styleSelectors, _) =>
+              case FeatureData(name, maybeDescription, maybeStyleUrl, maybeOpen, _, _, styleSelectors, _) =>
                 name shouldBe Text("MA - Boston NE: Historic New England Railroads")
                 maybeDescription shouldBe Some(Text("See description of Historic New England Railroads (MA - Boston NW). Full index: https://www.rubecula.com/RRMaps/"))
                 maybeStyleUrl shouldBe None
@@ -4696,7 +4800,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
         containers.head match {
           case document@Document(features) =>
             document.containerData.featureData match {
-              case FeatureData(name, maybeDescription, maybeStyleUrl, maybeOpen, _, styleSelectors, _) =>
+              case FeatureData(name, maybeDescription, maybeStyleUrl, maybeOpen, _, _, styleSelectors, _) =>
                 name shouldBe Text("MA - Boston NE: Historic New England Railroads")
                 maybeDescription shouldBe Some(Text("See description of Historic New England Railroads (MA - Boston NW).  Full index: https://www.rubecula.com/RRMaps/"))
                 maybeStyleUrl shouldBe None
@@ -4875,8 +4979,8 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
 
   val kd: KmlData = KmlData(None)
   val gd: GeometryData = GeometryData(None, None)(kd)
-  val fd1: FeatureData = FeatureData(Text("junk"), None, None, None, None, Nil, Nil)(kd)
-  val fd2: FeatureData = FeatureData(Text("junk junk"), None, None, None, None, Nil, Nil)(kd)
+  val fd1: FeatureData = FeatureData(Text("junk"), None, None, None, None, None, Nil, Nil)(kd)
+  val fd2: FeatureData = FeatureData(Text("junk junk"), None, None, None, None, None, Nil, Nil)(kd)
   val cs1: Seq[Coordinate] = Seq(Coordinate("1", "0", "0"), Coordinate("1", "1", "0"))
   val cs2: Seq[Coordinate] = Seq(Coordinate("1", "1", "0"), Coordinate("1", "2", "0"))
   val cs2a: Seq[Coordinate] = cs2.reverse

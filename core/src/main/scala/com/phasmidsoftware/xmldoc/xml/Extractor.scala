@@ -228,7 +228,9 @@ object Extractor {
    *              if the (text) content of the node, then the field should be "$";
    *              if a singleton child, then field is as is;
    *              if an attribute, then field should begin with "_";
-   *              if an optional child, then field should begin with "maybe".
+   *              if an optional child, then field should begin with "maybe" (the tag looked up is
+   *              lower-case-initial by default, e.g. "maybeStyleUrl" looks for "styleUrl", but falls
+   *              back to the capitalized form, e.g. "ExtendedData", if that's not found).
    * @tparam P the type to which Node should be converted.
    *           Required: implicit evidence of type `Extractor[P]`.
    * @return a `Try[P]`.
@@ -367,9 +369,15 @@ object Extractor {
       // NOTE child nodes are extracted using extractChildren, not here, but if the plural-sounding name is present in node, then we are OK
       case Plural(x) if (node \ field).isEmpty =>
         s"plural:" -> Failure(XmlException(s"extractField: incorrect usage for plural field: $x. Use extractChildren instead."))
-      // NOTE optional members such that the name begins with "maybe"
+      // NOTE optional members such that the name begins with "maybe".
+      // The captured tag x is always lower-case-initial (that's what "maybe" strips off and re-cases),
+      // which matches most KML element names, but not the handful of capitalized compound elements
+      // (e.g. ExtendedData). So, if the lower-case-initial lookup finds nothing, fall back to the
+      // capitalized form of the same tag before concluding the element is genuinely absent.
       case optional(x) =>
-        s"optional: $x" -> extractOptional[P](node / x) // CONSIDER using \\ like singleton below
+        val nodeSeq = node / x
+        val fallback = if (nodeSeq.isEmpty) node / s"${x.head.toUpper}${x.tail}" else nodeSeq
+        s"optional: $x" -> extractOptional[P](fallback) // CONSIDER using \\ like singleton below
       // NOTE this is the default case which is used for a singleton entity (plural entities would be extracted using extractChildren).
       // TODO Issue #21 why would we be looking for a singleton LinearRing in a node which is an extrude node?
       case x =>
