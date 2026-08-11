@@ -1,5 +1,10 @@
 package com.phasmidsoftware.xmldoc.xml
 
+import com.phasmidsoftware.xmldoc.core.XmlException
+import com.phasmidsoftware.xmldoc.render.{Format, Renderer}
+
+import scala.util.{Failure, Success, Try}
+
 /**
  * A fully generic representation of XML content: used for anything that doesn't have
  * (or doesn't need) a specialist type. `GenericElement` carries a tag, its attributes,
@@ -10,10 +15,16 @@ package com.phasmidsoftware.xmldoc.xml
  * `Seq[Either[ParagraphStyleRange, GenericElement]]`) — GenericElement itself doesn't
  * know or care whether its parent is specialist or generic.
  *
- * This is deliberately not routed through the `Extractor`/`Renderer` typeclass framework:
- * those combinators (`extractor1`...`extractor7`, `renderer1`...`renderer7`) assume a
- * fixed-arity `Product` type with a known field count, whereas this is a variable-arity
- * recursive tree, so `fromNode`/`toXmlString` are written directly instead.
+ * `fromNode`/`toXmlString` are hand-written rather than built from the `Extractor`/`Renderer`
+ * combinators (`extractor1`...`extractor7`, `renderer1`...`renderer7`): those all assume a
+ * fixed, known number of fields, each mapped by name to one specific attribute or child —
+ * a "capture whatever's left over" field, of unbounded/unnamed size, isn't something they can
+ * express (the parallel is a fixed-arity method versus a varargs method). That said,
+ * `GenericElement` still has ordinary `Extractor[GenericElement]`/`Renderer[GenericElement]`
+ * instances below, delegating to `fromElem`/`toXmlString` — these let `GenericElement` be used
+ * as a normal field type within an otherwise-specialist `extractorN`/`rendererN`, for a
+ * specific, named field that's deliberately left generic (as opposed to modeling an unbounded
+ * remainder, which these instances don't help with).
  *
  * NOTE: `scala.xml.Comment` and `scala.xml.EntityRef` nodes are not treated specially and
  * fall through to `GenericText` via their `.text` value, which loses their distinct node
@@ -124,4 +135,21 @@ object GenericElement {
   // must be split across adjacent CDATA sections: "]]" + "]]><![CDATA[" + ">" reassembles to
   // the same content once all sections are concatenated back together.
   private def escapeCData(text: String): String = text.replace("]]>", "]]]]><![CDATA[>")
+
+  /**
+   * An `Extractor[GenericElement]`, for use as an ordinary field type within an
+   * otherwise-specialist `extractorN`, wherever a specific, named field is deliberately left
+   * generic. Fails if the node isn't an element (e.g. it's a bare text node).
+   */
+  implicit val extractor: Extractor[GenericElement] = Extractor {
+    case e: scala.xml.Elem => Success(fromElem(e))
+    case other => Failure(XmlException(s"GenericElement extractor: expected an element, got: $other"))
+  } ^^ "genericElementExtractor"
+
+  /**
+   * A `Renderer[GenericElement]`, the counterpart to `extractor`, delegating to `toXmlString`.
+   */
+  implicit val renderer: Renderer[GenericElement] = Renderer[GenericElement] {
+    (t, _, _) => Success(toXmlString(t))
+  } ^^ "genericElementRenderer"
 }
