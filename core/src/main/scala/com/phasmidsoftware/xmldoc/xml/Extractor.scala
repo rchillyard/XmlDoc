@@ -866,7 +866,7 @@ object Plural extends JavaTokenParsers {
    *
    * @return a `Parser[String]` that matches one of the predefined singular terms ending in "s".
    */
-  private def singularEndsInS: Parser[String] = "innerBoundaryIs" | "outerBoundaryIs" | "coordinates" | "features" | "StyleSelectors" | "Styles"
+  private def singularEndsInS: Parser[String] = "innerBoundaryIs" | "outerBoundaryIs" | "coordinates" | "features" | "StyleSelectors" | "Styles" | "Alias"
 
   /**
    * Parses a valid root string composed of word characters (letters, digits, or underscores).

@@ -162,6 +162,38 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     triedColor.get shouldBe Color(Hex4("ff0000ff"))
   }
 
+  behavior of "Link"
+
+  it should "extract and render Link" in {
+    val xml: Elem = <Link>
+      <href>http://example.com/link.kml</href>
+      <refreshMode>onInterval</refreshMode>
+      <refreshInterval>4</refreshInterval>
+      <viewRefreshMode>onStop</viewRefreshMode>
+      <viewRefreshTime>4</viewRefreshTime>
+      <viewBoundScale>1</viewBoundScale>
+      <viewFormat>BBOX=[bboxWest],[bboxSouth],[bboxEast],[bboxNorth]</viewFormat>
+      <httpQuery>client=[clientVersion]</httpQuery>
+    </Link>
+    extract[Link](xml) match {
+      case Success(link) =>
+        link shouldBe Link(
+          Some(Text("http://example.com/link.kml")),
+          Some(RefreshMode(RefreshModeEnum.onInterval)),
+          Some(RefreshInterval(4.0)),
+          Some(ViewRefreshMode(ViewRefreshEnum.onStop)),
+          Some(ViewRefreshTime(4.0)),
+          Some(ViewBoundScale(1.0)),
+          Some(Text("BBOX=[bboxWest],[bboxSouth],[bboxEast],[bboxNorth]")),
+          Some(Text("client=[clientVersion]"))
+        )
+        val wy = TryUsing(StateR())(sr => Renderer.render(link, FormatXML(), sr.setName("Link")))
+        wy.isSuccess shouldBe true
+        extract[Link](XML.loadString(wy.get)) shouldBe Success(link)
+      case Failure(x) => fail("could not extract Link", x)
+    }
+  }
+
   behavior of "Coordinate"
 
   it should "parse Coordinate pair" in {
@@ -366,6 +398,53 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
         wy.get should include("<Point>\n    <coordinates>\n      1,1,0\n    </coordinates>\n  </Point>")
         wy.get should include("<Point>\n    <coordinates>\n      2,2,0\n    </coordinates>\n  </Point>")
       case Failure(x) => fail("could not extract MultiGeometry", x)
+    }
+  }
+
+  it should "extract, render and round-trip Model as geometry" in {
+    val xml: Elem = <xml>
+      <Model>
+        <altitudeMode>relativeToGround</altitudeMode>
+        <Location>
+          <longitude>-122.0822035425683</longitude>
+          <latitude>37.42228990140251</latitude>
+          <altitude>17</altitude>
+        </Location>
+        <Orientation>
+          <heading>45</heading>
+          <tilt>0</tilt>
+          <roll>0</roll>
+        </Orientation>
+        <Scale>
+          <x>1</x>
+          <y>1</y>
+          <z>1</z>
+        </Scale>
+        <Link>
+          <href>house.dae</href>
+        </Link>
+        <ResourceMap>
+          <Alias>
+            <targetHref>house.jpg</targetHref>
+            <sourceHref>../images/house.jpg</sourceHref>
+          </Alias>
+        </ResourceMap>
+      </Model>
+    </xml>
+    extractAll[Seq[Geometry]](xml) match {
+      case Success(gs) =>
+        gs.size shouldBe 1
+        val model = gs.head.asInstanceOf[Model]
+        model.geometryData.maybeAltitudeMode shouldBe Some(AltitudeMode(AltitudeModeEnum.relativeToGround))
+        model.maybeLocation shouldBe Some(Location(Longitude(-122.0822035425683), Latitude(37.42228990140251), Some(Altitude(17))))
+        model.maybeOrientation shouldBe Some(Orientation(Heading(45), Tilt(0), Roll(0)))
+        model.maybeScale shouldBe Some(ModelScale(AxisScale(1), AxisScale(1), AxisScale(1)))
+        model.maybeLink shouldBe Some(Link(Some(Text("house.dae")), None, None, None, None, None, None, None))
+        model.maybeResourceMap shouldBe Some(ResourceMap(Seq(Alias(Some(Text("house.jpg")), Some(Text("../images/house.jpg"))))))
+        val wy = TryUsing(StateR())(sr => Renderer.render(gs, FormatXML(), sr))
+        wy.isSuccess shouldBe true
+        extractAll[Seq[Geometry]](XML.loadString(s"<xml>${wy.get}</xml>")) shouldBe Success(gs)
+      case Failure(x) => fail("could not extract Model", x)
     }
   }
 
@@ -660,6 +739,34 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                  |</Placemark>""".stripMargin
         }
       case Failure(x) => fail(x)
+    }
+  }
+
+  it should "extract, render and round-trip NetworkLink as a Feature" in {
+    val xml: Elem = <xml>
+      <NetworkLink>
+        <name>NE US Radar</name>
+        <refreshVisibility>1</refreshVisibility>
+        <flyToView>1</flyToView>
+        <Link>
+          <href>http://example.com/radar.kml</href>
+          <refreshMode>onInterval</refreshMode>
+          <refreshInterval>900</refreshInterval>
+        </Link>
+      </NetworkLink>
+    </xml>
+    extractAll[Seq[Feature]](xml) match {
+      case Success(fs) =>
+        fs.size shouldBe 1
+        val networkLink = fs.head.asInstanceOf[NetworkLink]
+        networkLink.name shouldBe Text("NE US Radar")
+        networkLink.maybeRefreshVisibility shouldBe Some(RefreshVisibility(true))
+        networkLink.maybeFlyToView shouldBe Some(FlyToView(true))
+        networkLink.maybeLink shouldBe Some(Link(Some(Text("http://example.com/radar.kml")), Some(RefreshMode(RefreshModeEnum.onInterval)), Some(RefreshInterval(900)), None, None, None, None, None))
+        val wy = TryUsing(StateR())(sr => Renderer.render(fs, FormatXML(), sr))
+        wy.isSuccess shouldBe true
+        extractAll[Seq[Feature]](XML.loadString(s"<xml>${wy.get}</xml>")) shouldBe Success(fs)
+      case Failure(x) => fail("could not extract NetworkLink", x)
     }
   }
 
