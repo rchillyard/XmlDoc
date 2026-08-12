@@ -147,9 +147,19 @@ object GenericElement {
   } ^^ "genericElementExtractor"
 
   /**
+   * An `Extractor[Option[GenericElement]]`, for a deliberately generic field that's optional.
+   */
+  implicit val extractorOpt: Extractor[Option[GenericElement]] = extractor.lift
+
+  /**
    * A `Renderer[GenericElement]`, the counterpart to `extractor`, delegating to `toXmlString`.
    */
   implicit val renderer: Renderer[GenericElement] = Renderer[GenericElement] {
     (t, _, _) => Success(toXmlString(t))
   } ^^ "genericElementRenderer"
+
+  /**
+   * A `Renderer[Option[GenericElement]]`, the counterpart to `extractorOpt`.
+   */
+  implicit val rendererOpt: Renderer[Option[GenericElement]] = renderer.lift
 }

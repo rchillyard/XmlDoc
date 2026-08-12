@@ -1098,10 +1098,13 @@ object Feature extends Extractors with Renderers {
  * @param maybeStyleUrl    an optional style URL: Option[String].
  * @param maybeOpen        an optional openness designation: Option[Int].
  * @param maybeExtendedData an optional ExtendedData: Option[ExtendedData].
+ * @param maybeTimePrimitive an optional TimeStamp or TimeSpan, kept generic (see GenericElement) since
+ *                            TimePrimitive is an abstract type and its real tag is never literally
+ *                            "TimePrimitive": Option[GenericElement].
  * @param StyleSelectors   a sequence of StyleSelectors: Seq[StyleSelector].
  * @param kmlData          (auxiliary) member: KmlData.
  */
-case class FeatureData(name: Text, maybeDescription: Option[Text], maybeStyleUrl: Option[Text], maybeOpen: Option[Open], maybeVisibility: Option[Visibility], maybeExtendedData: Option[ExtendedData], StyleSelectors: Seq[StyleSelector], abstractView: Seq[AbstractView])(val kmlData: KmlData) extends Mergeable[FeatureData] with HasName {
+case class FeatureData(name: Text, maybeDescription: Option[Text], maybeStyleUrl: Option[Text], maybeOpen: Option[Open], maybeVisibility: Option[Visibility], maybeExtendedData: Option[ExtendedData], maybeTimePrimitive: Option[GenericElement], StyleSelectors: Seq[StyleSelector], abstractView: Seq[AbstractView])(val kmlData: KmlData) extends Mergeable[FeatureData] with HasName {
   /**
    * Method to merge FeatureData objects.
    *
@@ -1114,7 +1117,7 @@ case class FeatureData(name: Text, maybeDescription: Option[Text], maybeStyleUrl
       n <- if (mergeName) name merge f.name else Some(name)
       d = mergeOptions(maybeDescription, f.maybeDescription)((t1, t2) => t1 merge t2)
       z <- kmlData merge f.kmlData
-    } yield FeatureData(n, d, maybeStyleUrl, maybeOpen, maybeVisibility, maybeExtendedData, StyleSelectors, abstractView)(z) // TODO: not all fields are properly merged
+    } yield FeatureData(n, d, maybeStyleUrl, maybeOpen, maybeVisibility, maybeExtendedData, maybeTimePrimitive, StyleSelectors, abstractView)(z) // TODO: not all fields are properly merged
   }
 }
 
@@ -1136,10 +1139,14 @@ object FeatureData extends Extractors with Renderers {
 
   import Renderers.*
 
+  // TimePrimitive's real tag is TimeStamp or TimeSpan, never "timePrimitive"/"TimePrimitive" -
+  // see doExtractField's optional case in core's Extractor.scala.
+  TagProperties.addAliases("timePrimitive", Seq("TimeStamp", "TimeSpan"))
+
   implicit val extractor: Extractor[FeatureData] =
-    extractorPartial[KmlData, FeatureData](extractorPartial62(apply)) ^^ "extractorFeatureData"
+    extractorPartial[KmlData, FeatureData](extractorPartial72(apply)) ^^ "extractorFeatureData"
   implicit val renderer: Renderer[FeatureData] =
-    renderer8Super(apply)(_.kmlData) ^^ "rendererFeatureData"
+    renderer9Super(apply)(_.kmlData) ^^ "rendererFeatureData"
 }
 
 /**

@@ -248,6 +248,27 @@ trait Renderers {
   }
 
   /**
+   * Creates a Renderer instance for a product type with nine elements, where all elements have associated Renderers.
+   *
+   * @param construct A function that takes nine parameters of types P0..P8, and constructs an instance of type R.
+   * @tparam R The resulting product type, constrained to be a subclass of Product and require a ClassTag.
+   * @return A Renderer instance that can render objects of type R, utilizing the provided construct function
+   *         and the Renderers for each corresponding parameter type.
+   */
+  def renderer9[P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, P5: Renderer, P6: Renderer, P7: Renderer, P8: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6, P7, P8) => R): Renderer[R] = Renderer {
+    (r: R, format, stateR) => {
+      ((r.productElement(0), r.productElement(1), r.productElement(2), r.productElement(3), r.productElement(4), r.productElement(5), r.productElement(6), r.productElement(7), r.productElement(8)): @unchecked) match {
+        case (p0: P0 @unchecked, p1: P1 @unchecked, p2: P2 @unchecked, p3: P3 @unchecked, p4: P4 @unchecked, p5: P5 @unchecked, p6: P6 @unchecked, p7: P7 @unchecked, p8: P8 @unchecked) =>
+          val constructorInner: (P0, P1, P2, P3, P4, P5, P6, P7) => R = construct(_, _, _, _, _, _, _, _, p8)
+          for {wInner <- renderer8(constructorInner).render(constructorInner(p0, p1, p2, p3, p4, p5, p6, p7), format, stateR.recurse)
+               wOuter <- renderOuter(r, p8, 8, format.indent)
+               result <- doNestedRender(format, stateR, wInner, wOuter, r.productElementName(8))
+               } yield result
+      }
+    }
+  }
+
+  /**
    * Alternative method to create a renderer for a Product (e.g., case class) with one member but also an auxiliary object in a second parameter set.
    *
    * CONSIDER rename each of theses renderXSuper methods to renderXAux.
@@ -456,6 +477,26 @@ trait Renderers {
       for {
         wInner <- Renderer.render(b, format, stateR.recurse)
         wOuter <- renderer8(constructOuter).render(r, format, stateR.recurse)
+        result <- doNestedRender(format, stateR, wInner, wOuter, r.productElementName(0))
+      } yield result
+    }
+  }
+
+  /**
+   * Method to create a renderer for a Product (e.g., case class) with nine members but also an auxiliary object in a second parameter set.
+   *
+   * @param construct a function (P0, P1, P2, P3, P4, P5, P6, P7, P8) => R (this is usually the apply method of a case class).
+   * @tparam B  the (Renderer) type of the auxiliary object of type R.
+   * @tparam R  the type of Renderer to be returned (must be a Product).
+   * @return a Renderer[R].
+   */
+  def renderer9Super[B: Renderer, P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, P5: Renderer, P6: Renderer, P7: Renderer, P8: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6, P7, P8) => B => R)(lens: R => B): Renderer[R] = Renderer {
+    (r: R, format, stateR) => {
+      val b = lens(r)
+      val constructOuter: (P0, P1, P2, P3, P4, P5, P6, P7, P8) => R = construct(_, _, _, _, _, _, _, _, _)(b)
+      for {
+        wInner <- Renderer.render(b, format, stateR.recurse)
+        wOuter <- renderer9(constructOuter).render(r, format, stateR.recurse)
         result <- doNestedRender(format, stateR, wInner, wOuter, r.productElementName(0))
       } yield result
     }

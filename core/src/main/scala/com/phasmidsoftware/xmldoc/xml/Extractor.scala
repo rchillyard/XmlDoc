@@ -373,10 +373,13 @@ object Extractor {
       // The captured tag x is always lower-case-initial (that's what "maybe" strips off and re-cases),
       // which matches most KML element names, but not the handful of capitalized compound elements
       // (e.g. ExtendedData). So, if the lower-case-initial lookup finds nothing, fall back to the
-      // capitalized form of the same tag before concluding the element is genuinely absent.
+      // capitalized form of the same tag before concluding the element is genuinely absent — and, if
+      // that also finds nothing, try any tags registered for this field via TagProperties.addAliases
+      // (e.g. maybeTimePrimitive's real tag is TimeStamp or TimeSpan, never "TimePrimitive" at all).
       case optional(x) =>
         val nodeSeq = node / x
-        val fallback = if (nodeSeq.isEmpty) node / s"${x.head.toUpper}${x.tail}" else nodeSeq
+        val capitalized = if (nodeSeq.isEmpty) node / s"${x.head.toUpper}${x.tail}" else nodeSeq
+        val fallback = if (capitalized.isEmpty) TagProperties.aliases(x).flatMap(node / _) else capitalized
         s"optional: $x" -> extractOptional[P](fallback) // CONSIDER using \\ like singleton below
       // NOTE this is the default case which is used for a singleton entity (plural entities would be extracted using extractChildren).
       // TODO Issue #21 why would we be looking for a singleton LinearRing in a node which is an extrude node?

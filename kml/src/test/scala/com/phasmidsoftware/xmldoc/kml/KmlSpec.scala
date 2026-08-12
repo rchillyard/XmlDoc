@@ -27,7 +27,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
   it should "render Placemark" in {
     val coordinates1 = Coordinates(Seq(Coordinate("-72", "0", Some("0")), Coordinate("-71", "1", Some("1000"))))
     val point: Point = Point(Seq(coordinates1))(GeometryData(None, None)(KmlData.nemo))
-    val featureData: FeatureData = FeatureData(Text("Hello"), None, None, None, None, None, Nil, Nil)(KmlData.nemo)
+    val featureData: FeatureData = FeatureData(Text("Hello"), None, None, None, None, None, None, Nil, Nil)(KmlData.nemo)
     val placemark = Placemark(Seq(point))(featureData)
     val wy = TryUsing(StateR())(sr => Renderer.render[Placemark](placemark, FormatXML(), sr))
     wy.isSuccess shouldBe true
@@ -37,8 +37,8 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
   it should "render Folder" in {
     val coordinates1 = Coordinates(Seq(Coordinate("-72", "0", Some("0"))))
     val point: Point = Point(Seq(coordinates1))(GeometryData(None, None)(KmlData.nemo))
-    val featureData1: FeatureData = FeatureData(Text("Hello"), None, None, None, None, None, Nil, Nil)(KmlData.nemo)
-    val featureData2: FeatureData = FeatureData(Text("Goodbye"), None, None, None, None, None, Nil, Nil)(KmlData.nemo)
+    val featureData1: FeatureData = FeatureData(Text("Hello"), None, None, None, None, None, None, Nil, Nil)(KmlData.nemo)
+    val featureData2: FeatureData = FeatureData(Text("Goodbye"), None, None, None, None, None, None, Nil, Nil)(KmlData.nemo)
     val placemark = Placemark(Seq(point))(featureData1)
     val containerData: ContainerData = ContainerData(featureData2)
     val folder = Folder(Seq(placemark))(containerData)
@@ -654,7 +654,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
 
             }
             featureData match {
-              case FeatureData(Text("Wakefield Branch of Eastern RR"), maybeDescription, _, _, _, _, _, Nil) =>
+              case FeatureData(Text("Wakefield Branch of Eastern RR"), maybeDescription, _, _, _, _, _, _, Nil) =>
                 println(s"maybeDescription: $maybeDescription")
               case _ => println(s"$featureData did not match the expected result")
             }
@@ -710,7 +710,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
 
             }
             featureData match {
-              case FeatureData(Text("Wakefield Branch of Eastern RR"), maybeDescription, _, _, _, _, _, Nil) =>
+              case FeatureData(Text("Wakefield Branch of Eastern RR"), maybeDescription, _, _, _, _, _, _, Nil) =>
                 println(s"maybeDescription: $maybeDescription")
               case _ => println(s"$featureData did not match the expected result")
             }
@@ -767,6 +767,54 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
         wy.isSuccess shouldBe true
         extractAll[Seq[Feature]](XML.loadString(s"<xml>${wy.get}</xml>")) shouldBe Success(fs)
       case Failure(x) => fail("could not extract NetworkLink", x)
+    }
+  }
+
+  it should "extract, render and round-trip a Placemark's TimeStamp (Issue #51)" in {
+    // TimePrimitive is abstract (TimeStamp or TimeSpan), and its real tag is never literally
+    // "TimePrimitive" - so it's modeled generically, as a GenericElement, rather than as a
+    // first-class type of its own.
+    val xml: Elem = <xml>
+      <Placemark>
+        <name>X</name>
+        <TimeStamp>
+          <when>1997-07-16T10:30:15Z</when>
+        </TimeStamp>
+        <Point><coordinates>1,2,3</coordinates></Point>
+      </Placemark>
+    </xml>
+    extractAll[Seq[Feature]](xml) match {
+      case Success(fs) =>
+        fs.size shouldBe 1
+        val placemark = fs.head.asInstanceOf[Placemark]
+        placemark.featureData.maybeTimePrimitive.map(_.tag) shouldBe Some("TimeStamp")
+        val wy = TryUsing(StateR())(sr => Renderer.render(fs, FormatXML(), sr))
+        wy.isSuccess shouldBe true
+        extractAll[Seq[Feature]](XML.loadString(s"<xml>${wy.get}</xml>")) shouldBe Success(fs)
+      case Failure(x) => fail("could not extract Placemark", x)
+    }
+  }
+
+  it should "extract, render and round-trip a Placemark's TimeSpan (Issue #51)" in {
+    val xml: Elem = <xml>
+      <Placemark>
+        <name>Y</name>
+        <TimeSpan>
+          <begin>1876-08-01</begin>
+          <end>1997-07-16T10:30:15Z</end>
+        </TimeSpan>
+        <Point><coordinates>4,5,6</coordinates></Point>
+      </Placemark>
+    </xml>
+    extractAll[Seq[Feature]](xml) match {
+      case Success(fs) =>
+        fs.size shouldBe 1
+        val placemark = fs.head.asInstanceOf[Placemark]
+        placemark.featureData.maybeTimePrimitive.map(_.tag) shouldBe Some("TimeSpan")
+        val wy = TryUsing(StateR())(sr => Renderer.render(fs, FormatXML(), sr))
+        wy.isSuccess shouldBe true
+        extractAll[Seq[Feature]](XML.loadString(s"<xml>${wy.get}</xml>")) shouldBe Success(fs)
+      case Failure(x) => fail("could not extract Placemark", x)
     }
   }
 
@@ -4847,7 +4895,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
         containers.head match {
           case document@Document(features) =>
             document.containerData.featureData match {
-              case FeatureData(name, maybeDescription, maybeStyleUrl, maybeOpen, _, _, styleSelectors, _) =>
+              case FeatureData(name, maybeDescription, maybeStyleUrl, maybeOpen, _, _, _, styleSelectors, _) =>
                 name shouldBe Text("MA - Boston NE: Historic New England Railroads")
                 maybeDescription shouldBe Some(Text("See description of Historic New England Railroads (MA - Boston NW). Full index: https://www.rubecula.com/RRMaps/"))
                 maybeStyleUrl shouldBe None
@@ -4906,7 +4954,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
         containers.head match {
           case document@Document(features) =>
             document.containerData.featureData match {
-              case FeatureData(name, maybeDescription, maybeStyleUrl, maybeOpen, _, _, styleSelectors, _) =>
+              case FeatureData(name, maybeDescription, maybeStyleUrl, maybeOpen, _, _, _, styleSelectors, _) =>
                 name shouldBe Text("MA - Boston NE: Historic New England Railroads")
                 maybeDescription shouldBe Some(Text("See description of Historic New England Railroads (MA - Boston NW).  Full index: https://www.rubecula.com/RRMaps/"))
                 maybeStyleUrl shouldBe None
@@ -5094,8 +5142,8 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
 
   val kd: KmlData = KmlData(None)
   val gd: GeometryData = GeometryData(None, None)(kd)
-  val fd1: FeatureData = FeatureData(Text("junk"), None, None, None, None, None, Nil, Nil)(kd)
-  val fd2: FeatureData = FeatureData(Text("junk junk"), None, None, None, None, None, Nil, Nil)(kd)
+  val fd1: FeatureData = FeatureData(Text("junk"), None, None, None, None, None, None, Nil, Nil)(kd)
+  val fd2: FeatureData = FeatureData(Text("junk junk"), None, None, None, None, None, None, Nil, Nil)(kd)
   val cs1: Seq[Coordinate] = Seq(Coordinate("1", "0", Some("0")), Coordinate("1", "1", Some("0")))
   val cs2: Seq[Coordinate] = Seq(Coordinate("1", "1", Some("0")), Coordinate("1", "2", Some("0")))
   val cs2a: Seq[Coordinate] = cs2.reverse
@@ -5129,7 +5177,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
   it should "leave all Placemarks unchanged when a JOIN's second name matches nothing (Issue #20)" in {
     // Issue #20: a JOIN whose second name can't be matched used to silently delete the first
     // (matched) Placemark, even though it was never actually joined with anything.
-    def named(nm: String): Placemark = Placemark(Seq(LineString(tessellate, coordinates1)(gd)))(FeatureData(Text(nm), None, None, None, None, None, Nil, Nil)(kd))
+    def named(nm: String): Placemark = Placemark(Seq(LineString(tessellate, coordinates1)(gd)))(FeatureData(Text(nm), None, None, None, None, None, None, Nil, Nil)(kd))
     val a = named("A")
     val b = named("B")
     val c = named("C")
