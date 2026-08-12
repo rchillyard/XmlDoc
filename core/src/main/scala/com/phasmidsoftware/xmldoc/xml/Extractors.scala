@@ -1312,48 +1312,6 @@ trait Extractors {
       )
 
   /**
-   * Extractor which will convert an Xml Node into an instance of a case class with seven members.
-   *
-   * @param construct a function (P0,P1,P2,P3,P4,P5,P6) => T, usually the apply method of a case class.
-   * @param fields    an optional sequence of field names to guide the extraction process,
-   *                  defaults to an empty sequence
-   * @tparam T  the underlying type of the result, a Product with seven members.
-   * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
-   */
-  def extractor70[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: Extractor, P5: Extractor, P6: Extractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6) => T, fields: Seq[String] = Nil): Extractor[T] =
-    (node: Node) =>
-      applyWrappedToUnit(
-        extractorPartial7[P0, P1, P2, P3, P4, P5, P6, Unit, T](
-          fTagToFieldExtractor,
-          extractorPartial60(_, _),
-          (p0, p1, p2, p3, p4, p5, p6) => _ => construct(p0, p1, p2, p3, p4, p5, p6),
-          dropLast = false,
-          fields
-        ).extract(node)
-      )
-
-  /**
-   * Extractor which will convert an Xml Node into an instance of a case class with eight members.
-   *
-   * @param construct a function (P0,P1,P2,P3,P4,P5,P6,P7) => T, usually the apply method of a case class.
-   * @param fields    an optional sequence of field names to guide the extraction process,
-   *                  defaults to an empty sequence
-   * @tparam T  the underlying type of the result, a Product with eight members.
-   * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
-   */
-  def extractor80[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: Extractor, P5: Extractor, P6: Extractor, P7: Extractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6, P7) => T, fields: Seq[String] = Nil): Extractor[T] =
-    (node: Node) =>
-      applyWrappedToUnit(
-        extractorPartial8[P0, P1, P2, P3, P4, P5, P6, P7, Unit, T](
-          fTagToFieldExtractor,
-          extractorPartial70(_, _),
-          (p0, p1, p2, p3, p4, p5, p6, p7) => _ => construct(p0, p1, p2, p3, p4, p5, p6, p7),
-          dropLast = false,
-          fields
-        ).extract(node)
-      )
-
-  /**
    * Extractor which will convert an Xml Node into an instance of a case class with six members.
    *
    * TESTME
@@ -1604,6 +1562,27 @@ trait Extractors {
       ).extract(node)
 
   /**
+    * Extractor which will convert an Xml Node into an instance of a case class with seven members.
+    *
+    * @param construct a function (P0,P1,P2,P3,P4,P5,P6) => T, usually the apply method of a case class.
+    * @param fields    an optional sequence of field names to guide the extraction process,
+    *                  defaults to an empty sequence
+    * @tparam T  the underlying type of the result, a Product with seven members.
+    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
+    */
+  def extractor70[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: Extractor, P5: Extractor, P6: Extractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6) => T, fields: Seq[String] = Nil): Extractor[T] =
+    (node: Node) =>
+      applyWrappedToUnit(
+        extractorPartial7[P0, P1, P2, P3, P4, P5, P6, Unit, T](
+          fTagToFieldExtractor,
+          extractorPartial60(_, _),
+          (p0, p1, p2, p3, p4, p5, p6) => _ => construct(p0, p1, p2, p3, p4, p5, p6),
+          dropLast = false,
+          fields
+        ).extract(node)
+      )
+
+  /**
    * Extractor which will convert an Xml Node into an instance of a case class with seven members and one auxiliary (non-member) parameter.
    *
    * @param construct a function (P0, P1, P2, P3, P4, P5, P6) => B => T, usually the apply method of a case class.
@@ -1685,6 +1664,27 @@ trait Extractors {
         dropLast = true,
         fields
       ).extract(node)
+
+  /**
+    * Extractor which will convert an Xml Node into an instance of a case class with eight members.
+    *
+    * @param construct a function (P0,P1,P2,P3,P4,P5,P6,P7) => T, usually the apply method of a case class.
+    * @param fields    an optional sequence of field names to guide the extraction process,
+    *                  defaults to an empty sequence
+    * @tparam T  the underlying type of the result, a Product with eight members.
+    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
+    */
+  def extractor80[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: Extractor, P5: Extractor, P6: Extractor, P7: Extractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6, P7) => T, fields: Seq[String] = Nil): Extractor[T] =
+    (node: Node) =>
+      applyWrappedToUnit(
+        extractorPartial8[P0, P1, P2, P3, P4, P5, P6, P7, Unit, T](
+          fTagToFieldExtractor,
+          extractorPartial70(_, _),
+          (p0, p1, p2, p3, p4, p5, p6, p7) => _ => construct(p0, p1, p2, p3, p4, p5, p6, p7),
+          dropLast = false,
+          fields
+        ).extract(node)
+      )
 
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with eight members and one auxiliary (non-member) parameter.
