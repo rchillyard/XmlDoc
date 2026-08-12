@@ -382,7 +382,6 @@ object Extractor {
         val fallback = if (capitalized.isEmpty) TagProperties.aliases(x).flatMap(node / _) else capitalized
         s"optional: $x" -> extractOptional[P](fallback) // CONSIDER using \\ like singleton below
       // NOTE this is the default case which is used for a singleton entity (plural entities would be extracted using extractChildren).
-      // TODO Issue #21 why would we be looking for a singleton LinearRing in a node which is an extrude node?
       case x =>
         s"singleton: $x" -> (extractSingleton[P](node / x) orElse extractSingleton[P](node \\ x))
     }
