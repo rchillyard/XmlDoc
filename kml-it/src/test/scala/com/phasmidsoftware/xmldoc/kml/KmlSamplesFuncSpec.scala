@@ -17,14 +17,6 @@ class KmlSamplesFuncSpec extends AnyFlatSpec with should.Matchers {
 
   behavior of "MultiGeometry samples"
 
-  // PENDING: this fixture still surfaces one pre-existing, unrelated bug (not yet fixed):
-  //   Polygon.innerBoundaryIs (no literal <innerBoundaryIs> tag present) falls back to
-  //   extractAll, which searches too broadly (finds the <LinearRing> nested inside this same
-  //   Polygon's own outerBoundaryIs) and fabricates a phantom InnerBoundaryIs duplicating the
-  //   outer boundary, rather than correctly yielding Nil.
-  // (The element-order bug that used to be documented here - multiExtractor2..6 yielding the
-  // reverse of the declared label order rather than source document order - is now fixed; the
-  // order assertions below cover it.)
   it should "extract polygon-point.kml (Point + Polygon in one MultiGeometry)" in {
     val ksi: IO[Seq[KML]] = KMLCompanion.loadKML(Success("kml-it/src/test/resources/multigeometry-polygon-point.kml"))
     val result = ksi.unsafeRunSync()
@@ -36,12 +28,15 @@ class KmlSamplesFuncSpec extends AnyFlatSpec with should.Matchers {
           case mg: MultiGeometry =>
             mg.Geometry.size shouldBe 2
             mg.Geometry.head shouldBe a[Point]
-            mg.Geometry.last shouldBe a[Polygon]
+            mg.Geometry.last match {
+              case polygon: Polygon =>
+                polygon.innerBoundaryIs shouldBe Nil
+              case x => fail(s"expected a Polygon but got $x")
+            }
           case x => fail(s"expected a MultiGeometry but got $x")
         }
       case x => fail(s"expected a Placemark but got $x")
     }
-    pending
   }
 
   it should "extract multigeometry-linestrings.kml (10 LineStrings in one MultiGeometry)" in {

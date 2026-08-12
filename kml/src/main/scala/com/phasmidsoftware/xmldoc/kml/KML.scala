@@ -1443,6 +1443,16 @@ case class InnerBoundaryIs(LinearRing: LinearRing)
  * Companion class to InnerBoundaryIs.
  */
 object InnerBoundaryIs extends Extractors with Renderers {
+  // NOTE: InnerBoundaryIs and OuterBoundaryIs are structurally identical (both just wrap a
+  // LinearRing) - they're distinguished only by their own element's tag, not by shape. When no
+  // literal <innerBoundaryIs> tag is present, extractChildren's generic extractAll fallback tries
+  // to structurally match every child of the enclosing Polygon against InnerBoundaryIs's shape,
+  // with no idea that a sibling <outerBoundaryIs> is spoken for by a different field of the same
+  // Polygon - and since it has the same shape, it wrongly "matches" too. Registering this tag as
+  // a must-match tag skips that fallback for this field entirely: a missing literal tag just
+  // means zero results, as it should, rather than borrowing a sibling field's content.
+  TagProperties.addMustMatch("innerBoundaryIs")
+
   implicit val extractor: Extractor[InnerBoundaryIs] = extractor10(apply) ^^ "extractorInnerBoundaryIs"
   implicit val extractorSeq: MultiExtractor[Seq[InnerBoundaryIs]] = multiExtractorBase[InnerBoundaryIs](NonNegative) ^^ "multiExtractorInnerBoundaryIs"
   implicit val renderer: Renderer[InnerBoundaryIs] = renderer1(apply) ^^ "rendererInnerBoundaryIs"
@@ -1605,6 +1615,11 @@ object KML extends Extractors with Renderers {
    * to the must-match list of tags in the TagProperties object.
    * This ensures
    * that the specified tag must conform to certain matching criteria.
+   *
+   * NOTE: no longer necessary to call this explicitly - InnerBoundaryIs's own companion object
+   * now registers this same tag as a side effect of being loaded, which happens automatically
+   * the first time anything triggers Polygon's extractor. Kept for backward compatibility;
+   * calling it is harmless (the registration is idempotent).
    *
    * @return Unit This method has no return value.
    */
