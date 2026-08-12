@@ -2435,7 +2435,12 @@ case class Placemark(Geometry: Seq[Geometry])(val featureData: FeatureData) exte
     e match {
       case KmlEdit(command@(JOIN | JOINX), _, Element("Placemark", nameToMatch1), Some(Element("Placemark", nameToMatch2)))
         if name.matches(nameToMatch1) =>
-        Some(joinMatchedPlacemarks(fs, nameToMatch2, command == JOIN))
+        // NOTE: Issue #20. If no sibling matches nameToMatch2, joinMatchedPlacemarks yields None,
+        // and mapping (rather than unconditionally wrapping in Some) keeps this None as the
+        // outer result too - which editToOption's caller treats as "this edit doesn't apply,
+        // leave unchanged" rather than "delete this Placemark". Previously, an unmatched partner
+        // silently deleted this Placemark even though it was never actually joined with anything.
+        joinMatchedPlacemarks(fs, nameToMatch2, command == JOIN) map Some.apply
       case _ =>
         None
     }
@@ -2465,7 +2470,8 @@ case class Placemark(Geometry: Seq[Geometry])(val featureData: FeatureData) exte
    */
   private def joinMatchingPlacemarks(name: String, feature: Feature, mergeName: Boolean) = feature match {
     case q: Placemark if q.name.matches(name) => merge(q, mergeName)
-    // FIXME Issue #20 can result in this Placemark being lost if name doesn't match q.name
+    // NOTE: this sibling isn't the join partner - not itself a problem, since
+    // joinMatchedPlacemarks tries every sibling and only cares whether any of them matched.
     case _ => None
   }
 }

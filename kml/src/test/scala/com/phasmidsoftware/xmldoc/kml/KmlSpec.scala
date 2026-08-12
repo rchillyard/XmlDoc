@@ -5019,6 +5019,19 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     pz shouldBe p12
   }
 
+  it should "leave all Placemarks unchanged when a JOIN's second name matches nothing (Issue #20)" in {
+    // Issue #20: a JOIN whose second name can't be matched used to silently delete the first
+    // (matched) Placemark, even though it was never actually joined with anything.
+    def named(nm: String): Placemark = Placemark(Seq(LineString(tessellate, coordinates1)(gd)))(FeatureData(Text(nm), None, None, None, None, None, Nil, Nil)(kd))
+    val a = named("A")
+    val b = named("B")
+    val c = named("C")
+    val fs: Seq[Feature] = Seq(a, b, c)
+    val edit = KmlEdit(KmlEdit.JOIN, 2, com.phasmidsoftware.xmldoc.kml.Element("Placemark", "A"), Some(com.phasmidsoftware.xmldoc.kml.Element("Placemark", "X")))
+    val result = KmlEdit.editFeatures(edit, fs)
+    result shouldBe fs
+  }
+
 //  it should "merge Placemarks 3" in {
 //    val maybePlacemark = p1 merge p2a
 //    maybePlacemark.isDefined shouldBe true
