@@ -458,6 +458,9 @@ object Extractor {
       case CDATA(x) => Success(x)
       case x: xml.Text => Success(x.data)
       case _ => node.child.toSeq match {
+        // NOTE: an empty element (e.g. <description/>) has no children at all - that's just
+        // empty text content, not a failure to decode (Issue #19).
+        case Seq() => Success("")
         case Seq(x) => Success(x.text)
         case x => Failure(XmlException(s"charSequenceExtractor: cannot decode text node: $node: $x"))
       }

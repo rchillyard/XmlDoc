@@ -1,6 +1,5 @@
 package com.phasmidsoftware.xmldoc.kml
 
-import com.phasmidsoftware.xmldoc.core.Utilities.parseUnparsed
 import com.phasmidsoftware.xmldoc.core.{CDATA, Text, TryUsing, XmlException}
 import com.phasmidsoftware.xmldoc.render.{FormatXML, Renderer, StateR}
 import com.phasmidsoftware.xmldoc.xml.Extractor.{extract, extractAll, extractMulti}
@@ -4877,7 +4876,12 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     }
   }
 
-  it should "extract and render mini sample kml as XML from file" in {
+  // NOTE: these three round-trip via XML.loadString (real parsing), not parseUnparsed - the
+  // latter wraps its argument as literal, unparsed text (see Utilities.parseUnparsed), so
+  // extracting from it never actually re-parses the rendered output at all. Using it here made
+  // these always trivially pass regardless of whether the render was even close to correct,
+  // which is why round-tripping in this module seemed unworkable for so long.
+  it should "extract and round-trip mini sample kml as XML from file" in {
     val url = KML.getClass.getResource("minisample.kml")
     val xml: Elem = XML.loadFile(url.getFile)
     extractMulti[Seq[KML]](xml) match {
@@ -4891,15 +4895,15 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                 |""".stripMargin)
             for {w <- Renderer.render(kml, FormatXML(0), StateR().setName("kml"))
                  _ = fw.write(w)
-                 ks <- extractMulti[Seq[KML]](parseUnparsed(w))
-                 } yield ks
+                 ks2 <- extractMulti[Seq[KML]](XML.loadString(w))
+                 } yield ks2
         }
-        ksy should matchPattern { case Success(_ :: Nil) => }
+        ksy shouldBe Success(ks)
       case Failure(x) => fail(x)
     }
   }
 
-  it should "extract and render sample kml as XML from file" in {
+  it should "extract and round-trip sample kml as XML from file" in {
     val url = KML.getClass.getResource("sample.kml")
     val xml: Elem = XML.loadFile(url.getFile)
     extractMulti[Seq[KML]](xml) match {
@@ -4913,15 +4917,15 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                 |""".stripMargin)
             for {w <- Renderer.render(kml, FormatXML(), StateR().setName("kml"))
                  _ = fw.write(w)
-                 ks <- extractMulti[Seq[KML]](parseUnparsed(w))
-                 } yield ks
+                 ks2 <- extractMulti[Seq[KML]](XML.loadString(w))
+                 } yield ks2
         }
-        ksy should matchPattern { case Success(_ :: Nil) => }
+        ksy shouldBe Success(ks)
       case Failure(x) => fail(x)
     }
   }
 
-  it should "extract and render sample kml as XML from Google sample" in {
+  it should "extract and round-trip sample kml as XML from Google sample" in {
     val url = KML.getClass.getResource("/KML_Samples.kml")
     val xml: Elem = XML.loadFile(url.getFile)
     extractMulti[Seq[KML]](xml) match {
@@ -4937,9 +4941,10 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
           case Success(w) =>
             fw.write(w)
             fw.close()
-            val copy: Elem = parseUnparsed(w)
-            val ksy: Try[scala.Seq[KML]] = extractMulti[Seq[KML]](copy)
-            ksy should matchPattern { case Success(_ :: Nil) => }
+            extractMulti[Seq[KML]](XML.loadString(w)) match {
+              case Success(ks2) => ks2 shouldBe ks
+              case Failure(x) => fail("could not re-extract the rendered output", x)
+            }
           case Failure(x) =>
             x.printStackTrace()
             fail("see exception above")
@@ -4948,29 +4953,32 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     }
   }
 
-  it should "extract and render placemarks without descriptor" in {
+  it should "extract and round-trip a Document with an empty (self-closing) description" in {
+    // Issue #19: <description/> used to crash the entire extraction (charSequenceExtractor
+    // had no case for a node with zero children), which this file exists specifically to cover.
     val url = KML.getClass.getResource("/emptyDescriptor.kml")
     val xml: Elem = XML.loadFile(url.getFile)
     extractMulti[Seq[KML]](xml) match {
       case Success(ks) =>
-        ks.size shouldBe 0
-      //        val kml = KML_Binding(ks.head, xml.scope)
-      //        val filename = "emptyDescriptor_out.kml"
-      //        val fw = new FileWriter(filename)
-      //        fw.write(
-      //          """<?xml version="1.0" encoding="UTF-8"?>
-      //            |""".stripMargin)
-      //        Renderer.render(kml, FormatXML(), StateR().setName("kml")) match {
-      //          case Success(w) =>
-      //            fw.write(w)
-      //            fw.close()
-      //            val copy: Elem = parseUnparsed(w)
-      //            val ksy: Try[scala.Seq[KML]] = extractMulti[Seq[KML]](copy)
-      //            ksy should matchPattern { case Success(_ :: Nil) => }
-      //          case Failure(x) =>
-      //            x.printStackTrace()
-      //            fail("see exception above")
-      //        }
+        ks.size shouldBe 1
+        ks.head.features.head match {
+          case Document(features) =>
+            features.size shouldBe 1
+            features.head match {
+              case Folder(placemarks) => placemarks.size shouldBe 2
+              case x => fail(s"expected a Folder but got $x")
+            }
+          case x => fail(s"expected a Document but got $x")
+        }
+        val kml = KML_Binding(ks.head, xml.scope)
+        Renderer.render(kml, FormatXML(), StateR().setName("kml")) match {
+          case Success(w) =>
+            extractMulti[Seq[KML]](XML.loadString(w)) match {
+              case Success(ks2) => ks2 shouldBe ks
+              case Failure(x) => fail("could not re-extract the rendered output", x)
+            }
+          case Failure(x) => fail("could not render", x)
+        }
       case Failure(x) => fail(x)
     }
   }

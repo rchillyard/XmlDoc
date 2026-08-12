@@ -607,11 +607,31 @@ trait Renderers {
   /**
    * Method to return a Renderer of Seq[R].
    *
+   * NOTE: each element renders under its own type's name (no name override) - this is what's
+   * wanted for a polymorphic Seq (e.g. Seq[Geometry], mixing Point/LineString/Polygon/...),
+   * where every element's own distinct tag must be preserved. For a homogeneous Seq of a single,
+   * non-polymorphic type whose class name doesn't match its real tag (e.g. InnerBoundaryIs vs.
+   * the tag "innerBoundaryIs"), use sequenceRendererNamed instead.
+   *
    * @tparam R the underlying element type.
    * @return a Renderer of Seq[R].
    */
   def sequenceRenderer[R: Renderer]: Renderer[Seq[R]] = Renderer {
     (rs, format, _) => Renderer.doRenderSequence(rs, format, None)
+  }
+
+  /**
+   * Method to return a Renderer of Seq[R] where every element is rendered under the same,
+   * explicitly-given name, regardless of the calling context - unlike sequenceRenderer, which
+   * lets each element use its own type's name (correct for a polymorphic Seq, but wrong when a
+   * single type's class name doesn't match its actual KML tag).
+   *
+   * @param name the tag name every element of the sequence should be rendered under.
+   * @tparam R the underlying element type.
+   * @return a Renderer of Seq[R].
+   */
+  def sequenceRendererNamed[R: Renderer](name: String): Renderer[Seq[R]] = Renderer {
+    (rs, format, _) => Renderer.doRenderSequence(rs, format, Some(name))
   }
 
   /**

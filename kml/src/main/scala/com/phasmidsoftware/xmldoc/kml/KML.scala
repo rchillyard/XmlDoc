@@ -1456,7 +1456,10 @@ object InnerBoundaryIs extends Extractors with Renderers {
   implicit val extractor: Extractor[InnerBoundaryIs] = extractor10(apply) ^^ "extractorInnerBoundaryIs"
   implicit val extractorSeq: MultiExtractor[Seq[InnerBoundaryIs]] = multiExtractorBase[InnerBoundaryIs](NonNegative) ^^ "multiExtractorInnerBoundaryIs"
   implicit val renderer: Renderer[InnerBoundaryIs] = renderer1(apply) ^^ "rendererInnerBoundaryIs"
-  implicit val rendererSeq: Renderer[Seq[InnerBoundaryIs]] = sequenceRenderer[InnerBoundaryIs] ^^ "rendererInnerBoundaryIs"
+  // NOTE: sequenceRenderer (not used here) lets each element render under its own class's name -
+  // right for a polymorphic Seq, but here InnerBoundaryIs's class name doesn't match its actual
+  // KML tag ("innerBoundaryIs", lower-case-initial), so the name has to be forced explicitly.
+  implicit val rendererSeq: Renderer[Seq[InnerBoundaryIs]] = sequenceRendererNamed[InnerBoundaryIs]("innerBoundaryIs") ^^ "rendererInnerBoundaryIs"
 }
 
 /**

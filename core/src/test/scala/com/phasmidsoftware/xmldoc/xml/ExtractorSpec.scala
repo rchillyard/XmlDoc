@@ -55,7 +55,10 @@ class ExtractorSpec extends AnyFlatSpec with should.Matchers {
     val target = booleanExtractor
     target.extract(<junk>true</junk>) shouldBe Try(true)
     target.extract(<junk>false</junk>) shouldBe Try(false)
-    target.extract(<junk></junk>) should matchPattern { case Failure(_) => }
+    // An empty element has empty (not absent) text content (Issue #19), and booleanExtractor's
+    // own fallback already treats any unrecognized non-empty string as false too - so empty
+    // content being false as well is the consistent outcome, not a special-cased failure.
+    target.extract(<junk></junk>) shouldBe Try(false)
   }
 
   it should "doubleExtractor" in {
