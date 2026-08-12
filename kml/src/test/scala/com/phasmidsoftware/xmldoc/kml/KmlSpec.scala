@@ -489,6 +489,25 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     ey.isSuccess shouldBe true
     ey.get.maybeDescription shouldBe None
   }
+  it should "extract maybeStyleUrl as a genuine StyleURL, not a bare CharSequence (Issue #44)" in {
+    val xml: Elem = <xml>
+      <Placemark>
+        <name>X</name>
+        <styleUrl>#transRedPoly</styleUrl>
+        <Point><coordinates>1,2,3</coordinates></Point>
+      </Placemark>
+    </xml>
+    extractAll[Seq[Feature]](xml) match {
+      case Success(fs) =>
+        val placemark = fs.head.asInstanceOf[Placemark]
+        placemark.featureData.maybeStyleUrl shouldBe Some(StyleURL("#transRedPoly"))
+        placemark.featureData.maybeStyleUrl.get.$ shouldBe a[java.net.URI]
+        val wy = TryUsing(StateR())(sr => Renderer.render(fs, FormatXML(), sr))
+        wy.isSuccess shouldBe true
+        extractAll[Seq[Feature]](XML.loadString(s"<xml>${wy.get}</xml>")) shouldBe Success(fs)
+      case Failure(x) => fail(x)
+    }
+  }
 
   behavior of "ExtendedData"
 

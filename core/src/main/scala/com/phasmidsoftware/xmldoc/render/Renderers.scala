@@ -766,6 +766,13 @@ object Renderers {
       }
   } ^^ "charSequenceRenderer"
 
+  /**
+   * Implicit `Renderer` instance for `java.net.URI`, the counterpart to `Extractor.uriExtractor`.
+   */
+  implicit val uriRenderer: Renderer[java.net.URI] = Renderer[java.net.URI] {
+    (x, _, stateR) => renderAttribute(x.toString, stateR.maybeName)
+  } ^^ "uriRenderer"
+
   implicit val stringRenderer: Renderer[String] = rendererAnyWithName ^^ "stringRenderer"
 
   implicit val rendererOptionString: Renderer[Option[String]] = new Renderers {}.optionRenderer[String] ^^ "rendererOptionString"

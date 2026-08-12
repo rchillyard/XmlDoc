@@ -504,6 +504,17 @@ object Extractor {
     case x => Failure(XmlException(s"cannot convert $x to a Long"))
   }) ^^ "longExtractor"
 
+  /**
+   * URI extractor.
+   *
+   * NOTE: `java.net.URI`, not `java.net.URL` - KML's own "anyURI" fields (e.g. `styleUrl`) are
+   * frequently relative, fragment-only references (e.g. "#some-style"), which `URI` accepts but
+   * `URL` (which requires a recognized absolute scheme) rejects.
+   */
+  implicit val uriExtractor: Extractor[java.net.URI] = (charSequenceExtractor flatMap {
+    w => Try(new java.net.URI(w.toString))
+  }) ^^ "uriExtractor"
+
   val logger: Logger = LoggerFactory.getLogger(Extractor.getClass)
 }
 

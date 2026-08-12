@@ -1099,13 +1099,11 @@ object Feature extends Extractors with Renderers {
 /**
  * Properties of a Feature (and therefore all its sub-types).
  *
- * CONSIDER use StyleURL type for maybeStyleURL.
- *
  * CONSIDER redefining abstractView so that it can have only one optional AbstractView (according to KML spec.)
  *
  * @param name             the name (a Text).
  * @param maybeDescription an optional description: Option[Text].
- * @param maybeStyleUrl    an optional style URL: Option[String].
+ * @param maybeStyleUrl    an optional style URL: Option[StyleURL].
  * @param maybeOpen        an optional openness designation: Option[Int].
  * @param maybeExtendedData an optional ExtendedData: Option[ExtendedData].
  * @param maybeTimePrimitive an optional TimeStamp or TimeSpan, kept generic (see GenericElement) since
@@ -1114,7 +1112,7 @@ object Feature extends Extractors with Renderers {
  * @param StyleSelectors   a sequence of StyleSelectors: Seq[StyleSelector].
  * @param kmlData          (auxiliary) member: KmlData.
  */
-case class FeatureData(name: Text, maybeDescription: Option[Text], maybeStyleUrl: Option[Text], maybeOpen: Option[Open], maybeVisibility: Option[Visibility], maybeExtendedData: Option[ExtendedData], maybeTimePrimitive: Option[GenericElement], StyleSelectors: Seq[StyleSelector], abstractView: Seq[AbstractView])(val kmlData: KmlData) extends Mergeable[FeatureData] with HasName {
+case class FeatureData(name: Text, maybeDescription: Option[Text], maybeStyleUrl: Option[StyleURL], maybeOpen: Option[Open], maybeVisibility: Option[Visibility], maybeExtendedData: Option[ExtendedData], maybeTimePrimitive: Option[GenericElement], StyleSelectors: Seq[StyleSelector], abstractView: Seq[AbstractView])(val kmlData: KmlData) extends Mergeable[FeatureData] with HasName {
   /**
    * Method to merge FeatureData objects.
    *
@@ -3406,11 +3404,11 @@ object StyleSelectorData extends Extractors with Renderers {
 /**
  * A case class representing a style URL in the KML document context.
  *
- * This class encapsulates a character sequence
- * that serves as the identifier or reference to a style within a KML structure.
- * It provides a way to interact with style URLs within a KML processing framework.
+ * This class encapsulates a `java.net.URI` (Issue #44: not a bare `CharSequence`) that serves as
+ * the identifier or reference to a style within a KML structure - typically a fragment-only
+ * reference such as "#some-style", hence `URI` rather than the stricter `URL`.
  */
-case class StyleURL($: CharSequence)
+case class StyleURL($: java.net.URI)
 
 /**
  * Companion object for the `StyleURL` class, providing extractors and renderers for `StyleURL` instances.
@@ -3426,8 +3424,15 @@ object StyleURL extends Extractors with Renderers {
 
   import Renderers.*
 
-  implicit val extractor: Extractor[StyleURL] = extractor10(apply) ^^ "extractorStyleURL"
-  implicit val renderer: Renderer[StyleURL] = renderer1(apply) ^^ "rendererStyleURL"
+  /**
+   * Convenience factory for constructing a `StyleURL` directly from a `String`, e.g. in tests.
+   */
+  def apply(s: String): StyleURL = StyleURL(new java.net.URI(s))
+
+  implicit val extractor: Extractor[StyleURL] = extractor10((u: java.net.URI) => apply(u)) ^^ "extractorStyleURL"
+  implicit val extractorOpt: Extractor[Option[StyleURL]] = extractor.lift ^^ "extractorOptionStyleURL"
+  implicit val renderer: Renderer[StyleURL] = renderer1((u: java.net.URI) => apply(u)) ^^ "rendererStyleURL"
+  implicit val rendererOpt: Renderer[Option[StyleURL]] = renderer.lift ^^ "rendererOptionStyleURL"
 }
 
 /**
