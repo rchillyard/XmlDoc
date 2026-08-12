@@ -228,7 +228,9 @@ object Extractor {
    *              if the (text) content of the node, then the field should be "$";
    *              if a singleton child, then field is as is;
    *              if an attribute, then field should begin with "_";
-   *              if an optional child, then field should begin with "maybe".
+   *              if an optional child, then field should begin with "maybe" (the tag looked up is
+   *              lower-case-initial by default, e.g. "maybeStyleUrl" looks for "styleUrl", but falls
+   *              back to the capitalized form, e.g. "ExtendedData", if that's not found).
    * @tparam P the type to which Node should be converted.
    *           Required: implicit evidence of type `Extractor[P]`.
    * @return a `Try[P]`.
@@ -367,11 +369,19 @@ object Extractor {
       // NOTE child nodes are extracted using extractChildren, not here, but if the plural-sounding name is present in node, then we are OK
       case Plural(x) if (node \ field).isEmpty =>
         s"plural:" -> Failure(XmlException(s"extractField: incorrect usage for plural field: $x. Use extractChildren instead."))
-      // NOTE optional members such that the name begins with "maybe"
+      // NOTE optional members such that the name begins with "maybe".
+      // The captured tag x is always lower-case-initial (that's what "maybe" strips off and re-cases),
+      // which matches most KML element names, but not the handful of capitalized compound elements
+      // (e.g. ExtendedData). So, if the lower-case-initial lookup finds nothing, fall back to the
+      // capitalized form of the same tag before concluding the element is genuinely absent — and, if
+      // that also finds nothing, try any tags registered for this field via TagProperties.addAliases
+      // (e.g. maybeTimePrimitive's real tag is TimeStamp or TimeSpan, never "TimePrimitive" at all).
       case optional(x) =>
-        s"optional: $x" -> extractOptional[P](node / x) // CONSIDER using \\ like singleton below
+        val nodeSeq = node / x
+        val capitalized = if (nodeSeq.isEmpty) node / s"${x.head.toUpper}${x.tail}" else nodeSeq
+        val fallback = if (capitalized.isEmpty) TagProperties.aliases(x).flatMap(node / _) else capitalized
+        s"optional: $x" -> extractOptional[P](fallback) // CONSIDER using \\ like singleton below
       // NOTE this is the default case which is used for a singleton entity (plural entities would be extracted using extractChildren).
-      // TODO Issue #21 why would we be looking for a singleton LinearRing in a node which is an extrude node?
       case x =>
         s"singleton: $x" -> (extractSingleton[P](node / x) orElse extractSingleton[P](node \\ x))
     }
@@ -450,6 +460,9 @@ object Extractor {
       case CDATA(x) => Success(x)
       case x: xml.Text => Success(x.data)
       case _ => node.child.toSeq match {
+        // NOTE: an empty element (e.g. <description/>) has no children at all - that's just
+        // empty text content, not a failure to decode (Issue #19).
+        case Seq() => Success("")
         case Seq(x) => Success(x.text)
         case x => Failure(XmlException(s"charSequenceExtractor: cannot decode text node: $node: $x"))
       }
@@ -490,6 +503,17 @@ object Extractor {
     case w: String => Success(w.toLong)
     case x => Failure(XmlException(s"cannot convert $x to a Long"))
   }) ^^ "longExtractor"
+
+  /**
+   * URI extractor.
+   *
+   * NOTE: `java.net.URI`, not `java.net.URL` - KML's own "anyURI" fields (e.g. `styleUrl`) are
+   * frequently relative, fragment-only references (e.g. "#some-style"), which `URI` accepts but
+   * `URL` (which requires a recognized absolute scheme) rejects.
+   */
+  implicit val uriExtractor: Extractor[java.net.URI] = (charSequenceExtractor flatMap {
+    w => Try(new java.net.URI(w.toString))
+  }) ^^ "uriExtractor"
 
   val logger: Logger = LoggerFactory.getLogger(Extractor.getClass)
 }
@@ -855,7 +879,7 @@ object Plural extends JavaTokenParsers {
    *
    * @return a `Parser[String]` that matches one of the predefined singular terms ending in "s".
    */
-  private def singularEndsInS: Parser[String] = "innerBoundaryIs" | "outerBoundaryIs" | "coordinates" | "features" | "StyleSelectors" | "Styles"
+  private def singularEndsInS: Parser[String] = "innerBoundaryIs" | "outerBoundaryIs" | "coordinates" | "features" | "StyleSelectors" | "Styles" | "Alias"
 
   /**
    * Parses a valid root string composed of word characters (letters, digits, or underscores).

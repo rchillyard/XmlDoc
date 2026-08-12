@@ -101,8 +101,8 @@ class KMLEditorFuncSpec extends AnyFlatSpec with should.Matchers {
                     val coordinate: Coordinates = cs.head
                     val coordinates: Seq[Coordinate] = coordinate.coordinates
                     coordinates.size shouldBe 405
-                    coordinates.head shouldBe Coordinate("-70.25995", "41.69953", "0") // Yarmouth
-                    coordinates.last shouldBe Coordinate("-70.184376", "42.05095", "0") // P-town
+                    coordinates.head shouldBe Coordinate("-70.25995", "41.69953", Some("0")) // Yarmouth
+                    coordinates.last shouldBe Coordinate("-70.184376", "42.05095", Some("0")) // P-town
                 }
             }
         }

@@ -209,6 +209,20 @@ object FP {
     (x1, x2, x3, x4, x5, x6) => f(x1)(x2)(x3)(x4)(x5)(x6)
   }
 
+  /** Uncurrying for functions of arity 7.
+   *
+   */
+  def uncurried[T1, T2, T3, T4, T5, T6, T7, R](f: T1 => T2 => T3 => T4 => T5 => T6 => T7 => R): (T1, T2, T3, T4, T5, T6, T7) => R = {
+    (x1, x2, x3, x4, x5, x6, x7) => f(x1)(x2)(x3)(x4)(x5)(x6)(x7)
+  }
+
+  /** Uncurrying for functions of arity 8.
+   *
+   */
+  def uncurried[T1, T2, T3, T4, T5, T6, T7, T8, R](f: T1 => T2 => T3 => T4 => T5 => T6 => T7 => T8 => R): (T1, T2, T3, T4, T5, T6, T7, T8) => R = {
+    (x1, x2, x3, x4, x5, x6, x7, x8) => f(x1)(x2)(x3)(x4)(x5)(x6)(x7)(x8)
+  }
+
   /**
    * Applies a transformation function to the successful value of a Try if the value satisfies a predicate.
    * If the predicate fails, it returns a Failure with an exception indicating the reason.

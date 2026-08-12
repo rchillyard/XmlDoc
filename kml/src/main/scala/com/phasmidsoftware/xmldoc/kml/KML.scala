@@ -9,7 +9,6 @@ import com.phasmidsoftware.xmldoc.render.Renderers.{booleanRenderer, doubleRende
 import com.phasmidsoftware.xmldoc.xml.*
 import com.phasmidsoftware.xmldoc.xml.MultiExtractorBase.{NonNegative, Positive}
 
-import scala.io.Source
 import scala.util.*
 
 /**
@@ -76,6 +75,9 @@ object KmlData extends Extractors with Renderers {
  * and drape the overlay over the terrain.
  * - relativeToGround: Represents the altitude of the element relative to the actual ground elevation of a particular location.
  * - absolute: Represents the altitude of the coordinate relative to sea level
+ * - clampToSeaFloor, relativeToSeaFloor: gx: namespace extensions (see the `gx:altitudeMode`
+ * alias registered in AltitudeMode's companion object) - relative to the sea floor rather than
+ * the ground, for underwater features. Not part of plain KML's own altitudeMode enum.
  *
  * This object extends the capabilities of Enumeration to include Extractors and Renderers.
  *
@@ -85,7 +87,7 @@ object KmlData extends Extractors with Renderers {
  *
  */
 object AltitudeModeEnum extends Enumeration with Extractors with Renderers {
-  val clampToGround, relativeToGround, absolute = Value
+  val clampToGround, relativeToGround, absolute, clampToSeaFloor, relativeToSeaFloor = Value
   implicit val extractor: Extractor[AltitudeModeEnum.Value] = extractorEnum[Value, this.type](this)(identity)
   implicit val renderer: Renderer[AltitudeModeEnum.Value] = enumObjectRenderer
 }
@@ -338,6 +340,31 @@ object AbstractViewData extends Extractors with Renderers {
 }
 
 /**
+ * Case class Alias: sub-element of `ResourceMap`, mapping a texture reference used within a
+ * `Model`'s COLLADA file (`sourceHref`) to where that resource actually is within the KML/KMZ
+ * package (`targetHref`).
+ * See [[https://developers.google.com/kml/documentation/kmlreference#model Model]]
+ *
+ * @param maybeTargetHref the actual location of the resource: Option[Text].
+ * @param maybeSourceHref the texture reference as it appears in the COLLADA file: Option[Text].
+ */
+case class Alias(maybeTargetHref: Option[Text], maybeSourceHref: Option[Text])
+
+/**
+ * Companion object for the `Alias` case class, providing extractors and renderers for `Alias`
+ * instances and sequences thereof.
+ */
+object Alias extends Extractors with Renderers {
+
+  import Renderers.*
+
+  implicit val extractor: Extractor[Alias] = extractor20(apply) ^^ "extractorAlias"
+  implicit val extractorSeq: MultiExtractor[Seq[Alias]] = multiExtractorBase[Alias](NonNegative) ^^ "multiExtractorAlias"
+  implicit val renderer: Renderer[Alias] = renderer2(apply) ^^ "rendererAlias"
+  implicit val rendererSeq: Renderer[Seq[Alias]] = sequenceRenderer[Alias] ^^ "rendererAliases"
+}
+
+/**
  * Case class representing an altitude value.
  * See [[https://developers.google.com/kml/documentation/kmlreference#altitude Altitude]]
  *
@@ -390,9 +417,37 @@ case class AltitudeMode($: AltitudeModeEnum.Value)
  */
 object AltitudeMode extends Extractors with Renderers {
 
+  // Issue #29: Google Earth's gx: namespace extension uses gx:altitudeMode, rather than plain
+  // altitudeMode, specifically to carry the sea-floor-relative values (see AltitudeModeEnum) -
+  // e.g. altitudemode_reference.kml. Rendered output always uses the plain tag, regardless of
+  // which one was originally read; that's consistent with every other alias registered via
+  // TagProperties.addAliases elsewhere in this codebase.
+  TagProperties.addAliases("altitudeMode", Seq("gx:altitudeMode"))
+
   private val extractorAltitudeMode: Extractor[AltitudeMode] = extractor10(apply) ^^ "extractorAltitudeMode"
   implicit val extractorOpt: Extractor[Option[AltitudeMode]] = extractorAltitudeMode.lift ^^ "extractorOptAltitudeMode"
   implicit val rendererOpt: Renderer[Option[AltitudeMode]] = renderer1(apply).lift ^^ "rendererOptAltitudeMode"
+}
+
+/**
+ * Case class AxisScale: a generic, single-value scale factor along one axis, used by `ModelScale`
+ * for its `x`/`y`/`z` children.
+ *
+ * NOTE: see the comment on `RefreshInterval` for why this is wrapped rather than a bare `Double`.
+ *
+ * @param $ the scale factor.
+ */
+case class AxisScale($: Double)
+
+/**
+ * Companion object for the `AxisScale` case class, providing extractors and renderers.
+ */
+object AxisScale extends Extractors with Renderers {
+
+  import Renderers.*
+
+  implicit val extractor: Extractor[AxisScale] = extractor10(apply) ^^ "extractorAxisScale"
+  implicit val renderer: Renderer[AxisScale] = renderer1(apply) ^^ "rendererAxisScale"
 }
 
 /**
@@ -796,16 +851,17 @@ object Coordinates extends Extractors with Renderers {
   /**
    * Parses a given string representation of coordinates and returns a `Coordinates` instance.
    *
-   * The input string is expected to contain one or more lines, where each non-empty line
-   * represents a coordinate in a format that can be processed to create a `Coordinate` instance.
+   * Per the KML spec, tuples within a `coordinates` element are separated by any number of
+   * spaces or newlines, not necessarily one tuple per line - real-world (tool-generated) KML
+   * commonly packs several tuples onto a single line, so this splits on any run of whitespace
+   * rather than only on line breaks.
    *
-   * @param w a string containing the representation of one or more coordinates, with each
-   *          coordinate on a separate line.
-   *          Empty or whitespace-only lines are ignored.
+   * @param w a string containing the representation of one or more coordinate tuples, separated
+   *          by whitespace (spaces and/or newlines).
    * @return a `Coordinates` instance containing the parsed `Coordinate` objects extracted
    *         from the input string.
    */
-  def parse(w: String): Coordinates = Coordinates((for (line <- Source.fromString(w).getLines(); if line.trim.nonEmpty) yield Coordinate(line)).toSeq)
+  def parse(w: String): Coordinates = Coordinates(w.trim.split("\\s+").filter(_.nonEmpty).map(Coordinate(_)).toSeq)
 
   /**
    * Represents an instance of `Coordinates` without any elements.
@@ -814,6 +870,30 @@ object Coordinates extends Extractors with Renderers {
    * created with an empty sequence of `Coordinate` objects.
    */
   val empty: Coordinates = Coordinates(Nil)
+}
+
+/**
+ * Case class Data: sub-element of ExtendedData, representing an untyped name/value pair.
+ * See [[https://developers.google.com/kml/documentation/kmlreference#extendeddata Data]]
+ *
+ * @param _name            the name of this Data element (an XML attribute).
+ * @param maybeDisplayName an optional user-friendly display name: Option[Text].
+ * @param value            the value: Text.
+ */
+case class Data(_name: CharSequence, maybeDisplayName: Option[Text], value: Text)
+
+/**
+ * Companion object for the `Data` case class, providing extractors and renderers for `Data`
+ * instances and sequences thereof.
+ */
+object Data extends Extractors with Renderers {
+
+  import Renderers.*
+
+  implicit val extractor: Extractor[Data] = extractor30(apply) ^^ "extractorData"
+  implicit val extractorSeq: MultiExtractor[Seq[Data]] = multiExtractorBase[Data](NonNegative) ^^ "multiExtractorData"
+  implicit val renderer: Renderer[Data] = renderer3(apply) ^^ "rendererData"
+  implicit val rendererSeq: Renderer[Seq[Data]] = sequenceRenderer[Data] ^^ "rendererDatas"
 }
 
 /**
@@ -914,6 +994,29 @@ object DrawOrder extends Extractors with Renderers {
 
 
 /**
+ * Case class ExtendedData: optional sub-element of Feature, providing custom data in addition to
+ * the standard KML fields.
+ * See [[https://developers.google.com/kml/documentation/kmlreference#extendeddata ExtendedData]]
+ *
+ * @param Data       a sequence of untyped name/value pairs: Seq[Data].
+ * @param SchemaData a sequence of Schema-typed name/value pairs: Seq[SchemaData].
+ */
+case class ExtendedData(Data: Seq[Data], SchemaData: Seq[SchemaData])
+
+/**
+ * Companion object for the `ExtendedData` case class.
+ * Provides extractor and renderer instances for working with the `ExtendedData` type and
+ * `Option[ExtendedData]`.
+ */
+object ExtendedData extends Extractors with Renderers {
+
+  implicit val extractor: Extractor[ExtendedData] = extractor02(apply) ^^ "extractorExtendedData"
+  implicit val extractorOpt: Extractor[Option[ExtendedData]] = extractor.lift ^^ "extractorOptionExtendedData"
+  implicit val renderer: Renderer[ExtendedData] = renderer2(apply) ^^ "rendererExtendedData"
+  implicit val rendererOpt: Renderer[Option[ExtendedData]] = renderer.lift ^^ "rendererOptionExtendedData"
+}
+
+/**
  * Class Extrude which represents a `Boolean`.
  * Used by `LineString` and `Polygon`.
  * Similar to `Tessellate`--and in fact they often go together.
@@ -987,27 +1090,29 @@ trait Feature extends KmlObject {
 object Feature extends Extractors with Renderers {
 
   implicit val extractorSeq: MultiExtractor[Seq[Feature]] =
-    MultiExtractor.createLazy(multiExtractor6[Feature, (Folder, Document, Placemark, GroundOverlay, PhotoOverlay, ScreenOverlay), Folder, Document, Placemark, GroundOverlay, PhotoOverlay, ScreenOverlay]((f, d, p, go, po, so) =>
-      (f, d, p, go, po, so), Seq("Folder", "Document", "Placemark", "GroundOverlay", "PhotoOverlay", "ScreenOverlay")) ^^ "multiExtractorFeature")
-  implicit val renderer: Renderer[Feature] = Renderer.createLazy(rendererSuper5[Feature, Placemark, Container, GroundOverlay, PhotoOverlay, ScreenOverlay] ^^ "rendererFeature")
+    MultiExtractor.createLazy(multiExtractor7[Feature, (Folder, Document, Placemark, GroundOverlay, PhotoOverlay, ScreenOverlay, NetworkLink), Folder, Document, Placemark, GroundOverlay, PhotoOverlay, ScreenOverlay, NetworkLink]((f, d, p, go, po, so, nl) =>
+      (f, d, p, go, po, so, nl), Seq("Folder", "Document", "Placemark", "GroundOverlay", "PhotoOverlay", "ScreenOverlay", "NetworkLink")) ^^ "multiExtractorFeature")
+  implicit val renderer: Renderer[Feature] = Renderer.createLazy(rendererSuper6[Feature, Placemark, Container, GroundOverlay, PhotoOverlay, ScreenOverlay, NetworkLink] ^^ "rendererFeature")
   implicit val rendererSeq: Renderer[Seq[Feature]] = sequenceRenderer[Feature] ^^ "rendererFeatures"
 }
 
 /**
  * Properties of a Feature (and therefore all its sub-types).
  *
- * CONSIDER use StyleURL type for maybeStyleURL.
- *
  * CONSIDER redefining abstractView so that it can have only one optional AbstractView (according to KML spec.)
  *
  * @param name             the name (a Text).
  * @param maybeDescription an optional description: Option[Text].
- * @param maybeStyleUrl    an optional style URL: Option[String].
+ * @param maybeStyleUrl    an optional style URL: Option[StyleURL].
  * @param maybeOpen        an optional openness designation: Option[Int].
+ * @param maybeExtendedData an optional ExtendedData: Option[ExtendedData].
+ * @param maybeTimePrimitive an optional TimeStamp or TimeSpan, kept generic (see GenericElement) since
+ *                            TimePrimitive is an abstract type and its real tag is never literally
+ *                            "TimePrimitive": Option[GenericElement].
  * @param StyleSelectors   a sequence of StyleSelectors: Seq[StyleSelector].
  * @param kmlData          (auxiliary) member: KmlData.
  */
-case class FeatureData(name: Text, maybeDescription: Option[Text], maybeStyleUrl: Option[Text], maybeOpen: Option[Open], maybeVisibility: Option[Visibility], StyleSelectors: Seq[StyleSelector], abstractView: Seq[AbstractView])(val kmlData: KmlData) extends Mergeable[FeatureData] with HasName {
+case class FeatureData(name: Text, maybeDescription: Option[Text], maybeStyleUrl: Option[StyleURL], maybeOpen: Option[Open], maybeVisibility: Option[Visibility], maybeExtendedData: Option[ExtendedData], maybeTimePrimitive: Option[GenericElement], StyleSelectors: Seq[StyleSelector], abstractView: Seq[AbstractView])(val kmlData: KmlData) extends Mergeable[FeatureData] with HasName {
   /**
    * Method to merge FeatureData objects.
    *
@@ -1020,7 +1125,7 @@ case class FeatureData(name: Text, maybeDescription: Option[Text], maybeStyleUrl
       n <- if (mergeName) name merge f.name else Some(name)
       d = mergeOptions(maybeDescription, f.maybeDescription)((t1, t2) => t1 merge t2)
       z <- kmlData merge f.kmlData
-    } yield FeatureData(n, d, maybeStyleUrl, maybeOpen, maybeVisibility, StyleSelectors, abstractView)(z) // TODO: not all fields are properly merged
+    } yield FeatureData(n, d, maybeStyleUrl, maybeOpen, maybeVisibility, maybeExtendedData, maybeTimePrimitive, StyleSelectors, abstractView)(z) // TODO: not all fields are properly merged
   }
 }
 
@@ -1042,10 +1147,14 @@ object FeatureData extends Extractors with Renderers {
 
   import Renderers.*
 
+  // TimePrimitive's real tag is TimeStamp or TimeSpan, never "timePrimitive"/"TimePrimitive" -
+  // see doExtractField's optional case in core's Extractor.scala.
+  TagProperties.addAliases("timePrimitive", Seq("TimeStamp", "TimeSpan"))
+
   implicit val extractor: Extractor[FeatureData] =
-    extractorPartial[KmlData, FeatureData](extractorPartial52(apply)) ^^ "extractorFeatureData"
+    extractorPartial[KmlData, FeatureData](extractorPartial72(apply)) ^^ "extractorFeatureData"
   implicit val renderer: Renderer[FeatureData] =
-    renderer7Super(apply)(_.kmlData) ^^ "rendererFeatureData"
+    renderer9Super(apply)(_.kmlData) ^^ "rendererFeatureData"
 }
 
 /**
@@ -1101,7 +1210,9 @@ object FlyToView extends Extractors with Renderers {
   import Renderers.*
 
   implicit val extractor: Extractor[FlyToView] = extractor10(apply) ^^ "extractorFlyToView"
+  implicit val extractorOpt: Extractor[Option[FlyToView]] = extractor.lift ^^ "extractorOptionFlyToView"
   implicit val renderer: Renderer[FlyToView] = renderer1(apply) ^^ "rendererFlyToView"
+  implicit val rendererOpt: Renderer[Option[FlyToView]] = renderer.lift ^^ "rendererOptionFlyToView"
 }
 
 
@@ -1182,9 +1293,16 @@ trait Geometry extends KmlObject with Mergeable[Geometry] with Invertible[Geomet
  * - `rendererSeq`: An implicit utility for rendering sequences of `Geometry` instances.
  */
 object Geometry extends Extractors with Renderers {
+  // NOTE: MultiGeometry recursively contains Geometry, so this and MultiGeometry's own
+  // extractor/renderer are mutually dependent implicits - exactly the same shape as
+  // Feature/Container (a Container holds Seq[Feature], and Folder/Document are themselves
+  // Features). Following that precedent: createLazy's argument is by-name, so it's not
+  // evaluated at all until the returned Extractor/Renderer is actually invoked, by which point
+  // both objects are fully constructed.
   implicit val extractorSeq: MultiExtractor[Seq[Geometry]] =
-    multiExtractor4[Geometry, (LineString, Point, Polygon, LinearRing), LineString, Point, Polygon, LinearRing]((ls, pt, pg, lr) => (ls, pt, pg, lr), Seq("LineString", "Point", "Polygon", "LinearRing")) ^^ "multiExtractorGeometry"
-  implicit val renderer: Renderer[Geometry] = rendererSuper4[Geometry, Point, LineString, Polygon, LinearRing] ^^ "rendererGeometry"
+    MultiExtractor.createLazy(multiExtractor6[Geometry, (LineString, Point, Polygon, LinearRing, MultiGeometry, Model), LineString, Point, Polygon, LinearRing, MultiGeometry, Model]((ls, pt, pg, lr, mg, mo) => (ls, pt, pg, lr, mg, mo), Seq("LineString", "Point", "Polygon", "LinearRing", "MultiGeometry", "Model")) ^^ "multiExtractorGeometry")
+  implicit val renderer: Renderer[Geometry] =
+    Renderer.createLazy(rendererSuper6[Geometry, Point, LineString, Polygon, LinearRing, MultiGeometry, Model] ^^ "rendererGeometry")
   implicit val rendererSeq: Renderer[Seq[Geometry]] = sequenceRenderer[Geometry] ^^ "rendererGeometrys"
 }
 
@@ -1388,10 +1506,23 @@ case class InnerBoundaryIs(LinearRing: LinearRing)
  * Companion class to InnerBoundaryIs.
  */
 object InnerBoundaryIs extends Extractors with Renderers {
+  // NOTE: InnerBoundaryIs and OuterBoundaryIs are structurally identical (both just wrap a
+  // LinearRing) - they're distinguished only by their own element's tag, not by shape. When no
+  // literal <innerBoundaryIs> tag is present, extractChildren's generic extractAll fallback tries
+  // to structurally match every child of the enclosing Polygon against InnerBoundaryIs's shape,
+  // with no idea that a sibling <outerBoundaryIs> is spoken for by a different field of the same
+  // Polygon - and since it has the same shape, it wrongly "matches" too. Registering this tag as
+  // a must-match tag skips that fallback for this field entirely: a missing literal tag just
+  // means zero results, as it should, rather than borrowing a sibling field's content.
+  TagProperties.addMustMatch("innerBoundaryIs")
+
   implicit val extractor: Extractor[InnerBoundaryIs] = extractor10(apply) ^^ "extractorInnerBoundaryIs"
   implicit val extractorSeq: MultiExtractor[Seq[InnerBoundaryIs]] = multiExtractorBase[InnerBoundaryIs](NonNegative) ^^ "multiExtractorInnerBoundaryIs"
   implicit val renderer: Renderer[InnerBoundaryIs] = renderer1(apply) ^^ "rendererInnerBoundaryIs"
-  implicit val rendererSeq: Renderer[Seq[InnerBoundaryIs]] = sequenceRenderer[InnerBoundaryIs] ^^ "rendererInnerBoundaryIs"
+  // NOTE: sequenceRenderer (not used here) lets each element render under its own class's name -
+  // right for a polymorphic Seq, but here InnerBoundaryIs's class name doesn't match its actual
+  // KML tag ("innerBoundaryIs", lower-case-initial), so the name has to be forced explicitly.
+  implicit val rendererSeq: Renderer[Seq[InnerBoundaryIs]] = sequenceRendererNamed[InnerBoundaryIs]("innerBoundaryIs") ^^ "rendererInnerBoundaryIs"
 }
 
 /**
@@ -1550,6 +1681,11 @@ object KML extends Extractors with Renderers {
    * to the must-match list of tags in the TagProperties object.
    * This ensures
    * that the specified tag must conform to certain matching criteria.
+   *
+   * NOTE: no longer necessary to call this explicitly - InnerBoundaryIs's own companion object
+   * now registers this same tag as a side effect of being loaded, which happens automatically
+   * the first time anything triggers Polygon's extractor. Kept for backward compatibility;
+   * calling it is harmless (the registration is idempotent).
    *
    * @return Unit This method has no return value.
    */
@@ -1724,10 +1860,10 @@ object LinearRing extends Extractors with Renderers {
  *
  * See [[https://developers.google.com/kml/documentation/kmlreference#linestring LineString]]
  *
- * @param tessellate  the tessellation.
- * @param coordinates a sequence of Coordinates objects.
+ * @param maybeTessellate the (optional) tessellation.
+ * @param coordinates     a sequence of Coordinates objects.
  */
-case class LineString(tessellate: Tessellate, coordinates: Seq[Coordinates])(val geometryData: GeometryData) extends Geometry {
+case class LineString(maybeTessellate: Option[Tessellate], coordinates: Seq[Coordinates])(val geometryData: GeometryData) extends Geometry {
 
   import Coordinates.empty
 
@@ -1746,12 +1882,11 @@ case class LineString(tessellate: Tessellate, coordinates: Seq[Coordinates])(val
   override def merge(g: Geometry, mergeName: Boolean = true): Option[Geometry] = g match {
     case l@LineString(_, _) =>
       for {
-        t <- tessellate merge l.tessellate
         g <- geometryData merge l.geometryData
         c <- mergeSequence(coordinates)(empty).headOption
         d <- mergeSequence(l.coordinates)(empty).headOption
         z <- c merge d
-      } yield LineString(t, Seq(z))(g)
+      } yield LineString(mergeOptions(maybeTessellate, l.maybeTessellate)((t1, t2) => t1 merge t2), Seq(z))(g)
   }
 
   /**
@@ -1760,7 +1895,7 @@ case class LineString(tessellate: Tessellate, coordinates: Seq[Coordinates])(val
    *
    * @return an `Option` containing the inverted `LineString` instance if successful.
    */
-  override def invert: Option[LineString] = Some(LineString(tessellate, for (c <- coordinates) yield c.reverse)(geometryData))
+  override def invert: Option[LineString] = Some(LineString(maybeTessellate, for (c <- coordinates) yield c.reverse)(geometryData))
 
 }
 
@@ -1811,6 +1946,36 @@ object LineStyle extends Extractors with Renderers {
     renderer1Super(apply)(_.colorStyleData) ^^ "rendererLineStyle"
   implicit val rendererOpt: Renderer[Option[LineStyle]] =
     renderer.lift ^^ "rendererOptionLineStyle"
+}
+
+/**
+ * Case class Link, used by `NetworkLink` and `Model` to reference an external resource, with
+ * control over how and when it's refreshed.
+ * See [[https://developers.google.com/kml/documentation/kmlreference#link Link]]
+ *
+ * @param maybeHref            the location of the resource: Option[Text].
+ * @param maybeRefreshMode     an optional refresh mode: Option[RefreshMode].
+ * @param maybeRefreshInterval an optional refresh interval: Option[RefreshInterval].
+ * @param maybeViewRefreshMode an optional view refresh mode: Option[ViewRefreshMode].
+ * @param maybeViewRefreshTime an optional view refresh time: Option[ViewRefreshTime].
+ * @param maybeViewBoundScale  an optional scale factor for the view bounding box: Option[ViewBoundScale].
+ * @param maybeViewFormat      an optional format string for the view: Option[Text].
+ * @param maybeHttpQuery       an optional format string for an HTTP query: Option[Text].
+ */
+case class Link(maybeHref: Option[Text], maybeRefreshMode: Option[RefreshMode], maybeRefreshInterval: Option[RefreshInterval], maybeViewRefreshMode: Option[ViewRefreshMode], maybeViewRefreshTime: Option[ViewRefreshTime], maybeViewBoundScale: Option[ViewBoundScale], maybeViewFormat: Option[Text], maybeHttpQuery: Option[Text])
+
+/**
+ * Companion object for the `Link` case class, providing extractors and renderers for `Link`
+ * and `Option[Link]`.
+ */
+object Link extends Extractors with Renderers {
+
+  import Renderers.*
+
+  implicit val extractor: Extractor[Link] = extractor80(apply) ^^ "extractorLink"
+  implicit val extractorOpt: Extractor[Option[Link]] = extractor.lift ^^ "extractorOptionLink"
+  implicit val renderer: Renderer[Link] = renderer8(apply) ^^ "rendererLink"
+  implicit val rendererOpt: Renderer[Option[Link]] = renderer.lift ^^ "rendererOptionLink"
 }
 
 /**
@@ -1878,6 +2043,27 @@ object ListStyle extends Extractors with Renderers {
     extractorPartial[ColorStyleData, ListStyle](extractorPartial30(apply)) ^^ "extractorListStyle"
   implicit val renderer: Renderer[ListStyle] =
     renderer3Super(apply)(_.colorStyleData) ^^ "rendererListStyle"
+}
+
+/**
+ * Case class Location: sub-element of `Model`, specifying where the model is draped onto the
+ * Earth's surface.
+ * See [[https://developers.google.com/kml/documentation/kmlreference#model Model]]
+ *
+ * @param longitude    the longitude of the model's origin.
+ * @param latitude     the latitude of the model's origin.
+ * @param maybeAltitude an optional altitude of the model's origin: Option[Altitude].
+ */
+case class Location(longitude: Longitude, latitude: Latitude, maybeAltitude: Option[Altitude])
+
+/**
+ * Companion object for the `Location` case class, providing extractors and renderers.
+ */
+object Location extends Extractors with Renderers {
+  implicit val extractor: Extractor[Location] = extractor30(apply) ^^ "extractorLocation"
+  implicit val extractorOpt: Extractor[Option[Location]] = extractor.lift ^^ "extractorOptionLocation"
+  implicit val renderer: Renderer[Location] = renderer3(apply) ^^ "rendererLocation"
+  implicit val rendererOpt: Renderer[Option[Location]] = renderer.lift ^^ "rendererOptionLocation"
 }
 
 /**
@@ -1950,6 +2136,131 @@ object LookAt extends Extractors with Renderers {
 }
 
 /**
+ * Case class Model, which extends Geometry: a 3D object described in a COLLADA file, placed at a
+ * given location and orientation, and scaled.
+ * See [[https://developers.google.com/kml/documentation/kmlreference#model Model]]
+ *
+ * NOTE: altitude mode is not one of this class's own fields, unlike the KML spec's own grouping -
+ * it's already provided by every Geometry subtype via the shared `geometryData` aux (see
+ * `GeometryData.maybeAltitudeMode`), so adding it again here would render it twice.
+ *
+ * @param maybeLocation      an optional location on the Earth's surface: Option[Location].
+ * @param maybeOrientation   an optional orientation: Option[Orientation].
+ * @param maybeScale         an optional scale factor along each axis: Option[ModelScale].
+ * @param maybeLink          an optional reference to the COLLADA (.dae) file: Option[Link].
+ * @param maybeResourceMap   an optional map from the COLLADA file's own texture references to
+ *                           where those resources actually are in this KML/KMZ package: Option[ResourceMap].
+ * @param geometryData       the other properties of the Model.
+ */
+case class Model(maybeLocation: Option[Location], maybeOrientation: Option[Orientation], maybeScale: Option[ModelScale], maybeLink: Option[Link], maybeResourceMap: Option[ResourceMap])(val geometryData: GeometryData) extends Geometry
+
+/**
+ * Companion object for the `Model` case class, providing extractors and renderers.
+ */
+object Model extends Extractors with Renderers {
+  implicit val extractor: Extractor[Model] =
+    extractorPartial[GeometryData, Model](extractorPartial50(apply)) ^^ "extractorModel"
+  implicit val renderer: Renderer[Model] =
+    renderer5Super(apply)(_.geometryData) ^^ "rendererModel"
+}
+
+/**
+ * Case class ModelScale: sub-element of `Model`, a scale factor to apply along each of the three
+ * axes. Named `ModelScale` (not `Scale`, which already exists elsewhere in this file for the
+ * unrelated, single-value icon/label scale factor) since the two are structurally different -
+ * only the actual XML tag ("Scale") is shared between them, which is fine since it's `Model`'s
+ * own field name (not this class's name) that determines the tag used.
+ * See [[https://developers.google.com/kml/documentation/kmlreference#model Model]]
+ *
+ * @param x the scale factor along the x axis: AxisScale.
+ * @param y the scale factor along the y axis: AxisScale.
+ * @param z the scale factor along the z axis: AxisScale.
+ */
+case class ModelScale(x: AxisScale, y: AxisScale, z: AxisScale)
+
+/**
+ * Companion object for the `ModelScale` case class, providing extractors and renderers.
+ */
+object ModelScale extends Extractors with Renderers {
+
+  import Renderers.*
+
+  implicit val extractor: Extractor[ModelScale] = extractor30(apply) ^^ "extractorModelScale"
+  implicit val extractorOpt: Extractor[Option[ModelScale]] = extractor.lift ^^ "extractorOptionModelScale"
+  implicit val renderer: Renderer[ModelScale] = renderer3(apply) ^^ "rendererModelScale"
+  implicit val rendererOpt: Renderer[Option[ModelScale]] = renderer.lift ^^ "rendererOptionModelScale"
+}
+
+/**
+  * Case class MultiGeometry which extends Geometry: a collection of other Geometry elements
+  * (Point, LineString, LinearRing, Polygon, and recursively MultiGeometry itself).
+  *
+  * See [[https://developers.google.com/kml/documentation/kmlreference#multigeometry MultiGeometry]]
+  *
+  * @param Geometry     the child Geometry elements. NOTE: capitalized (matching Placemark's
+  *                     own field of the same type) rather than pluralized ("geometries"): a
+  *                     plural-looking field name triggers extractChildren's stricter,
+  *                     literal-tag-only lookup, which has no fallback to type-based matching -
+  *                     this needs the fallback, since there's no literal "&lt;geometry&gt;" tag.
+  * @param geometryData the other properties of the MultiGeometry.
+  */
+case class MultiGeometry(Geometry: Seq[Geometry])(val geometryData: GeometryData) extends Geometry
+
+/**
+  * Companion object for the case class MultiGeometry.
+  *
+  * This object provides utilities for working with the MultiGeometry type,
+  * including extractors and renderers to handle serialization and parsing.
+  *
+  * Utilities:
+  * - Provides an implicit extractor to parse MultiGeometry objects from GeometryData.
+  * - Provides an implicit renderer for serializing MultiGeometry objects.
+  * - Provides a renderer for sequences of MultiGeometry objects.
+  */
+object MultiGeometry extends Extractors with Renderers {
+  // No deferral needed on this side: by the time anything here runs, Geometry.extractorSeq/
+  // renderer are already fully constructed (see the NOTE there) - simple values holding
+  // undeferred lambdas, safe to fetch eagerly.
+  implicit val extractor: Extractor[MultiGeometry] =
+    extractorPartial[GeometryData, MultiGeometry](extractorPartial01(apply)) ^^ "extractorMultiGeometry"
+  implicit val renderer: Renderer[MultiGeometry] =
+    renderer1Super(apply)(_.geometryData) ^^ "rendererMultiGeometry"
+  implicit val rendererSeq: Renderer[Seq[MultiGeometry]] =
+    sequenceRenderer[MultiGeometry] ^^ "rendererMultiGeometrys"
+}
+
+/**
+ * Case class NetworkLink: subtype of Feature, referencing a KML file or KMZ archive on a local
+ * or remote network, optionally with rules for automatically refreshing it.
+ * See [[https://developers.google.com/kml/documentation/kmlreference#networklink NetworkLink]]
+ *
+ * @param maybeRefreshVisibility whether to reset the visibility of features when the file is
+ *                               refreshed: Option[RefreshVisibility].
+ * @param maybeFlyToView         whether a view change is limited to the extent of the referenced
+ *                               feature: Option[FlyToView].
+ * @param maybeLink              the location of, and refresh rules for, the referenced resource:
+ *                               Option[Link].
+ * @param featureData            the (auxiliary) FeatureData, shared by sub-elements.
+ */
+case class NetworkLink(maybeRefreshVisibility: Option[RefreshVisibility], maybeFlyToView: Option[FlyToView], maybeLink: Option[Link])(val featureData: FeatureData) extends Feature with HasName {
+  def name: Text = featureData.name
+
+  override def toString: String = s"NetworkLink: name=${name.$}"
+}
+
+/**
+ * Companion object for the `NetworkLink` case class, providing extractors and renderers.
+ */
+object NetworkLink extends Extractors with Renderers {
+  implicit val extractor: Extractor[NetworkLink] =
+    extractorPartial[FeatureData, NetworkLink](extractorPartial30(apply)) ^^ "extractorNetworkLink"
+  implicit val renderer: Renderer[NetworkLink] =
+    renderer3Super(apply)(_.featureData) ^^ "rendererNetworkLink"
+  implicit val rendererSeq: Renderer[Seq[NetworkLink]] =
+    sequenceRenderer[NetworkLink] ^^ "rendererNetworkLinks"
+}
+
+/**
  * Represents an `Open` state with a single boolean parameter.
  *
  * @param $ A boolean value indicating the open state.
@@ -1971,6 +2282,27 @@ object Open extends Extractors with Renderers {
   implicit val extractorOpt: Extractor[Option[Open]] = openExtractor.lift ^^ "extractorOptionOpen"
   implicit val renderer: Renderer[Open] = renderer1(apply) ^^ "rendererOptionOpen"
   implicit val rendererOpt: Renderer[Option[Open]] = renderer.lift ^^ "rendererOptionOpen"
+}
+
+/**
+ * Case class Orientation: sub-element of `Model`, describing the rotations to apply to the
+ * COLLADA model to position it correctly.
+ * See [[https://developers.google.com/kml/documentation/kmlreference#model Model]]
+ *
+ * @param heading the rotation about the z axis (normal to the Earth's surface).
+ * @param tilt    the rotation about the x axis.
+ * @param roll    the rotation about the y axis.
+ */
+case class Orientation(heading: Heading, tilt: Tilt, roll: Roll)
+
+/**
+ * Companion object for the `Orientation` case class, providing extractors and renderers.
+ */
+object Orientation extends Extractors with Renderers {
+  implicit val extractor: Extractor[Orientation] = extractor30(apply) ^^ "extractorOrientation"
+  implicit val extractorOpt: Extractor[Option[Orientation]] = extractor.lift ^^ "extractorOptionOrientation"
+  implicit val renderer: Renderer[Orientation] = renderer3(apply) ^^ "rendererOrientation"
+  implicit val rendererOpt: Renderer[Option[Orientation]] = renderer.lift ^^ "rendererOptionOrientation"
 }
 
 /**
@@ -2324,7 +2656,12 @@ case class Placemark(Geometry: Seq[Geometry])(val featureData: FeatureData) exte
     e match {
       case KmlEdit(command@(JOIN | JOINX), _, Element("Placemark", nameToMatch1), Some(Element("Placemark", nameToMatch2)))
         if name.matches(nameToMatch1) =>
-        Some(joinMatchedPlacemarks(fs, nameToMatch2, command == JOIN))
+        // NOTE: Issue #20. If no sibling matches nameToMatch2, joinMatchedPlacemarks yields None,
+        // and mapping (rather than unconditionally wrapping in Some) keeps this None as the
+        // outer result too - which editToOption's caller treats as "this edit doesn't apply,
+        // leave unchanged" rather than "delete this Placemark". Previously, an unmatched partner
+        // silently deleted this Placemark even though it was never actually joined with anything.
+        joinMatchedPlacemarks(fs, nameToMatch2, command == JOIN) map Some.apply
       case _ =>
         None
     }
@@ -2354,7 +2691,8 @@ case class Placemark(Geometry: Seq[Geometry])(val featureData: FeatureData) exte
    */
   private def joinMatchingPlacemarks(name: String, feature: Feature, mergeName: Boolean) = feature match {
     case q: Placemark if q.name.matches(name) => merge(q, mergeName)
-    // FIXME Issue #20 can result in this Placemark being lost if name doesn't match q.name
+    // NOTE: this sibling isn't the join partner - not itself a problem, since
+    // joinMatchedPlacemarks tries every sibling and only cares whether any of them matched.
     case _ => None
   }
 }
@@ -2498,6 +2836,33 @@ object Range extends Extractors with Renderers {
 }
 
 /**
+ * RefreshInterval represents the number of seconds to wait before refreshing a `Link`.
+ * See [[https://developers.google.com/kml/documentation/kmlreference#link Link]]
+ *
+ * NOTE: this is a plain Double wrapped in its own class - like `Rotation`/`Range`/`Heading` etc.
+ * elsewhere in this file - rather than a bare `Double` field, because `doubleRenderer` always
+ * renders itself as attribute-shaped text (`name="value"`), which is only ever correct when the
+ * enclosing field name starts with "_" (a genuine XML attribute); for an ordinary child element
+ * like this one, it has to go through the same single-field-wrapper machinery as those others.
+ *
+ * @param $ the refresh interval, in seconds.
+ */
+case class RefreshInterval($: Double)
+
+/**
+ * Companion object for the `RefreshInterval` case class, providing extractors and renderers.
+ */
+object RefreshInterval extends Extractors with Renderers {
+
+  import Renderers.*
+
+  implicit val extractor: Extractor[RefreshInterval] = extractor10(apply) ^^ "extractorRefreshInterval"
+  implicit val extractorOpt: Extractor[Option[RefreshInterval]] = extractor.lift ^^ "extractorOptionRefreshInterval"
+  implicit val renderer: Renderer[RefreshInterval] = renderer1(apply) ^^ "rendererRefreshInterval"
+  implicit val rendererOpt: Renderer[Option[RefreshInterval]] = renderer.lift ^^ "rendererOptionRefreshInterval"
+}
+
+/**
  * RefreshMode which has values "onChange" , "onInterval" or "onExpire".
  * Used by Link, Icon.
  *
@@ -2549,6 +2914,25 @@ object RefreshVisibility extends Extractors with Renderers {
   implicit val extractorOpt: Extractor[Option[RefreshVisibility]] = extractor.lift ^^ "extractorOptionRefreshVisibility"
   implicit val renderer: Renderer[RefreshVisibility] = renderer1(apply) ^^ "rendererRefreshVisibility"
   implicit val rendererOpt: Renderer[Option[RefreshVisibility]] = renderer1(apply).lift ^^ "rendererOptionRefreshVisibility"
+}
+
+/**
+ * Case class ResourceMap: sub-element of `Model`, mapping each texture reference used within the
+ * COLLADA file to where that resource actually is within this KML/KMZ package.
+ * See [[https://developers.google.com/kml/documentation/kmlreference#model Model]]
+ *
+ * @param Alias a sequence of source-to-target reference mappings: Seq[Alias].
+ */
+case class ResourceMap(Alias: Seq[Alias])
+
+/**
+ * Companion object for the `ResourceMap` case class, providing extractors and renderers.
+ */
+object ResourceMap extends Extractors with Renderers {
+  implicit val extractor: Extractor[ResourceMap] = extractor01(apply) ^^ "extractorResourceMap"
+  implicit val extractorOpt: Extractor[Option[ResourceMap]] = extractor.lift ^^ "extractorOptionResourceMap"
+  implicit val renderer: Renderer[ResourceMap] = renderer1(apply) ^^ "rendererResourceMap"
+  implicit val rendererOpt: Renderer[Option[ResourceMap]] = renderer.lift ^^ "rendererOptionResourceMap"
 }
 
 /**
@@ -2676,6 +3060,31 @@ object Scale extends Extractors with Renderers {
 }
 
 /**
+ * Case class SchemaData: sub-element of ExtendedData, providing typed name/value pairs whose
+ * types are defined by a Schema element elsewhere in the document (that Schema definition itself
+ * is not modeled here).
+ * See [[https://developers.google.com/kml/documentation/kmlreference#extendeddata SchemaData]]
+ *
+ * @param _schemaUrl a reference to the Schema which defines this SchemaData's fields (an XML attribute).
+ * @param SimpleData a sequence of typed name/value pairs: Seq[SimpleData].
+ */
+case class SchemaData(_schemaUrl: CharSequence, SimpleData: Seq[SimpleData])
+
+/**
+ * Companion object for the `SchemaData` case class, providing extractors and renderers for
+ * `SchemaData` instances and sequences thereof.
+ */
+object SchemaData extends Extractors with Renderers {
+
+  import Renderers.*
+
+  implicit val extractor: Extractor[SchemaData] = extractor11(apply) ^^ "extractorSchemaData"
+  implicit val extractorSeq: MultiExtractor[Seq[SchemaData]] = multiExtractorBase[SchemaData](NonNegative) ^^ "multiExtractorSchemaData"
+  implicit val renderer: Renderer[SchemaData] = renderer2(apply) ^^ "rendererSchemaData"
+  implicit val rendererSeq: Renderer[Seq[SchemaData]] = sequenceRenderer[SchemaData] ^^ "rendererSchemaDatas"
+}
+
+/**
  * Represents a screen overlay, which combines graphical data with specific positional and rotation details.
  * See [[https://developers.google.com/kml/documentation/kmlreference#screenoverlay ScreenOverlay]]
  *
@@ -2778,6 +3187,30 @@ case class Shape($: ShapeEnum.Value)
 object Shape extends Extractors with Renderers {
   implicit val extractor: Extractor[Shape] = extractor10(apply) ^^ "extractorShape"
   implicit val renderer: Renderer[Shape] = renderer1(apply) ^^ "rendererShape"
+}
+
+/**
+ * Case class SimpleData: sub-element of SchemaData, a single typed name/value pair.
+ * See [[https://developers.google.com/kml/documentation/kmlreference#extendeddata SimpleData]]
+ *
+ * @param _name the name of this SimpleData element, referencing a SimpleField of the
+ *              corresponding Schema (an XML attribute).
+ * @param $     the value, as the text content of this element.
+ */
+case class SimpleData(_name: CharSequence, $: CharSequence)
+
+/**
+ * Companion object for the `SimpleData` case class, providing extractors and renderers for
+ * `SimpleData` instances and sequences thereof.
+ */
+object SimpleData extends Extractors with Renderers {
+
+  import Renderers.*
+
+  implicit val extractor: Extractor[SimpleData] = extractor20(apply) ^^ "extractorSimpleData"
+  implicit val extractorSeq: MultiExtractor[Seq[SimpleData]] = multiExtractorBase[SimpleData](NonNegative) ^^ "multiExtractorSimpleData"
+  implicit val renderer: Renderer[SimpleData] = renderer2(apply) ^^ "rendererSimpleData"
+  implicit val rendererSeq: Renderer[Seq[SimpleData]] = sequenceRenderer[SimpleData] ^^ "rendererSimpleDatas"
 }
 
 /**
@@ -2971,11 +3404,11 @@ object StyleSelectorData extends Extractors with Renderers {
 /**
  * A case class representing a style URL in the KML document context.
  *
- * This class encapsulates a character sequence
- * that serves as the identifier or reference to a style within a KML structure.
- * It provides a way to interact with style URLs within a KML processing framework.
+ * This class encapsulates a `java.net.URI` (Issue #44: not a bare `CharSequence`) that serves as
+ * the identifier or reference to a style within a KML structure - typically a fragment-only
+ * reference such as "#some-style", hence `URI` rather than the stricter `URL`.
  */
-case class StyleURL($: CharSequence)
+case class StyleURL($: java.net.URI)
 
 /**
  * Companion object for the `StyleURL` class, providing extractors and renderers for `StyleURL` instances.
@@ -2991,8 +3424,15 @@ object StyleURL extends Extractors with Renderers {
 
   import Renderers.*
 
-  implicit val extractor: Extractor[StyleURL] = extractor10(apply) ^^ "extractorStyleURL"
-  implicit val renderer: Renderer[StyleURL] = renderer1(apply) ^^ "rendererStyleURL"
+  /**
+   * Convenience factory for constructing a `StyleURL` directly from a `String`, e.g. in tests.
+   */
+  def apply(s: String): StyleURL = StyleURL(new java.net.URI(s))
+
+  implicit val extractor: Extractor[StyleURL] = extractor10((u: java.net.URI) => apply(u)) ^^ "extractorStyleURL"
+  implicit val extractorOpt: Extractor[Option[StyleURL]] = extractor.lift ^^ "extractorOptionStyleURL"
+  implicit val renderer: Renderer[StyleURL] = renderer1((u: java.net.URI) => apply(u)) ^^ "rendererStyleURL"
+  implicit val rendererOpt: Renderer[Option[StyleURL]] = renderer.lift ^^ "rendererOptionStyleURL"
 }
 
 /**
@@ -3147,6 +3587,30 @@ object Tilt extends Extractors with Renderers {
 }
 
 /**
+ * ViewBoundScale represents a scale factor to apply to the current view bounding box, used by
+ * `Link` when constructing the `BBOX` parameters of `viewFormat`.
+ * See [[https://developers.google.com/kml/documentation/kmlreference#link Link]]
+ *
+ * NOTE: see the comment on `RefreshInterval` for why this is wrapped rather than a bare `Double`.
+ *
+ * @param $ the scale factor (1 leaves the bounding box unchanged).
+ */
+case class ViewBoundScale($: Double)
+
+/**
+ * Companion object for the `ViewBoundScale` case class, providing extractors and renderers.
+ */
+object ViewBoundScale extends Extractors with Renderers {
+
+  import Renderers.*
+
+  implicit val extractor: Extractor[ViewBoundScale] = extractor10(apply) ^^ "extractorViewBoundScale"
+  implicit val extractorOpt: Extractor[Option[ViewBoundScale]] = extractor.lift ^^ "extractorOptionViewBoundScale"
+  implicit val renderer: Renderer[ViewBoundScale] = renderer1(apply) ^^ "rendererViewBoundScale"
+  implicit val rendererOpt: Renderer[Option[ViewBoundScale]] = renderer.lift ^^ "rendererOptionViewBoundScale"
+}
+
+/**
  * ViewRefreshMode which has values "never" , "onStop", "onRequest" or "onRegion".
  * Used by Link, Icon.
  *
@@ -3170,6 +3634,30 @@ object ViewRefreshMode extends Extractors with Renderers {
   private val extractor: Extractor[ViewRefreshMode] = extractor10(apply) ^^ "viewRefreshModeExtractor"
   implicit val extractorOpt: Extractor[Option[ViewRefreshMode]] = extractor.lift ^^ "extractMaybeViewRefreshMode"
   implicit val rendererOpt: Renderer[Option[ViewRefreshMode]] = renderer1(apply).lift ^^ "rendererOptionViewRefreshMode"
+}
+
+/**
+ * ViewRefreshTime represents the number of seconds to wait after the view stops moving before
+ * refreshing a `Link`'s view-dependent content.
+ * See [[https://developers.google.com/kml/documentation/kmlreference#link Link]]
+ *
+ * NOTE: see the comment on `RefreshInterval` for why this is wrapped rather than a bare `Double`.
+ *
+ * @param $ the wait time, in seconds.
+ */
+case class ViewRefreshTime($: Double)
+
+/**
+ * Companion object for the `ViewRefreshTime` case class, providing extractors and renderers.
+ */
+object ViewRefreshTime extends Extractors with Renderers {
+
+  import Renderers.*
+
+  implicit val extractor: Extractor[ViewRefreshTime] = extractor10(apply) ^^ "extractorViewRefreshTime"
+  implicit val extractorOpt: Extractor[Option[ViewRefreshTime]] = extractor.lift ^^ "extractorOptionViewRefreshTime"
+  implicit val renderer: Renderer[ViewRefreshTime] = renderer1(apply) ^^ "rendererViewRefreshTime"
+  implicit val rendererOpt: Renderer[Option[ViewRefreshTime]] = renderer.lift ^^ "rendererOptionViewRefreshTime"
 }
 
 /**

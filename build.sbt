@@ -1,6 +1,6 @@
 ThisBuild / organization := "com.phasmidsoftware"
 
-ThisBuild / version := "1.1.0"
+ThisBuild / version := "1.1.1"
 
 ThisBuild / scalaVersion := "3.8.4"
 
@@ -9,7 +9,7 @@ lazy val scalaModules = "org.scala-lang.modules"
 lazy val commonSettings = Seq(
   Compile / doc / scalacOptions ++= Seq("-explaintypes", "-Vimplicits", "-implicits-debug", "-implicits-show-all", "-unchecked", "-feature", "-Xcheckinit", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused", "-Xsource:3", "-deprecation"),
   libraryDependencies ++= Seq(
-    "ch.qos.logback" % "logback-classic" % "1.6.1" % "runtime",
+    "ch.qos.logback" % "logback-classic" % "1.6.2" % "runtime",
     "org.scalatest" %% "scalatest" % "3.2.20" % Test
   )
 )
@@ -43,8 +43,15 @@ lazy val kmlIt = (project in file("kml-it"))
     publish / skip := true
   )
 
+lazy val idml = (project in file("idml"))
+  .dependsOn(core)
+  .settings(commonSettings)
+  .settings(
+    name := "xmldoc-idml"
+  )
+
 lazy val root = (project in file("."))
-  .aggregate(core, kml)
+  .aggregate(core, kml, idml)
   .settings(
     name := "XmlDoc",
     publish / skip := true

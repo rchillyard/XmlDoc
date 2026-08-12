@@ -218,6 +218,57 @@ trait Renderers {
   }
 
   /**
+   * Creates a Renderer instance for a product type with eight elements, where all elements have associated Renderers.
+   *
+   * @param construct A function that takes eight parameters of types P0, P1, P2, P3, P4, P5, P6, and P7, and constructs
+   *                  an instance of type R.
+   * @tparam P0 The type of the first element, which must have a Renderer instance available.
+   * @tparam P1 The type of the second element, which must have a Renderer instance available.
+   * @tparam P2 The type of the third element, which must have a Renderer instance available.
+   * @tparam P3 The type of the fourth element, which must have a Renderer instance available.
+   * @tparam P4 The type of the fifth element, which must have a Renderer instance available.
+   * @tparam P5 The type of the sixth element, which must have a Renderer instance available.
+   * @tparam P6 The type of the seventh element, which must have a Renderer instance available.
+   * @tparam P7 The type of the eighth element, which must have a Renderer instance available.
+   * @tparam R  The resulting product type, constrained to be a subclass of Product and require a ClassTag.
+   * @return A Renderer instance that can render objects of type R, utilizing the provided construct function
+   *         and the Renderers for each corresponding parameter type.
+   */
+  def renderer8[P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, P5: Renderer, P6: Renderer, P7: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6, P7) => R): Renderer[R] = Renderer {
+    (r: R, format, stateR) => {
+      ((r.productElement(0), r.productElement(1), r.productElement(2), r.productElement(3), r.productElement(4), r.productElement(5), r.productElement(6), r.productElement(7)): @unchecked) match {
+        case (p0: P0 @unchecked, p1: P1 @unchecked, p2: P2 @unchecked, p3: P3 @unchecked, p4: P4 @unchecked, p5: P5 @unchecked, p6: P6 @unchecked, p7: P7 @unchecked) =>
+          val constructorInner: (P0, P1, P2, P3, P4, P5, P6) => R = construct(_, _, _, _, _, _, _, p7)
+          for {wInner <- renderer7(constructorInner).render(constructorInner(p0, p1, p2, p3, p4, p5, p6), format, stateR.recurse)
+               wOuter <- renderOuter(r, p7, 7, format.indent)
+               result <- doNestedRender(format, stateR, wInner, wOuter, r.productElementName(7))
+               } yield result
+      }
+    }
+  }
+
+  /**
+   * Creates a Renderer instance for a product type with nine elements, where all elements have associated Renderers.
+   *
+   * @param construct A function that takes nine parameters of types P0..P8, and constructs an instance of type R.
+   * @tparam R The resulting product type, constrained to be a subclass of Product and require a ClassTag.
+   * @return A Renderer instance that can render objects of type R, utilizing the provided construct function
+   *         and the Renderers for each corresponding parameter type.
+   */
+  def renderer9[P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, P5: Renderer, P6: Renderer, P7: Renderer, P8: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6, P7, P8) => R): Renderer[R] = Renderer {
+    (r: R, format, stateR) => {
+      ((r.productElement(0), r.productElement(1), r.productElement(2), r.productElement(3), r.productElement(4), r.productElement(5), r.productElement(6), r.productElement(7), r.productElement(8)): @unchecked) match {
+        case (p0: P0 @unchecked, p1: P1 @unchecked, p2: P2 @unchecked, p3: P3 @unchecked, p4: P4 @unchecked, p5: P5 @unchecked, p6: P6 @unchecked, p7: P7 @unchecked, p8: P8 @unchecked) =>
+          val constructorInner: (P0, P1, P2, P3, P4, P5, P6, P7) => R = construct(_, _, _, _, _, _, _, _, p8)
+          for {wInner <- renderer8(constructorInner).render(constructorInner(p0, p1, p2, p3, p4, p5, p6, p7), format, stateR.recurse)
+               wOuter <- renderOuter(r, p8, 8, format.indent)
+               result <- doNestedRender(format, stateR, wInner, wOuter, r.productElementName(8))
+               } yield result
+      }
+    }
+  }
+
+  /**
    * Alternative method to create a renderer for a Product (e.g., case class) with one member but also an auxiliary object in a second parameter set.
    *
    * CONSIDER rename each of theses renderXSuper methods to renderXAux.
@@ -404,6 +455,54 @@ trait Renderers {
   }
 
   /**
+   * Method to create a renderer for a Product (e.g., case class) with eight members but also an auxiliary object in a second parameter set.
+   *
+   * @param construct a function (P0, P1, P2, P3, P4, P5, P6, P7) => R (this is usually the apply method of a case class).
+   * @tparam B  the (Renderer) type of the auxiliary object of type R.
+   * @tparam P0 the (Renderer) type of the first member of Product type R.
+   * @tparam P1 the (Renderer) type of the second member of Product type R.
+   * @tparam P2 the (Renderer) type of the third member of Product type R.
+   * @tparam P3 the (Renderer) type of the fourth member of Product type R.
+   * @tparam P4 the (Renderer) type of the fifth member of Product type R.
+   * @tparam P5 the (Renderer) type of the sixth member of Product type R.
+   * @tparam P6 the (Renderer) type of the seventh member of Product type R.
+   * @tparam P7 the (Renderer) type of the eighth member of Product type R.
+   * @tparam R  the type of Renderer to be returned (must be a Product).
+   * @return a Renderer[R].
+   */
+  def renderer8Super[B: Renderer, P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, P5: Renderer, P6: Renderer, P7: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6, P7) => B => R)(lens: R => B): Renderer[R] = Renderer {
+    (r: R, format, stateR) => {
+      val b = lens(r)
+      val constructOuter: (P0, P1, P2, P3, P4, P5, P6, P7) => R = construct(_, _, _, _, _, _, _, _)(b)
+      for {
+        wInner <- Renderer.render(b, format, stateR.recurse)
+        wOuter <- renderer8(constructOuter).render(r, format, stateR.recurse)
+        result <- doNestedRender(format, stateR, wInner, wOuter, r.productElementName(0))
+      } yield result
+    }
+  }
+
+  /**
+   * Method to create a renderer for a Product (e.g., case class) with nine members but also an auxiliary object in a second parameter set.
+   *
+   * @param construct a function (P0, P1, P2, P3, P4, P5, P6, P7, P8) => R (this is usually the apply method of a case class).
+   * @tparam B  the (Renderer) type of the auxiliary object of type R.
+   * @tparam R  the type of Renderer to be returned (must be a Product).
+   * @return a Renderer[R].
+   */
+  def renderer9Super[B: Renderer, P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, P5: Renderer, P6: Renderer, P7: Renderer, P8: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6, P7, P8) => B => R)(lens: R => B): Renderer[R] = Renderer {
+    (r: R, format, stateR) => {
+      val b = lens(r)
+      val constructOuter: (P0, P1, P2, P3, P4, P5, P6, P7, P8) => R = construct(_, _, _, _, _, _, _, _, _)(b)
+      for {
+        wInner <- Renderer.render(b, format, stateR.recurse)
+        wOuter <- renderer9(constructOuter).render(r, format, stateR.recurse)
+        result <- doNestedRender(format, stateR, wInner, wOuter, r.productElementName(0))
+      } yield result
+    }
+  }
+
+  /**
    * Creates a Renderer instance for an Option container type.
    *
    * This method lifts the functionality of an existing (implicit) Renderer for a type `R`
@@ -549,11 +648,31 @@ trait Renderers {
   /**
    * Method to return a Renderer of Seq[R].
    *
+   * NOTE: each element renders under its own type's name (no name override) - this is what's
+   * wanted for a polymorphic Seq (e.g. Seq[Geometry], mixing Point/LineString/Polygon/...),
+   * where every element's own distinct tag must be preserved. For a homogeneous Seq of a single,
+   * non-polymorphic type whose class name doesn't match its real tag (e.g. InnerBoundaryIs vs.
+   * the tag "innerBoundaryIs"), use sequenceRendererNamed instead.
+   *
    * @tparam R the underlying element type.
    * @return a Renderer of Seq[R].
    */
   def sequenceRenderer[R: Renderer]: Renderer[Seq[R]] = Renderer {
     (rs, format, _) => Renderer.doRenderSequence(rs, format, None)
+  }
+
+  /**
+   * Method to return a Renderer of Seq[R] where every element is rendered under the same,
+   * explicitly-given name, regardless of the calling context - unlike sequenceRenderer, which
+   * lets each element use its own type's name (correct for a polymorphic Seq, but wrong when a
+   * single type's class name doesn't match its actual KML tag).
+   *
+   * @param name the tag name every element of the sequence should be rendered under.
+   * @tparam R the underlying element type.
+   * @return a Renderer of Seq[R].
+   */
+  def sequenceRendererNamed[R: Renderer](name: String): Renderer[Seq[R]] = Renderer {
+    (rs, format, _) => Renderer.doRenderSequence(rs, format, Some(name))
   }
 
   /**
@@ -646,6 +765,13 @@ object Renderers {
         case _ => renderAttribute(scrub(x), stateR.maybeName)
       }
   } ^^ "charSequenceRenderer"
+
+  /**
+   * Implicit `Renderer` instance for `java.net.URI`, the counterpart to `Extractor.uriExtractor`.
+   */
+  implicit val uriRenderer: Renderer[java.net.URI] = Renderer[java.net.URI] {
+    (x, _, stateR) => renderAttribute(x.toString, stateR.maybeName)
+  } ^^ "uriRenderer"
 
   implicit val stringRenderer: Renderer[String] = rendererAnyWithName ^^ "stringRenderer"
 

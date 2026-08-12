@@ -90,6 +90,30 @@ object TagProperties {
   def mustMatch(tag: String): Boolean = mustMatchList.contains(tag)
 
   private val mustMatchList = mutable.Set[String]()
+
+  /**
+   * Registers alternate XML tag names for an optional field (one whose case class member name
+   * starts with "maybe"), for the rare case where the real element name doesn't derive from the
+   * field name at all — e.g. an abstract-type field like `maybeTimePrimitive`, whose real tag is
+   * whichever concrete subtype is present (`TimeStamp` or `TimeSpan`), never literally
+   * "timePrimitive"/"TimePrimitive". Consulted by `doExtractField`'s `optional` case only after
+   * both the usual lower-case-initial and capitalized-form lookups have come up empty.
+   *
+   * @param field the lower-case-initial field name (as captured from "maybeXxx").
+   * @param tags  the real tag names to try instead, in order.
+   * @return Unit
+   */
+  def addAliases(field: String, tags: Seq[String]): Unit = aliasMap += field -> tags
+
+  /**
+   * The alternate tag names registered for a field via `addAliases`, or `Nil` if none.
+   *
+   * @param field the lower-case-initial field name (as captured from "maybeXxx").
+   * @return the registered alternate tag names, in order.
+   */
+  def aliases(field: String): Seq[String] = aliasMap.getOrElse(field, Nil)
+
+  private val aliasMap = mutable.Map[String, Seq[String]]()
 }
 
 /**
