@@ -1331,7 +1331,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
   private val iconStyleText = "<IconStyle>\n    <scale>1.1</scale>\n    <Icon>\n      <href>https://www.gstatic.com/mapspro/images/stock/22-blue-dot.png</href>\n    </Icon>\n    <hotSpot x=\"16\" xunits=\"pixels\" y=\"32\" yunits=\"insetPixels\"/>\n  </IconStyle>"
   private val balloonStyleText = "<BalloonStyle>\n    <text>\n<![CDATA[<h3>$[name]</h3>]]>\n</text>\n  </BalloonStyle>"
   private val labelStyleText = "<LabelStyle>\n    <color>ff0000cc</color>\n    <colorMode>random</colorMode>\n    <scale>1.5</scale>\n  </LabelStyle>"
-  private val stylesText = s"\n  $labelStyleText\n  $iconStyleText\n  $balloonStyleText\n"
+  private val stylesText = s"\n  $iconStyleText\n  $labelStyleText\n  $balloonStyleText\n"
   private val styleText = s"<Style id=\"icon-22-nodesc-normal\">$stylesText</Style>"
 
   // Issue #42
@@ -1468,19 +1468,19 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
             styles.size shouldBe 3
             println(styles)
             styles.head match {
-              case x@LabelStyle(scale) =>
-                scale shouldBe Scale(0)(KmlData.nemo)
+              case x@IconStyle(maybeScale, icon, maybeHotSpot, maybeHeading) =>
+                maybeScale shouldBe Some(Scale(1.1)(KmlData.nemo))
+                icon shouldBe Icon(Text("https://www.gstatic.com/mapspro/images/stock/22-blue-dot.png"))
+                maybeHotSpot shouldBe Some(HotSpot(16, UnitsEnum.pixels, 32, UnitsEnum.insetPixels))
+                maybeHeading shouldBe None
                 x.colorStyleData match {
                   case c@ColorStyleData(_, _) =>
                     println(c)
                 }
             }
             styles(1) match {
-              case x@IconStyle(maybeScale, icon, maybeHotSpot, maybeHeading) =>
-                maybeScale shouldBe Some(Scale(1.1)(KmlData.nemo))
-                icon shouldBe Icon(Text("https://www.gstatic.com/mapspro/images/stock/22-blue-dot.png"))
-                maybeHotSpot shouldBe Some(HotSpot(16, UnitsEnum.pixels, 32, UnitsEnum.insetPixels))
-                maybeHeading shouldBe None
+              case x@LabelStyle(scale) =>
+                scale shouldBe Scale(0)(KmlData.nemo)
                 x.colorStyleData match {
                   case c@ColorStyleData(_, _) =>
                     println(c)
@@ -1504,9 +1504,6 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
             wy.isSuccess shouldBe true
             val expected =
               s"""<Style id="icon-22-nodesc-normal">
-                 |  <LabelStyle>
-                 |    <scale>0</scale>
-                 |  </LabelStyle>
                  |  <IconStyle>
                  |    <scale>1.1</scale>
                  |    <Icon>
@@ -1514,6 +1511,9 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                  |    </Icon>
                  |    <hotSpot x="16" xunits="pixels" y="32" yunits="insetPixels"/>
                  |  </IconStyle>
+                 |  <LabelStyle>
+                 |    <scale>0</scale>
+                 |  </LabelStyle>
                  |  <BalloonStyle>
                  |    <text>$cdata</text>
                  |    <displayMode>default</displayMode>
@@ -1617,18 +1617,18 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
           case Style(styles) =>
             styles.size shouldBe 3
             styles.head match {
-              case LabelStyle(ls) =>
-                ls.$ shouldBe 1.5
-            }
-            styles(1) match {
               case IconStyle(scale, Icon(Text(w)), hotSpot, maybeHeading) =>
                 scale shouldBe Some(Scale(1.1)(KmlData(None)))
                 w shouldBe "https://www.gstatic.com/mapspro/images/stock/22-blue-dot.png"
                 hotSpot shouldBe Some(HotSpot(16, UnitsEnum.pixels, 32, UnitsEnum.insetPixels))
                 maybeHeading shouldBe None
-                val wy = TryUsing(StateR())(sr => Renderer.render[SubStyle](styles(1), FormatXML(), sr))
+                val wy = TryUsing(StateR())(sr => Renderer.render[SubStyle](styles.head, FormatXML(), sr))
                 wy.isSuccess shouldBe true
                 wy.get shouldBe iconStyleText1
+            }
+            styles(1) match {
+              case LabelStyle(ls) =>
+                ls.$ shouldBe 1.5
             }
           case StyleMap(pairs) =>
             pairs.size shouldBe 2

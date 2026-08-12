@@ -3,7 +3,7 @@ package com.phasmidsoftware.xmldoc.xml
 import com.phasmidsoftware.xmldoc.core.FP.{optionToTry, sequence, tryNotNull}
 import com.phasmidsoftware.xmldoc.core.{FP, Reflection, XmlException}
 import com.phasmidsoftware.flog.Flog
-import com.phasmidsoftware.xmldoc.xml.Extractor.{extract, extractChildren, extractElementsByLabel, extractSequence, fieldExtractor, none, parse}
+import com.phasmidsoftware.xmldoc.xml.Extractor.{extract, extractChildren, extractSequence, fieldExtractor, none, parse}
 import com.phasmidsoftware.xmldoc.xml.Extractors.fieldNamesMaybeDropLast
 
 import scala.Function.uncurried
@@ -77,6 +77,40 @@ trait Extractors {
   def multiExtractorBase[P: Extractor](range: Range): MultiExtractor[Seq[P]] = new MultiExtractorBase[P](range) ^^ s"multiExtractorBase with range $range"
 
   /**
+   * Method to widen an `Extractor[P]` to an `Extractor[T]`, given `P <: T`.
+   *
+   * `Extractor` is invariant, so this can't happen automatically - needed by
+   * `orderedMultiExtractor` to put extractors for several distinct subtypes of `T` into one
+   * homogeneous, label-keyed lookup.
+   *
+   * @param e an `Extractor[P]`.
+   * @tparam P the narrower type, a subtype of `T`.
+   * @tparam T the wider type.
+   * @return an `Extractor[T]`.
+   */
+  private def widen[P, T >: P](e: Extractor[P]): Extractor[T] = e.map(p => p: T)
+
+  /**
+   * Shared implementation for `multiExtractor1`..`multiExtractor6`.
+   *
+   * Extracts one `T` for each direct child of the input `NodeSeq` whose label appears in
+   * `labelsAndExtractors`, using the `Extractor` registered for that label - a single pass over
+   * `nodeSeq` in its own original order. This is what makes the result preserve source document
+   * order across a mixed-type sequence (e.g. a `MultiGeometry` containing both `Point`s and a
+   * `Polygon`, in whatever order they actually appear) - the previous implementation extracted
+   * each label's matches separately and concatenated the per-label batches together, which does
+   * not preserve the original interleaving.
+   *
+   * @param labelsAndExtractors the label -> (already widened to `T`) `Extractor` mapping.
+   * @tparam T the ultimate underlying (super-)type of the resulting `MultiExtractor`.
+   * @return a `MultiExtractor` of `Seq[T]`.
+   */
+  private def orderedMultiExtractor[T](labelsAndExtractors: Seq[(String, Extractor[T])]): MultiExtractor[Seq[T]] = {
+    val lookup = labelsAndExtractors.toMap
+    (nodeSeq: NodeSeq) => sequence(for (node <- nodeSeq if lookup.contains(node.label)) yield lookup(node.label).extract(node))
+  }
+
+  /**
    * Method to yield a `MultiExtractor` of `Seq[T]` such that `T` is the super-type of `P0`.
    *
    * @param construct a function whose sole purpose is to enable type inference
@@ -89,11 +123,9 @@ trait Extractors {
    * @return `MultiExtractor of Seq[T]`.
    */
   def multiExtractor1[T, U <: Product, P0 <: T : {Extractor, ClassTag}](construct: P0 => U, labels: Seq[String]): MultiExtractor[Seq[T]] =
-    nodeSeq =>
-      labels match {
-        case label :: Nil => sequence(extractElementsByLabel[P0](nodeSeq, label))
-        case fs => Failure(XmlException(s"multiExtractor1: logic error for labels: $fs"))
-      }
+    if (labels.size == 1)
+      orderedMultiExtractor(labels.zip(Seq(widen[P0, T](implicitly[Extractor[P0]]))))
+    else (_: NodeSeq) => Failure(XmlException(s"multiExtractor1: logic error for labels: $labels"))
 
   /**
    * Method to yield a MultiExtractor of `Seq[T]` such that T is the super-type of P0.
@@ -122,13 +154,9 @@ trait Extractors {
    * @return MultiExtractor of `Seq[T]`.
    */
   def multiExtractor2[T, U <: Product, P0 <: T : {Extractor, ClassTag}, P1 <: T : {Extractor, ClassTag}](construct: (P0, P1) => U, labels: Seq[String]): MultiExtractor[Seq[T]] =
-    nodeSeq =>
-      labels match {
-        case label :: fs =>
-          val p0sy = sequence(extractElementsByLabel[P0](nodeSeq, label))
-          val tsy = multiExtractor1[T, Tuple1[P1], P1](p1 => Tuple1(p1), fs).extract(nodeSeq)
-          for (ts1 <- tsy; ts2 <- p0sy) yield ts1 ++ ts2
-      }
+    if (labels.size == 2)
+      orderedMultiExtractor(labels.zip(Seq(widen[P0, T](implicitly[Extractor[P0]]), widen[P1, T](implicitly[Extractor[P1]]))))
+    else (_: NodeSeq) => Failure(XmlException(s"multiExtractor2: logic error for labels: $labels"))
 
   /**
    * Method to yield a MultiExtractor of `Seq[T]` such that T is the super-type of three P-types.
@@ -146,13 +174,9 @@ trait Extractors {
    * @return MultiExtractor of `Seq[T]`.
    */
   def multiExtractor3[T, U <: Product, P0 <: T : {Extractor, ClassTag}, P1 <: T : {Extractor, ClassTag}, P2 <: T : {Extractor, ClassTag}](construct: (P0, P1, P2) => U, labels: Seq[String]): MultiExtractor[Seq[T]] =
-    nodeSeq =>
-      labels match {
-        case label :: fs =>
-          val p0sy = sequence(extractElementsByLabel[P0](nodeSeq, label))
-          val tsy = multiExtractor2[T, (P1, P2), P1, P2]((p1, p2) => (p1, p2), fs).extract(nodeSeq)
-          for (ts1 <- tsy; ts2 <- p0sy) yield ts1 ++ ts2
-      }
+    if (labels.size == 3)
+      orderedMultiExtractor(labels.zip(Seq(widen[P0, T](implicitly[Extractor[P0]]), widen[P1, T](implicitly[Extractor[P1]]), widen[P2, T](implicitly[Extractor[P2]]))))
+    else (_: NodeSeq) => Failure(XmlException(s"multiExtractor3: logic error for labels: $labels"))
 
   /**
    * Method to yield a `MultiExtractor` of `Seq[T]` such that `T` is the super-type of four P-types.
@@ -169,13 +193,9 @@ trait Extractors {
    * @return MultiExtractor of `Seq[T]`.
    */
   def multiExtractor4[T, U <: Product, P0 <: T : {Extractor, ClassTag}, P1 <: T : {Extractor, ClassTag}, P2 <: T : {Extractor, ClassTag}, P3 <: T : {Extractor, ClassTag}](construct: (P0, P1, P2, P3) => U, labels: Seq[String]): MultiExtractor[Seq[T]] =
-    nodeSeq =>
-      labels match {
-        case label :: fs =>
-          val p0sy = sequence(extractElementsByLabel[P0](nodeSeq, label))
-          val tsy = multiExtractor3[T, (P1, P2, P3), P1, P2, P3]((p1, p2, p3) => (p1, p2, p3), fs).extract(nodeSeq)
-          for (ts1 <- tsy; ts2 <- p0sy) yield ts1 ++ ts2
-      }
+    if (labels.size == 4)
+      orderedMultiExtractor(labels.zip(Seq(widen[P0, T](implicitly[Extractor[P0]]), widen[P1, T](implicitly[Extractor[P1]]), widen[P2, T](implicitly[Extractor[P2]]), widen[P3, T](implicitly[Extractor[P3]]))))
+    else (_: NodeSeq) => Failure(XmlException(s"multiExtractor4: logic error for labels: $labels"))
 
   /**
    * Method to yield a MultiExtractor of `Seq[T]` such that T is the super-type of five P-types.
@@ -192,13 +212,9 @@ trait Extractors {
    * @return MultiExtractor of `Seq[T]`.
    */
   def multiExtractor5[T, U <: Product, P0 <: T : {Extractor, ClassTag}, P1 <: T : {Extractor, ClassTag}, P2 <: T : {Extractor, ClassTag}, P3 <: T : {Extractor, ClassTag}, P4 <: T : {Extractor, ClassTag}](construct: (P0, P1, P2, P3, P4) => U, labels: Seq[String]): MultiExtractor[Seq[T]] =
-    nodeSeq =>
-      labels match {
-        case label :: fs =>
-          val p0sy = sequence(extractElementsByLabel[P0](nodeSeq, label))
-          val tsy = multiExtractor4[T, (P1, P2, P3, P4), P1, P2, P3, P4]((p1, p2, p3, p4) => (p1, p2, p3, p4), fs).extract(nodeSeq)
-          for (ts1 <- tsy; ts2 <- p0sy) yield ts1 ++ ts2
-      }
+    if (labels.size == 5)
+      orderedMultiExtractor(labels.zip(Seq(widen[P0, T](implicitly[Extractor[P0]]), widen[P1, T](implicitly[Extractor[P1]]), widen[P2, T](implicitly[Extractor[P2]]), widen[P3, T](implicitly[Extractor[P3]]), widen[P4, T](implicitly[Extractor[P4]]))))
+    else (_: NodeSeq) => Failure(XmlException(s"multiExtractor5: logic error for labels: $labels"))
 
   /**
    * Method to yield a MultiExtractor of `Seq[T]` such that T is the super-type of six P-types.
@@ -216,13 +232,9 @@ trait Extractors {
    * @return MultiExtractor of `Seq[T]`.
    */
   def multiExtractor6[T, U <: Product, P0 <: T : {Extractor, ClassTag}, P1 <: T : {Extractor, ClassTag}, P2 <: T : {Extractor, ClassTag}, P3 <: T : {Extractor, ClassTag}, P4 <: T : {Extractor, ClassTag}, P5 <: T : {Extractor, ClassTag}](construct: (P0, P1, P2, P3, P4, P5) => U, labels: Seq[String]): MultiExtractor[Seq[T]] =
-    nodeSeq =>
-      labels match {
-        case label :: fs =>
-          val p0sy = sequence(extractElementsByLabel[P0](nodeSeq, label))
-          val tsy = multiExtractor5[T, (P1, P2, P3, P4, P5), P1, P2, P3, P4, P5]((p1, p2, p3, p4, p5) => (p1, p2, p3, p4, p5), fs).extract(nodeSeq)
-          for (ts1 <- tsy; ts2 <- p0sy) yield ts1 ++ ts2
-      }
+    if (labels.size == 6)
+      orderedMultiExtractor(labels.zip(Seq(widen[P0, T](implicitly[Extractor[P0]]), widen[P1, T](implicitly[Extractor[P1]]), widen[P2, T](implicitly[Extractor[P2]]), widen[P3, T](implicitly[Extractor[P3]]), widen[P4, T](implicitly[Extractor[P4]]), widen[P5, T](implicitly[Extractor[P5]]))))
+    else (_: NodeSeq) => Failure(XmlException(s"multiExtractor6: logic error for labels: $labels"))
 
   /**
    * Method to yield an Extractor[T] where we have an Extractor[B => T].
