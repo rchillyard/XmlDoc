@@ -75,6 +75,9 @@ object KmlData extends Extractors with Renderers {
  * and drape the overlay over the terrain.
  * - relativeToGround: Represents the altitude of the element relative to the actual ground elevation of a particular location.
  * - absolute: Represents the altitude of the coordinate relative to sea level
+ * - clampToSeaFloor, relativeToSeaFloor: gx: namespace extensions (see the `gx:altitudeMode`
+ * alias registered in AltitudeMode's companion object) - relative to the sea floor rather than
+ * the ground, for underwater features. Not part of plain KML's own altitudeMode enum.
  *
  * This object extends the capabilities of Enumeration to include Extractors and Renderers.
  *
@@ -84,7 +87,7 @@ object KmlData extends Extractors with Renderers {
  *
  */
 object AltitudeModeEnum extends Enumeration with Extractors with Renderers {
-  val clampToGround, relativeToGround, absolute = Value
+  val clampToGround, relativeToGround, absolute, clampToSeaFloor, relativeToSeaFloor = Value
   implicit val extractor: Extractor[AltitudeModeEnum.Value] = extractorEnum[Value, this.type](this)(identity)
   implicit val renderer: Renderer[AltitudeModeEnum.Value] = enumObjectRenderer
 }
@@ -413,6 +416,13 @@ case class AltitudeMode($: AltitudeModeEnum.Value)
  * with AltitudeMode objects in the context of data transformation and rendering pipelines.
  */
 object AltitudeMode extends Extractors with Renderers {
+
+  // Issue #29: Google Earth's gx: namespace extension uses gx:altitudeMode, rather than plain
+  // altitudeMode, specifically to carry the sea-floor-relative values (see AltitudeModeEnum) -
+  // e.g. altitudemode_reference.kml. Rendered output always uses the plain tag, regardless of
+  // which one was originally read; that's consistent with every other alias registered via
+  // TagProperties.addAliases elsewhere in this codebase.
+  TagProperties.addAliases("altitudeMode", Seq("gx:altitudeMode"))
 
   private val extractorAltitudeMode: Extractor[AltitudeMode] = extractor10(apply) ^^ "extractorAltitudeMode"
   implicit val extractorOpt: Extractor[Option[AltitudeMode]] = extractorAltitudeMode.lift ^^ "extractorOptAltitudeMode"
@@ -1852,10 +1862,10 @@ object LinearRing extends Extractors with Renderers {
  *
  * See [[https://developers.google.com/kml/documentation/kmlreference#linestring LineString]]
  *
- * @param tessellate  the tessellation.
- * @param coordinates a sequence of Coordinates objects.
+ * @param maybeTessellate the (optional) tessellation.
+ * @param coordinates     a sequence of Coordinates objects.
  */
-case class LineString(tessellate: Tessellate, coordinates: Seq[Coordinates])(val geometryData: GeometryData) extends Geometry {
+case class LineString(maybeTessellate: Option[Tessellate], coordinates: Seq[Coordinates])(val geometryData: GeometryData) extends Geometry {
 
   import Coordinates.empty
 
@@ -1874,12 +1884,11 @@ case class LineString(tessellate: Tessellate, coordinates: Seq[Coordinates])(val
   override def merge(g: Geometry, mergeName: Boolean = true): Option[Geometry] = g match {
     case l@LineString(_, _) =>
       for {
-        t <- tessellate merge l.tessellate
         g <- geometryData merge l.geometryData
         c <- mergeSequence(coordinates)(empty).headOption
         d <- mergeSequence(l.coordinates)(empty).headOption
         z <- c merge d
-      } yield LineString(t, Seq(z))(g)
+      } yield LineString(mergeOptions(maybeTessellate, l.maybeTessellate)((t1, t2) => t1 merge t2), Seq(z))(g)
   }
 
   /**
@@ -1888,7 +1897,7 @@ case class LineString(tessellate: Tessellate, coordinates: Seq[Coordinates])(val
    *
    * @return an `Option` containing the inverted `LineString` instance if successful.
    */
-  override def invert: Option[LineString] = Some(LineString(tessellate, for (c <- coordinates) yield c.reverse)(geometryData))
+  override def invert: Option[LineString] = Some(LineString(maybeTessellate, for (c <- coordinates) yield c.reverse)(geometryData))
 
 }
 

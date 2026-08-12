@@ -262,7 +262,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
         val lsHead = gs.head
         lsHead match {
           case LineString(tessellate, cs) =>
-            tessellate shouldBe Tessellate(true)
+            tessellate shouldBe Some(Tessellate(true))
             cs.size shouldBe 1
             cs.head.coordinates.size shouldBe 18
         }
@@ -646,7 +646,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
             val geometry: Seq[Geometry] = placemark.Geometry
             geometry.size shouldBe 1
             geometry.head match {
-              case LineString(Tessellate(true), coordinates) =>
+              case LineString(Some(Tessellate(true)), coordinates) =>
                 coordinates.size shouldBe 1
                 val coordinate = coordinates.head
                 coordinate.coordinates.size shouldBe 8
@@ -702,7 +702,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
             val geometry: Seq[Geometry] = placemark.Geometry
             geometry.size shouldBe 1
             geometry.head match {
-              case LineString(Tessellate(true), coordinates) =>
+              case LineString(Some(Tessellate(true)), coordinates) =>
                 coordinates.size shouldBe 1
                 val coordinate = coordinates.head
                 coordinate.coordinates.size shouldBe 8
@@ -4917,7 +4917,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                         cs.size shouldBe 1
                         cs.head.coordinates.size shouldBe 1
                       case LineString(tessellate, coordinates) =>
-                        tessellate shouldBe Tessellate(true)
+                        tessellate shouldBe Some(Tessellate(true))
                         coordinates.size shouldBe 1
                         coordinates.head.coordinates.size shouldBe 94
                     }
@@ -4933,7 +4933,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                         cs.size shouldBe 1
                         cs.head.coordinates.size shouldBe 1
                       case LineString(tessellate, coordinates) =>
-                        tessellate shouldBe Tessellate(true)
+                        tessellate shouldBe Some(Tessellate(true))
                         coordinates.size shouldBe 1
                         coordinates.head.coordinates.size shouldBe 17
                     }
@@ -4976,7 +4976,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                         cs.size shouldBe 1
                         cs.head.coordinates.size shouldBe 1
                       case LineString(tessellate, coordinates) =>
-                        tessellate shouldBe Tessellate(true)
+                        tessellate shouldBe Some(Tessellate(true))
                         coordinates.size shouldBe 1
                         coordinates.head.coordinates.size shouldBe 94
                     }
@@ -4991,7 +4991,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                         cs.size shouldBe 1
                         cs.head.coordinates.size shouldBe 1
                       case LineString(tessellate, coordinates) =>
-                        tessellate shouldBe Tessellate(true)
+                        tessellate shouldBe Some(Tessellate(true))
                         coordinates.size shouldBe 1
                         coordinates.head.coordinates.size shouldBe 169
                     }
@@ -5108,6 +5108,28 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     }
   }
 
+  it should "extract and round-trip altitudemode_reference.kml (Issue #29)" in {
+    // Issue #29: gx:altitudeMode (Google Earth's gx: namespace extension) carries values
+    // (relativeToSeaFloor, clampToSeaFloor) that plain KML's altitudeMode enum doesn't have -
+    // and this file's LineString also has no <tessellate>, which used to be a required field.
+    val url = KML.getClass.getResource("/altitudemode_reference.kml")
+    val xml: Elem = XML.loadFile(url.getFile)
+    extractMulti[Seq[KML]](xml) match {
+      case Success(ks) =>
+        ks.size shouldBe 1
+        val placemark = ks.head.features.head.asInstanceOf[Placemark]
+        val lineString = placemark.Geometry.head.asInstanceOf[LineString]
+        lineString.maybeTessellate shouldBe None
+        lineString.geometryData.maybeAltitudeMode shouldBe Some(AltitudeMode(AltitudeModeEnum.relativeToSeaFloor))
+        val kml = KML_Binding(ks.head, xml.scope)
+        Renderer.render(kml, FormatXML(), StateR().setName("kml")) match {
+          case Success(w) => extractMulti[Seq[KML]](XML.loadString(w)) shouldBe Success(ks)
+          case Failure(x) => fail("could not render", x)
+        }
+      case Failure(x) => fail(x)
+    }
+  }
+
   it should "extract and round-trip a Document with an empty (self-closing) description" in {
     // Issue #19: <description/> used to crash the entire extraction (charSequenceExtractor
     // had no case for a node with zero children), which this file exists specifically to cover.
@@ -5151,11 +5173,11 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
   val coordinates2: Seq[Coordinates] = Seq(Coordinates(cs2))
   val coordinates2a: Seq[Coordinates] = Seq(Coordinates(cs2a))
   val tessellate: Tessellate = Tessellate(true)
-  val p1: Placemark = Placemark(Seq(LineString(tessellate, coordinates1)(gd)))(fd1)
-  val p2: Placemark = Placemark(Seq(LineString(tessellate, coordinates2)(gd)))(fd1)
-  val p2a: Placemark = Placemark(Seq(LineString(tessellate, coordinates2a)(gd)))(fd1)
-  val p12: Placemark = Placemark(Seq(LineString(tessellate, Seq(Coordinates(cs1 ++ cs2)))(gd)))(fd2)
-  val p12a: Placemark = Placemark(Seq(LineString(tessellate, Seq(Coordinates(cs2a ++ cs1.reverse)))(gd)))(fd2)
+  val p1: Placemark = Placemark(Seq(LineString(Some(tessellate), coordinates1)(gd)))(fd1)
+  val p2: Placemark = Placemark(Seq(LineString(Some(tessellate), coordinates2)(gd)))(fd1)
+  val p2a: Placemark = Placemark(Seq(LineString(Some(tessellate), coordinates2a)(gd)))(fd1)
+  val p12: Placemark = Placemark(Seq(LineString(Some(tessellate), Seq(Coordinates(cs1 ++ cs2)))(gd)))(fd2)
+  val p12a: Placemark = Placemark(Seq(LineString(Some(tessellate), Seq(Coordinates(cs2a ++ cs1.reverse)))(gd)))(fd2)
 
   it should "merge Placemarks 1" in {
     val maybePlacemark = p1 merge p2
@@ -5177,7 +5199,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
   it should "leave all Placemarks unchanged when a JOIN's second name matches nothing (Issue #20)" in {
     // Issue #20: a JOIN whose second name can't be matched used to silently delete the first
     // (matched) Placemark, even though it was never actually joined with anything.
-    def named(nm: String): Placemark = Placemark(Seq(LineString(tessellate, coordinates1)(gd)))(FeatureData(Text(nm), None, None, None, None, None, None, Nil, Nil)(kd))
+    def named(nm: String): Placemark = Placemark(Seq(LineString(Some(tessellate), coordinates1)(gd)))(FeatureData(Text(nm), None, None, None, None, None, None, Nil, Nil)(kd))
     val a = named("A")
     val b = named("B")
     val c = named("C")
