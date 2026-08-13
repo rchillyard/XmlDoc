@@ -89,3 +89,42 @@ on top of it, not underneath it.
 5. Only then: implement `gx:Track`/`gx:MultiTrack`/`gx:Tour`/`gx:LatLonQuad` support as the first
    real consumer of this mechanism — generic by default, overridable by anyone who wants a real
    typed `gx:Track`.
+
+## TODO: rename `merge`/`Mergeable` to `join`/`Joinable` (or similar) before Kaining's 3-way merge work
+
+Design discussion from 2026-08-13. Motivation: Kaining's IDML three-way-merge research project
+(the original reason `core`/`idml` exist at all — see [DESIGN.md](DESIGN.md)) is going to need a
+genuine 3-way merge operation (reconcile two independent edits against a common ancestor). That's
+a fundamentally different operation from what `core.Mergeable[T]`/`.merge` currently means
+throughout `kml` — combining two *adjacent, same-named* things into one (e.g. two `LineString`s
+that share an endpoint, two `Placemark`s with the same name). Issue #54's own title ("merging line
+strings") already used the more accurate word first: this is really a **join**, not a merge —
+and `KmlEdit.JOIN`/`JOINX` already use exactly that term for the editing operation that calls
+`.merge()` under the hood. Keeping "merge" for both this 2-way join operation *and* Kaining's
+future 3-way reconciliation would be genuinely confusing once both exist side by side.
+
+**Scope, if we do this** — it's bigger than it first looks:
+
+- `core.Mergeable[T]` (the trait itself) and its companion helpers: `mergeSequence`,
+  `mergeOptions`, `mergeOptionsBiased`, `mergeStrings`, `mergeStringsDelimited`. (`joinOrdered`,
+  added for #54, is already named correctly and needs no change.)
+- Every `.merge` implementation across `kml`: `Text`, `Coordinate`, `Coordinates`, `GeometryData`,
+  `FeatureData`, `LineString`, `Placemark`, and others — dozens of call sites in both main and test
+  sources.
+- **`core` is already published to Maven Central (1.1.0)** — renaming `Mergeable[T]`/`.merge` there
+  is a real breaking API change for anyone depending on `xmldoc-core`, not a cosmetic rename.
+
+**Open decision, worth making deliberately rather than assuming**: does the rename need to touch
+`core.Mergeable` itself, or only `kml`'s usage/vocabulary? Kaining's 3-way merge might end up
+living entirely in `idml` with its own name regardless (e.g. `ThreeWayMerge`/`reconcile`), in which
+case renaming `kml`'s 2-way operation to `join`/`Joinable` — possibly *without* renaming `core`'s
+underlying trait, or by adding a `join` alias alongside `merge` — could resolve the confusion
+without breaking `core`'s published API at all. Worth revisiting once Kaining's own design is
+concrete enough to know what vocabulary it actually needs, rather than renaming twice.
+
+**Context for why this matters as much as it does**: the KML "join" functionality (`KmlEdit.JOIN`)
+was, by Robin's own account, the *original* motivating reason for doing any of the `kml`-module
+work in this project at all — Google Maps' KML export UI tends to fragment a single logical route
+into dozens of separate `Placemark`/`LineString` pairs (e.g. "Historic New England Railroads
+(North).kml"), and the goal was a reliable, semi-automatic way to stitch them back into correct,
+contiguous lines. Issue #54's fix is the thing that actually finishes that original goal.
