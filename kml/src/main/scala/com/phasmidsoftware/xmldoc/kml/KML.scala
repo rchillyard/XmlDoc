@@ -778,18 +778,20 @@ case class Coordinates(coordinates: Seq[Coordinate]) extends Mergeable[Coordinat
   /**
    * Merges this `Coordinates` instance with another `Coordinates` instance.
    *
+   * The result is oriented the same way as `this` (this's own direction is authoritative and it
+   * always comes first) - `other` is attached at whichever of its own ends is closer to this
+   * one's last coordinate, reversing it first if that yields a closer join (Issue #54: previously,
+   * this only ever compared the two straight concatenations, this++other vs other++this, so a
+   * pair of lines that should join end-to-end or start-to-start - needing a reversal - was never
+   * actually found).
+   *
    * @param other     the other `Coordinates` instance to be merged with this instance.
    * @param mergeName a boolean indicating whether to merge the names of the two `Coordinates` instances. Defaults to true.
    * @return an `Option` containing the resulting merged `Coordinates`, or `None` if the merge cannot be performed.
    */
   infix def merge(other: Coordinates, mergeName: Boolean = true): Option[Coordinates] = {
     KMLCompanion.logger.info(s"merge $this with $other")
-    // CONSIDER rejuvenating the following code to try to deal automatically with inversions.
-//    val xo = vector
-//    val yo: Option[Cartesian] = other.vector
-//    val zo: Option[Double] = for (x <- xo; y <- yo) yield x dotProduct y
-//    val q: Option[Coordinates] = for (z <- zo) yield if (z >= 0) other else other.reverse // no longer used
-    mergeInternal(Some(other))
+    Some(Coordinates(Mergeable.joinOrdered(coordinates, other.coordinates)((a, b) => a distance b)))
   }
 
   /**
@@ -817,22 +819,6 @@ case class Coordinates(coordinates: Seq[Coordinate]) extends Mergeable[Coordinat
       b <- cs2.headOption
       q <- a.distance(b)
     } yield q
-
-  /**
-   * Merges the current `Coordinates` instance with another optional `Coordinates` instance.
-   * The merge operation is based on a comparison of distances (gaps) between the current
-   * and the provided `Coordinates` instances.
-   *
-   * @param co an `Option` containing the `Coordinates` instance to be merged with the current instance
-   * @return an `Option` containing the resulting merged `Coordinates`, or `None` if the merge cannot be performed
-   */
-  private def mergeInternal(co: Option[Coordinates]): Option[Coordinates] =
-    for {
-      c <- co
-      r <- gap(c)
-      s <- c.gap(this)
-    } yield
-      Coordinates(if (r < s) coordinates ++ c.coordinates else c.coordinates ++ coordinates)
 }
 
 /**
