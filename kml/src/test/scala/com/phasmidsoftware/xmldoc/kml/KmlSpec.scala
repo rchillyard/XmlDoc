@@ -5206,13 +5206,13 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
   }
 
   it should "merge Placemarks 2" in {
+    // Issue #54: the result is oriented the same way as the first-mentioned operand (p2, here) -
+    // it's never reordered or reversed itself; only the other operand (p1) may be reversed, if
+    // that attaches more closely to p2's own last coordinate (it does here).
     val maybePlacemark = p2 merge p1
     maybePlacemark.isDefined shouldBe true
     val pz = maybePlacemark.get
-    pz.Geometry.head match {
-      case LineString(_, cs) => cs shouldBe Seq(Coordinates(cs1 ++ cs2))
-    }
-    pz shouldBe p12
+    pz shouldBe Placemark(Seq(LineString(Some(tessellate), Seq(Coordinates(cs2 ++ cs1.reverse)))(gd)))(fd2)
   }
 
   it should "leave all Placemarks unchanged when a JOIN's second name matches nothing (Issue #20)" in {
@@ -5228,18 +5228,20 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     result shouldBe fs
   }
 
-//  it should "merge Placemarks 3" in {
-//    val maybePlacemark = p1 merge p2a
-//    maybePlacemark.isDefined shouldBe true
-//    val pz = maybePlacemark.get
-//    pz shouldBe p12
-//  }
-//
-//  it should "merge Placemarks 4" in {
-//    val maybePlacemark = p2a merge p1
-//    maybePlacemark.isDefined shouldBe true
-//    val pz = maybePlacemark.get
-//    pz shouldBe p12a
-//  }
+  it should "merge Placemarks 3 (Issue #54: p2a's coordinates are reversed relative to p2)" in {
+    // p2a is cs2 reversed - the fix must detect that p2a needs re-reversing to attach to p1
+    // correctly, rather than only ever trying the two straight (unreversed) concatenations.
+    val maybePlacemark = p1 merge p2a
+    maybePlacemark.isDefined shouldBe true
+    val pz = maybePlacemark.get
+    pz shouldBe p12
+  }
+
+  it should "merge Placemarks 4 (Issue #54: same as 3, but with the operands swapped)" in {
+    val maybePlacemark = p2a merge p1
+    maybePlacemark.isDefined shouldBe true
+    val pz = maybePlacemark.get
+    pz shouldBe p12a
+  }
 }
 

@@ -82,4 +82,33 @@ object Mergeable {
    * @return an Option[String].
    */
   def mergeStringsDelimited(ao: Option[String], bo: Option[String])(delimiter: String): Option[String] = mergeOptions(ao, bo)((a, b) => Some(s"$a$delimiter$b"))
+
+  /**
+   * Method to join two ordered sequences of elements at whichever end of `second` attaches more
+   * closely to the end of `first`, per the given `distance` function - without ever reversing (or
+   * reordering) `first`: its own orientation is authoritative, and it always comes first in the
+   * result. Only `second` may be reversed, if that yields a closer join.
+   *
+   * This is deliberately generic (not tied to geometry, or to any particular element type): the
+   * only thing it needs to know about `A` is how far apart two instances of it are, if that's even
+   * defined (e.g. Issue #54 uses `Coordinate.distance`, but any "ordered sequence of things with a
+   * distance/compatibility notion between them" can reuse this).
+   *
+   * @param first    the first sequence: appended as-is, never reversed, never reordered.
+   * @param second   the second sequence: appended as-is, or reversed - whichever end attaches more
+   *                 closely to `first`'s last element. If `distance` is undefined for both
+   *                 candidate joins (or either sequence is empty), `second` is appended as-is.
+   * @param distance a function yielding the distance between two elements, if defined.
+   * @tparam A the element type.
+   * @return the concatenation of `first` and (possibly-reversed) `second`.
+   */
+  def joinOrdered[A](first: Seq[A], second: Seq[A])(distance: (A, A) => Option[Double]): Seq[A] =
+    (first.lastOption, second.headOption, second.lastOption) match {
+      case (Some(a), Some(b0), Some(b1)) =>
+        (distance(a, b0), distance(a, b1)) match {
+          case (Some(asIs), Some(reversed)) if reversed < asIs => first ++ second.reverse
+          case _ => first ++ second
+        }
+      case _ => first ++ second
+    }
 }
