@@ -1,0 +1,142 @@
+# Notes toward a 3-way merge for `idml`
+
+Research and empirical findings from 2026-08-15, gathering what's needed before designing `idml`'s
+eventual 3-way merge (Kaining's research project - see [DESIGN.md](../DESIGN.md)). Nothing here is
+implemented yet; this is groundwork.
+
+## Why tree/DAG-based
+
+The problem is fundamentally structural, not textual: reconciling independent edits to a document
+*tree* against a common ancestor - insertions, deletions, moves, and content changes to whole
+subtrees, not line-based text diffing. `GenericElement` (tag, attributes, ordered children) is
+already `idml`'s own generic tree representation, so "3-way merge two document versions" reduces to
+"3-way merge two `GenericElement` trees."
+
+## Prior art: Lindholm's 3DM ("A Three-way Merge for XML Documents", 2004)
+
+The most directly relevant piece of prior work - a full copy is at `doc/Lindholm.pdf` in this repo.
+
+**The formal model.** Trees are expressed as a set of `pcs(r, p, s)` relations ("s immediately
+follows p in r's child list") plus a separate `c(n, content)` relation for each node's content.
+Changes are expressed using the *same* relations as the tree itself - a changed tree is just a
+different set of these tuples. This is a genuinely nice representation: a single insert/delete/move
+touches only one or two relation triples, not a whole child-list rewrite. Worth adopting (or
+adapting) as `idml`'s own change-representation, once it needs one, rather than inventing something
+from scratch - though translating `GenericElement`'s children list into/out of this form should be
+mechanical.
+
+**The paper's biggest caveat, and the one that matters most for us**: Lindholm explicitly does
+*not* solve tree matching. The merge algorithm assumes a matching relation between nodes of
+different tree versions is handed to it as input, and says outright that constructing this matching
+accurately (especially without unique identifiers) is "of large practical importance" but out of
+scope for the paper. **IDML has a candidate stable identifier that the general XML case doesn't**
+(see below) - so this is exactly where `idml` may be able to do better than the generic baseline.
+
+**Merge rules** (derived from 37 hand-crafted use cases, 35 handled successfully): the two most
+important ideas are *node context* (a node's parent + predecessor + successor, used to express
+*where* it belongs) and *guards* (certain node contexts must be preserved specifically to prevent
+merging two changes that are structurally "too close" to safely assume independent - e.g. `abcd`
+vs `bacd` vs `abdc` reorderings of the same short list are conflicts, not silently combined). Moves
+are *relative*: reordering paragraphs inside a section is preserved even if the whole section also
+moved elsewhere.
+
+**Conflict taxonomy**: Update/Update (both sides changed the same node's content differently) and
+Position/Position (both sides positioned things incompatibly) are hard conflicts; Delete/Edit (one
+side deletes a subtree the other edited inside) is optional - the basic merge discards it by default
+unless you explicitly check for edits inside deleted subtrees.
+
+## The actual 3dm implementation's matcher
+
+Read directly (`HeuristicMatching.java`, `Measure.java`, via the unofficial mirror,
+`github.com/Mikulas/3dm-mirror`, since the original project site is dead). One important finding
+that isn't in the paper: **the real tool's matcher uses no identifiers at all** - there's an
+`IdIndex` interface in the codebase, but it's used only to serialize an *already-computed* diff
+compactly, not for matching. The actual matching pipeline is pure content/structure similarity:
+
+1. Exact-content matching first (DFS scan for identical nodes, then greedily extend the match
+   downward through identical children - one whole identical subtree matches in one shot).
+2. Fuzzy fallback via a **q-gram distance** (Ukkonen 1992) on text/attribute values, plus a
+   child-list similarity computed by hashing each child's content and taking string-edit-distance
+   between the hash sequences.
+3. A positional gap-filling pass for anything still unmatched (first/last child heuristics, and
+   "if my matched neighbor's base-match has an unmatched adjacent sibling, match to that").
+4. Copy resolution when one base node matches several branch nodes (pick the best "master" copy,
+   discard small/ambiguous ones below a size threshold).
+
+Since this generic tool has to work without any assumption of stable IDs, and IDML actually
+provides one (`Self`), `idml`'s own matcher should be simpler and more reliable for anything that
+carries a `Self` - falling back to 3dm-style heuristics only where nothing else is available (most
+obviously, the plain text runs inside a `Story`, which have no `Self` of their own).
+
+## Empirical findings: what `Self` actually looks like and how stable it is
+
+Investigated directly against real files (`HelloWorld.idml`, `HelloWorld2.idml`, and several
+edited variants), not just assumed from the format spec.
+
+### Three different shapes of `Self`
+
+1. **Auto-generated, per-document identity** - `u` followed by a short lowercase base-36-ish
+   string (`u81`, `u97`, `ud1`, `ue6`, `uf8`, `u106`...`u13e`, etc.). Looks like one single,
+   monotonically-increasing counter shared across *every* kind of object in the document - colors,
+   gradients, spreads, stories, and page items are all just entries in the same ID space. This is
+   the shape that matters for content matching, and what `Story.self` is built on.
+2. **Compound/derived IDs for sub-components of a parent** - e.g. `u97GradientStop0`,
+   `u18ColorGroupSwatch3`, `ua1BuildingBlock2`. Literally `<parent Self><ComponentType><index>`
+   concatenated - stability here is entirely derivative (parent's `Self` + positional index), not
+   independently meaningful.
+3. **Named/predefined resource references** - `Color/Black`, `StrokeStyle/$ID/Solid`,
+   `Language/$ID/English%3a USA` (note the URL-escaped colon). Fixed, built-in vocabulary present
+   in essentially every InDesign document, not really "identity" at all. Custom user-created
+   resources of this kind fall back to shape 1, nested under the resource type (`Color/u96`).
+
+### Stability experiments
+
+Using `HelloWorld2.idml` as a base, with two independently edited copies (moved a `Rectangle` in
+one, restyled it - different attributes - in the other):
+
+- **Untouched objects kept identical `Self` values** across both independent edits.
+- **The edited object also kept its own `Self`** in both cases - one side changed `ItemTransform`
+  (position), the other changed fill/stroke attributes. Same identity, different content changed -
+  exactly what a mergeable identity should look like, and exactly the case a real 3-way merge
+  should be able to combine without conflict.
+- **Independent insertions did not collide** - two independently added new objects (from a common
+  base) got distinct `Self` values (`u154` vs `u141`).
+
+### The one gotcha: live sessions can drift from the saved file
+
+An initial round of this testing showed *all* the base document's original `Self` values shifted
+(consistently, identically, across two supposedly-independent edited copies) - which looked
+alarming until traced to the cause: those copies were made by continuing to work in an InDesign
+window that had been open for a while, never actually closed and reopened from the saved file in
+between. A copy made via a genuine close-then-reopen of the saved `.indd` preserved every original
+`Self` value exactly, byte-for-byte. **Conclusion**: `Self` stability across a save/reopen cycle is
+real and clean; the earlier apparent instability was an artifact of comparing against a stale
+in-memory session rather than what was actually saved to disk. Any future experiment (or any
+real usage advice for a merge tool) should insist on a genuine close/reopen between independent
+edit branches, not a continuously-open session.
+
+## Proposed design direction (not yet built)
+
+- **Match by `Self` first**, wherever present and of the "auto-generated per-document identity"
+  shape (category 1 above) - this should be cheap and exact for the majority of structural content
+  (page items, spreads, stories, master spreads).
+- **Fall back to 3dm-style content/structural heuristic matching** only for content with no `Self`
+  of its own - primarily the text and inline formatting inside a `Story`.
+- **Adopt Lindholm's vocabulary** (node context, guards, the Update/Update and Position/Position
+  conflict categories) as the target semantics for whatever merge logic gets built, rather than
+  inventing new terminology.
+- Represent changes using something in the spirit of the PCS relation model, translated to/from
+  `GenericElement`'s own tag/attributes/children shape.
+
+## Open questions / untested cases
+
+Recorded so they aren't lost, not yet investigated:
+
+- **Genuine conflicts**: both sides editing the *same* attribute of the same object differently
+  (as opposed to the different-attributes case already tested).
+- **Deletion**: does a deleted page item just vanish cleanly, with no dangling references left in
+  sibling `Previous`/`NextTextFrame`-style attributes or elsewhere?
+- **Structural moves**: reordering page items (z-order/stacking, i.e. actual child-list position,
+  not just `ItemTransform` coordinates) - does `Self` survive a real move, and how is the new
+  position expressed in the IDML?
+- Whether `Self` stability holds up over *many* rounds of independent editing, not just one.
