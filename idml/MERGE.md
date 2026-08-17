@@ -4,6 +4,13 @@ Research and empirical findings from 2026-08-15, gathering what's needed before 
 eventual 3-way merge (Kaining's research project - see [DESIGN.md](../DESIGN.md)). Nothing here is
 implemented yet; this is groundwork.
 
+**Scope decision (2026-08-17)**: all three inputs to a merge (base + two independently edited
+copies) are assumed to have been produced by the *same* InDesign version. Cross-version migration
+(see the `Magazine-2` finding below) is real and worth remembering, but treating it as in-scope
+would force the primary design to assume ID-based matching might be wholesale unusable - which
+punishes the common case to guard against an edge case nobody's asked to solve. The finding is kept
+below as a documented, deliberately out-of-scope caveat, not a design requirement.
+
 ## Why tree/DAG-based
 
 The problem is fundamentally structural, not textual: reconciling independent edits to a document
@@ -115,13 +122,51 @@ in-memory session rather than what was actually saved to disk. Any future experi
 real usage advice for a merge tool) should insist on a genuine close/reopen between independent
 edit branches, not a continuously-open session.
 
+### Real-world case: cross-version migration can invalidate `Self` correspondence entirely
+
+Tested against Kaining's own research data (`Magazine.idml`, a stock sample file from Adobe's own
+InDesign site, plus `Magazine-1.idml`/`Magazine-2.idml`, two independent edited variants Kaining
+produced from it using the latest InDesign) - a much larger, realistic document (~14 spreads,
+~210 stories) rather than the synthetic `HelloWorld2` cases above.
+
+The base file's `designmap.xml` reports `DOMVersion="8.0"` and was created by "Adobe InDesign CS6
+(Windows)"; both edited variants report `DOMVersion="21.5"`, "Adobe InDesign 21.5 (Macintosh)" -
+opening a 13-version-old file in a modern InDesign triggers a one-time format migration. The two
+variants diverged completely in how that migration affected `Self`:
+
+- **`Magazine-1.idml`** shares the base's exact `MasterSpread`/`Spread` `Self` values, and most of
+  its 209 Stories correspond directly to the base's 211 (a handful inserted, a few removed) -
+  consistent with the same kind of clean "reopen, edit, save" behavior confirmed with `HelloWorld2`.
+- **`Magazine-2.idml`** has a **completely disjoint `Self` space** from the base - different
+  `MasterSpread`/`Spread` IDs, and none of its 204 Story IDs match the base's at all (different
+  length and pattern entirely). Consistent with a full internal ID regeneration happening during
+  that particular migration.
+
+**Out of scope by the 2026-08-17 scoping decision above** (all merge inputs assumed same InDesign
+version), but real and worth remembering: this is Kaining's actual research data behaving this way,
+not a hypothetical. If cross-version migration ever becomes something we need to handle, revisit
+this - whether `Self` correspondence survives seems to depend on migration/session details not yet
+understood (see "the one gotcha" above, which may well be the same underlying phenomenon).
+
+Note that this means the current three files don't actually give us a valid same-version test case
+as-is: the base (`Magazine.idml`) is the CS6/DOMVersion-8.0 outlier, and *both* edited variants are
+21.5 - so under the new scope decision, neither pairing is a fair test against this particular base.
+`Magazine-1.idml` and `Magazine-2.idml` are, however, both 21.5 - so a genuine same-version test
+case would need a fresh base derived from one of them (e.g. re-save `Magazine-1.idml` itself as a
+new starting point, then produce two fresh independent edits from *that*), rather than reusing the
+original CS6 file as the base.
+
 ## Proposed design direction (not yet built)
 
 - **Match by `Self` first**, wherever present and of the "auto-generated per-document identity"
-  shape (category 1 above) - this should be cheap and exact for the majority of structural content
-  (page items, spreads, stories, master spreads).
-- **Fall back to 3dm-style content/structural heuristic matching** only for content with no `Self`
-  of its own - primarily the text and inline formatting inside a `Story`.
+  shape (category 1 above) - given the same-InDesign-version scope decision above, this should be
+  cheap and reliable for the large majority of structural content (page items, spreads, stories,
+  master spreads).
+- **Fall back to 3dm-style content/structural heuristic matching** for whatever has no `Self` of
+  its own - primarily the text and inline formatting inside a `Story`. (Cross-version migration
+  breaking `Self` wholesale, per the `Magazine-2` finding, is out of scope for now - see above - so
+  this fallback doesn't need to be sized for "the whole tree lost its identity," just for
+  genuinely un-identified content.)
 - **Adopt Lindholm's vocabulary** (node context, guards, the Update/Update and Position/Position
   conflict categories) as the target semantics for whatever merge logic gets built, rather than
   inventing new terminology.
@@ -140,3 +185,6 @@ Recorded so they aren't lost, not yet investigated:
   not just `ItemTransform` coordinates) - does `Self` survive a real move, and how is the new
   position expressed in the IDML?
 - Whether `Self` stability holds up over *many* rounds of independent editing, not just one.
+- **What actually determines whether a migration/reopen fully regenerates `Self` values or leaves
+  them untouched** - `Magazine-1` came through clean, `Magazine-2` didn't, from the same starting
+  file and the same InDesign version doing the editing. Not yet understood.
