@@ -8,17 +8,26 @@ import com.phasmidsoftware.xmldoc.xml.GenericElement
  * merge/reconciliation step, not the whole tree). There's no "unchanged" case - a matched node
  * whose content didn't change simply produces no `Edit` at all.
  */
-sealed trait Edit
+sealed trait Edit {
+  /**
+   * The `Self` this edit is about (the inserted/deleted/updated node's own identity).
+   */
+  def self: Option[String]
+}
 
 /**
  * A node present in the modified tree with no match in the base - i.e. newly created.
  */
-case class Inserted(node: NodeRef) extends Edit
+case class Inserted(node: NodeRef) extends Edit {
+  def self: Option[String] = node.self
+}
 
 /**
  * A node present in the base tree with no match in the modified tree - i.e. removed.
  */
-case class Deleted(node: NodeRef) extends Edit
+case class Deleted(node: NodeRef) extends Edit {
+  def self: Option[String] = node.self
+}
 
 /**
  * A matched node (same `Self` in both trees) whose own attributes differ.
@@ -29,7 +38,9 @@ case class Deleted(node: NodeRef) extends Edit
  *                          `(key, valueInBase, valueInModified)` - `None` means the attribute was
  *                          absent on that side (i.e. it was added or removed, not just changed).
  */
-case class Updated(base: NodeRef, modified: NodeRef, changedAttributes: Seq[(String, Option[String], Option[String])]) extends Edit
+case class Updated(base: NodeRef, modified: NodeRef, changedAttributes: Seq[(String, Option[String], Option[String])]) extends Edit {
+  def self: Option[String] = base.self
+}
 
 /**
  * Detects edits between a base tree and one modified version, by combining `TreeMatcher`'s

@@ -122,6 +122,15 @@ in-memory session rather than what was actually saved to disk. Any future experi
 real usage advice for a merge tool) should insist on a genuine close/reopen between independent
 edit branches, not a continuously-open session.
 
+**Practical consequence, already hit once**: `A`, `B`, and `C` (used in `MergerSpec`'s real 3-way
+test) all came from that same drifted session, so the plain `HelloWorld2.idml` doesn't actually
+share their `Self` lineage and can't serve as their base - `C` is used instead, as the closest real
+stand-in for the session's true (never-saved) starting point. See the comment on that test for the
+detail. **TODO**: produce a genuinely clean 3-way test trio - a base, then two edits each made from
+an explicit close-then-reopen of that *same saved base file* (not a continuously-open session, and
+not reusing an already-drifted file the way `A`/`B`/`C` do) - so the test doesn't have to route
+around this gotcha at all.
+
 ### Real-world case: cross-version migration can invalidate `Self` correspondence entirely
 
 Tested against Kaining's own research data (`Magazine.idml`, a stock sample file from Adobe's own
