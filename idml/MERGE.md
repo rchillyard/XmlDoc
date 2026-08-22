@@ -108,6 +108,16 @@ one, restyled it - different attributes - in the other):
   should be able to combine without conflict.
 - **Independent insertions did not collide** - two independently added new objects (from a common
   base) got distinct `Self` values (`u154` vs `u141`).
+- **Correction, from the `Mergeable` trio below: independent insertions *can* collide after all.**
+  `u154`/`u141` came from edits that weren't very similar to each other; when the two edits *are*
+  similar (both sides drawing one new `Rectangle`, from the same freshly-reopened base file),
+  InDesign's ID allocator handed out the *identical* `Self` (`u11c`) to both. This suggests ID
+  allocation is deterministic given the starting document state and the sequence of allocating
+  actions taken, not random or collision-resistant - so a genuine `Self` collision between two
+  independent inserts is a real possibility whenever both sides make similar edits, not just a
+  theoretical case `Merger.reconcileInserts` happened to be written defensively for. Confirmed by
+  `MergerSpec`'s `Mergeable`-based test: `Merger.merge` correctly reports this as a `Conflict`
+  (the two rectangles differ in `FillColor`), not a silent match.
 
 ### The one gotcha: live sessions can drift from the saved file
 
@@ -126,10 +136,9 @@ edit branches, not a continuously-open session.
 test) all came from that same drifted session, so the plain `HelloWorld2.idml` doesn't actually
 share their `Self` lineage and can't serve as their base - `C` is used instead, as the closest real
 stand-in for the session's true (never-saved) starting point. See the comment on that test for the
-detail. **TODO**: produce a genuinely clean 3-way test trio - a base, then two edits each made from
-an explicit close-then-reopen of that *same saved base file* (not a continuously-open session, and
-not reusing an already-drifted file the way `A`/`B`/`C` do) - so the test doesn't have to route
-around this gotcha at all.
+detail. **Done**: `Mergeable.idml`/`Mergeable-Left.idml`/`Mergeable-Right.idml` are exactly this - a
+base plus two edits, each made from an explicit close-then-reopen of that same saved file, verified
+to share the same `Self` lineage with no drift at all (see `MergerSpec`'s Mergeable-based test).
 
 **Follow-up: one candidate cause ruled out.** A separate document (`Mergeable.indd`, not related to
 this codebase's `Mergeable` trait) prompted InDesign to "save" after nothing more than an open and

@@ -96,4 +96,25 @@ class MergerSpec extends AnyFlatSpec with should.Matchers {
     u13dOutcomes.collect { case MergedAttributeChange(_, key, _, _) => key }.toSet should contain allOf("ItemTransform", "FillColor")
     u13dOutcomes.collect { case c: Conflict => c } shouldBe Nil // different attributes changed - no real conflict
   }
+
+  behavior of "Merger.merge, real Mergeable files (a genuinely clean 3-way trio)"
+
+  // Mergeable.idml/Mergeable-Left.idml/Mergeable-Right.idml are the trio MERGE.md's TODO asked
+  // for: base and both edits made from an explicit close-then-reopen of the same saved file each
+  // time, so - unlike HelloWorld2A/B/C above - there's no drift gotcha to route around here.
+  it should "detect a real Insert/Insert conflict: both sides independently added a Rectangle with the same Self" in {
+    val base = spread("Mergeable.idml", "Spreads/Spread_ud1.xml")
+    val left = spread("Mergeable-Left.idml", "Spreads/Spread_ud1.xml")
+    val right = spread("Mergeable-Right.idml", "Spreads/Spread_ud1.xml")
+    val outcomes = Merger.merge(base, left, right)
+    // The two pre-existing TextFrames (ue5, uee) were untouched by both sides - no edits at all.
+    outcomes.collect { case Conflict("ue5" | "uee", _, _, _, _) => () } shouldBe Nil
+    outcomes.collect { case MergedAttributeChange("ue5" | "uee", _, _, _) => () } shouldBe Nil
+    // Both sides independently drew a new Rectangle - and InDesign's ID allocation turned out to
+    // be deterministic enough, from the same starting file, to hand out the identical Self (u11c)
+    // to both - a real Insert/Insert collision, not just the defensively-handled theoretical case
+    // Merger.reconcileInserts was written for. Left filled it yellow, right filled it magenta, so
+    // it's a genuine conflict, not two independent insertions that happen to agree.
+    outcomes.collect { case c @ Conflict("u11c", _, _, _, _) => c } should not be empty
+  }
 }
