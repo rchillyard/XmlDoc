@@ -131,6 +131,19 @@ an explicit close-then-reopen of that *same saved base file* (not a continuously
 not reusing an already-drifted file the way `A`/`B`/`C` do) - so the test doesn't have to route
 around this gotcha at all.
 
+**Follow-up: one candidate cause ruled out.** A separate document (`Mergeable.indd`, not related to
+this codebase's `Mergeable` trait) prompted InDesign to "save" after nothing more than an open and
+an IDML export, which raised the question of whether opening-and-exporting alone could be causing
+drift. Tested directly: exported before saving (`Mergeable.idml`) and again after saving
+(`Mergeable-2.idml`, kept as a fixture even though no test currently needs it) - **every single
+`Self` value is byte-for-byte identical between the two**. The only difference anywhere in the two
+IDML packages is `META-INF/metadata.xml`'s XMP bookkeeping (a fresh `ModifyDate`/`InstanceID`, and a
+new history entry recording the save) - ordinary version-tracking metadata InDesign updates on
+every save regardless of whether content changed, unrelated to document structure. So: opening,
+exporting, and saving a document does *not*, on its own, cause `Self` drift. Whatever actually
+caused `A`/`B`/`C`'s drift is something more specific to that particular session's history, still
+unexplained.
+
 ### Real-world case: cross-version migration can invalidate `Self` correspondence entirely
 
 Tested against Kaining's own research data (`Magazine.idml`, a stock sample file from Adobe's own
