@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ue282" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" Justification="LeftAlign">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]" FontStyle="Light Italic">
+        <Content>Res ipienis reiur magnimus volori optat.</Content>
+        <Br/>
+        <Content>Tem aborrum iuscimo luptatum laborit as qui dio. Itatur, alit re landam, odia int aut que volorias re nesed</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ue4c3" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" Justification="LeftAlign">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]" FillColor="Color/Paper">
+        <Content>Bis volor molument, occum, que sitassit perum sit, sus nus sitestrum volora et quunt lanihit atiiscia sa nectis con enem essunt aut pel iunduciist aribustrum ex et aborumet adicienda nestiam que volo ipienie ntiunt aut im aliamus et esti vendera tempor modi qui doluptasit estia esto tempossit autem volectus.</Content>
+        <Br/>
+        <Content>Ebitiis exerspi ciumquaest acient entum aligend aeceped es eturepe reprat.</Content>
+        <Br/>
+        <Content>Iliqui doloristiae rem ducimil id ut alignat empostis eossi bea quidelliquis re diciisquati to magniet ex et ea consed quia aut ut ut aut que consect estiundem ipsam, tota dolore maximus, nobist, occus.</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

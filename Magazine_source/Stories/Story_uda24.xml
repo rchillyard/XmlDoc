@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="uda24" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Cover%3aShot title description">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/white" FillColor="Color/C=100 M=90 Y=10 K=0">
+        <Content>Onet laborae modis </Content>
+      </CharacterStyleRange>
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/white" FillColor="Color/C=100 M=90 Y=10 K=0" Position="Superscript">
+        <Content>esed</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ud9c8" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" Justification="LeftAlign">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Uciiscimpor remporeiunt ant laborero venihic iendae nus delesciet voluptatem. Quiam, nihiti dolente lia dolluptia alitati voloreh enderum non con cone es dis audantemquis es eum et faccupt atibus es asperes toressit, si nihilib usant, offici consequ aspisim porae. Qui consenit lam quas et doluptis ulparum entistia nobis nimi</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

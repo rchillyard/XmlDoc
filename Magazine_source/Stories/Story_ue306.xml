@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ue306" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Od ut ut mo consequ aerumquisi sit haria et, ius poremoluptam eumquis esse quatur mint esenti nia nos eicae et apitatibus num, ulparuptate et isin non nus volupta ne porem hil molorem poreped quia core dus aute moloreprata alitia quis es voluptatur? Ommo te cusapiciiste eati officto es nis am int esequos ea dolest dem ad ut vel mo beaquis et odit aut volorum dis delitatur? Qui ium eaqui rehendi tassit, tecupta eprori nesecti atusandae volesti aspiend issimint.</Content>
+        <Br/>
+        <Content>Haria volorpo ritiae offici ipitatius, sint et que sed exceres sequosseque ipsum ut veliquodio. Name cus aut ommoditiatis maio. Faces esendae. Atia arumque ommoluptatem vel ilibus issimo entinve lenihilit ipic tectius, unte et velloreptae. Ut lab iur, ut im estias sandae ommoluptam eserae. Nam sum etureperis elenis non por mo offic tenihit volor sequunt pero dolorum exped ea exces dollab idis aut quamusda estius essimaio dolor seque sitio et facepro eos ium qui te volo es as del</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

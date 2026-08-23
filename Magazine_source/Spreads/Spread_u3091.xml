@@ -1,0 +1,624 @@
+<?xml version="1.0" ?>
+<idPkg:Spread xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Spread Self="u3091" FlattenerOverride="Default" AllowPageShuffle="true" ItemTransform="1 0 0 1 0 5251.181102354567" ShowMasterItems="true" PageCount="2" BindingLocation="1" PageTransitionType="None" PageTransitionDirection="NotApplicable" PageTransitionDuration="Medium">
+    <FlattenerPreference LineArtAndTextResolution="300" GradientAndMeshResolution="150" ClipComplexRegions="false" ConvertAllStrokesToOutlines="false" ConvertAllTextToOutlines="false">
+      <Properties>
+        <RasterVectorBalance type="double">50</RasterVectorBalance>
+      </Properties>
+    </FlattenerPreference>
+    <Page Self="u3098" AppliedAlternateLayout="ucc" LayoutRule="Off" SnapshotBlendingMode="IgnoreLayoutSnapshots" OptionalPage="false" GeometricBounds="0 0 841.889763778 595.275590551" ItemTransform="1 0 0 1 -595.275590551 -420.944881889" Name="10" AppliedTrapPreset="TrapPreset/$ID/kDefaultTrapStyleName" OverrideList="" AppliedMaster="ucd" MasterPageTransform="1 0 0 1 0 0" TabOrder="" GridStartingPoint="TopOutside" UseMasterGrid="true">
+      <Properties>
+        <Descriptor type="list">
+          <ListItem type="string"/>
+          <ListItem type="enumeration">Arabic</ListItem>
+          <ListItem type="boolean">true</ListItem>
+          <ListItem type="boolean">false</ListItem>
+          <ListItem type="long">10</ListItem>
+          <ListItem type="string"/>
+        </Descriptor>
+        <PageColor type="enumeration">UseMasterColor</PageColor>
+      </Properties>
+      <MarginPreference ColumnCount="12" ColumnGutter="14.173228346456694" Top="56.692913385826785" Bottom="56.692913385826785" Left="56.692913385826785" Right="85.03937007874016" ColumnDirection="Horizontal" ColumnsPositions="0 24.803149606284123 38.97637795274082 63.77952755902494 77.95275590548164 102.75590551176576 116.92913385822246 141.73228346450657 155.90551181096325 180.70866141724736 194.88188976370404 219.68503936998815 233.85826771644483 258.66141732272894 272.83464566918565 297.6377952754698 311.8110236219265 336.61417322821063 350.78740157466734 375.5905511809515 389.7637795274082 414.5669291336923 428.74015748014904 453.5433070864332"/>
+      <GridDataInformation FontStyle="Regular" PointSize="12" CharacterAki="0" LineAki="9" HorizontalScale="100" VerticalScale="100" LineAlignment="LeftOrTopLineJustify" GridAlignment="AlignEmCenter" CharacterAlignment="AlignEmCenter">
+        <Properties>
+          <AppliedFont type="string">Minion Pro</AppliedFont>
+        </Properties>
+      </GridDataInformation>
+    </Page>
+    <Page Self="u3099" AppliedAlternateLayout="ucc" LayoutRule="Off" SnapshotBlendingMode="IgnoreLayoutSnapshots" OptionalPage="false" GeometricBounds="0 0 841.889763778 595.275590551" ItemTransform="1 0 0 1 0 -420.944881889" Name="11" AppliedTrapPreset="TrapPreset/$ID/kDefaultTrapStyleName" OverrideList="" AppliedMaster="ucd" MasterPageTransform="1 0 0 1 0 0" TabOrder="" GridStartingPoint="TopOutside" UseMasterGrid="true">
+      <Properties>
+        <Descriptor type="list">
+          <ListItem type="string"/>
+          <ListItem type="enumeration">Arabic</ListItem>
+          <ListItem type="boolean">true</ListItem>
+          <ListItem type="boolean">false</ListItem>
+          <ListItem type="long">11</ListItem>
+          <ListItem type="string"/>
+        </Descriptor>
+        <PageColor type="enumeration">UseMasterColor</PageColor>
+      </Properties>
+      <MarginPreference ColumnCount="12" ColumnGutter="14.173228346456694" Top="56.692913385826785" Bottom="56.692913385826785" Left="56.692913385826785" Right="85.03937007874016" ColumnDirection="Horizontal" ColumnsPositions="0 24.803149606284123 38.97637795274082 63.77952755902494 77.95275590548164 102.75590551176576 116.92913385822246 141.73228346450657 155.90551181096325 180.70866141724736 194.88188976370404 219.68503936998815 233.85826771644483 258.66141732272894 272.83464566918565 297.6377952754698 311.8110236219265 336.61417322821063 350.78740157466734 375.5905511809515 389.7637795274082 414.5669291336923 428.74015748014904 453.5433070864332"/>
+      <GridDataInformation FontStyle="Regular" PointSize="12" CharacterAki="0" LineAki="9" HorizontalScale="100" VerticalScale="100" LineAlignment="LeftOrTopLineJustify" GridAlignment="AlignEmCenter" CharacterAlignment="AlignEmCenter">
+        <Properties>
+          <AppliedFont type="string">Minion Pro</AppliedFont>
+        </Properties>
+      </GridDataInformation>
+    </Page>
+    <Polygon Self="ue2b3" ContentType="Unassigned" StoryTitle="$ID/" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" FillColor="Color/C=70 M=60 Y=0 K=0" StrokeWeight="0" StrokeColor="Swatch/None" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="u26d" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[Normal Graphics Frame]" Visible="true" Name="$ID/" ItemTransform="-0.9099612708765431 0.41469324265623897 -0.41469324265623897 -0.9099612708765431 1286.4985997683702 5308.590595025937">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="true">
+            <PathPointArray>
+              <PathPointType Anchor="-1026.9660246866679 5021.627319689889" LeftDirection="-1026.9660246866679 5021.627319689889" RightDirection="-1026.9660246866679 5021.627319689889"/>
+              <PathPointType Anchor="-1083.7667533790163 5078.8118114621975" LeftDirection="-1083.7667533790163 5078.8118114621975" RightDirection="-1083.7667533790163 5078.8118114621975"/>
+              <PathPointType Anchor="-503.6893195614209 5141.723395994895" LeftDirection="-503.6893195614209 5141.723395994895" RightDirection="-503.6893195614209 5141.723395994895"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+      </TextWrapPreference>
+      <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+      <FrameFittingOption AutoFit="false" LeftCrop="0" TopCrop="0" RightCrop="0" BottomCrop="0" FittingOnEmptyFrame="None" FittingAlignment="CenterAnchor"/>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+    </Polygon>
+    <Rectangle Self="ue255" ContentType="GraphicType" StoryTitle="$ID/" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="u26d" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[None]" Visible="true" Name="$ID/" BottomRightCornerOption="RoundedCorner" BottomRightCornerRadius="0" ItemTransform="1 0 0 1 -280.2874015749692 -4992.232283457693">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="false">
+            <PathPointArray>
+              <PathPointType Anchor="-113.39370078711477 4809.397637789166" LeftDirection="-113.39370078711477 4809.397637789166" RightDirection="-113.39370078711477 4809.397637789166"/>
+              <PathPointType Anchor="-113.39370078711477 5133.255905512576" LeftDirection="-113.39370078711477 5133.255905512576" RightDirection="-113.39370078711477 5133.255905512576"/>
+              <PathPointType Anchor="418.85039370089305 5133.255905512576" LeftDirection="418.85039370089305 5133.255905512576" RightDirection="418.85039370089305 5133.255905512576"/>
+              <PathPointType Anchor="418.85039370089305 4809.397637789166" LeftDirection="418.85039370089305 4809.397637789166" RightDirection="418.85039370089305 4809.397637789166"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+        <ContourOption ContourType="SameAsClipping" IncludeInsideEdges="false" ContourPathName="$ID/"/>
+      </TextWrapPreference>
+      <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+      <FrameFittingOption FittingOnEmptyFrame="FillProportionally"/>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+      <Image Self="uf12d" Space="$ID/#Links_RGB" ActualPpi="72 72" EffectivePpi="86 86" ImageRenderingIntent="UseColorSettings" OverriddenPageItemProps="" LocalDisplaySetting="Default" ImageTypeName="$ID/JPEG" AppliedObjectStyle="ObjectStyle/$ID/[None]" ItemTransform="0.8395017263217789 0 0 0.8395017263217796 -113.39370078711477 4714.439243396407" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" Visible="true" Name="$ID/">
+        <Properties>
+          <Profile type="string">$ID/None</Profile>
+          <GraphicBounds Left="0" Top="0" Right="634" Bottom="612"/>
+        </Properties>
+        <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+          <Properties>
+            <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+          </Properties>
+          <ContourOption ContourType="SameAsClipping" IncludeInsideEdges="false" ContourPathName="$ID/"/>
+        </TextWrapPreference>
+        <MetadataPacketPreference>
+          <Properties>
+            <Contents><![CDATA[<?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.3-c011 66.145661, 2012/02/06-14:56:27        ">
+   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <rdf:Description rdf:about=""
+            xmlns:xmp="http://ns.adobe.com/xap/1.0/">
+         <xmp:CreatorTool>Adobe Photoshop CS6 (Windows)</xmp:CreatorTool>
+      </rdf:Description>
+      <rdf:Description rdf:about=""
+            xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"
+            xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#">
+         <xmpMM:InstanceID>xmp.iid:E43E508C672211E3BDECC8E757908CEE</xmpMM:InstanceID>
+         <xmpMM:DocumentID>xmp.did:E43E508D672211E3BDECC8E757908CEE</xmpMM:DocumentID>
+         <xmpMM:DerivedFrom rdf:parseType="Resource">
+            <stRef:instanceID>xmp.iid:E43E508A672211E3BDECC8E757908CEE</stRef:instanceID>
+            <stRef:documentID>xmp.did:E43E508B672211E3BDECC8E757908CEE</stRef:documentID>
+         </xmpMM:DerivedFrom>
+      </rdf:Description>
+   </rdf:RDF>
+</x:xmpmeta>
+<?xpacket end="r"?>]]></Contents>
+          </Properties>
+        </MetadataPacketPreference>
+        <Link Self="uf131" AssetURL="$ID/" AssetID="$ID/" LinkResourceURI="file:D:/my%20project/sasori/dummy%20JPG/2.jpg" LinkResourceFormat="$ID/JPEG" StoredState="Normal" LinkClassID="35906" LinkClientID="257" LinkResourceModified="false" LinkObjectModified="false" ShowInUI="true" CanEmbed="true" CanUnembed="true" CanPackage="true" ImportPolicy="NoAutoImport" ExportPolicy="NoAutoExport" LinkImportStamp="file 130317621308295007 5747" LinkImportModificationTime="2013-12-17T20:55:30" LinkImportTime="2014-05-10T15:03:25" LinkResourceSize="0~1673"/>
+        <ClippingPathSettings ClippingType="None" InvertPath="false" IncludeInsideEdges="false" RestrictToFrame="false" UseHighResolutionImage="true" Threshold="25" Tolerance="2" InsetFrame="0" AppliedPathName="$ID/" Index="-1"/>
+        <ImageIOPreference ApplyPhotoshopClippingPath="true" AllowAutoEmbedding="true" AlphaChannelName="$ID/"/>
+      </Image>
+    </Rectangle>
+    <Rectangle Self="u4117" ContentType="GraphicType" StoryTitle="$ID/" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" StrokeWeight="5" StrokeColor="Color/Paper" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="u26d" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[None]" Visible="true" Name="$ID/" BottomRightCornerOption="RoundedCorner" BottomRightCornerRadius="0" ItemTransform="1 0 0 1 113.39370078729587 -5173.649606292339">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="false">
+            <PathPointArray>
+              <PathPointType Anchor="-158.1377952754848 4809.397637789166" LeftDirection="-158.1377952754848 4809.397637789166" RightDirection="-158.1377952754848 4809.397637789166"/>
+              <PathPointType Anchor="-158.1377952754848 5133.255905512576" LeftDirection="-158.1377952754848 5133.255905512576" RightDirection="-158.1377952754848 5133.255905512576"/>
+              <PathPointType Anchor="418.850393700893 5133.255905512576" LeftDirection="418.850393700893 5133.255905512576" RightDirection="418.850393700893 5133.255905512576"/>
+              <PathPointType Anchor="418.850393700893 4809.397637789166" LeftDirection="418.850393700893 4809.397637789166" RightDirection="418.850393700893 4809.397637789166"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+        <ContourOption ContourType="SameAsClipping" IncludeInsideEdges="false" ContourPathName="$ID/"/>
+      </TextWrapPreference>
+      <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+      <FrameFittingOption FittingOnEmptyFrame="FillProportionally"/>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+      <Image Self="uf137" Space="$ID/#Links_RGB" ActualPpi="72 72" EffectivePpi="79 79" ImageRenderingIntent="UseColorSettings" OverriddenPageItemProps="" LocalDisplaySetting="Default" ImageTypeName="$ID/JPEG" AppliedObjectStyle="ObjectStyle/$ID/[None]" ItemTransform="0.9100760078491764 0 0 0.910076007849177 -158.13779527548482 4692.843513249022" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" Visible="true" Name="$ID/">
+        <Properties>
+          <Profile type="string">$ID/None</Profile>
+          <GraphicBounds Left="0" Top="0" Right="634" Bottom="612"/>
+        </Properties>
+        <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+          <Properties>
+            <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+          </Properties>
+          <ContourOption ContourType="SameAsClipping" IncludeInsideEdges="false" ContourPathName="$ID/"/>
+        </TextWrapPreference>
+        <MetadataPacketPreference>
+          <Properties>
+            <Contents><![CDATA[<?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?>
+<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.3-c011 66.145661, 2012/02/06-14:56:27        ">
+   <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      <rdf:Description rdf:about=""
+            xmlns:xmp="http://ns.adobe.com/xap/1.0/">
+         <xmp:CreatorTool>Adobe Photoshop CS6 (Windows)</xmp:CreatorTool>
+      </rdf:Description>
+      <rdf:Description rdf:about=""
+            xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/"
+            xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#">
+         <xmpMM:InstanceID>xmp.iid:E43E508C672211E3BDECC8E757908CEE</xmpMM:InstanceID>
+         <xmpMM:DocumentID>xmp.did:E43E508D672211E3BDECC8E757908CEE</xmpMM:DocumentID>
+         <xmpMM:DerivedFrom rdf:parseType="Resource">
+            <stRef:instanceID>xmp.iid:E43E508A672211E3BDECC8E757908CEE</stRef:instanceID>
+            <stRef:documentID>xmp.did:E43E508B672211E3BDECC8E757908CEE</stRef:documentID>
+         </xmpMM:DerivedFrom>
+      </rdf:Description>
+   </rdf:RDF>
+</x:xmpmeta>
+<?xpacket end="r"?>]]></Contents>
+          </Properties>
+        </MetadataPacketPreference>
+        <Link Self="uf13b" AssetURL="$ID/" AssetID="$ID/" LinkResourceURI="file:D:/my%20project/sasori/dummy%20JPG/20.jpg" LinkResourceFormat="$ID/JPEG" StoredState="Normal" LinkClassID="35906" LinkClientID="257" LinkResourceModified="false" LinkObjectModified="false" ShowInUI="true" CanEmbed="true" CanUnembed="true" CanPackage="true" ImportPolicy="NoAutoImport" ExportPolicy="NoAutoExport" LinkImportStamp="file 130317621308295007 5747" LinkImportModificationTime="2013-12-17T20:55:30" LinkImportTime="2014-05-10T15:03:25" LinkResourceSize="0~1673"/>
+        <ClippingPathSettings ClippingType="None" InvertPath="false" IncludeInsideEdges="false" RestrictToFrame="false" UseHighResolutionImage="true" Threshold="25" Tolerance="2" InsetFrame="0" AppliedPathName="$ID/" Index="-1"/>
+        <ImageIOPreference ApplyPhotoshopClippingPath="true" AllowAutoEmbedding="true" AlphaChannelName="$ID/"/>
+      </Image>
+    </Rectangle>
+    <Rectangle Self="ud3d6" ContentType="Unassigned" StoryTitle="$ID/" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" FillColor="Color/C=100 M=90 Y=10 K=0" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="u26d" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[None]" Visible="true" Name="$ID/" ItemTransform="1 0 0 1 43.022194778010885 -4962.192913381626">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="false">
+            <PathPointArray>
+              <PathPointType Anchor="-553.25590551163 4941.287401574804" LeftDirection="-553.25590551163 4941.287401574804" RightDirection="-553.25590551163 4941.287401574804"/>
+              <PathPointType Anchor="-553.25590551163 5147.216535426197" LeftDirection="-553.25590551163 5147.216535426197" RightDirection="-553.25590551163 5147.216535426197"/>
+              <PathPointType Anchor="-322.94094488178416 5147.216535426197" LeftDirection="-322.94094488178416 5147.216535426197" RightDirection="-322.94094488178416 5147.216535426197"/>
+              <PathPointType Anchor="-322.94094488178416 4941.287401574804" LeftDirection="-322.94094488178416 4941.287401574804" RightDirection="-322.94094488178416 4941.287401574804"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+      </TextWrapPreference>
+      <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+    </Rectangle>
+    <Polygon Self="ue2b1" ContentType="Unassigned" StoryTitle="$ID/" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" FillColor="Color/C=0 M=100 Y=100 K=0" StrokeWeight="0" StrokeColor="Swatch/None" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="u26d" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[Normal Graphics Frame]" Visible="true" Name="$ID/" ItemTransform="0 -1 1 0 -5559.905511810843 -686.7285684605695">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="false">
+            <PathPointArray>
+              <PathPointType Anchor="-656.9647889406489 5049.671801077224" LeftDirection="-656.9647889406489 5049.671801077224" RightDirection="-656.9647889406489 5049.671801077224"/>
+              <PathPointType Anchor="-656.9647889406485 5156.606985422281" LeftDirection="-656.9647889406485 5156.606985422281" RightDirection="-656.9647889406485 5156.606985422281"/>
+              <PathPointType Anchor="-433.4487025691009 5156.606985422281" LeftDirection="-433.4487025691009 5156.606985422281" RightDirection="-433.4487025691009 5156.606985422281"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+      </TextWrapPreference>
+      <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+      <FrameFittingOption AutoFit="false" LeftCrop="0" TopCrop="0" RightCrop="0" BottomCrop="0" FittingOnEmptyFrame="None" FittingAlignment="CenterAnchor"/>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+    </Polygon>
+    <Polygon Self="ue2b2" ContentType="Unassigned" StoryTitle="$ID/" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" FillColor="Color/C=100 M=90 Y=10 K=0" StrokeWeight="0" StrokeColor="Swatch/None" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="u26d" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[Normal Graphics Frame]" Visible="true" Name="$ID/" ItemTransform="-0.9099612708765431 0.41469324265623897 -0.41469324265623897 -0.9099612708765431 1285.1868387277007 5307.590595025936">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="false">
+            <PathPointArray>
+              <PathPointType Anchor="-1068.2950742103567 4868.942501350153" LeftDirection="-1068.2950742103567 4868.942501350153" RightDirection="-1068.2950742103567 4868.942501350153"/>
+              <PathPointType Anchor="-1027.7449831876656 5020.173379979466" LeftDirection="-1027.7449831876656 5020.173379979466" RightDirection="-1027.7449831876656 5020.173379979466"/>
+              <PathPointType Anchor="-433.44870256909985 5156.606985422279" LeftDirection="-433.44870256909985 5156.606985422279" RightDirection="-433.44870256909985 5156.606985422279"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+      </TextWrapPreference>
+      <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+      <FrameFittingOption AutoFit="false" LeftCrop="0" TopCrop="0" RightCrop="0" BottomCrop="0" FittingOnEmptyFrame="None" FittingAlignment="CenterAnchor"/>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+    </Polygon>
+    <Rectangle Self="uee3e" ContentType="Unassigned" StoryTitle="$ID/" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" FillColor="Color/C=100 M=90 Y=10 K=0" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="u26d" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[None]" Visible="true" Name="$ID/" ItemTransform="1 0 0 1 604.633858267528 -5303.039370077977">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="false">
+            <PathPointArray>
+              <PathPointType Anchor="-553.25590551163 4941.287401574804" LeftDirection="-553.25590551163 4941.287401574804" RightDirection="-553.25590551163 4941.287401574804"/>
+              <PathPointType Anchor="-553.25590551163 5235.007874022623" LeftDirection="-553.25590551163 5235.007874022623" RightDirection="-553.25590551163 5235.007874022623"/>
+              <PathPointType Anchor="-322.94094488178416 5235.007874022623" LeftDirection="-322.94094488178416 5235.007874022623" RightDirection="-322.94094488178416 5235.007874022623"/>
+              <PathPointType Anchor="-322.94094488178416 4941.287401574804" LeftDirection="-322.94094488178416 4941.287401574804" RightDirection="-322.94094488178416 4941.287401574804"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TransparencySetting>
+        <BlendingSetting BlendMode="Multiply"/>
+      </TransparencySetting>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+      </TextWrapPreference>
+      <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+    </Rectangle>
+    <GraphicLine Self="ueeb7" ContentType="Unassigned" LockState="None" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="u26d" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[Normal Graphics Frame]" Visible="true" Name="$ID/" ItemTransform="1 -0 -0 1 0 -5251.181102354567">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="true">
+            <PathPointArray>
+              <PathPointType Anchor="-510.5826771650827 5451.02362204037" LeftDirection="-510.5826771650827 5451.02362204037" RightDirection="-510.5826771650827 5451.02362204037"/>
+              <PathPointType Anchor="-56.69291338564574 5451.02362204037" LeftDirection="-56.69291338564574 5451.02362204037" RightDirection="-56.69291338564574 5451.02362204037"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+      </TextWrapPreference>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+    </GraphicLine>
+    <TextFrame Self="ubc1e" ParentStory="ubc0c" PreviousTextFrame="n" NextTextFrame="n" ContentType="TextType" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="uc3" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[Normal Text Frame]" Visible="true" Name="$ID/" ItemTransform="1 0 0 1 338.3858267717213 263.14960630685164">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="false">
+            <PathPointArray>
+              <PathPointType Anchor="-116.92913385822243 -25.511811023622613" LeftDirection="-116.92913385822243 -25.511811023622613" RightDirection="-116.92913385822243 -25.511811023622613"/>
+              <PathPointType Anchor="-116.92913385822243 25.511811023622613" LeftDirection="-116.92913385822243 25.511811023622613" RightDirection="-116.92913385822243 25.511811023622613"/>
+              <PathPointType Anchor="116.92913385822249 25.511811023622613" LeftDirection="116.92913385822249 25.511811023622613" RightDirection="116.92913385822249 25.511811023622613"/>
+              <PathPointType Anchor="116.92913385822249 -25.511811023622613" LeftDirection="116.92913385822249 -25.511811023622613" RightDirection="116.92913385822249 -25.511811023622613"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextFramePreference TextColumnFixedWidth="233.8582677164449" TextColumnMaxWidth="0"/>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+      </TextWrapPreference>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+    </TextFrame>
+    <TextFrame Self="ud3bd" ParentStory="ud3c0" PreviousTextFrame="n" NextTextFrame="n" ContentType="TextType" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="uc3" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[Normal Text Frame]" Visible="true" Name="$ID/" ItemTransform="1 0 0 1 139.4311023624236 280.4825196858037">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="false">
+            <PathPointArray>
+              <PathPointType Anchor="82.02559055107531 -80.64000000000028" LeftDirection="82.02559055107531 -80.64000000000028" RightDirection="82.02559055107531 -80.64000000000028"/>
+              <PathPointType Anchor="82.02559055107531 -57.301023619374945" LeftDirection="82.02559055107531 -57.301023619374945" RightDirection="82.02559055107531 -57.301023619374945"/>
+              <PathPointType Anchor="315.8838582675203 -57.301023619374945" LeftDirection="315.8838582675203 -57.301023619374945" RightDirection="315.8838582675203 -57.301023619374945"/>
+              <PathPointType Anchor="315.8838582675203 -80.64000000000028" LeftDirection="315.8838582675203 -80.64000000000028" RightDirection="315.8838582675203 -80.64000000000028"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextFramePreference TextColumnFixedWidth="233.85826771644497" VerticalJustification="CenterAlign" TextColumnMaxWidth="0" VerticalBalanceColumns="true"/>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+      </TextWrapPreference>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+    </TextFrame>
+    <TextFrame Self="ud3d9" ParentStory="ud3dc" PreviousTextFrame="n" NextTextFrame="n" ContentType="TextType" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="uc3" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[Normal Text Frame]" Visible="true" Name="$ID/" ItemTransform="1 0 0 1 -541.5860729381471 79.077007871344">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="false">
+            <PathPointArray>
+              <PathPointType Anchor="82.02559055107531 -80.6400000000001" LeftDirection="82.02559055107531 -80.6400000000001" RightDirection="82.02559055107531 -80.6400000000001"/>
+              <PathPointType Anchor="82.02559055107531 83.76944881889733" LeftDirection="82.02559055107531 83.76944881889733" RightDirection="82.02559055107531 83.76944881889733"/>
+              <PathPointType Anchor="210.70275590526262 83.76944881889733" LeftDirection="210.70275590526262 83.76944881889733" RightDirection="210.70275590526262 83.76944881889733"/>
+              <PathPointType Anchor="210.70275590526262 -80.6400000000001" LeftDirection="210.70275590526262 -80.6400000000001" RightDirection="210.70275590526262 -80.6400000000001"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextFramePreference TextColumnFixedWidth="128.6771653541873" VerticalJustification="CenterAlign" TextColumnMaxWidth="0" VerticalBalanceColumns="true"/>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+      </TextWrapPreference>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+    </TextFrame>
+    <TextFrame Self="ue266" ParentStory="ue269" PreviousTextFrame="n" NextTextFrame="n" ContentType="TextType" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="uc3" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[Normal Text Frame]" Visible="true" Name="$ID/" ItemTransform="1 0 0 1 -475.70669291315926 -172.6398658914677">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="false">
+            <PathPointArray>
+              <PathPointType Anchor="82.02559055107528 -80.64000000000021" LeftDirection="82.02559055107528 -80.64000000000021" RightDirection="82.02559055107528 -80.64000000000021"/>
+              <PathPointType Anchor="82.02559055107528 -32.871945124516046" LeftDirection="82.02559055107528 -32.871945124516046" RightDirection="82.02559055107528 -32.871945124516046"/>
+              <PathPointType Anchor="419.0137795275136 -32.871945124516046" LeftDirection="419.0137795275136 -32.871945124516046" RightDirection="419.0137795275136 -32.871945124516046"/>
+              <PathPointType Anchor="419.0137795275136 -80.64000000000021" LeftDirection="419.0137795275136 -80.64000000000021" RightDirection="419.0137795275136 -80.64000000000021"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextFramePreference TextColumnFixedWidth="336.9881889764383" TextColumnMaxWidth="0" VerticalBalanceColumns="true"/>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+      </TextWrapPreference>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+    </TextFrame>
+    <TextFrame Self="ue27f" ParentStory="ue282" PreviousTextFrame="n" NextTextFrame="n" ContentType="TextType" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="uc3" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[Normal Text Frame]" Visible="true" Name="$ID/" ItemTransform="1 0 0 1 -155.1968503937461 178.53543307850578">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="false">
+            <PathPointArray>
+              <PathPointType Anchor="-101.6220472440492 -25.511811023622613" LeftDirection="-101.6220472440492 -25.511811023622613" RightDirection="-101.6220472440492 -25.511811023622613"/>
+              <PathPointType Anchor="-101.6220472440492 5.918853038877387" LeftDirection="-101.6220472440492 5.918853038877387" RightDirection="-101.6220472440492 5.918853038877387"/>
+              <PathPointType Anchor="98.50393700810037 5.918853038877387" LeftDirection="98.50393700810037 5.918853038877387" RightDirection="98.50393700810037 5.918853038877387"/>
+              <PathPointType Anchor="98.50393700810037 -25.511811023622613" LeftDirection="98.50393700810037 -25.511811023622613" RightDirection="98.50393700810037 -25.511811023622613"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextFramePreference TextColumnFixedWidth="200.12598425214958" TextColumnMaxWidth="0"/>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+      </TextWrapPreference>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+    </TextFrame>
+    <TextFrame Self="ue297" ParentStory="ue29b" PreviousTextFrame="n" NextTextFrame="n" ContentType="TextType" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="uc3" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[Normal Text Frame]" Visible="true" Name="$ID/" ItemTransform="1 0 0 1 283.46456692904314 12.755905519449698">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="false">
+            <PathPointArray>
+              <PathPointType Anchor="-116.92913385822243 -25.511811023622613" LeftDirection="-116.92913385822243 -25.511811023622613" RightDirection="-116.92913385822243 -25.511811023622613"/>
+              <PathPointType Anchor="-116.92913385822243 128.26771653543346" LeftDirection="-116.92913385822243 128.26771653543346" RightDirection="-116.92913385822243 128.26771653543346"/>
+              <PathPointType Anchor="226.77165354357888 128.26771653543346" LeftDirection="226.77165354357888 128.26771653543346" RightDirection="226.77165354357888 128.26771653543346"/>
+              <PathPointType Anchor="226.77165354357888 -25.511811023622613" LeftDirection="226.77165354357888 -25.511811023622613" RightDirection="226.77165354357888 -25.511811023622613"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextFramePreference TextColumnCount="2" TextColumnFixedWidth="165.85039370090067" TextColumnMaxWidth="0"/>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+      </TextWrapPreference>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+    </TextFrame>
+    <TextFrame Self="uee3f" ParentStory="uee42" PreviousTextFrame="n" NextTextFrame="n" ContentType="TextType" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="uc3" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[Normal Text Frame]" Visible="true" Name="$ID/" ItemTransform="1 0 0 1 20.17125984265192 -266.60409448742394">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="false">
+            <PathPointArray>
+              <PathPointType Anchor="82.02559055107531 -80.64000000000021" LeftDirection="82.02559055107531 -80.64000000000021" RightDirection="82.02559055107531 -80.64000000000021"/>
+              <PathPointType Anchor="82.02559055107531 5.108031502935667" LeftDirection="82.02559055107531 5.108031502935667" RightDirection="82.02559055107531 5.108031502935667"/>
+              <PathPointType Anchor="210.70275590526262 5.108031502935667" LeftDirection="210.70275590526262 5.108031502935667" RightDirection="210.70275590526262 5.108031502935667"/>
+              <PathPointType Anchor="210.70275590526262 -80.64000000000021" LeftDirection="210.70275590526262 -80.64000000000021" RightDirection="210.70275590526262 -80.64000000000021"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextFramePreference TextColumnFixedWidth="128.6771653541873" VerticalJustification="CenterAlign" TextColumnMaxWidth="0" VerticalBalanceColumns="true"/>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+      </TextWrapPreference>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+    </TextFrame>
+    <TextFrame Self="uee56" ParentStory="uee59" PreviousTextFrame="n" NextTextFrame="n" ContentType="TextType" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="uc3" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[Normal Text Frame]" Visible="true" Name="$ID/" ItemTransform="1 0 0 1 186.02362204719128 -202.32283464146803">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="false">
+            <PathPointArray>
+              <PathPointType Anchor="-116.92913385822243 -25.511811023622613" LeftDirection="-116.92913385822243 -25.511811023622613" RightDirection="-116.92913385822243 -25.511811023622613"/>
+              <PathPointType Anchor="-116.92913385822243 25.511811023622613" LeftDirection="-116.92913385822243 25.511811023622613" RightDirection="-116.92913385822243 25.511811023622613"/>
+              <PathPointType Anchor="77.95275590548157 25.511811023622613" LeftDirection="77.95275590548157 25.511811023622613" RightDirection="77.95275590548157 25.511811023622613"/>
+              <PathPointType Anchor="77.95275590548157 -25.511811023622613" LeftDirection="77.95275590548157 -25.511811023622613" RightDirection="77.95275590548157 -25.511811023622613"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextFramePreference TextColumnFixedWidth="194.881889763704" TextColumnMaxWidth="0"/>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+      </TextWrapPreference>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+    </TextFrame>
+    <TextFrame Self="uee70" ParentStory="uee73" PreviousTextFrame="n" NextTextFrame="n" ContentType="TextType" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="uc3" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[Normal Text Frame]" Visible="true" Name="$ID/" ItemTransform="1 0 0 1 186.02362204719128 -116.01001168207222">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="false">
+            <PathPointArray>
+              <PathPointType Anchor="-116.92913385822243 -34.9348702000534" LeftDirection="-116.92913385822243 -34.9348702000534" RightDirection="-116.92913385822243 -34.9348702000534"/>
+              <PathPointType Anchor="-116.92913385822243 25.511811023622613" LeftDirection="-116.92913385822243 25.511811023622613" RightDirection="-116.92913385822243 25.511811023622613"/>
+              <PathPointType Anchor="77.95275590548157 25.511811023622613" LeftDirection="77.95275590548157 25.511811023622613" RightDirection="77.95275590548157 25.511811023622613"/>
+              <PathPointType Anchor="77.95275590548157 -34.9348702000534" LeftDirection="77.95275590548157 -34.9348702000534" RightDirection="77.95275590548157 -34.9348702000534"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextFramePreference TextColumnFixedWidth="194.881889763704" TextColumnMaxWidth="0"/>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+      </TextWrapPreference>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+    </TextFrame>
+    <TextFrame Self="uee88" ParentStory="uee8c" PreviousTextFrame="n" NextTextFrame="n" ContentType="TextType" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="uc3" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[Normal Text Frame]" Visible="true" Name="$ID/" ItemTransform="1 0 0 1 -408.6116634895699 240.43427427560164">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="false">
+            <PathPointArray>
+              <PathPointType Anchor="-101.62204724404917 -25.511811023622613" LeftDirection="-101.62204724404917 -25.511811023622613" RightDirection="-101.62204724404917 -25.511811023622613"/>
+              <PathPointType Anchor="-101.62204724404917 81.42337332143414" LeftDirection="-101.62204724404917 81.42337332143414" RightDirection="-101.62204724404917 81.42337332143414"/>
+              <PathPointType Anchor="128.69291338579654 81.42337332143414" LeftDirection="128.69291338579654 81.42337332143414" RightDirection="128.69291338579654 81.42337332143414"/>
+              <PathPointType Anchor="128.69291338579654 -25.511811023622613" LeftDirection="128.69291338579654 -25.511811023622613" RightDirection="128.69291338579654 -25.511811023622613"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextFramePreference TextColumnFixedWidth="230.3149606298457" TextColumnMaxWidth="0"/>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+      </TextWrapPreference>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+    </TextFrame>
+    <TextFrame Self="ueea0" ParentStory="ueea3" PreviousTextFrame="n" NextTextFrame="n" ContentType="TextType" ParentInterfaceChangeCount="" TargetInterfaceChangeCount="" LastUpdatedInterfaceChangeCount="" OverriddenPageItemProps="" HorizontalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" VerticalLayoutConstraints="FlexibleDimension FixedDimension FlexibleDimension" GradientFillStart="0 0" GradientFillLength="0" GradientFillAngle="0" GradientStrokeStart="0 0" GradientStrokeLength="0" GradientStrokeAngle="0" ItemLayer="uc3" Locked="false" LocalDisplaySetting="Default" GradientFillHiliteLength="0" GradientFillHiliteAngle="0" GradientStrokeHiliteLength="0" GradientStrokeHiliteAngle="0" AppliedObjectStyle="ObjectStyle/$ID/[Normal Text Frame]" Visible="true" Name="$ID/" ItemTransform="1 0 0 1 -155.1968503937461 240.43427427560164">
+      <Properties>
+        <PathGeometry>
+          <GeometryPathType PathOpen="false">
+            <PathPointArray>
+              <PathPointType Anchor="-101.6220472440492 -25.511811023622613" LeftDirection="-101.6220472440492 -25.511811023622613" RightDirection="-101.6220472440492 -25.511811023622613"/>
+              <PathPointType Anchor="-101.6220472440492 59.5657257320363" LeftDirection="-101.6220472440492 59.5657257320363" RightDirection="-101.6220472440492 59.5657257320363"/>
+              <PathPointType Anchor="98.50393700810037 59.5657257320363" LeftDirection="98.50393700810037 59.5657257320363" RightDirection="98.50393700810037 59.5657257320363"/>
+              <PathPointType Anchor="98.50393700810037 -25.511811023622613" LeftDirection="98.50393700810037 -25.511811023622613" RightDirection="98.50393700810037 -25.511811023622613"/>
+            </PathPointArray>
+          </GeometryPathType>
+        </PathGeometry>
+      </Properties>
+      <TextFramePreference TextColumnFixedWidth="200.12598425214958" TextColumnMaxWidth="0"/>
+      <TextWrapPreference Inverse="false" ApplyToMasterPageOnly="false" TextWrapSide="BothSides" TextWrapMode="None">
+        <Properties>
+          <TextWrapOffset Top="0" Left="0" Bottom="0" Right="0"/>
+        </Properties>
+      </TextWrapPreference>
+      <ObjectExportOption AltTextSourceType="SourceXMLStructure" ActualTextSourceType="SourceXMLStructure" CustomAltText="$ID/" CustomActualText="$ID/" ApplyTagType="TagFromStructure" CustomImageConversion="false" ImageConversionType="JPEG" CustomImageSizeOption="SizeRelativeToPageWidth" ImageExportResolution="Ppi300" GIFOptionsPalette="AdaptivePalette" GIFOptionsInterlaced="true" JPEGOptionsQuality="High" JPEGOptionsFormat="BaselineEncoding" ImageAlignment="AlignLeft" ImageSpaceBefore="0" ImageSpaceAfter="0" UseImagePageBreak="false" ImagePageBreak="PageBreakBefore" CustomImageAlignment="false" SpaceUnit="CssPixel" CustomLayout="false" CustomLayoutType="AlignmentAndSpacing">
+        <Properties>
+          <AltMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+          <ActualMetadataProperty NamespacePrefix="$ID/" PropertyPath="$ID/"/>
+        </Properties>
+      </ObjectExportOption>
+    </TextFrame>
+  </Spread>
+</idPkg:Spread>

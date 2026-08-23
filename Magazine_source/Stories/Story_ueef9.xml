@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ueef9" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" Justification="LeftAlign">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Rae volupis audiciendi ommosant ate eos et reseque omniminiscia nobis maion comnim et qui asinciatium apitatem et pe vellorp osant.</Content>
+        <Br/>
+        <Content>Edio. Ignimenimod es aut hil et pos quiatem que precatusam fugit haris ut aribus dolupta dolorep elecae apis sum ut reptatio. Itatem hil modit int es maximil modi quaspid ucimolorem qui alitati il in plandunt utem. Ehendae esto ipsumque non esequib erorpor eniatemped que sedionseque occae asped quid quoditatur aut aut quis aboreium re volupta testis quam fuga. Conserum</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

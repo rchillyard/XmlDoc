@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="uf05b" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" Justification="LeftAlign">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Molupti corro consed quatur alit, odis es eos exces sint elenimusa cus sunt qui tota dolupid ebist, volessed unto consequis earioria corestio. Itatem facitis audi reperat dolorem quatiusdant recupiet etus as audi blautectatur solupta nis aut vel mincide liametur remquam lacerroreri consequia nosam quia si tem audae cusanda nimolorum que conemod ut doloreic tem cum que sita vel iur ame nem num, abo. Nam, qui deniminum, conse et magnatusam rendaeprat.</Content>
+        <Br/>
+        <Content>Bitae ommolen ihitatint.</Content>
+        <Br/>
+        <Content>Perem aut por si ni inciunt laut quia pe voluptatur reprem quo elicipsamus nobit veligna turit, qui con nobitatate sum ut quatemped eos maximol uptibus ciunto quam que veribus aliqui commolorpori a cusaect atusam, sendaec essincto molorrovid quiatur?</Content>
+        <Br/>
+        <Content>Atur sum volore volorepel ilia quam eos et ut maio. Nequi odi dellestis volorit aessim fugit plignias derunt possi blaboru piduntiam qui blam et quisquia netur, nit volendi onseria debita venimin porest, consequo omni</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

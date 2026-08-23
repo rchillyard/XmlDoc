@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ud194" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Ga. Itates susa serrume elique consequia ipsum dolupta int harum quam quam aut veribea rcipisin con pos quo elitaturerat libus accat re late none venda exeris et aut ut alisimolore quo expero blabo. Paribusae pore, conem et aligeni hillorestis incitas rem ea perita nulparum dolorporum eliquae. Ita volorpor aliquatem que re sundit fugia venimol uptium, ommolore voluptation cullaut pariori orerumquiae. Epe et idestius nem. Et doluptatibus im est ullaborernam fugitioriat maxim ad quodis molorro eossi tem harionserum hitio optat ma ipsam quibusam nulluptur sam eius nes magnimus sedigendam harchil inventis molorepro que volectore nis eum volorese cusc</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

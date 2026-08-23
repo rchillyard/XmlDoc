@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ue4da" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" Justification="LeftAlign">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]" FillColor="Color/Paper">
+        <Content>Ipsam, sapidunt. Venimagnimus moditassit re parciis elent eos rati atem et re nonseque odi nullatias ut id qui aspe soluptiis aut illis doluptate volorro tem aut ant et ex ea solectum as volorehenis voluptat min corehen tiasperit audaecest, sequat quo magnihitatur ma verianihicto essiniat la quiaeste perepre volor assim as eumque debit et quidiat iusdae nos voluptiorum ressum que sam, opta dende plit harchita acerro volenda</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

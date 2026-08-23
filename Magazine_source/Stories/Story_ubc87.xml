@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ubc87" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Bit fugitint. Giate optam, invella qui quatia nim destio et experrum fuga. Oluptas delendi omnit vellendi tor sedis sequi ius andam nis quatest rument.</Content>
+        <Br/>
+        <Content>Itat essum ducimin conse con et in eos ea volessi odi re eria nus si aut et, quia ium accumquisqui sam invelent in consecaectia que eaquodist quodis explitaesere cullaudam faccabor andicia ereheni qui cus des mo eum sa venecea veribernatem rate resti quamenis quae inis none inim que demquodit et quia doluptam faceaquosant inullab ipsamus min parum quia quia dolupta tiissequat volenimusae ped undi officit eatiust iasped ulluptatis doluptat hic torporro quiae possit pelligent re iliqui aceperspe sinulli quatur? Os nem fuga. Obit eaque volut maio int molupta num alique voluptio dis nulparum sintescit fugia veliquo ditium di sent prorest, essimod molupitiumet re nos excest arum res atius quossim volori dolupta tquaestem. Uptinve rferibu scimenis doloreped et ab ipsapelectur rem qui re landi odis doloribus.</Content>
+        <Br/>
+        <Content>Uci aut pa ad endi aut erum num, quame videntia sendes simus eatur mo consenimo beatemporio. Itatqua turitat aut que pe alignatinita quos coreriam corro volupta aut parum earumque nonsect otasiti oressumquae co</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

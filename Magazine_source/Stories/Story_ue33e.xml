@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ue33e" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Volor similitassi sim exeratiatem exerrum que se res porum, que volest in pore perum, sam que dendi velest, cum deliqui aut eum aliquo ium aliti assi sit, coria verit isi blaborature nectorum evel eribus molut elit, se vollandia nos repratur, autae erspic to consedi untio enectetur, consedi aernatium quatecto molori occum repuda nosam essit, ius is exeriasitae et poritibeatem sedicidem exerios ad magnis ipides dolupienis ernatemquam, corum est, te</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

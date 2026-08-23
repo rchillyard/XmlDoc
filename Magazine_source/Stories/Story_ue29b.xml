@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ue29b" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" DropCapCharacters="1" DropCapLines="2">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Musdae laturibusam, sus abo. Ut vene est moloreheni delitium et voluptur? Dae nus earchiliquam reperum vel inctate intis sus apitaqu atiumet ature erumqui temporem quodis as qui acimin est eum, optaten estio. Itatio odist, eum sum quam ipictem ventiust quiaepel et es plit hic totas qui is everorp osantia vidundaecti dusdae. Quiasit iusapit, omnient lat quam fugitiore consequi consequid mod quae acim quas sametur aut exero denem qui nihiti ut offic tenis es aspitas pedit vent, autemporume nonsedi aut eate nos maion nullatio beriate eos aut fuga. Ut as nisimax imagnatur, at voluptio ventiis pedit laut laborruptat quid es etur magnat porem reritibus eatiundae venimus ventiosam nihilignis aut exped maion pore verehenda dolentis eaquunt iorempelent moluptatur? Nam evendusam quas nossi ad et ab ium cumque sincto et velias acepedit maximusdaes et facient iustia num eum et venis ducias ilit alis vendunde es saperenest et magniae laut earupid ma ad quo doluptate con es exceat quis susam dolorumquis ad evenimpossed quibusda sincillati ut arci sequibu scilit platibusdae volorep raeressin nonsequatio coreiu</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

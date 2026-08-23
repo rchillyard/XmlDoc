@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ubed1" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" DropCapCharacters="1" DropCapLines="2">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Ehenis porem sit, qui nis apidel es nis erro intem quiam la nis dunt officipsa voluptiat quiam ellor at odias es explis et aut is mi, ilita dolut assitem peligni hilignia alitium que exceper uptaesequi voluptatio cuscienditi re illes dolor re repti quassequam aborest facerum et apedit exerisi modions ecest, atisquidem reptati si delit, to bla perionsero volorest utempor esecaborem at quam, omnimpe liatatusa quatias dolo coruptas doluptatquas eicid magniet il inihit abo. Itatiat aspieni meniend endam, que es et de sersperum quatemp oratur, sequianimi, volores illaccatur se eatecab oreperum volorrovit liciae doluptata ipsaper eperum quuntibusam, volecesequi dolum anit vel ipiene dolorer spienda ntiunti comnimo luptatiasim vel inimustotat.</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

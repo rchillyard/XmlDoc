@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="uecc6" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" Justification="LeftAlign">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]" FontStyle="Light Italic">
+        <Content>Atquate nimolupta consendit volorem accum quistiore dolor a sitio. Antotatio eati num ipient et derem. Equi volupta esto dolut dolorro et fugiat officit perehenet lacillam, intur rest, voluptus ad molorit aut estius, ilias qui ommoluptatum quasime nistio eaqui doluptasped maios eatium aut qui alit reperunt ius, odi omnit fuga. Ficim volorro ilis nis et lam qui audam eum volendia nus, evenimi litibus et hillit, aut aut exernatibus dolum nim intorep udaeprature dolendunt ulparchit que cum et</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

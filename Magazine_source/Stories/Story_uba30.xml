@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="uba30" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Axim necument quo consequatur? Soluptae et plitae. Itat denis magnis sit vel ilibus, que volorion cus, to molentur si occabor reriam sin excepe voluptas aut quia sam et voloratio etur rem hil ilibus enihil explatio iur mint es mod eum assit, eum sunt mo molestet quia quia pro molenihit qui que nestiis volorrori duci sollabo. Por aspeliquat volorita vit utemporit, cust re, quamusani odis magnatiae etus restium quibus.</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="uc28c" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" DropCapCharacters="1" DropCapLines="3">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Cum que nusdae et quat. Odignis et exceatque voluptata voluptas a denia nis qui ut illit ut ipsaped que audandam, commolorum, sum adiatet repra coreritatur ressimet voloriae pro ea autemped mi, con essima nis nonectia poribernam et laboratem faccusa pellacc aecabore, acesere plaborpor as eaquis re venimo consedi psaepel lacesti blatibus voluptas eum quasper roviderum fugit de dolor aut est, cusapis a nonsectati rerit, soluptatate dit que veraestium sitior acesequam, omnihilique impore senieni molupta tetus, cum sum que re quid et occum es dollabo. Oratquod ereium id eum as ea dellorpore nat et am, estio. Nequi re, is del evelent umquam velent erovite doluptat.</Content>
+        <Br/>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Dus, nis di quis suntecu lparibus et dis di dolore pa dundaesequis ipsam et arit voluptasimus quuntium, temposam faccatio omnisitium doleni dit laccatis sequiam ipitinimped maximpos eossed que nobis et enihicides sincto volores t</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

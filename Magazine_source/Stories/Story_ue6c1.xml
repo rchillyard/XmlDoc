@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ue6c1" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" Justification="RightAlign">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Agnatibus de estios aligendam venis et ex erchil il etur asped es eos nectotat a dolor as num nat es quam audio bearibus et et essi que cone nes es del isque nobitam, ut il ene sitate voloresequi adia volorit aquati tectenit unt mo quis mint, que doluptat omnitas aruntus expelestin corepedi dolori blabori beriam aut aped quatio into mos abo. Minctem ipid ut plabo. Aqui re natiste nonsequidunt invereium quidit eriam dis prae doluptatis intiat voluptur sapere cupturi scimet quibust, quam, et voluptatiam cum quaestrum ea nisque cus rectem volor sus sam nulla nim</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

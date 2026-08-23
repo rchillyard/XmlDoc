@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="uee0f" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]" FontStyle="Italic">
+        <Content>Iqui aut asincia qui te volent ommoloris maximus excerrum que solupicia dolessequis qui volest volor mintor as sument volesti ut ut plit quodi tem conse volectem deliqui omnit que evelitassum est, inulparibus ut verferovitas aut debit eatem expliquunt eicimag nimille caecto tenis aut aliberf ercipsantis id quiam alici quam, acculli aerumque maximodi sit debitat inis ius, ni destias es volor andam, cum intur sed mintionsente et imilis dolenti busant eum, ommolup tatias arit volesse quatquibus ent omni ut ius id qui ommolut ulla am quae. Igendaecum nusam, omnisci blabor mi, etur adi ipsam, aut quae molor.</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ueff5" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" Justification="LeftAlign">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Tum, veris debit aut prore veritat.</Content>
+        <Br/>
+        <Content>Itibus aut quatibus exceature, comnihit molescimodit eritam quundeniat ditincta iundanimi, sam, is ad maionsequi alique aut vollend icitis id et magnihil id qui ommoluptas quiscid moluptatio enduntusa volupta tempori onseditiam fuga. Harume dio inus.</Content>
+        <Br/>
+        <Content>Ulparum id excesendus et volupta cumquiam voluptatiis magnis volorum elitae santior recum facepel min porumquis num apicatio quiandu ciamet ex eos moloribus et quiasperi dem. Ut idest liquae occus maio. Dolestias moluptassit et fugit utem fugiatur? Itecupis con et qui tendem faccus as cus, et asitat.</Content>
+        <Br/>
+        <Content>Ga. Turit, vellupt atioratur adit expellam fuga. Nam fuga. Ut quo te vendunda quibusdam, int, assit et eriam fugit vellend elibern atempore moluptas derundae. Ut idelit et hicit od qui que licidem id quatur rerfera autatur, sum earum et quiam, eature quunt.</Content>
+        <Br/>
+        <Content>Name vererio nseque modis qui versped eos aut officie ndisqui nobisima quias nonempo</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

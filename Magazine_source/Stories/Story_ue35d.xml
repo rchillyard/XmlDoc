@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ue35d" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]" FontStyle="Light Italic">
+        <Content>Turesequatia as veliqui cus dolent eum inction sequassecus.</Content>
+        <Br/>
+        <Content>Non reptate ceptatet que non cum que volorempor mo explani dolupta tiunto es am sit odicit voluptate elia volore ipition sereceatem et re molor asi id eum dolor anda destis sit voluptiae ducilis ratendellest eum sitatis consedicil exerrum, sed qui aut omnimin con et am ut il moluptatum ducilit et res et optatemporum inctatur sit vent quiatur emperatquia dunt maionse quodio blacepudi rerchiliquia plis dolor ma quunda poreius voluptio officit fuga. Orat ut pore voloria ndissin ctaturio int, omnist doluptas cor aspici sequi dolut labore, unt offictat plit hic</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="uc4ae" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]" FillColor="Color/Paper">
+        <Content>Ovid et vollautae. Erroreptus dis vitat aut illoressi optas rest, eossuntem estrum, esto mo inimagnia qui occus corro es endi bea cusamet dolecea nonetur, et lam, invella dolo maximil inum et inum quunt que alita aut volorest, ad explab inihill uptasit, te mi, corum eos mo endus arciis accum eium eum sant labo. Sit fugiat experis nimint estio eaquo officte mpossit quaeprem hillam, archill</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ub8f8" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" DropCapCharacters="1" DropCapLines="2">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Bis cor autemporia que la ipis maximus eicium ipsunt ulpa dus si omnis maios quam qui nobit occupta tiuntius, con perum alit alit haruptae nienem eum demporiorita sitet il iminim re, voluptur rero ea sum ius est, tem est, cus, comnis ex es mo quae ped eium et modi si odignim incilique volenim odistint, nobit et, id ut debis aut ommolore qui dolo torrore, coreper emquam quassi inctiur aboriam quia nis autaquo omnimus aperorp orerspel inciatis sint as is modita exerferi adignis nusdae. Nam cupis ilitate molorrum adia volupta pedi idi delendic torerum illenda quas accum esciati orest, si rehendi</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

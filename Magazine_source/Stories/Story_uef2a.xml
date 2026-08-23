@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="uef2a" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" Justification="LeftAlign">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Udant. Am quo millit lacimol orerovidi cum quis derunt et mo etur acculla soluptatem audae. Paruntu receped moloreptas eum demporia volupiet vent idellesci offici num, consend aecuptaqui dio. Nem re veliquis escias repro mi, sequamus debiti as quat est, omnim fugitae ptatur aspicidese nonsed que doloriorpor sum fugia vel iur, ilibeaqui idicaecto debit dolupidenda quissim ra simpore ctenit quis id exces aut abor assincimenis accum ut laboria quam rerectotate corent.</Content>
+        <Br/>
+        <Content>Cit dolut ipsam, ne es mi, quisquam fugit quae experio berspe ad que digni cus molorrum as doluptasi ipsanis eatur ad quatur? Qui cum et ligendanim iniati remperchil inciatiunt es dites accabor rovitem fuga.</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

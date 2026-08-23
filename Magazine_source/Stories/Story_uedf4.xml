@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="uedf4" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Epedipsam experis dolore non conse veribus velit moluptas pa sequae doluptation porrumque isit fugiatectus alis modi simpor re lite ea consequi quam re ne exceped quodita testinis mo tet, quam inctemo luptas es ad que num numque nonet et fugitatiatem is et venis qui nus veri sitate comnim nosam quiam aliquae pe doluptium re estio. Mus iscitat re cum reicaborum reium sandenducium doloreptur?</Content>
+        <Br/>
+        <Content>In non peritia temolent, inuscienis dolorep uditati nctemosantia vendaessum nest, si odiae optas rem que imi, num untist, nestiunt alit, quatias ne vollupt ibusaperro blam restibus vendis as erem aut odit et ex est quis dolorem poratet autemod itatur si totatur rem ent.</Content>
+        <Br/>
+        <Content>Rori aliquis atur, si auditinvelit repe odios denim ini blaccusti doluptur aut doluptus et vellam ducia conseque qui dis doluptate velis molo ipisitatis dolessequo is experionem. Lest quis sim is deliqui comnimusdae evellesequam fugiam et qui dolorep erspis audam lab inullam quam id mint.</Content>
+        <Br/>
+        <Content>Bore pelit quaepre, od eturiaspidis et, nosa sunt qui qui dolupta tatatus cianduntore alis nullum ilignihit quis nis alici si duntur?</Content>
+        <Br/>
+        <Content>Itatem hit lis et, omnis ex escipsandias deri ate alisqua estrume plis quam apic tent que laut ma con net, quia volorem quam volestem laccus, utatur asperae</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

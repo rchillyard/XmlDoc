@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="uee8c" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" Justification="LeftAlign">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Ignis aceateturit desci aceatquis maiones trumet aut atur? Quis dis erum rercilit andebit aut aut lab ipidi sum nonecta tioriae aut hicimus voluptur?</Content>
+        <Br/>
+        <Content>Ferro vellupit id quiscil lendenienis sit, corumquis a volorum et rem. Agnatusam, iur moluptur re aut untiorae conet imint lisi omnim fuga. Sed eume magni rempore rae neceperate voloriat volori di restio doluptatur, quaspeliqui dendio quiae simus doluptat alicitatiis id eaturem expernam ide corrum dist alissecae volorec eroruptae.</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

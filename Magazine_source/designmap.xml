@@ -1,0 +1,397 @@
+<?xml version="1.0" ?>
+<?aid style="50" type="document" readerVersion="6.0" featureSet="257" product="8.0(370)" ?>
+<Document xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0" Self="d" StoryList="u3d90 u3da7 u3eda u5b4e u7940 u9f5e ua006 ua943 ub02d ub044 ub8f8 ub9d8 uba30 ubc0c ubc51 ubc87 ubd47 ubed1 ubf04 ubf19 uc025 uc050 uc09b uc240 uc28c uc2a3 uc3d6 uc4ae uc613 ucc32 ucc4c ucc63 ucdb1 ucddf uce0d ud0b1 ud150 ud194 ud1ad ud1c4 ud1db ud1f6 ud20d ud278 ud292 ud2c2 ud3c0 ud3dc ud3f9 ud490 ud4a7 ud4be ud56e ud585 ud59c ud5b3 ud5cb ud5e2 ud73e ud7a5 ud854 ud86d ud8a2 ud8e5 ud98c ud9c8 uda0d uda24 uda3b ude2f ude46 udf0b udf55 udfc6 udfdd udfff ue016 ue02d ue044 ue06b ue083 ue09c ue0b5 ue0d2 ue0e9 ue110 ue128 ue187 ue1b8 ue1cf ue214 ue230 ue269 ue282 ue29b ue2c9 ue2e3 ue306 ue31d ue33e ue35d ue38f ue3d3 ue424 ue43b ue467 ue480 ue498 ue4c3 ue4da ue512 ue583 ue59a ue5b1 ue5cb ue5e2 ue644 ue669 ue691 ue6a8 ue6c1 ue6e9 ue703 ue71a ue741 ue758 ue771 ue788 ue819 ue833 ue84c ue864 ue87e ue895 ue8ac ue8c3 ue8da ue8f2 ue90e ue925 ue93c ue953 ue96a ue981 ue999 ue9b0 ue9ce ue9e5 ue9fc uea13 uea2a uea41 uea58 uea70 ueab5 ueacc ueaf1 ueb08 ueb23 ueb3d ueb54 ueb6b ueb82 ueb99 uebb0 uebc7 uebdf uebf6 uec0d uec31 uec48 uec5f uec7b uec93 uecac uecc6 uece0 uecf9 ued44 ued5e ued76 ued8e ueda9 uedc1 uedda uedf4 uee0f uee29 uee42 uee59 uee73 uee8c ueea3 ueec9 ueee1 ueef9 uef10 uef2a uef56 uef72 uef8c uefa3 uefbd uefd8 ueff5 uf00f uf02d uf044 uf05b uf08e uf0a5 ua8" ZeroPoint="0 0" ActiveLayer="u26d" CMYKProfile="U.S. Web Coated (SWOP) v2" RGBProfile="sRGB IEC61966-2.1" SolidColorIntent="UseColorSettings" AfterBlendingIntent="UseColorSettings" DefaultImageIntent="UseColorSettings" RGBPolicy="PreserveEmbeddedProfiles" CMYKPolicy="CombinationOfPreserveAndSafeCmyk" AccurateLABSpots="false">
+  <Properties>
+    <Label>
+      <KeyValuePair Key="kAdobeDPS_Version" Value="2"/>
+    </Label>
+  </Properties>
+  <Language Self="Language/$ID/English%3a USA" Name="$ID/English: USA" SingleQuotes="‘’" DoubleQuotes="“”" PrimaryLanguageName="$ID/English" SublanguageName="$ID/USA" Id="269" HyphenationVendor="Proximity" SpellingVendor="Proximity"/>
+  <Language Self="Language/$ID/English%3a UK" Name="$ID/English: UK" SingleQuotes="‘’" DoubleQuotes="“”" PrimaryLanguageName="$ID/English" SublanguageName="$ID/UK" Id="525" HyphenationVendor="Hunspell" SpellingVendor="Hunspell"/>
+  <idPkg:Graphic src="Resources/Graphic.xml"/>
+  <idPkg:Fonts src="Resources/Fonts.xml"/>
+  <idPkg:Styles src="Resources/Styles.xml"/>
+  <NumberingList Self="NumberingList/$ID/[Default]" Name="$ID/[Default]" ContinueNumbersAcrossStories="false" ContinueNumbersAcrossDocuments="false"/>
+  <NamedGrid Self="NamedGrid/$ID/[Page Grid]" Name="$ID/[Page Grid]">
+    <GridDataInformation FontStyle="Regular" PointSize="12" CharacterAki="0" LineAki="9" HorizontalScale="100" VerticalScale="100" LineAlignment="LeftOrTopLineJustify" GridAlignment="AlignEmCenter" CharacterAlignment="AlignEmCenter">
+      <Properties>
+        <AppliedFont type="string">Minion Pro</AppliedFont>
+      </Properties>
+    </GridDataInformation>
+  </NamedGrid>
+  <idPkg:Preferences src="Resources/Preferences.xml"/>
+  <LinkedStoryOption UpdateWhileSaving="false" WarnOnUpdateOfEditedStory="true" RemoveForcedLineBreaks="false" ApplyStyleMappings="false"/>
+  <LinkedPageItemOption UpdateLinkWhileSaving="false" WarnOnUpdateOfEditedPageItem="true" PreserveSizeAndShape="false" PreserveAppearance="false" PreserveInteractivity="false" PreserveFrameContent="false" PreserveOthers="false"/>
+  <TaggedPDFPreference StructureOrder="UseXMLStructure"/>
+  <WatermarkPreference WatermarkVisibility="false" WatermarkDoPrint="false" WatermarkDrawInBack="true" WatermarkText="" WatermarkFontFamily="Minion Pro" WatermarkFontStyle="Regular" WatermarkFontPointSize="48" WatermarkOpacity="50" WatermarkRotation="0" WatermarkHorizontalPosition="WatermarkHCenter" WatermarkHorizontalOffset="0" WatermarkVerticalPosition="WatermarkVCenter" WatermarkVerticalOffset="0">
+    <Properties>
+      <WatermarkFontColor type="enumeration">Black</WatermarkFontColor>
+    </Properties>
+  </WatermarkPreference>
+  <ConditionalTextPreference ShowConditionIndicators="ShowIndicators" ActiveConditionSet="n"/>
+  <TextVariable Self="dTextVariablen&lt;?AID 001b?&gt;TV XRefChapterNumber" Name="&lt;?AID 001b?&gt;TV XRefChapterNumber" VariableType="XrefChapterNumberType"/>
+  <TextVariable Self="dTextVariablen&lt;?AID 001b?&gt;TV XRefPageNumber" Name="&lt;?AID 001b?&gt;TV XRefPageNumber" VariableType="XrefPageNumberType"/>
+  <TextVariable Self="dTextVariablenChapter Number" Name="Chapter Number" VariableType="ChapterNumberType">
+    <ChapterNumberVariablePreference TextBefore="" Format="Current" TextAfter=""/>
+  </TextVariable>
+  <TextVariable Self="dTextVariablenCreation Date" Name="Creation Date" VariableType="CreationDateType">
+    <DateVariablePreference TextBefore="" Format="MM/dd/yy" TextAfter=""/>
+  </TextVariable>
+  <TextVariable Self="dTextVariablenFile Name" Name="File Name" VariableType="FileNameType">
+    <FileNameVariablePreference TextBefore="" IncludePath="false" IncludeExtension="false" TextAfter=""/>
+  </TextVariable>
+  <TextVariable Self="dTextVariablenImage Name" Name="Image Name" VariableType="LiveCaptionType">
+    <CaptionMetadataVariablePreference TextBefore="" MetadataProviderName="$ID/#LinkInfoNameStr" TextAfter=""/>
+  </TextVariable>
+  <TextVariable Self="dTextVariablenLast Page Number" Name="Last Page Number" VariableType="LastPageNumberType">
+    <PageNumberVariablePreference TextBefore="" Format="Current" TextAfter="" Scope="SectionScope"/>
+  </TextVariable>
+  <TextVariable Self="dTextVariablenModification Date" Name="Modification Date" VariableType="ModificationDateType">
+    <DateVariablePreference TextBefore="" Format="MMMM d, yyyy h:mm aa" TextAfter=""/>
+  </TextVariable>
+  <TextVariable Self="dTextVariablenOutput Date" Name="Output Date" VariableType="OutputDateType">
+    <DateVariablePreference TextBefore="" Format="MM/dd/yy" TextAfter=""/>
+  </TextVariable>
+  <TextVariable Self="dTextVariablenRunning Header" Name="Running Header" VariableType="MatchParagraphStyleType">
+    <MatchParagraphStylePreference TextBefore="" TextAfter="" AppliedParagraphStyle="ParagraphStyle/$ID/NormalParagraphStyle" SearchStrategy="FirstOnPage" ChangeCase="None" DeleteEndPunctuation="false"/>
+  </TextVariable>
+  <idPkg:Tags src="XML/Tags.xml"/>
+  <Layer Self="u26d" Name="photo &amp; background" Visible="true" Locked="false" IgnoreWrap="false" ShowGuides="true" LockGuides="false" UI="true" Expendable="true" Printable="true">
+    <Properties>
+      <LayerColor type="enumeration">Green</LayerColor>
+    </Properties>
+  </Layer>
+  <Layer Self="uc3" Name="text" Visible="true" Locked="false" IgnoreWrap="false" ShowGuides="true" LockGuides="false" UI="true" Expendable="true" Printable="true">
+    <Properties>
+      <LayerColor type="enumeration">LightBlue</LayerColor>
+    </Properties>
+  </Layer>
+  <idPkg:MasterSpread src="MasterSpreads/MasterSpread_ucd.xml"/>
+  <idPkg:MasterSpread src="MasterSpreads/MasterSpread_u67d.xml"/>
+  <idPkg:Spread src="Spreads/Spread_uc6.xml"/>
+  <idPkg:Spread src="Spreads/Spread_udb.xml"/>
+  <idPkg:Spread src="Spreads/Spread_u3076.xml"/>
+  <idPkg:Spread src="Spreads/Spread_u307f.xml"/>
+  <idPkg:Spread src="Spreads/Spread_u3088.xml"/>
+  <idPkg:Spread src="Spreads/Spread_u3091.xml"/>
+  <idPkg:Spread src="Spreads/Spread_u309a.xml"/>
+  <idPkg:Spread src="Spreads/Spread_u30a3.xml"/>
+  <idPkg:Spread src="Spreads/Spread_u30ac.xml"/>
+  <idPkg:Spread src="Spreads/Spread_u30b5.xml"/>
+  <idPkg:Spread src="Spreads/Spread_u30be.xml"/>
+  <idPkg:Spread src="Spreads/Spread_u444e.xml"/>
+  <idPkg:Spread src="Spreads/Spread_u444f.xml"/>
+  <idPkg:Spread src="Spreads/Spread_u44cc.xml"/>
+  <Section Self="ucc" Length="26" AlternateLayoutLength="26" AlternateLayout="A4 V" Pagination="AutoPaginate" PaginationMaster="n" Name="" ContinueNumbering="true" IncludeSectionPrefix="false" Marker="" PageStart="ucb" SectionPrefix="">
+    <Properties>
+      <PageNumberStyle type="enumeration">Arabic</PageNumberStyle>
+    </Properties>
+  </Section>
+  <DocumentUser Self="dDocumentUser0" UserName="$ID/Unknown User Name">
+    <Properties>
+      <UserColor type="enumeration">Gold</UserColor>
+    </Properties>
+  </DocumentUser>
+  <CrossReferenceFormat Self="u96" Name="Full Paragraph &amp; Page Number" AppliedCharacterStyle="n">
+    <BuildingBlock Self="u96BuildingBlock0" BlockType="CustomStringBuildingBlock" AppliedCharacterStyle="n" CustomText="&quot;" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u96BuildingBlock1" BlockType="FullParagraphBuildingBlock" AppliedCharacterStyle="n" CustomText="$ID/" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u96BuildingBlock2" BlockType="CustomStringBuildingBlock" AppliedCharacterStyle="n" CustomText="&quot; on page " AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u96BuildingBlock3" BlockType="PageNumberBuildingBlock" AppliedCharacterStyle="n" CustomText="$ID/" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+  </CrossReferenceFormat>
+  <CrossReferenceFormat Self="u97" Name="Full Paragraph" AppliedCharacterStyle="n">
+    <BuildingBlock Self="u97BuildingBlock0" BlockType="CustomStringBuildingBlock" AppliedCharacterStyle="n" CustomText="&quot;" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u97BuildingBlock1" BlockType="FullParagraphBuildingBlock" AppliedCharacterStyle="n" CustomText="$ID/" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u97BuildingBlock2" BlockType="CustomStringBuildingBlock" AppliedCharacterStyle="n" CustomText="&quot;" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+  </CrossReferenceFormat>
+  <CrossReferenceFormat Self="u98" Name="Paragraph Text &amp; Page Number" AppliedCharacterStyle="n">
+    <BuildingBlock Self="u98BuildingBlock0" BlockType="CustomStringBuildingBlock" AppliedCharacterStyle="n" CustomText="&quot;" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u98BuildingBlock1" BlockType="ParagraphTextBuildingBlock" AppliedCharacterStyle="n" CustomText="$ID/" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u98BuildingBlock2" BlockType="CustomStringBuildingBlock" AppliedCharacterStyle="n" CustomText="&quot; on page " AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u98BuildingBlock3" BlockType="PageNumberBuildingBlock" AppliedCharacterStyle="n" CustomText="$ID/" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+  </CrossReferenceFormat>
+  <CrossReferenceFormat Self="u99" Name="Paragraph Text" AppliedCharacterStyle="n">
+    <BuildingBlock Self="u99BuildingBlock0" BlockType="CustomStringBuildingBlock" AppliedCharacterStyle="n" CustomText="&quot;" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u99BuildingBlock1" BlockType="ParagraphTextBuildingBlock" AppliedCharacterStyle="n" CustomText="$ID/" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u99BuildingBlock2" BlockType="CustomStringBuildingBlock" AppliedCharacterStyle="n" CustomText="&quot;" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+  </CrossReferenceFormat>
+  <CrossReferenceFormat Self="u9a" Name="Paragraph Number &amp; Page Number" AppliedCharacterStyle="n">
+    <BuildingBlock Self="u9aBuildingBlock0" BlockType="ParagraphNumberBuildingBlock" AppliedCharacterStyle="n" CustomText="$ID/" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u9aBuildingBlock1" BlockType="CustomStringBuildingBlock" AppliedCharacterStyle="n" CustomText=" on page " AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u9aBuildingBlock2" BlockType="PageNumberBuildingBlock" AppliedCharacterStyle="n" CustomText="$ID/" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+  </CrossReferenceFormat>
+  <CrossReferenceFormat Self="u9b" Name="Paragraph Number" AppliedCharacterStyle="n">
+    <BuildingBlock Self="u9bBuildingBlock0" BlockType="ParagraphNumberBuildingBlock" AppliedCharacterStyle="n" CustomText="$ID/" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+  </CrossReferenceFormat>
+  <CrossReferenceFormat Self="u9c" Name="Text Anchor Name &amp; Page Number" AppliedCharacterStyle="n">
+    <BuildingBlock Self="u9cBuildingBlock0" BlockType="CustomStringBuildingBlock" AppliedCharacterStyle="n" CustomText="&quot;" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u9cBuildingBlock1" BlockType="BookmarkNameBuildingBlock" AppliedCharacterStyle="n" CustomText="$ID/" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u9cBuildingBlock2" BlockType="CustomStringBuildingBlock" AppliedCharacterStyle="n" CustomText="&quot; on page " AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u9cBuildingBlock3" BlockType="PageNumberBuildingBlock" AppliedCharacterStyle="n" CustomText="$ID/" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+  </CrossReferenceFormat>
+  <CrossReferenceFormat Self="u9d" Name="Text Anchor Name" AppliedCharacterStyle="n">
+    <BuildingBlock Self="u9dBuildingBlock0" BlockType="CustomStringBuildingBlock" AppliedCharacterStyle="n" CustomText="&quot;" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u9dBuildingBlock1" BlockType="BookmarkNameBuildingBlock" AppliedCharacterStyle="n" CustomText="$ID/" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u9dBuildingBlock2" BlockType="CustomStringBuildingBlock" AppliedCharacterStyle="n" CustomText="&quot;" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+  </CrossReferenceFormat>
+  <CrossReferenceFormat Self="u9e" Name="Page Number" AppliedCharacterStyle="n">
+    <BuildingBlock Self="u9eBuildingBlock0" BlockType="CustomStringBuildingBlock" AppliedCharacterStyle="n" CustomText="page " AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+    <BuildingBlock Self="u9eBuildingBlock1" BlockType="PageNumberBuildingBlock" AppliedCharacterStyle="n" CustomText="$ID/" AppliedDelimiter="$ID/" IncludeDelimiter="false"/>
+  </CrossReferenceFormat>
+  <idPkg:BackingStory src="XML/BackingStory.xml"/>
+  <idPkg:Story src="Stories/Story_uf0a5.xml"/>
+  <idPkg:Story src="Stories/Story_uf08e.xml"/>
+  <idPkg:Story src="Stories/Story_uf05b.xml"/>
+  <idPkg:Story src="Stories/Story_uf044.xml"/>
+  <idPkg:Story src="Stories/Story_uf02d.xml"/>
+  <idPkg:Story src="Stories/Story_uf00f.xml"/>
+  <idPkg:Story src="Stories/Story_ueff5.xml"/>
+  <idPkg:Story src="Stories/Story_uefd8.xml"/>
+  <idPkg:Story src="Stories/Story_uefbd.xml"/>
+  <idPkg:Story src="Stories/Story_uefa3.xml"/>
+  <idPkg:Story src="Stories/Story_uef8c.xml"/>
+  <idPkg:Story src="Stories/Story_uef72.xml"/>
+  <idPkg:Story src="Stories/Story_uef56.xml"/>
+  <idPkg:Story src="Stories/Story_uef2a.xml"/>
+  <idPkg:Story src="Stories/Story_uef10.xml"/>
+  <idPkg:Story src="Stories/Story_ueef9.xml"/>
+  <idPkg:Story src="Stories/Story_ueee1.xml"/>
+  <idPkg:Story src="Stories/Story_ueec9.xml"/>
+  <idPkg:Story src="Stories/Story_ueea3.xml"/>
+  <idPkg:Story src="Stories/Story_uee8c.xml"/>
+  <idPkg:Story src="Stories/Story_uee73.xml"/>
+  <idPkg:Story src="Stories/Story_uee59.xml"/>
+  <idPkg:Story src="Stories/Story_uee42.xml"/>
+  <idPkg:Story src="Stories/Story_uee29.xml"/>
+  <idPkg:Story src="Stories/Story_uee0f.xml"/>
+  <idPkg:Story src="Stories/Story_uedf4.xml"/>
+  <idPkg:Story src="Stories/Story_uedda.xml"/>
+  <idPkg:Story src="Stories/Story_uedc1.xml"/>
+  <idPkg:Story src="Stories/Story_ueda9.xml"/>
+  <idPkg:Story src="Stories/Story_ued8e.xml"/>
+  <idPkg:Story src="Stories/Story_ued76.xml"/>
+  <idPkg:Story src="Stories/Story_ued5e.xml"/>
+  <idPkg:Story src="Stories/Story_ued44.xml"/>
+  <idPkg:Story src="Stories/Story_uecf9.xml"/>
+  <idPkg:Story src="Stories/Story_uece0.xml"/>
+  <idPkg:Story src="Stories/Story_uecc6.xml"/>
+  <idPkg:Story src="Stories/Story_uecac.xml"/>
+  <idPkg:Story src="Stories/Story_uec93.xml"/>
+  <idPkg:Story src="Stories/Story_uec7b.xml"/>
+  <idPkg:Story src="Stories/Story_uec5f.xml"/>
+  <idPkg:Story src="Stories/Story_uec48.xml"/>
+  <idPkg:Story src="Stories/Story_uec31.xml"/>
+  <idPkg:Story src="Stories/Story_uec0d.xml"/>
+  <idPkg:Story src="Stories/Story_uebf6.xml"/>
+  <idPkg:Story src="Stories/Story_uebdf.xml"/>
+  <idPkg:Story src="Stories/Story_uebc7.xml"/>
+  <idPkg:Story src="Stories/Story_uebb0.xml"/>
+  <idPkg:Story src="Stories/Story_ueb99.xml"/>
+  <idPkg:Story src="Stories/Story_ueb82.xml"/>
+  <idPkg:Story src="Stories/Story_ueb6b.xml"/>
+  <idPkg:Story src="Stories/Story_ueb54.xml"/>
+  <idPkg:Story src="Stories/Story_ueb3d.xml"/>
+  <idPkg:Story src="Stories/Story_ueb23.xml"/>
+  <idPkg:Story src="Stories/Story_ueb08.xml"/>
+  <idPkg:Story src="Stories/Story_ueaf1.xml"/>
+  <idPkg:Story src="Stories/Story_ueacc.xml"/>
+  <idPkg:Story src="Stories/Story_ueab5.xml"/>
+  <idPkg:Story src="Stories/Story_uea70.xml"/>
+  <idPkg:Story src="Stories/Story_uea58.xml"/>
+  <idPkg:Story src="Stories/Story_uea41.xml"/>
+  <idPkg:Story src="Stories/Story_uea2a.xml"/>
+  <idPkg:Story src="Stories/Story_uea13.xml"/>
+  <idPkg:Story src="Stories/Story_ue9fc.xml"/>
+  <idPkg:Story src="Stories/Story_ue9e5.xml"/>
+  <idPkg:Story src="Stories/Story_ue9ce.xml"/>
+  <idPkg:Story src="Stories/Story_ue9b0.xml"/>
+  <idPkg:Story src="Stories/Story_ue999.xml"/>
+  <idPkg:Story src="Stories/Story_ue981.xml"/>
+  <idPkg:Story src="Stories/Story_ue96a.xml"/>
+  <idPkg:Story src="Stories/Story_ue953.xml"/>
+  <idPkg:Story src="Stories/Story_ue93c.xml"/>
+  <idPkg:Story src="Stories/Story_ue925.xml"/>
+  <idPkg:Story src="Stories/Story_ue90e.xml"/>
+  <idPkg:Story src="Stories/Story_ue8f2.xml"/>
+  <idPkg:Story src="Stories/Story_ue8da.xml"/>
+  <idPkg:Story src="Stories/Story_ue8c3.xml"/>
+  <idPkg:Story src="Stories/Story_ue8ac.xml"/>
+  <idPkg:Story src="Stories/Story_ue895.xml"/>
+  <idPkg:Story src="Stories/Story_ue87e.xml"/>
+  <idPkg:Story src="Stories/Story_ue864.xml"/>
+  <idPkg:Story src="Stories/Story_ue84c.xml"/>
+  <idPkg:Story src="Stories/Story_ue833.xml"/>
+  <idPkg:Story src="Stories/Story_ue819.xml"/>
+  <idPkg:Story src="Stories/Story_ue788.xml"/>
+  <idPkg:Story src="Stories/Story_ue771.xml"/>
+  <idPkg:Story src="Stories/Story_ue758.xml"/>
+  <idPkg:Story src="Stories/Story_ue741.xml"/>
+  <idPkg:Story src="Stories/Story_ue71a.xml"/>
+  <idPkg:Story src="Stories/Story_ue703.xml"/>
+  <idPkg:Story src="Stories/Story_ue6e9.xml"/>
+  <idPkg:Story src="Stories/Story_ue6c1.xml"/>
+  <idPkg:Story src="Stories/Story_ue6a8.xml"/>
+  <idPkg:Story src="Stories/Story_ue691.xml"/>
+  <idPkg:Story src="Stories/Story_ue669.xml"/>
+  <idPkg:Story src="Stories/Story_ue644.xml"/>
+  <idPkg:Story src="Stories/Story_ue5e2.xml"/>
+  <idPkg:Story src="Stories/Story_ue5cb.xml"/>
+  <idPkg:Story src="Stories/Story_ue5b1.xml"/>
+  <idPkg:Story src="Stories/Story_ue59a.xml"/>
+  <idPkg:Story src="Stories/Story_ue583.xml"/>
+  <idPkg:Story src="Stories/Story_ue512.xml"/>
+  <idPkg:Story src="Stories/Story_ue4da.xml"/>
+  <idPkg:Story src="Stories/Story_ue4c3.xml"/>
+  <idPkg:Story src="Stories/Story_ue498.xml"/>
+  <idPkg:Story src="Stories/Story_ue480.xml"/>
+  <idPkg:Story src="Stories/Story_ue467.xml"/>
+  <idPkg:Story src="Stories/Story_ue43b.xml"/>
+  <idPkg:Story src="Stories/Story_ue424.xml"/>
+  <idPkg:Story src="Stories/Story_ue3d3.xml"/>
+  <idPkg:Story src="Stories/Story_ue38f.xml"/>
+  <idPkg:Story src="Stories/Story_ue35d.xml"/>
+  <idPkg:Story src="Stories/Story_ue33e.xml"/>
+  <idPkg:Story src="Stories/Story_ue31d.xml"/>
+  <idPkg:Story src="Stories/Story_ue306.xml"/>
+  <idPkg:Story src="Stories/Story_ue2e3.xml"/>
+  <idPkg:Story src="Stories/Story_ue2c9.xml"/>
+  <idPkg:Story src="Stories/Story_ue29b.xml"/>
+  <idPkg:Story src="Stories/Story_ue282.xml"/>
+  <idPkg:Story src="Stories/Story_ue269.xml"/>
+  <idPkg:Story src="Stories/Story_ue230.xml"/>
+  <idPkg:Story src="Stories/Story_ue214.xml"/>
+  <idPkg:Story src="Stories/Story_ue1cf.xml"/>
+  <idPkg:Story src="Stories/Story_ue1b8.xml"/>
+  <idPkg:Story src="Stories/Story_ue187.xml"/>
+  <idPkg:Story src="Stories/Story_ue128.xml"/>
+  <idPkg:Story src="Stories/Story_ue110.xml"/>
+  <idPkg:Story src="Stories/Story_ue0e9.xml"/>
+  <idPkg:Story src="Stories/Story_ue0d2.xml"/>
+  <idPkg:Story src="Stories/Story_ue0b5.xml"/>
+  <idPkg:Story src="Stories/Story_ue09c.xml"/>
+  <idPkg:Story src="Stories/Story_ue083.xml"/>
+  <idPkg:Story src="Stories/Story_ue06b.xml"/>
+  <idPkg:Story src="Stories/Story_ue044.xml"/>
+  <idPkg:Story src="Stories/Story_ue02d.xml"/>
+  <idPkg:Story src="Stories/Story_ue016.xml"/>
+  <idPkg:Story src="Stories/Story_udfff.xml"/>
+  <idPkg:Story src="Stories/Story_udfdd.xml"/>
+  <idPkg:Story src="Stories/Story_udfc6.xml"/>
+  <idPkg:Story src="Stories/Story_udf55.xml"/>
+  <idPkg:Story src="Stories/Story_udf0b.xml"/>
+  <idPkg:Story src="Stories/Story_ude46.xml"/>
+  <idPkg:Story src="Stories/Story_ude2f.xml"/>
+  <idPkg:Story src="Stories/Story_uda3b.xml"/>
+  <idPkg:Story src="Stories/Story_uda24.xml"/>
+  <idPkg:Story src="Stories/Story_uda0d.xml"/>
+  <idPkg:Story src="Stories/Story_ud9c8.xml"/>
+  <idPkg:Story src="Stories/Story_ud98c.xml"/>
+  <idPkg:Story src="Stories/Story_ud8e5.xml"/>
+  <idPkg:Story src="Stories/Story_ud8a2.xml"/>
+  <idPkg:Story src="Stories/Story_ud86d.xml"/>
+  <idPkg:Story src="Stories/Story_ud854.xml"/>
+  <idPkg:Story src="Stories/Story_ud7a5.xml"/>
+  <idPkg:Story src="Stories/Story_ud73e.xml"/>
+  <idPkg:Story src="Stories/Story_ud5e2.xml"/>
+  <idPkg:Story src="Stories/Story_ud5cb.xml"/>
+  <idPkg:Story src="Stories/Story_ud5b3.xml"/>
+  <idPkg:Story src="Stories/Story_ud59c.xml"/>
+  <idPkg:Story src="Stories/Story_ud585.xml"/>
+  <idPkg:Story src="Stories/Story_ud56e.xml"/>
+  <idPkg:Story src="Stories/Story_ud4be.xml"/>
+  <idPkg:Story src="Stories/Story_ud4a7.xml"/>
+  <idPkg:Story src="Stories/Story_ud490.xml"/>
+  <idPkg:Story src="Stories/Story_ud3f9.xml"/>
+  <idPkg:Story src="Stories/Story_ud3dc.xml"/>
+  <idPkg:Story src="Stories/Story_ud3c0.xml"/>
+  <idPkg:Story src="Stories/Story_ud2c2.xml"/>
+  <idPkg:Story src="Stories/Story_ud292.xml"/>
+  <idPkg:Story src="Stories/Story_ud278.xml"/>
+  <idPkg:Story src="Stories/Story_ud20d.xml"/>
+  <idPkg:Story src="Stories/Story_ud1f6.xml"/>
+  <idPkg:Story src="Stories/Story_ud1db.xml"/>
+  <idPkg:Story src="Stories/Story_ud1c4.xml"/>
+  <idPkg:Story src="Stories/Story_ud1ad.xml"/>
+  <idPkg:Story src="Stories/Story_ud194.xml"/>
+  <idPkg:Story src="Stories/Story_ud150.xml"/>
+  <idPkg:Story src="Stories/Story_ud0b1.xml"/>
+  <idPkg:Story src="Stories/Story_uce0d.xml"/>
+  <idPkg:Story src="Stories/Story_ucddf.xml"/>
+  <idPkg:Story src="Stories/Story_ucdb1.xml"/>
+  <idPkg:Story src="Stories/Story_ucc63.xml"/>
+  <idPkg:Story src="Stories/Story_ucc4c.xml"/>
+  <idPkg:Story src="Stories/Story_ucc32.xml"/>
+  <idPkg:Story src="Stories/Story_uc613.xml"/>
+  <idPkg:Story src="Stories/Story_uc4ae.xml"/>
+  <idPkg:Story src="Stories/Story_uc3d6.xml"/>
+  <idPkg:Story src="Stories/Story_uc2a3.xml"/>
+  <idPkg:Story src="Stories/Story_uc28c.xml"/>
+  <idPkg:Story src="Stories/Story_uc240.xml"/>
+  <idPkg:Story src="Stories/Story_uc09b.xml"/>
+  <idPkg:Story src="Stories/Story_uc050.xml"/>
+  <idPkg:Story src="Stories/Story_uc025.xml"/>
+  <idPkg:Story src="Stories/Story_ubf19.xml"/>
+  <idPkg:Story src="Stories/Story_ubf04.xml"/>
+  <idPkg:Story src="Stories/Story_ubed1.xml"/>
+  <idPkg:Story src="Stories/Story_ubd47.xml"/>
+  <idPkg:Story src="Stories/Story_ubc87.xml"/>
+  <idPkg:Story src="Stories/Story_ubc51.xml"/>
+  <idPkg:Story src="Stories/Story_ubc0c.xml"/>
+  <idPkg:Story src="Stories/Story_uba30.xml"/>
+  <idPkg:Story src="Stories/Story_ub9d8.xml"/>
+  <idPkg:Story src="Stories/Story_ub8f8.xml"/>
+  <idPkg:Story src="Stories/Story_ub044.xml"/>
+  <idPkg:Story src="Stories/Story_ub02d.xml"/>
+  <idPkg:Story src="Stories/Story_ua943.xml"/>
+  <idPkg:Story src="Stories/Story_ua006.xml"/>
+  <idPkg:Story src="Stories/Story_u9f5e.xml"/>
+  <idPkg:Story src="Stories/Story_u7940.xml"/>
+  <idPkg:Story src="Stories/Story_u5b4e.xml"/>
+  <idPkg:Story src="Stories/Story_u3eda.xml"/>
+  <idPkg:Story src="Stories/Story_u3da7.xml"/>
+  <idPkg:Story src="Stories/Story_u3d90.xml"/>
+  <IndexingSortOption Self="dIndexingSortOptionnkIndexGroup_Symbol" Name="$ID/kIndexGroup_Symbol" Include="true" Priority="0" HeaderType="Nothing"/>
+  <IndexingSortOption Self="dIndexingSortOptionnkIndexGroup_Alphabet" Name="$ID/kIndexGroup_Alphabet" Include="true" Priority="1" HeaderType="BasicLatin"/>
+  <IndexingSortOption Self="dIndexingSortOptionnkIndexGroup_Numeric" Name="$ID/kIndexGroup_Numeric" Include="false" Priority="2" HeaderType="Nothing"/>
+  <IndexingSortOption Self="dIndexingSortOptionnkWRIndexGroup_GreekAlphabet" Name="$ID/kWRIndexGroup_GreekAlphabet" Include="false" Priority="3" HeaderType="Nothing"/>
+  <IndexingSortOption Self="dIndexingSortOptionnkWRIndexGroup_CyrillicAlphabet" Name="$ID/kWRIndexGroup_CyrillicAlphabet" Include="false" Priority="4" HeaderType="Russian"/>
+  <IndexingSortOption Self="dIndexingSortOptionnkIndexGroup_Kana" Name="$ID/kIndexGroup_Kana" Include="false" Priority="5" HeaderType="HiraganaAll"/>
+  <IndexingSortOption Self="dIndexingSortOptionnkIndexGroup_Chinese" Name="$ID/kIndexGroup_Chinese" Include="false" Priority="6" HeaderType="ChinesePinyin"/>
+  <IndexingSortOption Self="dIndexingSortOptionnkIndexGroup_Korean" Name="$ID/kIndexGroup_Korean" Include="false" Priority="7" HeaderType="KoreanConsonant"/>
+  <IndexingSortOption Self="dIndexingSortOptionnkWRIndexGroup_ArabicAlphabet" Name="$ID/kWRIndexGroup_ArabicAlphabet" Include="false" Priority="8" HeaderType="Nothing"/>
+  <IndexingSortOption Self="dIndexingSortOptionnkWRIndexGroup_HebrewAlphabet" Name="$ID/kWRIndexGroup_HebrewAlphabet" Include="false" Priority="9" HeaderType="Nothing"/>
+  <ABullet Self="dABullet0" CharacterType="UnicodeOnly" CharacterValue="8226">
+    <Properties>
+      <BulletsFont type="string">$ID/</BulletsFont>
+      <BulletsFontStyle type="string">$ID/</BulletsFontStyle>
+    </Properties>
+  </ABullet>
+  <ABullet Self="dABullet1" CharacterType="UnicodeOnly" CharacterValue="42">
+    <Properties>
+      <BulletsFont type="string">$ID/</BulletsFont>
+      <BulletsFontStyle type="string">$ID/</BulletsFontStyle>
+    </Properties>
+  </ABullet>
+  <ABullet Self="dABullet2" CharacterType="UnicodeOnly" CharacterValue="9674">
+    <Properties>
+      <BulletsFont type="string">$ID/</BulletsFont>
+      <BulletsFontStyle type="string">$ID/</BulletsFontStyle>
+    </Properties>
+  </ABullet>
+  <ABullet Self="dABullet3" CharacterType="UnicodeWithFont" CharacterValue="187">
+    <Properties>
+      <BulletsFont type="string">Myriad Pro</BulletsFont>
+      <BulletsFontStyle type="string">$ID/Regular</BulletsFontStyle>
+    </Properties>
+  </ABullet>
+  <ABullet Self="dABullet4" CharacterType="GlyphWithFont" CharacterValue="503">
+    <Properties>
+      <BulletsFont type="string">Minion Pro</BulletsFont>
+      <BulletsFontStyle type="string">$ID/Regular</BulletsFontStyle>
+    </Properties>
+  </ABullet>
+  <Assignment Self="ud4" Name="$ID/UnassignedInCopy" UserName="$ID/" ExportOptions="AssignedSpreads" IncludeLinksWhenPackage="true" FilePath="$ID/">
+    <Properties>
+      <FrameColor type="enumeration">Nothing</FrameColor>
+    </Properties>
+  </Assignment>
+</Document>

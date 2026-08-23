@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="u5b4e" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]" FillColor="Color/Paper">
+        <Content>Harchil incipiet imin corit ventiur magnihi llaborro et omnia del moluptus, odipid mi, cusam facculpa idus et voloresti te venda nonserum dicilit as ut est volorep elique consecte peri atus.</Content>
+        <Br/>
+        <Content>Gias quatur aut verorporro voloreptam adipiet optiumqui tem voluptatem quas acepero molorem des di blaborrovid mo quae nim ex exerspe lestiae ma voluptiis nim ut magnita volupta sperum voloremost, suntis</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

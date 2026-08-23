@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ueda9" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Facid et, sus, tet ex et is prae rersper feribus dolupta tentemp oribus veri quate labo. Xerovit volorepe vent est assitia ssinull autatempos alit, quas magnihillat minvele ctatur aut optatiae qui volorit, con non conecernam veror adi aborum ernatur?</Content>
+        <Br/>
+        <Content>Venihil latur, quo volupta am aut omnim fuga. Ebitis ma doluptati con pe nulparum, quae cum, ommolla nissit et omni tore pratia dolorep ereperum dolesti corerferro quas aspidig endit, quamus.</Content>
+        <Br/>
+        <Content>Et vendi beraes niendis dolut enitae pa de essus consequ issitiis natur mos molut qui dolum nat as sitat lam que dolupid ucidem eum quam ressend ipsunt, asperiori ditame ium as quo quam fuga. Aqui consequiasi quiat alitia et laborem quae comni dia volorepratur remo magnam, inihit</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

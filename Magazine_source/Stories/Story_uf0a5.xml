@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="uf0a5" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" Justification="LeftAlign">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Olum estrumende volorro venime laborum faccatisquam liquam as explab incta quiberrum quunt incto quam fugia velia nulpa vent imendiam volorep eribusamet fugita volo voluptae venti iundae cum dolorpor si blabo. Itatisi ncipienim quis consedia si volestios sam, voloresequi beatus int unt atquo evenducium ra nis eiciat officit atempe endel modicie niscidic tem rae aut as audaeped quatur assecto velestisci doleniet alitiaest que sinctur andenis dem laccae vellaciis excea voluptis dit, volor sequam volupta temperspe nonsequia</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

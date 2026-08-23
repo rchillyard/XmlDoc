@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ue583" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" Justification="LeftAlign">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Hent fuga. Et ut late ommo modigenienem reribus dolorem repelessit volupta sequam, quiae. Et et adigent quam repudanis aboreiciam quam, sam estiis rercidi orerro mo conseditas sernati volorro berate quas entio tem estis comnimos et diciasseque doloritat aut omni doles con repudiatetur repel et dit volorro officat fuga. Nam et moloria voluptibus ipsapit ataerior sitatatusam, officid empossimo venditatque ommolore labo. Ignist, quas saperibus esci inctem facea est, sam fugia sitas quiandunt rerro min nonsequi occae provit utem sum net odiatium ipienisi alitas eiciend usciam simus sequas ium etur?</Content>
+        <Br/>
+        <Content>Ximus dolore, seque non et harcius simoluptusae aborior umquias conseri orestrunt lam fuga. Pa consenist aut quatio volorit faci sequi core volupta sunditia que siminus, cor aut aliti temperrum exerchic tem auta conseni magnimusam, volorup tatur? Qui quo coraes qui dis auda veliquo exceperum que vidita volum volupta estior rest prem ipide nis am dolore, quiam voluptas de plit, nobis dolori sum in core endae volorem facculp aribus ab ipsunt dendant.</Content>
+        <Br/>
+        <Content>Rio. Ur, quid quasper rovitia ssitio tem quaspero quam, te que acipis et officitate essume simusci comnis eost et, quias ium dipsamus re dunt odicill ecerchi llabores evel et peria derorep t</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

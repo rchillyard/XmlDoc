@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ub02d" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" Justification="LeftAlign">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Fugit, sam alic tempedis exces repudae de invent quunt hillendiatem ullorae labor atus molorio. Nam qui nullant.</Content>
+        <Br/>
+        <Content>Enim int. Pudit, volorro corem volupid et fuga. Ne voluptaspit alignimus nis modi consequodis alia ide eum repreicienis simus eosae et, con ressum labo. Ro ipici officii squisime veles nis dit es molorem rem ullacer chiliquid es remquo cores sitaspicias comnima dent.</Content>
+        <Br/>
+        <Content>Ebitaturitam velentibus magnimo volorerchit odis destruptaqui occus voluptas am est, in cum aliquae corupta dolupta ssitatem fugit, torepel lupites eratias soloreriame pliberum sin coritam, odias que nonsendicae nis si incimol orehentesto dellacepe perunt officiet in restius doluptaturem que qui di net et int.</Content>
+        <Br/>
+        <Content>Modis accuptatatem est, quo blam sum int et volore nonse consedisinum et alianti ncimusa consequae aliquame exceperion conse doluptae is doloristias audist, at inihilic to et explit ut estem faccaectem faccus delignatum qui aut quis exped</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

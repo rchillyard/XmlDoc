@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ue703" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" Justification="LeftAlign">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/$ID/[No character style]">
+        <Content>Bea ipiendae ipsundi omnis vel ipitaqui accum sitiuntio magnis re, senitium dit, ut fuga. Duci officim inciam comnit laccus ea doluptas aut aut pos dipsani asperio risquias dolupta eptatecatque verum eum, sus dolupta voluptamust as derupta nusa nonecta ectotas et qui sum natem et verspiciet officium fugiatur, si num nimaior molum dolecum am eri disqui officiliquat laboreperum qui officta dollab imus.</Content>
+        <Br/>
+        <Content>Ipsam num qui soloreribus.</Content>
+        <Br/>
+        <Content>Sim hil magnam enimillibus alibus non nonsenis rem quo inullib usapita temporum ius acerit qui incilluptae es que dolessimus,</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>

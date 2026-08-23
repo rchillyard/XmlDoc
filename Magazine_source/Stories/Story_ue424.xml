@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" DOMVersion="8.0">
+  <Story Self="ue424" AppliedTOCStyle="n" TrackChanges="false" StoryTitle="$ID/" AppliedNamedGrid="n">
+    <StoryPreference OpticalMarginAlignment="false" OpticalMarginSize="12" FrameType="TextFrameType" StoryOrientation="Horizontal" StoryDirection="LeftToRightDirection"/>
+    <InCopyExportOption IncludeGraphicProxies="true" IncludeAllResources="false"/>
+    <ParagraphStyleRange AppliedParagraphStyle="ParagraphStyle/Body Text" Justification="LeftAlign">
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/white" FillColor="Color/Black">
+        <Content>1. Pitis dunt ut eossimincidi dent harchit, </Content>
+        <Br/>
+        <Br/>
+        <Content>2. Putem ut expernamusam qui qui qui acerferis ea </Content>
+        <Br/>
+        <Br/>
+        <Content>3. dolupic atestiis pelest, ipsusci endiscia none magnist, </Content>
+        <Br/>
+        <Br/>
+        <Content>4. But omni utemquae pro quia nullame lat quas as eum velenecus explique </Content>
+        <Br/>
+        <Br/>
+      </CharacterStyleRange>
+      <CharacterStyleRange AppliedCharacterStyle="CharacterStyle/white" FillColor="Color/C=0 M=100 Y=100 K=0" FontStyle="Medium Italic">
+        <Content>Nem. Am doloreperspe aut id escium sinctemporia deligni molores</Content>
+      </CharacterStyleRange>
+    </ParagraphStyleRange>
+  </Story>
+</idPkg:Story>
