@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "case": "04-both-add-diff-pos",
+  "requirement": "Both sides insert at different positions",
+  "expectedStatus": "accept",
+  "acceptedEdits": [
+    {
+      "side": "left",
+      "type": "insert",
+      "target": "rL",
+      "description": "Insert rL after r1."
+    },
+    {
+      "side": "right",
+      "type": "insert",
+      "target": "rR",
+      "description": "Insert rR after r2."
+    }
+  ],
+  "conflicts": [],
+  "invariants": {
+    "commonBase": true,
+    "unchangedSelfValuesStable": true,
+    "reciprocalThreadReferencesRequired": true
+  },
+  "artifacts": {
+    "base.idml": {
+      "sha256": "a0bc7a454e40437ec85a9b8bebf3a132ba4aaa674e05dc8d3c330f9c3cdc3586",
+      "bytes": 39552
+    },
+    "left.idml": {
+      "sha256": "3664f9d486fbfdb2cb3e5c4274f74af65ccf6f102e766f5d5ebcd4f1e95262d2",
+      "bytes": 39588
+    },
+    "right.idml": {
+      "sha256": "271164fd1db7a89977a756582a0eab676c7ec94bcbe71d993d29e102d30cf77f",
+      "bytes": 39588
+    }
+  },
+  "note": "The merged sibling order must be deterministic and preserve both anchors."
+}

@@ -4,6 +4,13 @@ Research and empirical findings from 2026-08-15, gathering what's needed before 
 eventual 3-way merge (Kaining's research project - see [DESIGN.md](../DESIGN.md)). Nothing here is
 implemented yet; this is groundwork.
 
+## Test corpus
+
+The deterministic base/left/right fixtures for the structural, text, z-order, grouping, and
+cross-reference scenarios are documented in
+[`src/test/resources/com/phasmidsoftware/xmldoc/idml/three-way-corpus/README.md`](src/test/resources/com/phasmidsoftware/xmldoc/idml/three-way-corpus/README.md).
+Each case also contains a machine-readable `expected.json` and reproducible operation notes.
+
 **Scope decision (2026-08-17)**: all three inputs to a merge (base + two independently edited
 copies) are assumed to have been produced by the *same* InDesign version. Cross-version migration
 (see the `Magazine-2` finding below) is real and worth remembering, but treating it as in-scope
