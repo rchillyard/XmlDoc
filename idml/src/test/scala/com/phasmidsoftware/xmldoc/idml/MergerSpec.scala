@@ -36,12 +36,26 @@ class MergerSpec extends AnyFlatSpec with should.Matchers {
     Merger.merge(base, left, right) shouldBe Seq(Conflict("u1", "Fill", Some("None"), Some("Red"), Some("Blue")))
   }
 
-  it should "let deletion win over an update to the same node (Delete/Edit, per Lindholm's default)" in {
+  it should "report a conflict when one side deletes a node the other side updated (Kaining's 06-delete-vs-modify)" in {
     val base = rect("Fill" -> "None")
     val left = GenericElement("Root", Nil, Nil) // left deleted it
     val right = rect("Fill" -> "Red") // right just updated it
     Merger.merge(base, left, right) match {
-      case Seq(MergedDelete(node)) => node.self shouldBe Some("u1")
+      case Seq(c @ Conflict("u1", _, _, _, _)) =>
+        c.leftValue shouldBe Some("(deleted)")
+        c.rightValue.get should include("Fill=Red")
+      case other => fail(other.toString)
+    }
+  }
+
+  it should "report the same conflict regardless of which side did the deleting" in {
+    val base = rect("Fill" -> "None")
+    val left = rect("Fill" -> "Red") // left just updated it
+    val right = GenericElement("Root", Nil, Nil) // right deleted it
+    Merger.merge(base, left, right) match {
+      case Seq(c @ Conflict("u1", _, _, _, _)) =>
+        c.leftValue.get should include("Fill=Red")
+        c.rightValue shouldBe Some("(deleted)")
       case other => fail(other.toString)
     }
   }

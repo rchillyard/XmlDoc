@@ -204,14 +204,109 @@ original CS6 file as the base.
 - Represent changes using something in the spirit of the PCS relation model, translated to/from
   `GenericElement`'s own tag/attributes/children shape.
 
+## Kaining's 13 conflict conditions, cross-checked against what's built (2026-08-24)
+
+Kaining independently catalogued 13 IDML use cases (16 counting the "b" variants) as left/right
+edits plus an expected merge outcome. Recorded here cross-referenced against `TreeMatcher`/
+`EditDetector`/`Merger` as they actually stand, not just restated.
+
+**Already correctly handled:**
+
+- **01** (one-sided add) -> `MergedInsert`.
+- **02** (one-sided delete) -> `MergedDelete`, for the "accept" half. The "fix references if
+  threads are involved" half is a real gap - see below.
+- **12** (`tf1.Next=tfA` vs `tf1.Next=tfB`) -> `NextTextFrame` is a plain XML attribute (confirmed
+  against real files, e.g. `NextTextFrame="n"`), so this is just the existing "same attribute,
+  different value" case -> `Conflict`. A useful confirmation that attribute-level conflict
+  detection already generalizes to thread-linking attributes, not just visual ones.
+
+**A real semantic mismatch, now fixed**: **06** (delete-vs-modify) - Kaining's expected outcome is
+a conflict. `Merger` previously let deletion win silently, following Lindholm's stated *default*
+(he treats Delete/Edit as an optional, separately-checked category, not a core conflict). Changed
+`Merger` to report a `Conflict` for this case instead (sentinel key `"(deleted vs updated)"`,
+carrying `"(deleted)"` on one side and a summary of the other side's changed attributes on the
+other) - Kaining's own catalogue is the more authoritative source for what this tool actually needs
+to do, and it disagrees with Lindholm's default here.
+
+**Real, unbuilt gaps this table makes concrete** (previously abstract "future work," now with
+actual test cases to build toward):
+
+- **Thread-reference repair** (02's parenthetical, `06b`, `11`) - deleting or inserting a linked
+  `TextFrame` needs to fix up `Previous`/`NextTextFrame` on its neighbors, not just vanish/appear
+  and leave dangling references.
+- **Structural moves / z-order** (`03`, `05`, `09`) - "pinned to top" and z-order changes are
+  almost certainly child-*order* changes within the Spread, not attribute changes at all.
+  `EditDetector` currently only diffs attributes on matched nodes - it never compares whether a
+  node's position among its siblings changed. This is the "Structural moves" item already in the
+  open questions below, now with three concrete cases.
+- **Insertion ordering** (`04`) - two independent inserts at different positions both get kept
+  (each already shows up as its own `MergedInsert`), but *where* they land relative to each other
+  in the merged order isn't resolved at all yet.
+- **Story-text-level diffing** (`07`, `08`, `08b`) - entirely out of scope of what exists: only
+  page-item *attributes* are diffed, never the actual paragraph/word content inside a `Story`.
+  `08b` in particular pins down a real granularity decision not yet made: word-level diffing would
+  accept it, whole-paragraph-as-one-atomic-unit would conflict.
+- **Structural-parent-change conflicts** (`10`) - ungrouping while a sibling edit assumes the
+  group still exists.
+- **Cross-reference conflicts** (`13`) - redirecting `ParentStory` on one side while the other
+  edits the story that used to feed that frame. A genuinely different *category* from anything
+  handled now - not two edits to the same node, but two edits to two different nodes that
+  reference each other.
+
+## Eventual integration: a git merge driver
+
+The natural "endgame" for this work, once the merge logic itself is further along: git has a
+built-in extension point for exactly this - a **merge driver** - the same mechanism tools like
+`nbdime` use for Jupyter notebooks.
+
+- **`.gitattributes`** declares which driver applies to which files, e.g. `*.idml merge=idml3way`.
+- **Git config** maps that driver name to an actual command, e.g.
+  `git config merge.idml3way.driver "idml-merge %O %A %B"`. Git substitutes `%O`/`%A`/`%B` with real
+  file paths for the base/ours/theirs versions before invoking it (`%L`/`%P` are also available:
+  a conflict-marker-size hint, and the original pathname).
+- **The driver is invoked as an ordinary shell subprocess** - there's no special git API, no
+  linking against `libgit2`, nothing beyond "git runs this command with these file-path arguments."
+  It can be anything executable: a compiled binary, a shell script, or - for us - a packaged JVM
+  program (e.g. an assembled runnable JAR via `sbt-assembly`, invoked as `java -jar idml-merge.jar
+  %O %A %B`, optionally wrapped in a thin shell script to keep the git config line simple).
+- **The contract**: exit code `0` means "merged successfully, use whatever's now in the `%A` file";
+  nonzero means "conflict." Unlike git's own line-based merge, it does *not* insert `<<<<<<<`/
+  `=======`/`>>>>>>>` markers for a custom driver - it's entirely up to the driver to leave `%A` in
+  a sensible state (or invent its own conflict-marking convention) when it reports a conflict.
+- **Practical catch**: the driver *definition* (the actual command) lives in git config, which
+  isn't versioned or distributed with the repo. `.gitattributes` can travel with the repo and name
+  the driver, but each collaborator still has to separately run the `git config merge.idml3way...`
+  command (or a setup script has to do it for them) before it takes effect - git deliberately
+  doesn't let a repo silently make a clone run an arbitrary command.
+
+**Conflict representation and resolution UX (Robin's proposal, 2026-08-24)**: since a custom
+driver doesn't get git's own `<<<<<<<`/`=======`/`>>>>>>>` text markers, and an IDML file isn't
+text anyone would want to hand-edit anyway, the driver could instead write *both* the "ours" and
+"theirs" versions of each conflicted node directly into the `%A` file when it reports a conflict
+(rather than picking one, or leaving something unresolved). A separate dedicated editor/tool would
+then let the user resolve each recorded conflict with one of four choices:
+
+- `0` - neither (drop it)
+- `1` - ours
+- `2` - theirs
+- `3` - both
+
+This fits naturally with `Merger`'s own `Conflict` type, which already carries both sides' values -
+the driver's job would just be to serialize every `Conflict` it gets back from `Merger.merge` into
+the `%A` file in a form that resolver tool can read, rather than trying to guess a resolution or
+force the user into git's usual inline text-conflict workflow.
+
 ## Open questions / untested cases
 
 Recorded so they aren't lost, not yet investigated:
 
-- **Genuine conflicts**: both sides editing the *same* attribute of the same object differently
-  (as opposed to the different-attributes case already tested).
+- ~~**Genuine conflicts**: both sides editing the *same* attribute of the same object
+  differently.~~ **Done**: `Merger.reconcileUpdates` handles this, tested both synthetically and
+  against the real `Mergeable` Insert/Insert collision (`u11c`'s differing `FillColor`).
 - **Deletion**: does a deleted page item just vanish cleanly, with no dangling references left in
-  sibling `Previous`/`NextTextFrame`-style attributes or elsewhere?
+  sibling `Previous`/`NextTextFrame`-style attributes or elsewhere? Kaining's catalogue (above)
+  confirms this is a real requirement, not a hypothetical - thread-reference repair is still
+  unbuilt.
 - **Structural moves**: reordering page items (z-order/stacking, i.e. actual child-list position,
   not just `ItemTransform` coordinates) - does `Self` survive a real move, and how is the new
   position expressed in the IDML?

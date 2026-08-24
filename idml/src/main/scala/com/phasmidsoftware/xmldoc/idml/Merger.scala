@@ -14,10 +14,11 @@ sealed trait MergeOutcome
 case class MergedInsert(node: NodeRef) extends MergeOutcome
 
 /**
- * A node to be removed from the merged result - deleted by one or both sides. If one side deleted
- * a node the other side updated, deletion wins (Lindholm's default behavior for what he calls the
- * "Delete/Edit" case - it's an *optional* conflict category, checked separately from the core
- * merge, and not implemented here).
+ * A node to be removed from the merged result - deleted by both sides in agreement. If only one
+ * side deleted it while the other updated it, that's a `Conflict` instead (see below) - Lindholm
+ * treats this "Delete/Edit" case as optional and lets deletion win by default, but Kaining's own
+ * catalogue of expected outcomes (see `MERGE.md`) calls for it to be a real conflict, which is what
+ * this implements.
  */
 case class MergedDelete(node: NodeRef) extends MergeOutcome
 
@@ -40,6 +41,9 @@ case class Conflict(self: String, key: String, baseValue: Option[String], leftVa
  * reconciled attribute-by-attribute, so (per the running `HelloWorld2A`/`HelloWorld2B` example)
  * one side moving an object and the other restyling it combine cleanly, while two sides changing
  * the *same* attribute differently is reported as a `Conflict`, not silently resolved either way.
+ * A node deleted by one side and updated by the other is also a `Conflict` (per Kaining's own
+ * catalogue of expected outcomes, `06-delete-vs-modify` in `MERGE.md` - this deliberately
+ * disagrees with Lindholm's stated default of letting deletion win silently).
  *
  * Deliberately narrow, matching `EditDetector`'s own scope: only attribute-level content is
  * reconciled, not child order/position (Lindholm's node-context/guard machinery, not yet built).
@@ -62,8 +66,8 @@ object Merger {
         case (Some(e), None) => toOutcomes(self, e)
         case (None, Some(e)) => toOutcomes(self, e)
         case (Some(_: Deleted), Some(r: Deleted)) => Seq(MergedDelete(r.node))
-        case (Some(u: Updated), Some(_: Deleted)) => Seq(MergedDelete(u.base))
-        case (Some(_: Deleted), Some(u: Updated)) => Seq(MergedDelete(u.base))
+        case (Some(u: Updated), Some(_: Deleted)) => Seq(deleteUpdateConflict(self, u, deletedIsLeft = false))
+        case (Some(_: Deleted), Some(u: Updated)) => Seq(deleteUpdateConflict(self, u, deletedIsLeft = true))
         case (Some(l: Updated), Some(r: Updated)) => reconcileUpdates(self, l, r)
         case (Some(l: Inserted), Some(r: Inserted)) => reconcileInserts(self, l, r)
         // Insert+Delete or Insert+Update for the same Self can't happen: Inserted implies absent
@@ -98,6 +102,12 @@ object Merger {
           throw new IllegalStateException(s"Merger.reconcileUpdates: unreachable - key $key came from the union of both sides' own keys")
       }
     }
+  }
+
+  private def deleteUpdateConflict(self: String, updated: Updated, deletedIsLeft: Boolean): Conflict = {
+    val updateSummary = updated.changedAttributes.map { case (key, _, newValue) => s"$key=${newValue.getOrElse("(removed)")}" }.mkString(", ")
+    if (deletedIsLeft) Conflict(self, "(deleted vs updated)", None, Some("(deleted)"), Some(updateSummary))
+    else Conflict(self, "(deleted vs updated)", None, Some(updateSummary), Some("(deleted)"))
   }
 
   private def reconcileInserts(self: String, left: Inserted, right: Inserted): Seq[MergeOutcome] = {
