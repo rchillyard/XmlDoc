@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "case": "06b-delete-thread-vs-content",
+  "requirement": "Thread deletion versus story content",
+  "expectedStatus": "conflict",
+  "acceptedEdits": [],
+  "conflicts": [
+    {
+      "type": "delete-thread-vs-content",
+      "target": "tf2/story1",
+      "left": "tf2 deleted; thread terminates at tf1",
+      "right": "story1 paragraph 2 changes brown to crimson",
+      "resolution": "manual"
+    }
+  ],
+  "invariants": {
+    "commonBase": true,
+    "unchangedSelfValuesStable": true,
+    "reciprocalThreadReferencesRequired": true
+  },
+  "artifacts": {
+    "base.idml": {
+      "sha256": "70dfde77fc6d9b9f8f051f389a7dcae0f11683993b55a640c67f20f3761c9834",
+      "bytes": 39555
+    },
+    "left.idml": {
+      "sha256": "ff9792a3b1fd543a97788bb9fa2ccadf6619a082bd45e1dacf4635fff23afdf5",
+      "bytes": 39504
+    },
+    "right.idml": {
+      "sha256": "e9bcd7cdecec73ac49e4e9dca3a9020730212a43a5dcdcb918ed158954beb75b",
+      "bytes": 39555
+    }
+  },
+  "note": "This is a policy case: a frame deletion changes story flow even though story text is stored separately."
+}

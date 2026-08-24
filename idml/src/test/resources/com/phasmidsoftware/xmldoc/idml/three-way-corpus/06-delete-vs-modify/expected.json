@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "case": "06-delete-vs-modify",
+  "requirement": "One side deletes; the other modifies",
+  "expectedStatus": "conflict",
+  "acceptedEdits": [],
+  "conflicts": [
+    {
+      "type": "delete-modify",
+      "target": "r2",
+      "left": "deleted",
+      "right": "FillColor=Color/Red",
+      "resolution": "manual"
+    }
+  ],
+  "invariants": {
+    "commonBase": true,
+    "unchangedSelfValuesStable": true,
+    "reciprocalThreadReferencesRequired": true
+  },
+  "artifacts": {
+    "base.idml": {
+      "sha256": "7199de26ece157b2006b020f5188f94e81aa42daf7e360a1d5302f966c69cc7d",
+      "bytes": 39550
+    },
+    "left.idml": {
+      "sha256": "1d18f5f1f1cc40be50efab043f4cca6b9072f2479de4c4884bc43e1468dbf905",
+      "bytes": 39510
+    },
+    "right.idml": {
+      "sha256": "6b81c65bafb02da2156f257b510867da5e7c359add1d9e84c489d69d85d33a25",
+      "bytes": 39564
+    }
+  },
+  "note": null
+}
