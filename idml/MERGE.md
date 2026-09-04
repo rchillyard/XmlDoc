@@ -4,6 +4,10 @@ Research and empirical findings from 2026-08-15, gathering what's needed before 
 eventual 3-way merge (Kaining's research project - see [DESIGN.md](../DESIGN.md)). Nothing here is
 implemented yet; this is groundwork.
 
+See the illustrated [3-way merge case atlas](docs/merge-case-atlas.md) for the ordered-tree,
+cross-parent graph, reference, and text scenarios. The original interactive version is preserved
+alongside it as [HTML](docs/merge-case-atlas.html).
+
 ## Test corpus
 
 The deterministic base/left/right fixtures for the structural, text, z-order, grouping, and
