@@ -213,7 +213,43 @@ original CS6 file as the base.
   conflict categories) as the target semantics for whatever merge logic gets built, rather than
   inventing new terminology.
 - Represent changes using something in the spirit of the PCS relation model, translated to/from
-  `GenericElement`'s own tag/attributes/children shape.
+  `GenericElement`'s own tag/attributes/children shape. **Built** - see below.
+
+## PCS relation utilities (built 2026-09-18)
+
+There is now an illustrated walkthrough of the Lindholm paper, `doc/Three-way_XML_Merge.html`
+(generated from the paper, not authoritative for its exact statements/formulas - `doc/Lindholm.pdf`
+still is), section "§2.3 Ordered trees & PCS" in particular. It's what prompted actually building
+the representation, in `Pcs.scala`:
+
+- `Sibling` (`SiblingNode(label)` / `ListStart` / `ListEnd`) stands in for Lindholm's `⊣`/`⊢`
+  boundary markers, so every real child has both a predecessor and a successor even at either end
+  of the list.
+- `Pcs(parent, predecessor, successor)` is his `pcs(r, p, s)`; `Content(label, tag, attributes)` is
+  his `c(n, content)` - collapsed to the whole `(tag, attributes)` pair, since attribute-by-attribute
+  detail is `EditDetector`'s job, not this relation's.
+- `Pcs.relations(root): RelationSet` decomposes a whole tree into these two relation sets - the
+  "T\* expressed as a set" step his algorithm's pseudocode starts from.
+- **The one real design decision**: what identifies a node that has no `Self` at all (confirmed by
+  direct inspection of real fixtures to be `Properties`, the `PathGeometry`/`GeometryPathType`/
+  `PathPointArray` chain, and `ParagraphStyleRange`/`CharacterStyleRange`/`Content` inside a
+  `Story` - never the page items themselves: `Rectangle`, `TextFrame`, `Group`, `Page`, `Spread`,
+  `Story` all reliably carry `Self`). `Pcs.label` falls back to the node's `NodePath` (already used
+  for exactly this in `TreeMatcher`) rather than inventing a new synthetic-ID scheme. A path-labelled
+  node only ever matches itself, within one tree, never a node from another tree - same gap
+  `TreeMatcher`/`EditDetector` already have (they skip `Self`-less nodes outright); this at least
+  makes the relation set total, per Lindholm's assumption that every node has *some* label, without
+  pretending path-based identity is reliable across independent edits.
+
+Confirmed useful in `PcsSpec`: two trees where a `Spread`'s two children swap places, with neither
+child's own attributes touched, produce *identical* `EditDetector.detectEdits` output (`Nil` -
+attribute-only diffing is blind to reordering) but *different* `Pcs.relations(...).pcs` sets - the
+concrete gap "Structural moves / z-order" below has been describing in the abstract.
+
+**Not yet built**: the edit-set difference (`E = T* - T*0`), the raw-merge union, and the
+conflict-resolution scan from the paper's `merge` pseudocode (§6) - i.e. `Pcs` is the relation
+representation only, not yet a second, structural `Merger`. `EditDetector`/`Merger` still only see
+attributes; nothing consumes `Pcs.relations` yet.
 
 ## Kaining's 13 conflict conditions, cross-checked against what's built (2026-08-24)
 
@@ -320,7 +356,8 @@ Recorded so they aren't lost, not yet investigated:
   unbuilt.
 - **Structural moves**: reordering page items (z-order/stacking, i.e. actual child-list position,
   not just `ItemTransform` coordinates) - does `Self` survive a real move, and how is the new
-  position expressed in the IDML?
+  position expressed in the IDML? `Pcs.relations` (above) can now represent and detect this; no
+  structural merger consumes it yet.
 - Whether `Self` stability holds up over *many* rounds of independent editing, not just one.
 - **What actually determines whether a migration/reopen fully regenerates `Self` values or leaves
   them untouched** - `Magazine-1` came through clean, `Magazine-2` didn't, from the same starting
