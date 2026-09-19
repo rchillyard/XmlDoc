@@ -19,13 +19,23 @@ import scala.util.{Failure, Success, Try}
 object PcsTreeBuilder {
 
   /**
-   * Reconstructs the tree rooted at `result.rootLabel` from `result.relations`.
+   * Reconstructs the tree rooted at `result.rootLabel` from `result.relations` - refusing outright
+   * if `result.conflicts` is non-empty, rather than relying on `build(relations, rootLabel)`'s own
+   * cycle/missing-content detection to catch the problem. That detection isn't a complete
+   * substitute for checking `conflicts`: a "unique parent" conflict (two sides disagreeing about
+   * which parent a node belongs to, e.g. Kaining's `10-group-ungroup`) can leave both parents'
+   * chains individually well-formed - one side's edit simply wins by construction, silently, with
+   * no cycle or missing content to trip over - which is exactly why `PcsMerger` reports it as a
+   * conflict in the first place rather than resolving it.
    *
    * @param result a `PcsMerger.merge` result.
-   * @return the rebuilt tree, or a `Failure` if `result.relations` isn't actually consistent
-   *         (most likely because `result.conflicts` is non-empty and was ignored).
+   * @return the rebuilt tree, or a `Failure` if `result.conflicts` is non-empty, or (should that
+   *         somehow not catch it) `result.relations` still turns out inconsistent.
    */
-  def build(result: StructuralMergeResult): Try[GenericElement] = build(result.relations, result.rootLabel)
+  def build(result: StructuralMergeResult): Try[GenericElement] =
+    if (result.conflicts.nonEmpty)
+      Failure(XmlException(s"PcsTreeBuilder: refusing to build from ${result.conflicts.size} unresolved conflict(s): ${result.conflicts.map(_.slot).mkString(", ")}"))
+    else build(result.relations, result.rootLabel)
 
   /**
    * Reconstructs the tree rooted at `rootLabel` from `relations`.

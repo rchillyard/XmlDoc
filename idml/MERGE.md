@@ -270,9 +270,6 @@ derived and confirmed against the implementation. Also re-run against the real `
 catches at the attribute level - a useful cross-check that the two mergers agree where their scopes
 overlap.
 
-One thing deliberately not attempted here, an already-tracked gap: "unique parent" (a node moved to
-a genuinely different parent - Kaining's `10-group-ungroup`).
-
 **Built next (2026-09-19): tree reconstruction.** `PcsTreeBuilder.build` is the other half of the
 sentence in §6 the pseudocode itself doesn't spell out: "Tm can be reconstructed by traversing from
 ⊥0 level by level along the PCS relations in Δ." It walks a `RelationSet` from a given root label,
@@ -283,13 +280,16 @@ so `PcsTreeBuilder.build(result: StructuralMergeResult)` needs nothing else.
 
 Two things worth noting:
 
-- **It fails cleanly, on purpose, when handed an inconsistent relation set** - i.e. when
-  `conflicts` was non-empty and got ignored anyway. This isn't just defensive: `PcsMergerSpec`'s own
-  `05-move-move-divergent` case, walked through by hand, resolves to `u1`'s successor still pointing
-  at `u2` (the stale base value, since that slot conflicted) while `u2`'s successor now points back
-  at `u1` (one side's winning edit) - a genuine 2-cycle. `PcsTreeBuilderSpec` confirms `build` catches
-  it (and a missing-content case, from an Insert/Insert content conflict) rather than looping forever
-  or fabricating a tree.
+- **`build(result: StructuralMergeResult)` refuses outright whenever `result.conflicts` is
+  non-empty**, rather than relying only on the lower-level `build(relations, rootLabel)`'s own
+  cycle/missing-content detection - see "the unique-parent rule" below for why that detection alone
+  turned out not to be a complete safety net. The lower-level overload still exists and still does
+  its own opportunistic checking (useful on its own, e.g. for the round-trip tests below, which
+  don't go through `PcsMerger`/`StructuralMergeResult` at all): `05-move-move-divergent`, walked
+  through by hand, resolves to `u1`'s successor still pointing at `u2` (the stale base value, since
+  that slot conflicted) while `u2`'s successor now points back at `u1` (one side's winning edit) - a
+  genuine 2-cycle, which it catches; so does a missing-content case, from an Insert/Insert content
+  conflict.
 - **It's lossy in the same way the rest of this layer already is**: `Pcs.relations` never captured
   `GenericText`/`GenericCData` children (see `Pcs.scala`), so a rebuilt tree never has any text
   content, even where the originals did - confirmed against a real file by comparing to a
@@ -299,6 +299,34 @@ Round-tripped successfully: a plain tree through `Pcs.relations` and back unchan
 reorder and a one-sided insertion, each exactly as the modifying side arranged it; both sides'
 independent, non-conflicting changes combined into one tree; and the real `HelloWorld2` ->
 `HelloWorld2D` insertion, end to end through `PcsMerger` and back into a real `GenericElement`.
+
+**Built next (2026-09-19): the unique-parent rule.** The third of Lindholm's three structural
+consistency rules, and the one `PcsMerger` originally deferred:
+`parent(r,n) ∧ parent(r′,n) → r=r′` - a node claimed as a child by two genuinely different parents. The "unique successor"/"unique predecessor" rules already built can't see this at all:
+they only ever compare two values sharing the same `(parent, ...)` key, but a node moved to a
+different parent changes *which key it appears under in the first place*, not the value at a shared
+one - so a genuine reparenting conflict (Kaining's `10-group-ungroup`: one side ungroups `g1`, the
+other moves a new sibling *into* `g1`) can sail straight through both existing checks with zero
+overlap between the two sides' touched keys, and get silently, wrongly resolved.
+
+`PcsMerger.parentOf(pcs): Map[String, String]` computes each label's parent from a relation set (a
+label appearing as anyone's predecessor or successor tells you its `parent`); reconciling
+`base`/`left`/`right`'s three parent-maps through the same `reconcile` helper the other two rules
+already use catches exactly this. `PcsMergerSpec`'s `10-group-ungroup` case confirms both affected
+nodes (the ungrouped one and the one moved into the still-assumed-present group) are flagged, with
+the exact base/left/right parent labels hand-derived and confirmed against the implementation - and
+that a genuine single-sided reparenting (no disagreement) still isn't mistaken for a conflict.
+
+This is also what motivated hardening `PcsTreeBuilder.build(result)` (above): the group/ungroup case
+doesn't produce a cycle or missing content anywhere - both sides' chains individually look perfectly
+consistent - so nothing about the walk itself would ever have caught it. Checking `conflicts` up
+front is a real fix, not a redundant belt-and-braces check.
+
+With all three structural consistency rules built, the only remaining named gaps for the structural
+(`Pcs`-level) path are: thread-reference repair, insertion ordering across independent inserts,
+story-text-level diffing, and cross-reference conflicts (`ParentStory`, `NextTextFrame`) - see
+Kaining's cross-check below - plus actually wiring this path up alongside the existing attribute-only
+`EditDetector`/`Merger` for a real end-to-end merge.
 
 ## Kaining's 13 conflict conditions, cross-checked against what's built (2026-08-24)
 
@@ -342,8 +370,8 @@ actual test cases to build toward):
   page-item *attributes* are diffed, never the actual paragraph/word content inside a `Story`.
   `08b` in particular pins down a real granularity decision not yet made: word-level diffing would
   accept it, whole-paragraph-as-one-atomic-unit would conflict.
-- **Structural-parent-change conflicts** (`10`) - ungrouping while a sibling edit assumes the
-  group still exists.
+- ~~**Structural-parent-change conflicts** (`10`) - ungrouping while a sibling edit assumes the
+  group still exists.~~ **Done**: `PcsMerger`'s "unique parent" rule (above) reports exactly this.
 - **Cross-reference conflicts** (`13`) - redirecting `ParentStory` on one side while the other
   edits the story that used to feed that frame. A genuinely different *category* from anything
   handled now - not two edits to the same node, but two edits to two different nodes that

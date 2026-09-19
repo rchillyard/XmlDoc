@@ -57,22 +57,44 @@ class PcsTreeBuilderSpec extends AnyFlatSpec with should.Matchers {
 
   behavior of "PcsTreeBuilder.build, an unresolved conflict"
 
-  it should "fail rather than silently reconstruct a bad tree from a move/move conflict (Kaining's 05)" in {
+  it should "refuse to build at all from a result with any unresolved conflict, move/move (Kaining's 05) included" in {
     val base = spreadOf("us", rect("u1"), rect("u2"), rect("u3"))
     val left = spreadOf("us", rect("u2"), rect("u3"), rect("u1")) // left moves u1 to the end
     val right = spreadOf("us", rect("u2"), rect("u1"), rect("u3")) // right moves u1 to the middle
     val result = PcsMerger.merge(base, left, right)
     result.conflicts should not be empty
-    PcsTreeBuilder.build(result) shouldBe a[Failure[?]]
+    val Failure(t) = PcsTreeBuilder.build(result): @unchecked
+    t.getMessage should include("refusing to build")
   }
 
-  it should "fail with a clear error when a referenced label has no content (an Insert/Insert content conflict)" in {
+  it should "refuse to build from an Insert/Insert content conflict too, even though its relations alone wouldn't cycle" in {
     val base = spreadOf("us")
     val left = spreadOf("us", rect("u1", "Fill" -> "Yellow"))
     val right = spreadOf("us", rect("u1", "Fill" -> "Magenta"))
     val result = PcsMerger.merge(base, left, right)
-    val Failure(t) = PcsTreeBuilder.build(result): @unchecked
+    PcsTreeBuilder.build(result) shouldBe a[Failure[?]]
+  }
+
+  it should "still fail (via the lower-level relations/rootLabel overload) with a clear error when a referenced label has no content" in {
+    val base = spreadOf("us")
+    val left = spreadOf("us", rect("u1", "Fill" -> "Yellow"))
+    val right = spreadOf("us", rect("u1", "Fill" -> "Magenta"))
+    val result = PcsMerger.merge(base, left, right)
+    val Failure(t) = PcsTreeBuilder.build(result.relations, result.rootLabel): @unchecked
     t.getMessage should include("no content recorded for u1")
+  }
+
+  behavior of "PcsTreeBuilder.build, the unique-parent rule (Kaining's 10-group-ungroup)"
+
+  it should "refuse to build when left ungroups a node right takes as its new home" in {
+    val g1 = GenericElement("Group", Seq("Self" -> "g1"), Seq(rect("x")))
+    val y = rect("y")
+    val base = spreadOf("us", g1, y)
+    val left = spreadOf("us", rect("x"), y) // left ungroups g1: x is promoted, g1 vanishes
+    val right = spreadOf("us", GenericElement("Group", Seq("Self" -> "g1"), Seq(rect("x"), y))) // right moves y inside g1
+    val result = PcsMerger.merge(base, left, right)
+    result.conflicts.map(_.slot) should (contain("parent of x") and contain("parent of y"))
+    PcsTreeBuilder.build(result) shouldBe a[Failure[?]]
   }
 
   behavior of "PcsTreeBuilder.build, real HelloWorld2 files"

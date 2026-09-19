@@ -37,10 +37,12 @@ case class StructuralMergeResult(relations: RelationSet, rootLabel: String, conf
  * reconcile attributes on already-matched nodes; this is what actually detects and merges a plain
  * reorder, which they cannot (see `PcsSpec`/`PcsEditDetectorSpec`).
  *
- * Deliberately narrower than the paper's full algorithm in one respect: it only checks the
- * "unique successor" and "unique predecessor" consistency rules - a node's position *within* its
- * current parent's child list - not "unique parent" (a node moved to a genuinely different
- * parent, e.g. Kaining's `10-group-ungroup`), which stays an open gap (see `MERGE.md`).
+ * Checks all three of Lindholm's structural consistency rules: "unique successor" and "unique
+ * predecessor" (a node's position *within* its current parent's child list), and "unique parent" -
+ * a node claimed as a child by two genuinely different parents (e.g. Kaining's
+ * `10-group-ungroup`), which the first two can't see: they only compare values sharing the same
+ * `(parent, ...)` key, but a node moved to a different parent changes which *key* it appears
+ * under at all, not the value at a shared one.
  */
 object PcsMerger {
 
@@ -85,13 +87,28 @@ object PcsMerger {
       StructuralConflict(s"predecessor before ${render(successor)} under $parent", b.map(render), l.map(render), r.map(render))
     }
 
+    // Like bySuccessor above, only used for conflict detection: it can't tell us anything safe to
+    // apply (a label's "resolved" parent here says nothing about *where* under that parent it
+    // goes - the predecessor/successor maps above already own that), only that two sides disagree
+    // about which parent a node belongs to at all.
+    val baseParent = parentOf(baseRelations.pcs)
+    val (_, parentConflicts) = reconcile(baseParent, parentOf(leftEdits.pcs), parentOf(rightEdits.pcs))
+    val parentReports = parentConflicts.map { case (label, b, l, r) => StructuralConflict(s"parent of $label", b, l, r) }
+
     val rootLabel = Pcs.label(NodeRef(NodePath.root, base))
-    StructuralMergeResult(RelationSet(mergedPcs, mergedContent), rootLabel, contentReports ++ predReports ++ succReports)
+    StructuralMergeResult(RelationSet(mergedPcs, mergedContent), rootLabel, contentReports ++ predReports ++ succReports ++ parentReports)
   }
 
   private def byPredecessor(pcs: Set[Pcs]): Map[(String, Sibling), Sibling] = pcs.map(p => (p.parent, p.predecessor) -> p.successor).toMap
 
   private def bySuccessor(pcs: Set[Pcs]): Map[(String, Sibling), Sibling] = pcs.map(p => (p.parent, p.successor) -> p.predecessor).toMap
+
+  // Every real (non-boundary) label's parent, per this relation set - assumes a well-formed tree
+  // (each label has exactly one parent within one tree's own relations); if that's ever violated,
+  // same as TreeMatcher's Self-uniqueness assumption, whichever relation is visited last silently
+  // wins the slot.
+  private def parentOf(pcs: Set[Pcs]): Map[String, String] =
+    pcs.flatMap(p => Seq(p.predecessor, p.successor).collect { case SiblingNode(label) => label -> p.parent }).toMap
 
   /**
    * Reconciles `left`'s and `right`'s edits (both relative to `base`) for one map of relation

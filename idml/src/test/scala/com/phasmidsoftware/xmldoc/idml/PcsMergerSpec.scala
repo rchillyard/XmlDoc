@@ -75,6 +75,28 @@ class PcsMergerSpec extends AnyFlatSpec with should.Matchers {
     result.relations.content should contain(Content("u1", "Rectangle", Seq("Self" -> "u1", "Fill" -> "Yellow")))
   }
 
+  behavior of "PcsMerger.merge, the unique-parent rule (Kaining's 10-group-ungroup)"
+
+  it should "report a parent conflict for every node whose new parent the two sides disagree about" in {
+    val g1 = GenericElement("Group", Seq("Self" -> "g1"), Seq(rect("x")))
+    val y = rect("y")
+    val base = spreadOf("us", g1, y)
+    val left = spreadOf("us", rect("x"), y) // left ungroups g1: x is promoted to a direct child of us, g1 vanishes
+    val right = spreadOf("us", GenericElement("Group", Seq("Self" -> "g1"), Seq(rect("x"), y))) // right moves y inside g1
+    val result = PcsMerger.merge(base, left, right)
+    val bySlot = result.conflicts.map(c => c.slot -> c).toMap
+    bySlot("parent of x") shouldBe StructuralConflict("parent of x", Some("g1"), Some("us"), Some("g1"))
+    bySlot("parent of y") shouldBe StructuralConflict("parent of y", Some("us"), Some("us"), Some("g1"))
+  }
+
+  it should "not confuse a single-sided move to a new parent (no disagreement) with a conflict" in {
+    val g1 = GenericElement("Group", Seq("Self" -> "g1"), Seq(rect("x")))
+    val base = spreadOf("us", g1)
+    val right = spreadOf("us", rect("x")) // right ungroups g1; left leaves it alone
+    val result = PcsMerger.merge(base, base, right)
+    result.conflicts shouldBe Nil
+  }
+
   behavior of "PcsMerger.merge, real Mergeable files (the same trio MergerSpec uses)"
 
   private def spread(resourceName: String, path: String): GenericElement =
