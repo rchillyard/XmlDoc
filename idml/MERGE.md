@@ -254,11 +254,26 @@ reconcile - `PcsEditDetectorSpec` checks that a pure reorder produces only `Pcs`
 attribute change produces only a `Content` edit, and an insertion produces both (the new node's own
 `Content` plus the `Pcs` links that splice it into its parent's chain).
 
-**Still not built**: the raw-merge union and the conflict-resolution scan from the paper's `merge`
-pseudocode (§6) - the actual 3-way reconciliation, i.e. a second, structural `Merger` alongside the
-existing attribute-only one. `EditDetector`/`Merger` still only see attributes; nothing does 3-way
-reconciliation over `Pcs.relations` yet, so a real move/reorder still can't be *merged*, only
-*detected* one side at a time.
+**Built next (2026-09-19): the structural merger.** `PcsMerger.merge(base, left, right):
+StructuralMergeResult` is the reconciliation half of §6's pseudocode: it unions `base`'s relations
+with both sides' `PcsEditDetector` edits and resolves each contested "slot" (which content a label
+has; which successor follows a given predecessor under a given parent; which predecessor precedes a
+given successor) the same way for all three - untouched-by-both stands, one side's edit wins if the
+other didn't touch it, agreeing edits win, and disagreeing edits are reported as a `StructuralConflict`
+rather than guessed at. `PcsMergerSpec` checks a clean one-sided reorder and insertion apply with no
+conflicts, an Insert/Insert `Self` collision with differing content conflicts (agreeing content
+doesn't), and - the sharpest test - Kaining's `05-move-move-divergent` (`u1` moved to the end by one
+side, to the middle by the other) produces exactly the two conflicts the "unique successor" and
+"unique predecessor" rules each independently detect, with the exact base/left/right values hand-
+derived and confirmed against the implementation. Also re-run against the real `Mergeable-Left`/
+`-Right` trio: it independently flags the same `u11c` Insert/Insert collision `MergerSpec` already
+catches at the attribute level - a useful cross-check that the two mergers agree where their scopes
+overlap.
+
+Two things deliberately **not** attempted here, both already-tracked gaps: "unique parent" (a node
+moved to a genuinely different parent - Kaining's `10-group-ungroup`), and actually reconstructing a
+merged `GenericElement` tree from the resolved `RelationSet` (walking it from the root, per the
+paper) - `StructuralMergeResult.relations` is still just a relation set, not a tree.
 
 ## Kaining's 13 conflict conditions, cross-checked against what's built (2026-08-24)
 
