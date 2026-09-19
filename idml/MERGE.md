@@ -270,10 +270,35 @@ derived and confirmed against the implementation. Also re-run against the real `
 catches at the attribute level - a useful cross-check that the two mergers agree where their scopes
 overlap.
 
-Two things deliberately **not** attempted here, both already-tracked gaps: "unique parent" (a node
-moved to a genuinely different parent - Kaining's `10-group-ungroup`), and actually reconstructing a
-merged `GenericElement` tree from the resolved `RelationSet` (walking it from the root, per the
-paper) - `StructuralMergeResult.relations` is still just a relation set, not a tree.
+One thing deliberately not attempted here, an already-tracked gap: "unique parent" (a node moved to
+a genuinely different parent - Kaining's `10-group-ungroup`).
+
+**Built next (2026-09-19): tree reconstruction.** `PcsTreeBuilder.build` is the other half of the
+sentence in §6 the pseudocode itself doesn't spell out: "Tm can be reconstructed by traversing from
+⊥0 level by level along the PCS relations in Δ." It walks a `RelationSet` from a given root label,
+following each parent's `Pcs` chain from `ListStart` to `ListEnd` and looking up each label's
+`Content`, to rebuild an actual `GenericElement`. `StructuralMergeResult` now carries the merge's
+own root label (`base`/`left`/`right`'s shared root, since they're assumed to already correspond),
+so `PcsTreeBuilder.build(result: StructuralMergeResult)` needs nothing else.
+
+Two things worth noting:
+
+- **It fails cleanly, on purpose, when handed an inconsistent relation set** - i.e. when
+  `conflicts` was non-empty and got ignored anyway. This isn't just defensive: `PcsMergerSpec`'s own
+  `05-move-move-divergent` case, walked through by hand, resolves to `u1`'s successor still pointing
+  at `u2` (the stale base value, since that slot conflicted) while `u2`'s successor now points back
+  at `u1` (one side's winning edit) - a genuine 2-cycle. `PcsTreeBuilderSpec` confirms `build` catches
+  it (and a missing-content case, from an Insert/Insert content conflict) rather than looping forever
+  or fabricating a tree.
+- **It's lossy in the same way the rest of this layer already is**: `Pcs.relations` never captured
+  `GenericText`/`GenericCData` children (see `Pcs.scala`), so a rebuilt tree never has any text
+  content, even where the originals did - confirmed against a real file by comparing to a
+  text-node-stripped copy of the expected tree, not the raw original.
+
+Round-tripped successfully: a plain tree through `Pcs.relations` and back unchanged; a one-sided
+reorder and a one-sided insertion, each exactly as the modifying side arranged it; both sides'
+independent, non-conflicting changes combined into one tree; and the real `HelloWorld2` ->
+`HelloWorld2D` insertion, end to end through `PcsMerger` and back into a real `GenericElement`.
 
 ## Kaining's 13 conflict conditions, cross-checked against what's built (2026-08-24)
 

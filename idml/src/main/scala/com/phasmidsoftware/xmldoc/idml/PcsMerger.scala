@@ -15,16 +15,20 @@ case class StructuralConflict(slot: String, baseValue: Option[String], leftValue
 /**
  * The result of a structural (`Pcs`-level) 3-way merge. `relations` is `Δ` after resolving
  * whatever could be resolved automatically - safe to reconstruct a merged tree from by walking it
- * from the root (that reconstruction step isn't built yet). `conflicts` is everywhere that
- * couldn't be. For a conflicting slot, `relations` keeps the base's own value if it had one
- * (Lindholm's rule: an edit always wins over the base, so a real conflict - two *edits*
- * disagreeing - is the one case with no automatic winner); a conflicting slot with no base value
- * at all (e.g. both sides independently insert different content at the same anchor) is simply
- * absent from `relations`. Either way, `relations` isn't guaranteed internally consistent when
- * `conflicts` is non-empty - per Lindholm, that's expected: `Δ` only becomes `Tm` once every
- * conflict is resolved one way or another.
+ * from `rootLabel` (see `PcsTreeBuilder`). `conflicts` is everywhere that couldn't be resolved.
+ * For a conflicting slot, `relations` keeps the base's own value if it had one (Lindholm's rule:
+ * an edit always wins over the base, so a real conflict - two *edits* disagreeing - is the one
+ * case with no automatic winner); a conflicting slot with no base value at all (e.g. both sides
+ * independently insert different content at the same anchor) is simply absent from `relations`.
+ * Either way, `relations` isn't guaranteed internally consistent when `conflicts` is non-empty -
+ * per Lindholm, that's expected: `Δ` only becomes `Tm` once every conflict is resolved one way or
+ * another (`PcsTreeBuilder.build` fails cleanly rather than silently reconstructing a bad tree
+ * when it isn't).
+ *
+ * @param rootLabel the label of `base`/`left`/`right`'s shared root node (they're assumed to
+ *                   already correspond, same as everywhere else in this package).
  */
-case class StructuralMergeResult(relations: RelationSet, conflicts: Seq[StructuralConflict])
+case class StructuralMergeResult(relations: RelationSet, rootLabel: String, conflicts: Seq[StructuralConflict])
 
 /**
  * A structural merger over `Pcs`/`Content` relations - the reconciliation half of Lindholm's
@@ -81,7 +85,8 @@ object PcsMerger {
       StructuralConflict(s"predecessor before ${render(successor)} under $parent", b.map(render), l.map(render), r.map(render))
     }
 
-    StructuralMergeResult(RelationSet(mergedPcs, mergedContent), contentReports ++ predReports ++ succReports)
+    val rootLabel = Pcs.label(NodeRef(NodePath.root, base))
+    StructuralMergeResult(RelationSet(mergedPcs, mergedContent), rootLabel, contentReports ++ predReports ++ succReports)
   }
 
   private def byPredecessor(pcs: Set[Pcs]): Map[(String, Sibling), Sibling] = pcs.map(p => (p.parent, p.predecessor) -> p.successor).toMap
