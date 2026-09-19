@@ -246,10 +246,19 @@ child's own attributes touched, produce *identical* `EditDetector.detectEdits` o
 attribute-only diffing is blind to reordering) but *different* `Pcs.relations(...).pcs` sets - the
 concrete gap "Structural moves / z-order" below has been describing in the abstract.
 
-**Not yet built**: the edit-set difference (`E = T* - T*0`), the raw-merge union, and the
-conflict-resolution scan from the paper's `merge` pseudocode (§6) - i.e. `Pcs` is the relation
-representation only, not yet a second, structural `Merger`. `EditDetector`/`Merger` still only see
-attributes; nothing consumes `Pcs.relations` yet.
+**Built next (2026-09-18): the edit-set difference.** `PcsEditDetector.detectEdits(base, modified):
+RelationSet` is exactly Lindholm's `E = T* - T*0` - the relations in `modified`'s set but not
+`base`'s. Genuinely simpler than `EditDetector`: it doesn't classify *what kind* of edit occurred
+(insert/delete/update/move), it just reports the raw relations a structural merger would need to
+reconcile - `PcsEditDetectorSpec` checks that a pure reorder produces only `Pcs` edits, a pure
+attribute change produces only a `Content` edit, and an insertion produces both (the new node's own
+`Content` plus the `Pcs` links that splice it into its parent's chain).
+
+**Still not built**: the raw-merge union and the conflict-resolution scan from the paper's `merge`
+pseudocode (§6) - the actual 3-way reconciliation, i.e. a second, structural `Merger` alongside the
+existing attribute-only one. `EditDetector`/`Merger` still only see attributes; nothing does 3-way
+reconciliation over `Pcs.relations` yet, so a real move/reorder still can't be *merged*, only
+*detected* one side at a time.
 
 ## Kaining's 13 conflict conditions, cross-checked against what's built (2026-08-24)
 
