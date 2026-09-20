@@ -1,6 +1,6 @@
 package com.phasmidsoftware.xmldoc.merge
 
-import com.phasmidsoftware.xmldoc.xml.GenericElement
+import com.phasmidsoftware.xmldoc.xml.{GenericElement, GenericText}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -23,6 +23,14 @@ class PcsTreeBuilderSpec extends AnyFlatSpec with should.Matchers {
 
   it should "reconstruct a Self-less node using its NodePath label" in {
     val tree = GenericElement("Root", Nil, Seq(GenericElement("Group", Nil, Nil)))
+    PcsTreeBuilder.build(Pcs.relations(tree), "/") shouldBe Success(tree)
+  }
+
+  it should "reconstruct a text-only leaf's text intact (found and fixed merging real KML)" in {
+    val tree = GenericElement("Placemark", Nil, Seq(
+      GenericElement("name", Nil, Seq(GenericText("Simple placemark"))),
+      GenericElement("description", Nil, Seq(GenericText("Attached to the ground.")))
+    ))
     PcsTreeBuilder.build(Pcs.relations(tree), "/") shouldBe Success(tree)
   }
 

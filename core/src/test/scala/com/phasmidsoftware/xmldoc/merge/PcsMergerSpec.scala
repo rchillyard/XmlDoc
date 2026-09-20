@@ -1,6 +1,6 @@
 package com.phasmidsoftware.xmldoc.merge
 
-import com.phasmidsoftware.xmldoc.xml.GenericElement
+import com.phasmidsoftware.xmldoc.xml.{GenericElement, GenericText}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -11,6 +11,8 @@ class PcsMergerSpec extends AnyFlatSpec with should.Matchers {
 
   private def rect(self: String, attrs: (String, String)*): GenericElement =
     GenericElement("Rectangle", ("Self" -> self) +: attrs, Nil)
+
+  private def leaf(tag: String, text: String): GenericElement = GenericElement(tag, Nil, Seq(GenericText(text)))
 
   behavior of "PcsMerger.merge, single-sided structural changes"
 
@@ -117,5 +119,43 @@ class PcsMergerSpec extends AnyFlatSpec with should.Matchers {
     val right = spreadOf("us", rect("x")) // right ungroups g1; left leaves it alone
     val result = PcsMerger.merge(base, base, right)
     result.conflicts shouldBe Nil
+  }
+
+  behavior of "PcsMerger.merge, text-only leaves (found merging real KML, which has no Self at all)"
+
+  it should "cleanly combine one side's text edit with the other's untouched copy" in {
+    val base = spreadOf("us", leaf("name", "Simple placemark"))
+    val left = spreadOf("us", leaf("name", "Renamed placemark"))
+    val result = PcsMerger.merge(base, left, base)
+    result.conflicts shouldBe Nil
+    result.relations.content should contain(Content("/0", "name", Nil, Some("Renamed placemark")))
+  }
+
+  it should "report a conflict when both sides change the same leaf's text differently" in {
+    val base = spreadOf("us", leaf("name", "Simple placemark"))
+    val left = spreadOf("us", leaf("name", "Left's name"))
+    val right = spreadOf("us", leaf("name", "Right's name"))
+    val result = PcsMerger.merge(base, left, right)
+    val contentConflicts = result.conflicts.filter(_.slot == "content of /0")
+    contentConflicts should have size 1
+    contentConflicts.head.leftValue.get should include("Left's name")
+    contentConflicts.head.rightValue.get should include("Right's name")
+  }
+
+  behavior of "PcsMerger.mergeByContent, weak/no-identity documents (found and fixed merging real KML)"
+
+  it should "keep an edit that plain merge would silently lose when a deletion shifts positions" in {
+    val base = spreadOf("us", leaf("name", "A"), leaf("name", "B"), leaf("name", "C"))
+    val left = spreadOf("us", leaf("name", "B"), leaf("name", "C")) // left deletes A
+    val right = spreadOf("us", leaf("name", "A"), leaf("name", "B"), leaf("name", "C-updated")) // right only edits C
+
+    val plain = PcsMerger.merge(base, left, right)
+    plain.conflicts shouldBe Nil
+    PcsTreeBuilder.build(plain).get.childElements.flatMap(_.children).collect { case GenericText(t) => t } should not contain "C-updated"
+
+    val byContent = PcsMerger.mergeByContent(base, left, right)
+    byContent.conflicts shouldBe Nil
+    val rebuilt = PcsTreeBuilder.build(byContent).get
+    rebuilt.childElements.flatMap(_.children).collect { case GenericText(t) => t } should contain allOf("B", "C-updated")
   }
 }

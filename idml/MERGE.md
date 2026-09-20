@@ -381,6 +381,118 @@ Not yet done: nothing consumes `ThreeWayMerger.merge`'s `GenericElement` result 
 it back into a real `.idml` package, or the git-merge-driver integration below) - it's the merge
 logic itself, tested down to real files, not yet a runnable tool.
 
+## First test of the generic layer outside idml: `kml` (2026-09-20)
+
+`kml/src/test/scala/com/phasmidsoftware/xmldoc/kml/KmlMergeSpec.scala` - the first real check of the
+"relocated to `core` so it's reusable" claim from the previous section. `kml` has no
+`GenericElement`-based tree of its own (its `KML.scala` is a specialist `Extractor`/`Renderer` model
+throughout), so this bridges straight from raw `scala.xml` parsing via `GenericElement.fromElem`,
+bypassing that model entirely - the same trick `IdmlPackage` uses for `idml`. It works, mechanically:
+`Pcs.relations`/`PcsMerger`/`PcsTreeBuilder` run against real and synthetic KML trees with zero code
+changes. But it surfaced two limitations that `idml` had been quietly hiding:
+
+- ~~**Text-node blindness is a footnote for `idml`, not for `kml`.**~~ **Fixed (2026-09-20)**, see
+  below - `Pcs.relations` originally captured element children only, never `GenericText`, which is
+  fine for IDML (everything of interest is in attributes) but not for KML, whose actual content
+  (`<name>`, `<description>`, `<coordinates>`) lives almost entirely in element-wrapped *text*.
+- ~~**No stable per-node identity, unlike IDML's `Self`.**~~ **Fixed (2026-09-20)**, see below. Real
+  KML fixtures only ever populate `id` on `Style`/`StyleMap` (confirmed by direct inspection of
+  `KML_Samples.kml` and others), never on content elements (`Placemark`, `Folder`, `Document`).
+  `Pcs.label` falls back to `NodePath` everywhere here, so identity across `base`/`left`/`right` was
+  purely positional. Disjoint edits at fixed positions (nothing inserted/deleted anywhere) still
+  merged cleanly - but a genuinely damning case did not: left deletes the first of three
+  `Placemark`s (shifting the other two one position earlier); right, independently, only edits the
+  third's content. `PcsMerger.merge` reports **no conflict at all**, yet right's edit is **silently
+  absent** from the merged result - a false *negative*, arguably worse than a false conflict, since
+  nothing signals that anything went wrong. This isn't a `PcsMerger` bug; it's the predicted
+  consequence of handing Lindholm's algorithm a weak (purely positional) matching relation for a
+  document type with nothing like `Self` - exactly the gap "the actual 3dm implementation's matcher"
+  section (content/structural heuristic matching, no identifiers needed) describes. See below.
+
+## Fixed: text-node blindness (2026-09-20)
+
+Robin's own framing of the ask: "I would like to be able to merge KML documents, or even any XML
+documents." `Content` gained a fourth field, `text: Option[String]`, alongside `label`/`tag`/
+`attributes`; `Pcs.leafText(e: GenericElement): Option[String]` computes it - the concatenated text
+of every `GenericText`/`GenericCData` child, but *only* when `e.childElements.isEmpty` (no element
+children of its own at all). `Pcs.relations` calls it when building each node's `Content`;
+`PcsTreeBuilder` puts it back as a plain `GenericText` child when rebuilding. Nothing about the `Pcs`
+chain itself changed - a text-only leaf still gets the same childless `ListStart`-to-`ListEnd` chain
+it always did; the text rides along as part of its `Content`, not as a chain member of its own.
+
+**Why "text-only leaf," not "capture every text node everywhere"**: the tempting alternative - walk
+*all* children (elements and text alike) into the `Pcs` chain uniformly - was tried first, mentally,
+and rejected before writing any code: every real file `GenericElement.fromNode` parses is full of
+whitespace `GenericText` between sibling elements (indentation), so a *structural* container's own
+list of children would suddenly include dozens of whitespace nodes as full chain participants,
+turning every existing structural test's implicit assumptions (a `Spread`'s children are its page
+items, full stop) into something that would need auditing node by node. Restricting capture to
+`childElements.isEmpty` sidesteps this entirely: a structural container's chain is completely
+unaffected (still only ever built from `childElements`, exactly as before), and only genuine leaf
+elements - precisely the shape of `<name>`/`<description>`/`<coordinates>`, or (found while fixing
+this) an IDML `Link`'s base64-encoded embedded-preview data - pick up a `text` value at all.
+
+**What's still not covered, on purpose, for now**: genuinely *mixed* content - text interleaved with
+element children at the same level (`<p>Hello <b>world</b></p>`) - isn't captured at all; rare in
+both IDML and KML, not demonstrated as a real problem yet, so not built preemptively. `GenericCData`
+collapses to plain `GenericText` on rebuild, same kind of accepted gap `GenericElement.fromNode`
+already documents for comments and entity references. Neither distinguishes a genuine `Self`-style
+identity problem (still open, above) from this one - they're independent limitations that happened
+to surface together.
+
+**Verified**: `PcsSpec`/`PcsEditDetectorSpec`/`PcsMergerSpec`/`PcsTreeBuilderSpec` (`core`) each gained
+direct unit tests (leaf capture, edit detection, clean merge, conflict, and round-trip, all using
+plain text content); `PcsTreeBuilderIdmlSpec`'s real `HelloWorld2`/`HelloWorld2D` round-trip test
+needed its own comparison helper updated to match (leaf text now kept, not stripped, while
+inter-element whitespace still is). `KmlMergeSpec` is the direct confirmation this was actually
+built for: a `Placemark`'s real `<name>`/`<description>` text now survives `PcsMerger`/
+`PcsTreeBuilder` intact, and the "disjoint edits merge cleanly" test now edits real description text
+directly rather than standing in with attributes.
+
+## Fixed: weak/no-identity documents silently losing edits (2026-09-20)
+
+`ContentMatcher` (`core`, fully generic - not `idml`-specific despite the motivating case being
+IDML's `Self`-less counterpart in `kml`): matches `base` against one modified tree using content and
+structure alone, loosely modeled on the real 3dm tool's own matcher ("the actual 3dm implementation's
+matcher", above) - exact whole-subtree content equality first (a node, and everything below it, byte
+for byte, is almost certainly the same node even if it moved), then positional pairing for whatever's
+left among an already-matched parent's remaining children, recursively. Deliberately simpler than
+3dm's own algorithm: no fuzzy content similarity (q-gram distance) for the positional fallback - just
+pairs whatever's left, in document order - and no real "copy resolution" for duplicate content. It
+also never looks *across* an unmatched parent, so a node moved to a genuinely different parent still
+shows up as a plain delete-plus-insert, not a recognized move.
+
+`Pcs.relations`, `PcsEditDetector.detectEdits`, and `PcsMerger.merge` each gained an optional
+labeling parameter (`labelOf`/`modifiedLabel`/`leftLabel`+`rightLabel`, all defaulting to the
+ordinary `Pcs.label`, so every existing call site and test is completely unaffected) - a way to say
+"treat this node as if it were the base node the matcher found for it," instead of always falling
+back to raw position. `PcsMerger.mergeByContent(base, left, right)` is the convenience entry point:
+matches `left` and `right` against `base` independently via `ContentMatcher`, then delegates to the
+ordinary `merge` with the resulting labels.
+
+**Confirmed fixed, using the exact scenario that found the bug**: `KmlMergeSpec`'s deletion-shifts-
+positions case, unchanged, now merges cleanly *and keeps the edit* through `mergeByContent` - `B`
+(untouched by either side) and `C` (right's real edit to it) both survive, where plain `merge` on the
+same inputs still silently drops `C`'s edit (kept as its own explicit test, for contrast).
+`ContentMatcherSpec` covers the matcher directly: matching an untouched tree to itself, matching an
+untouched child by content despite a position shift, and the positional fallback for a single
+changed remaining candidate. `PcsMergerSpec`/`KmlMergeSpec` also confirm `mergeByContent` still
+correctly reports a *genuine* conflict (both sides really did change the same matched node
+differently) rather than papering over every disagreement - matching by content fixes misattribution,
+it doesn't relax what counts as a conflict.
+
+**What's still not addressed, on purpose**: reparenting (a node moved to a genuinely different
+parent) isn't recognized as a move - `ContentMatcher` only ever matches within an already-matched
+parent's own children, never searches globally across the tree. Several simultaneous changes among
+the same unmatched sibling group can still be misattributed to each other, same as 3dm's own fuzzy
+fallback would only partially help with - the positional fallback here is deliberately simpler
+(no content-similarity scoring at all), correct for exactly one remaining ambiguous candidate on
+each side (the case that motivated this), weaker with more. Neither the `EditDetector`/`Merger`
+side of `ThreeWayMerger` nor the `ignoredAttributes` mechanism are threaded through
+`ContentMatcher`'s own exact-content comparison yet - two subtrees differing only in a value that
+would otherwise be ignored won't exact-match, though they may still recover via the positional
+fallback.
+
 ## Kaining's 13 conflict conditions, cross-checked against what's built (2026-08-24)
 
 Kaining independently catalogued 13 IDML use cases (16 counting the "b" variants) as left/right
@@ -510,10 +622,14 @@ Recorded so they aren't lost, not yet investigated:
   sibling `Previous`/`NextTextFrame`-style attributes or elsewhere? Kaining's catalogue (above)
   confirms this is a real requirement, not a hypothetical - thread-reference repair is still
   unbuilt.
-- **Structural moves**: reordering page items (z-order/stacking, i.e. actual child-list position,
-  not just `ItemTransform` coordinates) - does `Self` survive a real move, and how is the new
-  position expressed in the IDML? `Pcs.relations` (above) can now represent and detect this; no
-  structural merger consumes it yet.
+- ~~**Structural moves**: reordering page items...~~ **Done**: `PcsMerger`'s successor/predecessor
+  rules, per real IDML moves - does `Self` survive a real move, and how is the new position
+  expressed? Still genuinely open, though: all structural-move testing so far is against synthetic
+  trees or `HelloWorld2`-scale files; not yet checked against a real, larger-scale reorder.
+- ~~**Weak/no-identity documents lose edits silently, not just conflict wrongly**~~ **Done**:
+  `ContentMatcher`/`PcsMerger.mergeByContent` (above, "Fixed: weak/no-identity documents silently
+  losing edits") - for the demonstrated case; reparenting and multi-way ambiguous remainders are
+  real, separately-tracked scope limits of the fix itself, not this open question re-opened.
 - Whether `Self` stability holds up over *many* rounds of independent editing, not just one.
 - **What actually determines whether a migration/reopen fully regenerates `Self` values or leaves
   them untouched** - `Magazine-1` came through clean, `Magazine-2` didn't, from the same starting

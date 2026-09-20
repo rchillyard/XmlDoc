@@ -95,7 +95,7 @@ object ThreeWayMerger {
       outcome match {
         case MergedInsert(node) =>
           val self = node.self.get // Inserted always has a Self - EditDetector only ever diffs Self-bearing nodes
-          acc.updated(self, Content(self, node.element.tag, node.element.attributes))
+          acc.updated(self, Content(self, node.element.tag, node.element.attributes, Pcs.leafText(node.element)))
         case MergedDelete(node) =>
           acc.removed(node.self.get)
         case MergedAttributeChange(self, key, _, newValue) =>

@@ -1,6 +1,6 @@
 package com.phasmidsoftware.xmldoc.merge
 
-import com.phasmidsoftware.xmldoc.xml.GenericElement
+import com.phasmidsoftware.xmldoc.xml.{GenericCData, GenericElement, GenericText}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -33,5 +33,41 @@ class PcsSpec extends AnyFlatSpec with should.Matchers {
     val rs = Pcs.relations(root)
     rs.pcs should contain(Pcs("/", ListStart, SiblingNode("/0")))
     rs.content should contain(Content("/0", "Group", Nil))
+  }
+
+  behavior of "Pcs.leafText"
+
+  it should "capture a text-only leaf's text" in {
+    Pcs.leafText(GenericElement("name", Nil, Seq(GenericText("Simple placemark")))) shouldBe Some("Simple placemark")
+  }
+
+  it should "concatenate more than one text/CDATA child, in order" in {
+    val e = GenericElement("mixed-text", Nil, Seq(GenericText("Hello, "), GenericCData("world"), GenericText("!")))
+    Pcs.leafText(e) shouldBe Some("Hello, world!")
+  }
+
+  it should "return None for a childless element (nothing to capture)" in {
+    Pcs.leafText(GenericElement("Point", Nil, Nil)) shouldBe None
+  }
+
+  it should "return None for a container with element children, even if some incidental text sits alongside them" in {
+    val e = GenericElement("Folder", Nil, Seq(GenericText("\n  "), GenericElement("Placemark", Nil, Nil), GenericText("\n")))
+    Pcs.leafText(e) shouldBe None
+  }
+
+  behavior of "Pcs.relations, text-only leaves"
+
+  it should "carry a leaf's text into its own Content relation, not as a separate Pcs sibling" in {
+    val root = GenericElement("Placemark", Nil, Seq(
+      GenericElement("name", Nil, Seq(GenericText("Simple placemark"))),
+      GenericElement("description", Nil, Seq(GenericText("Attached to the ground.")))
+    ))
+    val rs = Pcs.relations(root)
+    rs.content should contain allOf(
+      Content("/0", "name", Nil, Some("Simple placemark")),
+      Content("/1", "description", Nil, Some("Attached to the ground."))
+    )
+    // the structural chain is exactly as if the leaves were childless - no extra relation for the text itself
+    rs.pcs should contain allOf(Pcs("/0", ListStart, ListEnd), Pcs("/1", ListStart, ListEnd))
   }
 }

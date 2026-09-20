@@ -1,6 +1,6 @@
 package com.phasmidsoftware.xmldoc.merge
 
-import com.phasmidsoftware.xmldoc.xml.GenericElement
+import com.phasmidsoftware.xmldoc.xml.{GenericCData, GenericElement, GenericText}
 
 /**
  * One end of a `Pcs` chain: the two children-list boundary markers from Lindholm's paper ("A
@@ -26,12 +26,18 @@ case object ListEnd extends Sibling // ⊢
 case class Pcs(parent: String, predecessor: Sibling, successor: Sibling)
 
 /**
- * The content relation `c(label, tag, attributes)`: the node identified by `label` has this tag
- * and these attributes. Attribute-by-attribute detail is `EditDetector`'s job, not this relation's
- * - `Content` only needs to say "this node's content is/isn't identical to that one's", which
- * comparing the whole `(tag, attributes)` pair already gives for free.
+ * The content relation `c(label, tag, attributes, text)`: the node identified by `label` has this
+ * tag, these attributes, and (for a text-only leaf - see `Pcs.leafText`) this text. Attribute-by-
+ * attribute detail is `EditDetector`'s job, not this relation's - `Content` only needs to say "this
+ * node's content is/isn't identical to that one's", which comparing the whole tuple already gives
+ * for free.
+ *
+ * `text` deliberately doesn't distinguish `GenericText` from `GenericCData` - both collapse to the
+ * same plain string here, and a rebuilt node always comes back as `GenericText` (`PcsTreeBuilder`),
+ * same kind of acceptable-for-now gap `GenericElement.fromNode` already documents for comments and
+ * entity references.
  */
-case class Content(label: String, tag: String, attributes: Seq[(String, String)])
+case class Content(label: String, tag: String, attributes: Seq[(String, String)], text: Option[String] = None)
 
 /**
  * A tree, fully decomposed into `Pcs` and `Content` relations - Lindholm's representation of a
@@ -61,18 +67,43 @@ object Pcs {
   def label(ref: NodeRef): String = ref.self.getOrElse(ref.path.toString)
 
   /**
+   * An element's own text, when it's a text-only leaf - `childElements.isEmpty` (no element
+   * children at all) and at least one `GenericText`/`GenericCData` child (concatenated, in order,
+   * if there's more than one - e.g. either side of an entity reference). `None` for anything else,
+   * including a structural container that happens to *also* mix in some text alongside real element
+   * children (rare in both IDML and KML; a real remaining gap, not addressed here) - capturing that
+   * unconditionally would mean two copies that only differ in incidental whitespace between element
+   * children looking like a content change, which is worse than not capturing it at all.
+   *
+   * This is exactly the gap found empirically merging real KML: `<name>`/`<description>`/
+   * `<coordinates>` are precisely this shape (one element, no element children, one text child) -
+   * IDML barely has any of these (it puts everything in attributes), which is why this was invisible
+   * until `kml` was tried.
+   */
+  def leafText(e: GenericElement): Option[String] =
+    if (e.childElements.nonEmpty) None
+    else e.children.collect { case GenericText(t) => t; case GenericCData(t) => t } match {
+      case Nil => None
+      case texts => Some(texts.mkString)
+    }
+
+  /**
    * Decomposes `root`'s whole subtree into `Pcs` and `Content` relations.
    *
-   * @param root the tree (or subtree) to decompose.
+   * @param root     the tree (or subtree) to decompose.
+   * @param labelOf  how to label each node - `label` (`Self`-or-`NodePath`) by default; pass
+   *                 `ContentMatcher.matchedLabel(base, root)` instead when `root` is one side of a
+   *                 3-way merge against `base` and neither has a stable identity attribute at all
+   *                 (see `ContentMatcher`'s own doc for why raw `NodePath` alone isn't safe there).
    * @return every relation needed to reconstruct `root`'s structure and content.
    */
-  def relations(root: GenericElement): RelationSet = {
+  def relations(root: GenericElement, labelOf: NodeRef => String = label): RelationSet = {
     def go(ref: NodeRef): RelationSet = {
-      val here = Content(label(ref), ref.element.tag, ref.element.attributes)
+      val here = Content(labelOf(ref), ref.element.tag, ref.element.attributes, leafText(ref.element))
       val kids = ref.element.childElements.zipWithIndex.map { case (c, i) => NodeRef(ref.path.child(i), c) }
-      val siblings: Seq[Sibling] = kids.map(k => SiblingNode(label(k)))
+      val siblings: Seq[Sibling] = kids.map(k => SiblingNode(labelOf(k)))
       val chain = (ListStart +: siblings) zip (siblings :+ ListEnd)
-      val pcsHere = chain.map { case (p, s) => Pcs(label(ref), p, s) }.toSet
+      val pcsHere = chain.map { case (p, s) => Pcs(labelOf(ref), p, s) }.toSet
       val below = kids.map(go)
       RelationSet(pcsHere ++ below.flatMap(_.pcs), Set(here) ++ below.flatMap(_.content))
     }

@@ -1,6 +1,6 @@
 package com.phasmidsoftware.xmldoc.merge
 
-import com.phasmidsoftware.xmldoc.xml.GenericElement
+import com.phasmidsoftware.xmldoc.xml.{GenericElement, GenericText}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -52,5 +52,13 @@ class PcsEditDetectorSpec extends AnyFlatSpec with should.Matchers {
       Pcs("us", SiblingNode("u2"), ListEnd),
       Pcs("u2", ListStart, ListEnd) // the new (childless) node's own chain link
     )
+  }
+
+  it should "report a Content edit for a text-only leaf whose text changed, structure untouched" in {
+    val base = GenericElement("Placemark", Nil, Seq(GenericElement("name", Nil, Seq(GenericText("Simple placemark")))))
+    val renamed = GenericElement("Placemark", Nil, Seq(GenericElement("name", Nil, Seq(GenericText("Renamed placemark")))))
+    val edits = PcsEditDetector.detectEdits(base, renamed)
+    edits.pcs shouldBe Set.empty
+    edits.content shouldBe Set(Content("/0", "name", Nil, Some("Renamed placemark")))
   }
 }

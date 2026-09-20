@@ -31,17 +31,20 @@ object PcsEditDetector {
    *                          same as if that attribute didn't exist at all - though the attribute
    *                          itself is still carried along unchanged wherever a real edit to that
    *                          node *is* reported, so it's never lost from the resulting `Content`.
+   * @param modifiedLabel     how to label `modified`'s nodes - forwarded to `Pcs.relations`; `base`
+   *                          always labels itself the ordinary way (`Pcs.label`), since it's the
+   *                          reference frame everything else is expressed relative to.
    * @return every `Pcs`/`Content` relation present in `modified` but not in `base`.
    */
-  def detectEdits(base: GenericElement, modified: GenericElement, ignoredAttributes: Set[String] = Set.empty): RelationSet = {
+  def detectEdits(base: GenericElement, modified: GenericElement, ignoredAttributes: Set[String] = Set.empty, modifiedLabel: NodeRef => String = Pcs.label): RelationSet = {
     val t0 = Pcs.relations(base)
-    val tPrime = Pcs.relations(modified)
+    val tPrime = Pcs.relations(modified, modifiedLabel)
     val baseContentByLabel = t0.content.map(c => c.label -> c).toMap
     val contentEdits = tPrime.content.filterNot(c => baseContentByLabel.get(c.label).exists(sameContent(_, c, ignoredAttributes)))
     RelationSet(tPrime.pcs -- t0.pcs, contentEdits)
   }
 
   private def sameContent(a: Content, b: Content, ignoredAttributes: Set[String]): Boolean =
-    a.label == b.label && a.tag == b.tag &&
+    a.label == b.label && a.tag == b.tag && a.text == b.text &&
       a.attributes.filterNot(kv => ignoredAttributes(kv._1)).toMap == b.attributes.filterNot(kv => ignoredAttributes(kv._1)).toMap
 }

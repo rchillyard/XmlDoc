@@ -1,7 +1,7 @@
 package com.phasmidsoftware.xmldoc.idml
 
 import com.phasmidsoftware.xmldoc.merge.{PcsMerger, PcsTreeBuilder}
-import com.phasmidsoftware.xmldoc.xml.GenericElement
+import com.phasmidsoftware.xmldoc.xml.{GenericCData, GenericElement, GenericText}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -17,10 +17,14 @@ class PcsTreeBuilderIdmlSpec extends AnyFlatSpec with should.Matchers {
     IdmlPackage.open(new File(getClass.getResource(resourceName).toURI)).get.loadPart(path).get
       .childElements.find(_.tag == "Spread").get
 
-  // Pcs.relations only ever captures element children (same scope limit as TreeMatcher/
-  // EditDetector), so a rebuilt tree never has the whitespace GenericText nodes real files are
-  // full of - this projects a real tree down to the same elements-only shape before comparing.
-  private def stripText(e: GenericElement): GenericElement = GenericElement(e.tag, e.attributes, e.childElements.map(stripText))
+  // Pcs.relations keeps a text-only leaf's text (Pcs.leafText) but never the whitespace
+  // GenericText nodes real files are full of between element children - this projects a real tree
+  // down to that same shape (leaf text kept, inter-element whitespace dropped) before comparing.
+  private def normalize(e: GenericElement): GenericElement =
+    if (e.childElements.isEmpty) {
+      val text = e.children.collect { case GenericText(t) => t; case GenericCData(t) => t }.mkString
+      GenericElement(e.tag, e.attributes, if (text.isEmpty) Nil else Seq(GenericText(text)))
+    } else GenericElement(e.tag, e.attributes, e.childElements.map(normalize))
 
   behavior of "PcsTreeBuilder.build, real HelloWorld2 files"
 
@@ -31,6 +35,6 @@ class PcsTreeBuilderIdmlSpec extends AnyFlatSpec with should.Matchers {
     result.conflicts shouldBe Nil
     val rebuilt = PcsTreeBuilder.build(result).get
     rebuilt.childElements.flatMap(_.attributes.collectFirst { case ("Self", v) => v }) should contain("u141")
-    rebuilt shouldBe stripText(d)
+    rebuilt shouldBe normalize(d)
   }
 }

@@ -53,12 +53,23 @@ object PcsMerger {
    * @param left              one independently modified version.
    * @param right             the other independently modified version.
    * @param ignoredAttributes forwarded to `PcsEditDetector.detectEdits` - see there.
+   * @param leftLabel         how to label `left`'s nodes - forwarded to `PcsEditDetector.detectEdits`;
+   *                          pass `ContentMatcher.matchedLabel(base, left)` for a document type with
+   *                          no stable identity attribute (see `mergeByContent`, which does this).
+   * @param rightLabel        the same, for `right`.
    * @return the resolved relation set, plus every conflict found.
    */
-  def merge(base: GenericElement, left: GenericElement, right: GenericElement, ignoredAttributes: Set[String] = Set.empty): StructuralMergeResult = {
+  def merge(
+    base: GenericElement,
+    left: GenericElement,
+    right: GenericElement,
+    ignoredAttributes: Set[String] = Set.empty,
+    leftLabel: NodeRef => String = Pcs.label,
+    rightLabel: NodeRef => String = Pcs.label
+  ): StructuralMergeResult = {
     val baseRelations = Pcs.relations(base)
-    val leftEdits = PcsEditDetector.detectEdits(base, left, ignoredAttributes)
-    val rightEdits = PcsEditDetector.detectEdits(base, right, ignoredAttributes)
+    val leftEdits = PcsEditDetector.detectEdits(base, left, ignoredAttributes, leftLabel)
+    val rightEdits = PcsEditDetector.detectEdits(base, right, ignoredAttributes, rightLabel)
 
     val baseContent = baseRelations.content.map(c => c.label -> c).toMap
     val (contentEdits, contentConflicts) = reconcile(
@@ -99,6 +110,23 @@ object PcsMerger {
     val rootLabel = Pcs.label(NodeRef(NodePath.root, base))
     StructuralMergeResult(RelationSet(mergedPcs, mergedContent), rootLabel, contentReports ++ predReports ++ succReports ++ parentReports)
   }
+
+  /**
+   * `merge`, but for a document type with no stable per-node identity at all (see `ContentMatcher`'s
+   * own doc, and `MERGE.md`'s "silently lose an edit..." finding, from real KML) - `left` and
+   * `right` are each matched against `base` by content/structure first, via `ContentMatcher`,
+   * instead of raw position. An edited-but-not-moved node then keeps its base identity across the
+   * edit, instead of silently inheriting whichever base identity now happens to sit at its shifted
+   * position.
+   *
+   * @param base              the common ancestor.
+   * @param left              one independently modified version.
+   * @param right             the other independently modified version.
+   * @param ignoredAttributes forwarded to `PcsEditDetector.detectEdits` - see there.
+   * @return the resolved relation set, plus every conflict found.
+   */
+  def mergeByContent(base: GenericElement, left: GenericElement, right: GenericElement, ignoredAttributes: Set[String] = Set.empty): StructuralMergeResult =
+    merge(base, left, right, ignoredAttributes, ContentMatcher.matchedLabel(base, left), ContentMatcher.matchedLabel(base, right))
 
   private def byPredecessor(pcs: Set[Pcs]): Map[(String, Sibling), Sibling] = pcs.map(p => (p.parent, p.predecessor) -> p.successor).toMap
 
@@ -146,6 +174,9 @@ object PcsMerger {
 
   private def render(c: Content): String = {
     val attrs = if (c.attributes.isEmpty) "" else c.attributes.map { case (k, v) => s"""$k="$v"""" }.mkString(" ", " ", "")
-    s"<${c.tag}$attrs>"
+    c.text match {
+      case Some(t) => s"<${c.tag}$attrs>$t</${c.tag}>"
+      case None => s"<${c.tag}$attrs>"
+    }
   }
 }
