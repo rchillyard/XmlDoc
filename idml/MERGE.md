@@ -322,11 +322,51 @@ doesn't produce a cycle or missing content anywhere - both sides' chains individ
 consistent - so nothing about the walk itself would ever have caught it. Checking `conflicts` up
 front is a real fix, not a redundant belt-and-braces check.
 
-With all three structural consistency rules built, the only remaining named gaps for the structural
-(`Pcs`-level) path are: thread-reference repair, insertion ordering across independent inserts,
-story-text-level diffing, and cross-reference conflicts (`ParentStory`, `NextTextFrame`) - see
-Kaining's cross-check below - plus actually wiring this path up alongside the existing attribute-only
-`EditDetector`/`Merger` for a real end-to-end merge.
+With all three structural consistency rules built, the remaining named gaps for the structural
+(`Pcs`-level) path itself are: thread-reference repair, insertion ordering across independent
+inserts, story-text-level diffing, and cross-reference conflicts (`ParentStory`, `NextTextFrame`) -
+see Kaining's cross-check below.
+
+## Built next (2026-09-20): wiring `Merger` and `PcsMerger` together - `ThreeWayMerger`
+
+The two mergers had been developed and tested entirely in parallel up to this point - neither had
+ever been run *together* against the same three trees. `ThreeWayMerger.merge` is the first thing in
+this codebase that produces an actual, real, merged `GenericElement` combining both kinds of edit.
+
+**The division of labor, and why it isn't arbitrary**: structure (which nodes exist, their order,
+their parent) comes entirely from `PcsMerger`/`PcsTreeBuilder`; a matched node's own tag/attributes
+come from `Merger` wherever `Merger` has an opinion (i.e. the node has a `Self`). This isn't just
+"pick one merger per concern" for its own sake - `PcsMerger`'s own `Content` relation only ever
+compares a node's *whole* tag+attributes as one indivisible blob (it has to; `Pcs` has no concept of
+individual attributes at all), so on its own it cannot tell "both sides changed *different*
+attributes of the same node" (safe to combine, per `Merger`) apart from "both sides changed the
+*same* thing differently" (a genuine conflict) - it would (wrongly) flag the first as a conflict too.
+`ThreeWayMergerSpec`'s first test confirms this directly: the `HelloWorld2A`/`HelloWorld2B`-style
+disjoint-attribute-change case that `Merger`/`MergerSpec` already merge cleanly is confirmed to make
+*plain* `PcsMerger` conflict on its own, then confirms `ThreeWayMerger` merges it cleanly anyway.
+
+**Combining the conflict reports**: both mergers independently detect an Insert/Insert collision
+with differing content (`Merger` via `reconcileInserts`'s whole-attribute-map comparison, `PcsMerger`
+via its own whole-content-blob comparison) - reporting both would just be the same finding twice in
+different words. Since a path label always starts with `/` (`NodePath.toString`) and no real `Self`
+ever does, `ThreeWayMerger` keeps `PcsMerger`'s own content conflicts only for path-labelled
+(`Self`-less) nodes - `Merger`'s finer-grained report always wins for anything with a real `Self`.
+Confirmed against the real `Mergeable-Left`/`-Right` trio: exactly one conflict for `u11c`, not two.
+
+**A real, unplanned finding from wiring this up against actual files**: merging the *whole*
+`HelloWorld2A`/`HelloWorld2B`/`HelloWorld2C` spread end to end does *not* come back clean - `Merger`
+correctly reports a genuine, unrelated `LinkImportTime` conflict on a Link (`u10d`) that both A and B
+happened to touch independently. This is a real instance of the paper's own §7 caveat ("document
+metadata often changes inconsistently on both sides"), not a bug - `MergerSpec`'s and
+`PcsMergerSpec`'s own real-file tests never noticed it because each only ever inspected `u13d`'s own
+outcomes, never asked "does the *whole* merge succeed?" `ThreeWayMergerSpec` demonstrates both: the u13d
+subtree merges exactly as cleanly as ever when scoped down to it directly, and the whole-Spread
+merge correctly reports the real `LinkImportTime` conflict rather than silently dropping one side's
+change to it.
+
+Not yet done: nothing consumes `ThreeWayMerger.merge`'s `GenericElement` result end to end (writing
+it back into a real `.idml` package, or the git-merge-driver integration below) - it's the merge
+logic itself, tested down to real files, not yet a runnable tool.
 
 ## Kaining's 13 conflict conditions, cross-checked against what's built (2026-08-24)
 
