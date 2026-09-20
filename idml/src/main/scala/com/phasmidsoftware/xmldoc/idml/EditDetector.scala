@@ -60,9 +60,13 @@ object EditDetector {
    * re-stamps a `Link`'s `LinkImportTime` unconditionally, so two independently re-exported copies
    * with *no* real editorial overlap at all can otherwise still come back with a false conflict on
    * it (found 2026-09-20, wiring `ThreeWayMerger` up against the real `HelloWorld2A`/`B`/`C` trio -
-   * see `MERGE.md`). `detectEdits`'s default; pass `Set.empty` (or your own set) to opt out.
+   * see `MERGE.md`). `StyleUniqueId` (on built-in styles like `CharacterStyle/$ID/[No character
+   * style]`) is the same phenomenon - a UUID InDesign regenerates on every export, confirmed to
+   * differ across `base`/`HelloWorld2A`/`HelloWorld2B` simultaneously (found 2026-09-20, testing
+   * `IdmlMergeDriver` against a real *whole* package for the first time, not just one Spread).
+   * `detectEdits`'s default; pass `Set.empty` (or your own set) to opt out.
    */
-  val defaultIgnoredAttributes: Set[String] = Set("LinkImportTime")
+  val defaultIgnoredAttributes: Set[String] = Set("LinkImportTime", "StyleUniqueId")
 
   /**
    * Detects the edits that turn `base` into `modified`.

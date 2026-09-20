@@ -285,11 +285,49 @@ both directions against the real trio: the whole Spread merges cleanly with the 
 and the `LinkImportTime` conflict reappears if a caller explicitly opts out (`ignoredAttributes =
 Set.empty`).
 
-## Eventual integration: a git merge driver
+## A git merge driver
 
-The natural "endgame" for this work, once the merge logic itself is further along: git has a
-built-in extension point for exactly this - a **merge driver** - the same mechanism tools like
-`nbdime` use for Jupyter notebooks.
+The "endgame" for this work: git has a built-in extension point for exactly this - a **merge
+driver** - the same mechanism tools like `nbdime` use for Jupyter notebooks.
+
+**Built (2026-09-20)**: `IdmlMergeDriver.merge(base, ours, theirs)` (mutating `ours` in place, git's
+own `%O`/`%A`/`%B` contract exactly) and its `main` method, the actual runnable driver. It's a thin
+orchestration layer, not new merge logic: `IdmlPackageMerger` reconciles every part `IdmlPackage`
+lists (Spreads, Stories, MasterSpreads, Resources, ...) - one `ThreeWayMerger.merge` per part still
+present on all three sides, plus the same present/absent case analysis `Merger`/`PcsMerger` already
+use for a single node, one level up (a whole part added, removed, or both-sides-added-differently).
+
+**`designmap.xml` is deliberately not part of that reconciliation**, for two real reasons found
+along the way, not assumed up front:
+
+- It's a much richer element than "a list of part references" - it has its own `Self`, and its own
+  other `Self`-bearing children (e.g. `Language` resource definitions) that a real 3-way merge would
+  need to handle on their own terms. Out of scope for this first cut.
+- Worse: `scala.xml`'s own parser silently drops the leading `<?aid style="50" type="document" ...?>`
+  processing instruction every real `designmap.xml` starts with (confirmed directly - it never even
+  reaches `elem.child`), and `GenericElement` has no representation for a processing instruction at
+  all, so a parse-then-rebuild round trip would lose it outright.
+
+Both are avoided the same way: `ours`'s `designmap.xml` is left **completely untouched** unless a
+part was actually added or removed, in which case its raw text is **surgically patched** - one
+`<idPkg:Type src="..." />` line inserted or removed, via a regex, not a parse - so everything else
+about the file, including that processing instruction, survives byte for byte. `IdmlMergeDriverSpec`
+covers all three shapes against real files: a clean one-sided insertion (no part added/removed, so
+`designmap.xml` isn't touched at all), a whole part removed (patched), and a genuine conflict
+(`ours` left byte-for-byte untouched, confirmed by comparing file bytes before and after).
+
+**A second real finding from testing a whole package for the first time, not just one Spread**:
+`Resources/Styles.xml`'s `StyleUniqueId` (on built-in styles like `CharacterStyle/$ID/[No character
+style]`) turned out to be a second volatile, auto-regenerated attribute, exactly like
+`LinkImportTime` - a UUID that differed across `base`/`HelloWorld2A`/`HelloWorld2B` *simultaneously*
+(three different UUIDs for the same style). Added to `EditDetector.defaultIgnoredAttributes`
+alongside it. Once that stopped masking things, testing the real `HelloWorld2A`/`B`/`C` trio as a
+*whole package* surfaced a **genuine** conflict no prior test (all scoped to one Spread) could have
+found: `Stories/Story_ued.xml`'s own text ("Hello World!" in the base) was independently changed to
+two different strings by A and B - a real Update/Update, correctly left blocking the merge.
+
+**Not yet built**: reading `%O`/`%A`/`%B` as real `.idml` files is exactly what `IdmlMergeDriver`
+does, so the merge logic itself is no longer the gap - what's left is *installing* it:
 
 - **`.gitattributes`** declares which driver applies to which files, e.g. `*.idml merge=idml3way`.
 - **Git config** maps that driver name to an actual command, e.g.
@@ -298,13 +336,20 @@ built-in extension point for exactly this - a **merge driver** - the same mechan
   a conflict-marker-size hint, and the original pathname).
 - **The driver is invoked as an ordinary shell subprocess** - there's no special git API, no
   linking against `libgit2`, nothing beyond "git runs this command with these file-path arguments."
-  It can be anything executable: a compiled binary, a shell script, or - for us - a packaged JVM
-  program (e.g. an assembled runnable JAR via `sbt-assembly`, invoked as `java -jar idml-merge.jar
-  %O %A %B`, optionally wrapped in a thin shell script to keep the git config line simple).
+  `IdmlMergeDriver.main` already matches that contract exactly (three file-path args, exit code
+  `0`/`1`/`2`); today it's runnable via
+  `sbt "idml/runMain com.phasmidsoftware.xmldoc.idml.IdmlMergeDriver.main %O %A %B"` (or a JVM
+  classpath invocation against the compiled classes directly) - **not yet built**: packaging it as a
+  single portable executable (an `sbt-assembly` fat JAR, `java -jar idml-merge.jar %O %A %B`,
+  optionally wrapped in a thin shell script) so the `git config` line doesn't need `sbt`/a project
+  checkout at merge time. `sbt-assembly` isn't a project plugin yet either.
 - **The contract**: exit code `0` means "merged successfully, use whatever's now in the `%A` file";
   nonzero means "conflict." Unlike git's own line-based merge, it does *not* insert `<<<<<<<`/
   `=======`/`>>>>>>>` markers for a custom driver - it's entirely up to the driver to leave `%A` in
   a sensible state (or invent its own conflict-marking convention) when it reports a conflict.
+  `IdmlMergeDriver` leaves `%A` completely untouched on conflict (confirmed byte-for-byte in
+  `IdmlMergeDriverSpec`) and prints each conflicting part and slot to stderr - not yet Robin's
+  ours/theirs-embedding proposal below.
 - **Practical catch**: the driver *definition* (the actual command) lives in git config, which
   isn't versioned or distributed with the repo. `.gitattributes` can travel with the repo and name
   the driver, but each collaborator still has to separately run the `git config merge.idml3way...`
@@ -323,10 +368,11 @@ then let the user resolve each recorded conflict with one of four choices:
 - `2` - theirs
 - `3` - both
 
-This fits naturally with `Merger`'s own `Conflict` type, which already carries both sides' values -
-the driver's job would just be to serialize every `Conflict` it gets back from `Merger.merge` into
-the `%A` file in a form that resolver tool can read, rather than trying to guess a resolution or
-force the user into git's usual inline text-conflict workflow.
+This fits naturally with `PartConflict`/`StructuralConflict`, which already carry both sides' values
+for every conflicting part and slot `IdmlPackageMerger` finds - the driver's job would just be to
+serialize each one into the `%A` file in a form a resolver tool can read, rather than trying to
+guess a resolution or force the user into git's usual inline text-conflict workflow. Not yet built -
+`IdmlMergeDriver` only prints them to stderr today.
 
 ## Open questions / untested cases
 
