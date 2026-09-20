@@ -55,6 +55,24 @@ class PcsSpec extends AnyFlatSpec with should.Matchers {
     Pcs.leafText(e) shouldBe None
   }
 
+  behavior of "Pcs.leafIsCData"
+
+  it should "be true for a leaf whose only child is CDATA" in {
+    Pcs.leafIsCData(GenericElement("script", Nil, Seq(GenericCData("alert(1)")))) shouldBe true
+  }
+
+  it should "be false for a leaf whose only child is plain text" in {
+    Pcs.leafIsCData(GenericElement("name", Nil, Seq(GenericText("Simple placemark")))) shouldBe false
+  }
+
+  it should "be false for a genuine mix of text and CDATA, even though leafText still concatenates both" in {
+    Pcs.leafIsCData(GenericElement("mixed", Nil, Seq(GenericText("a"), GenericCData("b")))) shouldBe false
+  }
+
+  it should "be false for a childless element (nothing to be CDATA)" in {
+    Pcs.leafIsCData(GenericElement("Point", Nil, Nil)) shouldBe false
+  }
+
   behavior of "Pcs.relations, text-only leaves"
 
   it should "carry a leaf's text into its own Content relation, not as a separate Pcs sibling" in {

@@ -434,11 +434,17 @@ this) an IDML `Link`'s base64-encoded embedded-preview data - pick up a `text` v
 
 **What's still not covered, on purpose, for now**: genuinely *mixed* content - text interleaved with
 element children at the same level (`<p>Hello <b>world</b></p>`) - isn't captured at all; rare in
-both IDML and KML, not demonstrated as a real problem yet, so not built preemptively. `GenericCData`
-collapses to plain `GenericText` on rebuild, same kind of accepted gap `GenericElement.fromNode`
-already documents for comments and entity references. Neither distinguishes a genuine `Self`-style
-identity problem (still open, above) from this one - they're independent limitations that happened
-to surface together.
+both IDML and KML, not demonstrated as a real problem yet, so not built preemptively.
+
+~~`GenericCData` collapses to plain `GenericText` on rebuild~~ **Fixed (2026-09-20)**: `Content`
+gained `textIsCData: Boolean`, set by `Pcs.leafIsCData` (true only when *every* text/CDATA child of
+a text-only leaf was itself CDATA - a genuine mix, or a single plain-text child, stays plain
+`GenericText`, same acceptable-for-now simplification `GenericElement.fromNode` already applies to
+comments and entity references). `PcsTreeBuilder` picks `GenericCData` vs `GenericText` on rebuild
+accordingly. Found to matter immediately: the real `HelloWorld2`/`HelloWorld2D` round-trip test
+(`PcsTreeBuilderIdmlSpec`) actually has a CDATA leaf (a `Link`'s base64-encoded embedded-preview
+data, seen directly in a test failure's diff output) - its own comparison helper needed updating to
+preserve CDATA-ness too, once the real rebuild started doing so correctly.
 
 **Verified**: `PcsSpec`/`PcsEditDetectorSpec`/`PcsMergerSpec`/`PcsTreeBuilderSpec` (`core`) each gained
 direct unit tests (leaf capture, edit detection, clean merge, conflict, and round-trip, all using
@@ -481,17 +487,25 @@ correctly reports a *genuine* conflict (both sides really did change the same ma
 differently) rather than papering over every disagreement - matching by content fixes misattribution,
 it doesn't relax what counts as a conflict.
 
+~~`ignoredAttributes` isn't threaded through `ContentMatcher`'s own exact-content comparison~~
+**Fixed (2026-09-20)**: `matchTrees`/`matchedLabel` both gained the same `ignoredAttributes`
+parameter (default empty), applied via a `normalized` step that strips those attribute names from
+an element *and every element nested inside it*, recursively, before comparing for exact-content
+equality - a volatile attribute could sit on any descendant, not just the node being compared.
+`PcsMerger.mergeByContent` forwards the same set to both `ContentMatcher` and (as before)
+`PcsEditDetector`. Confirmed with a test constructed so a single-remaining-candidate fallback
+couldn't accidentally paper over the difference: two nodes reorder *and* both have their volatile
+attribute bumped at the same time, so without ignoring it neither exact-matches and the positional
+fallback pairs them in the wrong relative order (each gets the *other*'s identity); with it, both
+exact-match by their real content regardless of the reorder.
+
 **What's still not addressed, on purpose**: reparenting (a node moved to a genuinely different
 parent) isn't recognized as a move - `ContentMatcher` only ever matches within an already-matched
 parent's own children, never searches globally across the tree. Several simultaneous changes among
 the same unmatched sibling group can still be misattributed to each other, same as 3dm's own fuzzy
 fallback would only partially help with - the positional fallback here is deliberately simpler
 (no content-similarity scoring at all), correct for exactly one remaining ambiguous candidate on
-each side (the case that motivated this), weaker with more. Neither the `EditDetector`/`Merger`
-side of `ThreeWayMerger` nor the `ignoredAttributes` mechanism are threaded through
-`ContentMatcher`'s own exact-content comparison yet - two subtrees differing only in a value that
-would otherwise be ignored won't exact-match, though they may still recover via the positional
-fallback.
+each side (the case that motivated this), weaker with more.
 
 ## Kaining's 13 conflict conditions, cross-checked against what's built (2026-08-24)
 

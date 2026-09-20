@@ -45,6 +45,6 @@ object PcsEditDetector {
   }
 
   private def sameContent(a: Content, b: Content, ignoredAttributes: Set[String]): Boolean =
-    a.label == b.label && a.tag == b.tag && a.text == b.text &&
+    a.label == b.label && a.tag == b.tag && a.text == b.text && a.textIsCData == b.textIsCData &&
       a.attributes.filterNot(kv => ignoredAttributes(kv._1)).toMap == b.attributes.filterNot(kv => ignoredAttributes(kv._1)).toMap
 }

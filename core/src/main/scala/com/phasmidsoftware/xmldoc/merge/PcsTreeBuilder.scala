@@ -1,7 +1,7 @@
 package com.phasmidsoftware.xmldoc.merge
 
 import com.phasmidsoftware.xmldoc.core.XmlException
-import com.phasmidsoftware.xmldoc.xml.{GenericElement, GenericText}
+import com.phasmidsoftware.xmldoc.xml.{GenericCData, GenericContent, GenericElement, GenericText}
 
 import scala.util.{Failure, Success, Try}
 
@@ -12,11 +12,10 @@ import scala.util.{Failure, Success, Try}
  * but that `PcsMerger` deliberately stops short of, since it's only meaningful once the relation
  * set is actually consistent.
  *
- * A rebuilt text-only leaf (`Pcs.leafText`) gets its text back as a plain `GenericText` child,
- * regardless of whether the original was `GenericText` or `GenericCData` - see `Content`'s own doc
- * for why that distinction isn't preserved. Still lossy for genuinely mixed content (text
- * interleaved with element children at the same level) - `Pcs.relations` never captures that shape
- * at all, only the text-only-leaf one.
+ * A rebuilt text-only leaf (`Pcs.leafText`) gets its text back as `GenericCData` when the original
+ * was uniformly CDATA (`Content.textIsCData`), plain `GenericText` otherwise. Still lossy for
+ * genuinely mixed content (text interleaved with element children at the same level) -
+ * `Pcs.relations` never captures that shape at all, only the text-only-leaf one.
  */
 object PcsTreeBuilder {
 
@@ -85,7 +84,10 @@ object PcsTreeBuilder {
             child <- buildNode(childLabel, ancestors + label)
           } yield built :+ child
         }
-      } yield GenericElement(content.tag, content.attributes, children ++ content.text.map(GenericText.apply).toSeq)
+      } yield {
+        val textChild: Seq[GenericContent] = content.text.map(t => if (content.textIsCData) GenericCData(t) else GenericText(t)).toSeq
+        GenericElement(content.tag, content.attributes, children ++ textChild)
+      }
 
     buildNode(rootLabel, Set.empty)
   }

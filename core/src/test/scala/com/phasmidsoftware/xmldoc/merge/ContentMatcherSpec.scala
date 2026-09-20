@@ -60,4 +60,24 @@ class ContentMatcherSpec extends AnyFlatSpec with should.Matchers {
     val newNode = NodeRef(NodePath.root.child(1), rect("new"))
     labelOf(newNode) shouldBe "+/1"
   }
+
+  behavior of "ContentMatcher, ignoredAttributes"
+
+  it should "exact-match despite a volatile attribute, avoiding a wrong positional guess when two nodes both change and reorder at once" in {
+    def item(kind: String, stamp: Int): GenericElement = GenericElement("Item", Seq("kind" -> kind, "stamp" -> stamp.toString), Nil)
+    val base = GenericElement("Root", Nil, Seq(item("a", 1), item("b", 1), item("c", 1)))
+    // b is untouched; a and c both reorder *and* have their volatile "stamp" bumped, at once
+    val modified = GenericElement("Root", Nil, Seq(item("b", 1), item("c", 2), item("a", 2)))
+    val modifiedA = NodePath.root.child(2) // "a" is modified's 3rd child now
+    val basesOwnLabelForA = "/0" // NodePath.toString for base's "a", at position 0
+
+    // without ignoring "stamp": only b exact-matches (unchanged); a and c both fail to exact-match
+    // (their stamp differs) and fall through to the positional pass, in the wrong relative order -
+    // each ends up with the *other*'s base identity.
+    ContentMatcher.matchedLabel(base, modified)(NodeRef(modifiedA, item("a", 2))) should not be basesOwnLabelForA
+
+    // ignoring "stamp": a and c each exact-match by their real (kind-based) content regardless of
+    // the reorder, so "a" correctly keeps its own base identity.
+    ContentMatcher.matchedLabel(base, modified, Set("stamp"))(NodeRef(modifiedA, item("a", 2))) shouldBe basesOwnLabelForA
+  }
 }

@@ -32,12 +32,13 @@ case class Pcs(parent: String, predecessor: Sibling, successor: Sibling)
  * node's content is/isn't identical to that one's", which comparing the whole tuple already gives
  * for free.
  *
- * `text` deliberately doesn't distinguish `GenericText` from `GenericCData` - both collapse to the
- * same plain string here, and a rebuilt node always comes back as `GenericText` (`PcsTreeBuilder`),
- * same kind of acceptable-for-now gap `GenericElement.fromNode` already documents for comments and
+ * `textIsCData` records whether `text` should come back as a `GenericCData` (`PcsTreeBuilder`) -
+ * true only when *every* text/CDATA child was itself CDATA (`Pcs.leafText`'s own doc); a genuine
+ * mix of plain text and CDATA in the same leaf (rare) just comes back as plain `GenericText`, same
+ * kind of acceptable-for-now gap `GenericElement.fromNode` already documents for comments and
  * entity references.
  */
-case class Content(label: String, tag: String, attributes: Seq[(String, String)], text: Option[String] = None)
+case class Content(label: String, tag: String, attributes: Seq[(String, String)], text: Option[String] = None, textIsCData: Boolean = false)
 
 /**
  * A tree, fully decomposed into `Pcs` and `Content` relations - Lindholm's representation of a
@@ -88,6 +89,18 @@ object Pcs {
     }
 
   /**
+   * Whether `leafText(e)` (if any) should come back as `GenericCData` rather than plain
+   * `GenericText` - true only when `e` is a text-only leaf (same condition as `leafText`) *and*
+   * every one of its text/CDATA children was itself `GenericCData`, so a single plain-text child
+   * (or a genuine mix) is never wrongly promoted to CDATA.
+   */
+  def leafIsCData(e: GenericElement): Boolean =
+    e.childElements.isEmpty && e.children.nonEmpty && e.children.forall {
+      case _: GenericCData => true
+      case _ => false
+    }
+
+  /**
    * Decomposes `root`'s whole subtree into `Pcs` and `Content` relations.
    *
    * @param root     the tree (or subtree) to decompose.
@@ -99,7 +112,7 @@ object Pcs {
    */
   def relations(root: GenericElement, labelOf: NodeRef => String = label): RelationSet = {
     def go(ref: NodeRef): RelationSet = {
-      val here = Content(labelOf(ref), ref.element.tag, ref.element.attributes, leafText(ref.element))
+      val here = Content(labelOf(ref), ref.element.tag, ref.element.attributes, leafText(ref.element), leafIsCData(ref.element))
       val kids = ref.element.childElements.zipWithIndex.map { case (c, i) => NodeRef(ref.path.child(i), c) }
       val siblings: Seq[Sibling] = kids.map(k => SiblingNode(labelOf(k)))
       val chain = (ListStart +: siblings) zip (siblings :+ ListEnd)

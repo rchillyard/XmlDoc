@@ -1,6 +1,6 @@
 package com.phasmidsoftware.xmldoc.merge
 
-import com.phasmidsoftware.xmldoc.xml.{GenericElement, GenericText}
+import com.phasmidsoftware.xmldoc.xml.{GenericCData, GenericElement, GenericText}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -31,6 +31,11 @@ class PcsTreeBuilderSpec extends AnyFlatSpec with should.Matchers {
       GenericElement("name", Nil, Seq(GenericText("Simple placemark"))),
       GenericElement("description", Nil, Seq(GenericText("Attached to the ground.")))
     ))
+    PcsTreeBuilder.build(Pcs.relations(tree), "/") shouldBe Success(tree)
+  }
+
+  it should "reconstruct a text-only leaf as GenericCData when the original was uniformly CDATA" in {
+    val tree = GenericElement("Root", Nil, Seq(GenericElement("script", Nil, Seq(GenericCData("alert(1)")))))
     PcsTreeBuilder.build(Pcs.relations(tree), "/") shouldBe Success(tree)
   }
 

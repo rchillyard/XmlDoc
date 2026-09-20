@@ -30,14 +30,20 @@ object ContentMatcher {
    * Matches every level of `base` against `modified`, recursively, starting from their (assumed
    * corresponding) roots.
    *
-   * @param base     the base tree.
-   * @param modified one modified version of it.
+   * @param base              the base tree.
+   * @param modified          one modified version of it.
+   * @param ignoredAttributes attribute names two otherwise-identical subtrees may still differ in
+   *                          and be treated as an exact match anyway (e.g. an auto-stamped
+   *                          timestamp) - same idea, and same default (none), as `EditDetector`'s/
+   *                          `PcsEditDetector`'s own `ignoredAttributes`. Applied recursively to
+   *                          every element at every depth, not just the one being compared, since a
+   *                          volatile attribute could sit on any descendant.
    * @return every matched pair, plus whatever's only in one side.
    */
-  def matchTrees(base: GenericElement, modified: GenericElement): Matching = {
+  def matchTrees(base: GenericElement, modified: GenericElement, ignoredAttributes: Set[String] = Set.empty): Matching = {
     val rootBase = NodeRef(NodePath.root, base)
     val rootModified = NodeRef(NodePath.root, modified)
-    val (matched, onlyInBase, onlyInModified) = matchChildren(rootBase, rootModified)
+    val (matched, onlyInBase, onlyInModified) = matchChildren(rootBase, rootModified, ignoredAttributes)
     Matching((rootBase, rootModified) +: matched, onlyInBase, onlyInModified)
   }
 
@@ -48,33 +54,43 @@ object ContentMatcher {
    * had it one; anything with no match falls back to its own path, prefixed with `+` so it can never
    * collide with a real base path (which never starts with `+`).
    */
-  def matchedLabel(base: GenericElement, modified: GenericElement): NodeRef => String = {
-    val byPath = matchTrees(base, modified).matched.map { case (b, m) => m.path -> Pcs.label(b) }.toMap
+  def matchedLabel(base: GenericElement, modified: GenericElement, ignoredAttributes: Set[String] = Set.empty): NodeRef => String = {
+    val byPath = matchTrees(base, modified, ignoredAttributes).matched.map { case (b, m) => m.path -> Pcs.label(b) }.toMap
     ref => byPath.getOrElse(ref.path, s"+${ref.path}")
   }
 
-  private def matchChildren(baseParent: NodeRef, modifiedParent: NodeRef): (Seq[(NodeRef, NodeRef)], Seq[NodeRef], Seq[NodeRef]) = {
+  private def matchChildren(baseParent: NodeRef, modifiedParent: NodeRef, ignoredAttributes: Set[String]): (Seq[(NodeRef, NodeRef)], Seq[NodeRef], Seq[NodeRef]) = {
     val baseKids = childrenOf(baseParent)
     val modifiedKids = childrenOf(modifiedParent)
-    val (exactPairs, baseRemainder1, modifiedRemainder1) = matchByExactContent(baseKids, modifiedKids)
+    val (exactPairs, baseRemainder1, modifiedRemainder1) = matchByExactContent(baseKids, modifiedKids, ignoredAttributes)
     val (positionalPairs, baseRemainder2, modifiedRemainder2) = matchByPosition(baseRemainder1, modifiedRemainder1)
     val here = exactPairs ++ positionalPairs
-    val below = here.map { case (b, m) => matchChildren(b, m) }
+    val below = here.map { case (b, m) => matchChildren(b, m, ignoredAttributes) }
     (here ++ below.flatMap(_._1), baseRemainder2 ++ below.flatMap(_._2), modifiedRemainder2 ++ below.flatMap(_._3))
   }
 
   private def childrenOf(ref: NodeRef): Seq[NodeRef] = ref.element.childElements.zipWithIndex.map { case (c, i) => NodeRef(ref.path.child(i), c) }
 
-  // Whole-subtree equality (GenericElement's own structural equality, recursively) - greedy,
-  // document-order pairing within each content-identical group. Two distinct base nodes with
-  // identical content but only one modified counterpart will have the earlier one matched and the
-  // later one fall through to the positional pass below - a real simplification of 3dm's own "copy
-  // resolution" phase, not a full solution to duplicate content.
-  private def matchByExactContent(baseKids: Seq[NodeRef], modifiedKids: Seq[NodeRef]): (Seq[(NodeRef, NodeRef)], Seq[NodeRef], Seq[NodeRef]) = {
-    val initialByContent = modifiedKids.groupBy(_.element)
+  // Strips ignoredAttributes from an element and every element nested inside it, so two subtrees
+  // that only differ in one of those attributes (wherever it sits) compare equal below.
+  private def normalized(e: GenericElement, ignoredAttributes: Set[String]): GenericElement =
+    if (ignoredAttributes.isEmpty) e
+    else GenericElement(e.tag, e.attributes.filterNot(kv => ignoredAttributes(kv._1)), e.children.map {
+      case child: GenericElement => normalized(child, ignoredAttributes)
+      case other => other
+    })
+
+  // Whole-subtree equality (GenericElement's own structural equality, recursively, modulo
+  // ignoredAttributes) - greedy, document-order pairing within each content-identical group. Two
+  // distinct base nodes with identical content but only one modified counterpart will have the
+  // earlier one matched and the later one fall through to the positional pass below - a real
+  // simplification of 3dm's own "copy resolution" phase, not a full solution to duplicate content.
+  private def matchByExactContent(baseKids: Seq[NodeRef], modifiedKids: Seq[NodeRef], ignoredAttributes: Set[String]): (Seq[(NodeRef, NodeRef)], Seq[NodeRef], Seq[NodeRef]) = {
+    val initialByContent = modifiedKids.groupBy(k => normalized(k.element, ignoredAttributes))
     val (pairs, _) = baseKids.foldLeft((Vector.empty[(NodeRef, NodeRef)], initialByContent)) { case ((acc, byContent), b) =>
-      byContent.get(b.element).filter(_.nonEmpty) match {
-        case Some(m +: rest) => (acc :+ (b -> m), byContent.updated(b.element, rest))
+      val key = normalized(b.element, ignoredAttributes)
+      byContent.get(key).filter(_.nonEmpty) match {
+        case Some(m +: rest) => (acc :+ (b -> m), byContent.updated(key, rest))
         case _ => (acc, byContent)
       }
     }

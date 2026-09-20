@@ -122,11 +122,14 @@ object PcsMerger {
    * @param base              the common ancestor.
    * @param left              one independently modified version.
    * @param right             the other independently modified version.
-   * @param ignoredAttributes forwarded to `PcsEditDetector.detectEdits` - see there.
+   * @param ignoredAttributes forwarded to both `PcsEditDetector.detectEdits` and
+   *                          `ContentMatcher.matchTrees` - so a subtree that only differs from
+   *                          `base` in one of these attributes still counts as an exact content
+   *                          match, not just as a non-conflicting edit once matched.
    * @return the resolved relation set, plus every conflict found.
    */
   def mergeByContent(base: GenericElement, left: GenericElement, right: GenericElement, ignoredAttributes: Set[String] = Set.empty): StructuralMergeResult =
-    merge(base, left, right, ignoredAttributes, ContentMatcher.matchedLabel(base, left), ContentMatcher.matchedLabel(base, right))
+    merge(base, left, right, ignoredAttributes, ContentMatcher.matchedLabel(base, left, ignoredAttributes), ContentMatcher.matchedLabel(base, right, ignoredAttributes))
 
   private def byPredecessor(pcs: Set[Pcs]): Map[(String, Sibling), Sibling] = pcs.map(p => (p.parent, p.predecessor) -> p.successor).toMap
 
