@@ -4,6 +4,7 @@
 .bsp/
 target/
 project/target
+.DS_Store
 
 xmlOutput.xml
 /xmlOutput.kml
