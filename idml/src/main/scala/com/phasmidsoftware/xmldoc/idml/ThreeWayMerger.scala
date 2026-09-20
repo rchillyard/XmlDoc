@@ -1,5 +1,6 @@
 package com.phasmidsoftware.xmldoc.idml
 
+import com.phasmidsoftware.xmldoc.merge.{Content, NodePath, NodeRef, Pcs, PcsMerger, PcsTreeBuilder, RelationSet, StructuralConflict}
 import com.phasmidsoftware.xmldoc.xml.GenericElement
 
 import scala.util.{Failure, Success}
@@ -31,18 +32,30 @@ object ThreeWayMerger {
   /**
    * Merges `left` and `right`, both relative to `base`.
    *
-   * @param base  the common ancestor.
-   * @param left  one independently modified version.
-   * @param right the other independently modified version.
+   * @param base              the common ancestor.
+   * @param left              one independently modified version.
+   * @param right             the other independently modified version.
+   * @param ignoredAttributes forwarded to both `Merger.merge` and `PcsMerger.merge` - see
+   *                          `EditDetector.defaultIgnoredAttributes`. Passed to both, not just one,
+   *                          since a node whose *only* difference is an ignored attribute needs to
+   *                          look unchanged from *both* mergers' point of view - otherwise the one
+   *                          that still sees a difference reports a conflict `ThreeWayMerger`'s own
+   *                          dedup logic (below) can't catch, since the other merger never had any
+   *                          opinion on that node at all to defer to.
    * @return `Right` the merged tree, or `Left` every conflict found (attribute-level and
    *         structural together, in one uniform shape) if there was at least one.
    */
-  def merge(base: GenericElement, left: GenericElement, right: GenericElement): Either[Seq[StructuralConflict], GenericElement] = {
-    val attrOutcomes = Merger.merge(base, left, right)
+  def merge(
+    base: GenericElement,
+    left: GenericElement,
+    right: GenericElement,
+    ignoredAttributes: Set[String] = EditDetector.defaultIgnoredAttributes
+  ): Either[Seq[StructuralConflict], GenericElement] = {
+    val attrOutcomes = Merger.merge(base, left, right, ignoredAttributes)
     val attrSelves = attrOutcomes.flatMap(selfOf).toSet
     val attrConflictReports = attrOutcomes.collect { case c: Conflict => renderAttrConflict(c) }
 
-    val structResult = PcsMerger.merge(base, left, right)
+    val structResult = PcsMerger.merge(base, left, right, ignoredAttributes)
     // Merger already handles content-level conflicts for anything with a real Self, finer-grained
     // than PcsMerger's own whole-blob comparison (see the class doc) - keep PcsMerger's content
     // conflicts only for path-labelled (Self-less) nodes, which Merger never sees at all. A path

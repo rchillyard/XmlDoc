@@ -1,5 +1,6 @@
 package com.phasmidsoftware.xmldoc.idml
 
+import com.phasmidsoftware.xmldoc.merge.{PcsMerger, StructuralConflict}
 import com.phasmidsoftware.xmldoc.xml.GenericElement
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
@@ -92,12 +93,6 @@ class ThreeWayMergerSpec extends AnyFlatSpec with should.Matchers {
     IdmlPackage.open(new File(getClass.getResource(resourceName).toURI)).get.loadPart(path).get
       .childElements.find(_.tag == "Spread").get
 
-  // The whole Spread doesn't merge cleanly end to end: A and B also independently touched an
-  // unrelated Link's LinkImportTime (InDesign re-stamps that on export, regardless of user
-  // action) - a real instance of the paper's own §7 caveat ("document metadata often changes
-  // inconsistently on both sides"), not a bug here. Scoped down to the u13d subtree the test is
-  // actually about, the move-plus-restyle combination is exactly as clean as MergerSpec/
-  // PcsMergerSpec's own separate checks already showed.
   it should "merge HelloWorld2A's move and HelloWorld2B's restyle of u13d into one real tree (base C)" in {
     def u13dOf(spreadEl: GenericElement): GenericElement = spreadEl.childElements.find(_.attributes.toMap.get("Self").contains("u13d")).get
     val base = u13dOf(spread("HelloWorld2C.idml", "Spreads/Spread_ue6.xml"))
@@ -108,11 +103,27 @@ class ThreeWayMergerSpec extends AnyFlatSpec with should.Matchers {
     merged.attributes.toMap.get("FillColor") shouldBe right.attributes.toMap.get("FillColor") // B's restyle
   }
 
-  it should "report the real, unrelated LinkImportTime conflict when merging the whole Spread (not a bug - see above)" in {
+  // A and B also independently touched an unrelated Link's LinkImportTime (InDesign re-stamps
+  // that on export, regardless of user action) - a real instance of the paper's own §7 caveat
+  // ("document metadata often changes inconsistently on both sides"), not a bug. This is exactly
+  // what EditDetector.defaultIgnoredAttributes exists for.
+  it should "merge the whole real Spread cleanly, with the default ignored attributes filtering out the unrelated LinkImportTime noise" in {
     val base = spread("HelloWorld2C.idml", "Spreads/Spread_ue6.xml")
     val left = spread("HelloWorld2A.idml", "Spreads/Spread_ue6.xml")
     val right = spread("HelloWorld2B.idml", "Spreads/Spread_ue6.xml")
-    val conflicts = expectConflicts(ThreeWayMerger.merge(base, left, right))
+    val merged = expectMerged(ThreeWayMerger.merge(base, left, right))
+    val mergedU13d = merged.childElements.find(_.attributes.toMap.get("Self").contains("u13d")).get.attributes.toMap
+    val aU13d = left.childElements.find(_.attributes.toMap.get("Self").contains("u13d")).get.attributes.toMap
+    val bU13d = right.childElements.find(_.attributes.toMap.get("Self").contains("u13d")).get.attributes.toMap
+    mergedU13d.get("ItemTransform") shouldBe aU13d.get("ItemTransform")
+    mergedU13d.get("FillColor") shouldBe bU13d.get("FillColor")
+  }
+
+  it should "still report the LinkImportTime conflict when a caller opts out of ignoring it" in {
+    val base = spread("HelloWorld2C.idml", "Spreads/Spread_ue6.xml")
+    val left = spread("HelloWorld2A.idml", "Spreads/Spread_ue6.xml")
+    val right = spread("HelloWorld2B.idml", "Spreads/Spread_ue6.xml")
+    val conflicts = expectConflicts(ThreeWayMerger.merge(base, left, right, ignoredAttributes = Set.empty))
     conflicts.map(_.slot) should contain("LinkImportTime of u10d")
   }
 

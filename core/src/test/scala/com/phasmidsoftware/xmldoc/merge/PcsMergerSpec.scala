@@ -1,10 +1,8 @@
-package com.phasmidsoftware.xmldoc.idml
+package com.phasmidsoftware.xmldoc.merge
 
 import com.phasmidsoftware.xmldoc.xml.GenericElement
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
-
-import java.io.File
 
 class PcsMergerSpec extends AnyFlatSpec with should.Matchers {
 
@@ -35,6 +33,30 @@ class PcsMergerSpec extends AnyFlatSpec with should.Matchers {
     result.conflicts shouldBe Nil
     result.relations.pcs should contain allOf(Pcs("us", SiblingNode("u1"), SiblingNode("u2")), Pcs("us", SiblingNode("u2"), ListEnd))
     result.relations.content should contain(Content("u2", "Rectangle", Seq("Self" -> "u2", "Fill" -> "Red")))
+  }
+
+  it should "accept both sides' inserts at different anchors, in a deterministic combined order (Kaining's 04-both-add-diff-pos)" in {
+    val base = spreadOf("us", rect("r1"), rect("r2"))
+    val left = spreadOf("us", rect("r1"), rect("rL"), rect("r2")) // left inserts rL after r1
+    val right = spreadOf("us", rect("r1"), rect("r2"), rect("rR")) // right inserts rR after r2
+    val result = PcsMerger.merge(base, left, right)
+    result.conflicts shouldBe Nil
+    result.relations.pcs should contain allOf(
+      Pcs("us", ListStart, SiblingNode("r1")),
+      Pcs("us", SiblingNode("r1"), SiblingNode("rL")),
+      Pcs("us", SiblingNode("rL"), SiblingNode("r2")),
+      Pcs("us", SiblingNode("r2"), SiblingNode("rR")),
+      Pcs("us", SiblingNode("rR"), ListEnd)
+    )
+  }
+
+  it should "accept a z-order swap described from both ends as the same move, not a conflict (Kaining's 09-zorder)" in {
+    val base = spreadOf("us", rect("r1"), rect("r2"))
+    val left = spreadOf("us", rect("r2"), rect("r1")) // "move r1 forward, after r2"
+    val right = spreadOf("us", rect("r2"), rect("r1")) // "move r2 backward, before r1" - same result
+    val result = PcsMerger.merge(base, left, right)
+    result.conflicts shouldBe Nil
+    result.relations.pcs should contain allOf(Pcs("us", ListStart, SiblingNode("r2")), Pcs("us", SiblingNode("r2"), SiblingNode("r1")), Pcs("us", SiblingNode("r1"), ListEnd))
   }
 
   behavior of "PcsMerger.merge, move/move divergence (Kaining's 05-move-move-divergent)"
@@ -95,19 +117,5 @@ class PcsMergerSpec extends AnyFlatSpec with should.Matchers {
     val right = spreadOf("us", rect("x")) // right ungroups g1; left leaves it alone
     val result = PcsMerger.merge(base, base, right)
     result.conflicts shouldBe Nil
-  }
-
-  behavior of "PcsMerger.merge, real Mergeable files (the same trio MergerSpec uses)"
-
-  private def spread(resourceName: String, path: String): GenericElement =
-    IdmlPackage.open(new File(getClass.getResource(resourceName).toURI)).get.loadPart(path).get
-      .childElements.find(_.tag == "Spread").get
-
-  it should "surface the same real Insert/Insert collision (u11c) that Merger's attribute-level check finds" in {
-    val base = spread("Mergeable.idml", "Spreads/Spread_ud1.xml")
-    val left = spread("Mergeable-Left.idml", "Spreads/Spread_ud1.xml")
-    val right = spread("Mergeable-Right.idml", "Spreads/Spread_ud1.xml")
-    val result = PcsMerger.merge(base, left, right)
-    result.conflicts.map(_.slot) should contain("content of u11c")
   }
 }

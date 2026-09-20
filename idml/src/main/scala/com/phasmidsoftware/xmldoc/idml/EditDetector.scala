@@ -1,5 +1,6 @@
 package com.phasmidsoftware.xmldoc.idml
 
+import com.phasmidsoftware.xmldoc.merge.{NodeRef, TreeMatcher}
 import com.phasmidsoftware.xmldoc.xml.GenericElement
 
 /**
@@ -48,31 +49,45 @@ case class Updated(base: NodeRef, modified: NodeRef, changedAttributes: Seq[(Str
  * depth they occur) fall out of `TreeMatcher`'s own whole-tree walk for free; this only adds
  * content-level change detection for the nodes that *do* still correspond.
  *
- * Deliberately narrow for now: only a matched node's own attributes are compared, not its
- * children's order (a "move" among already-matched siblings) - that's `MERGE.md`'s node-context/
- * guard machinery, not yet built.
+ * Deliberately narrow: only a matched node's own attributes are compared, not its children's order
+ * (a "move" among already-matched siblings, or a reparenting) - `PcsEditDetector`/`PcsMerger`
+ * handle that instead; `ThreeWayMerger` combines the two.
  */
 object EditDetector {
 
   /**
+   * Attribute names known to change on every export regardless of any real edit - InDesign
+   * re-stamps a `Link`'s `LinkImportTime` unconditionally, so two independently re-exported copies
+   * with *no* real editorial overlap at all can otherwise still come back with a false conflict on
+   * it (found 2026-09-20, wiring `ThreeWayMerger` up against the real `HelloWorld2A`/`B`/`C` trio -
+   * see `MERGE.md`). `detectEdits`'s default; pass `Set.empty` (or your own set) to opt out.
+   */
+  val defaultIgnoredAttributes: Set[String] = Set("LinkImportTime")
+
+  /**
    * Detects the edits that turn `base` into `modified`.
    *
-   * @param base     the base tree.
-   * @param modified one modified version of it.
+   * @param base              the base tree.
+   * @param modified          one modified version of it.
+   * @param ignoredAttributes attribute names to leave out of the per-node diff entirely - see
+   *                          `defaultIgnoredAttributes`. A node whose *only* difference is one of
+   *                          these is reported as unchanged, not as an `Updated` edit - the
+   *                          attribute's own (unchanged) value is still there either way, since an
+   *                          unchanged node just keeps whatever `base` already had.
    * @return every insertion, deletion, and content update found - omitting anything unchanged.
    */
-  def detectEdits(base: GenericElement, modified: GenericElement): Seq[Edit] = {
+  def detectEdits(base: GenericElement, modified: GenericElement, ignoredAttributes: Set[String] = defaultIgnoredAttributes): Seq[Edit] = {
     val m = TreeMatcher.matchBySelf(base, modified)
     val inserted = m.onlyInRight.map(Inserted.apply)
     val deleted = m.onlyInLeft.map(Deleted.apply)
-    val updated = m.matched.flatMap { case (baseRef, modRef) => diffAttributes(baseRef, modRef).map(Updated(baseRef, modRef, _)) }
+    val updated = m.matched.flatMap { case (baseRef, modRef) => diffAttributes(baseRef, modRef, ignoredAttributes).map(Updated(baseRef, modRef, _)) }
     inserted ++ deleted ++ updated
   }
 
-  private def diffAttributes(base: NodeRef, modified: NodeRef): Option[Seq[(String, Option[String], Option[String])]] = {
+  private def diffAttributes(base: NodeRef, modified: NodeRef, ignoredAttributes: Set[String]): Option[Seq[(String, Option[String], Option[String])]] = {
     val baseAttrs = base.element.attributes.toMap
     val modAttrs = modified.element.attributes.toMap
-    val changes = (baseAttrs.keySet ++ modAttrs.keySet).toSeq.sorted.flatMap { key =>
+    val changes = ((baseAttrs.keySet ++ modAttrs.keySet) -- ignoredAttributes).toSeq.sorted.flatMap { key =>
       val (bv, mv) = (baseAttrs.get(key), modAttrs.get(key))
       if (bv != mv) Some((key, bv, mv)) else None
     }

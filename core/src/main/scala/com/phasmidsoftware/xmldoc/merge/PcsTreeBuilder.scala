@@ -1,4 +1,4 @@
-package com.phasmidsoftware.xmldoc.idml
+package com.phasmidsoftware.xmldoc.merge
 
 import com.phasmidsoftware.xmldoc.core.XmlException
 import com.phasmidsoftware.xmldoc.xml.GenericElement

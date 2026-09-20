@@ -1,41 +1,17 @@
 package com.phasmidsoftware.xmldoc.idml
 
+import com.phasmidsoftware.xmldoc.merge.{Content, ListStart, Pcs, SiblingNode}
 import com.phasmidsoftware.xmldoc.xml.GenericElement
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
 import java.io.File
 
-class PcsSpec extends AnyFlatSpec with should.Matchers {
-
-  behavior of "Pcs.relations, synthetic trees"
-
-  it should "give a childless node just one pcs chain link, from ListStart straight to ListEnd" in {
-    val root = GenericElement("Rectangle", Seq("Self" -> "u1"), Nil)
-    val rs = Pcs.relations(root)
-    rs.pcs shouldBe Set(Pcs("u1", ListStart, ListEnd))
-    rs.content shouldBe Set(Content("u1", "Rectangle", Seq("Self" -> "u1")))
-  }
-
-  it should "chain two children from ListStart to ListEnd via their Self labels" in {
-    val root = GenericElement("Root", Nil, Seq(
-      GenericElement("Rectangle", Seq("Self" -> "u1"), Nil),
-      GenericElement("TextFrame", Seq("Self" -> "u2"), Nil)
-    ))
-    val rs = Pcs.relations(root)
-    rs.pcs should contain allOf(
-      Pcs("/", ListStart, SiblingNode("u1")),
-      Pcs("/", SiblingNode("u1"), SiblingNode("u2")),
-      Pcs("/", SiblingNode("u2"), ListEnd)
-    )
-  }
-
-  it should "fall back to a NodePath label for a child with no Self, distinct from any Self label" in {
-    val root = GenericElement("Root", Nil, Seq(GenericElement("Group", Nil, Nil))) // no Self
-    val rs = Pcs.relations(root)
-    rs.pcs should contain(Pcs("/", ListStart, SiblingNode("/0")))
-    rs.content should contain(Content("/0", "Group", Nil))
-  }
+/**
+ * `Pcs` itself is generic (see `core`'s own `PcsSpec`) - these are the tests that need either a
+ * real `.idml` fixture or the idml-specific `EditDetector`, so only this module can run them.
+ */
+class PcsIdmlSpec extends AnyFlatSpec with should.Matchers {
 
   it should "detect a reorder as a change in Pcs relations, even though the two Self-identified nodes are otherwise untouched" in {
     val base = GenericElement("Spread", Seq("Self" -> "us"), Seq(
@@ -65,7 +41,7 @@ class PcsSpec extends AnyFlatSpec with should.Matchers {
     val spread = IdmlPackage.open(new File(getClass.getResource("HelloWorld2.idml").toURI)).get
       .loadPart("Spreads/Spread_ud1.xml").get.childElements.find(_.tag == "Spread").get
     val rs = Pcs.relations(spread)
-    rs.content.map(_.label) should contain("u13a") // a real page item's Self, from TreeMatcherSpec
+    rs.content.map(_.label) should contain("u13a") // a real page item's Self, from TreeMatcherIdmlSpec
     rs.pcs.collect { case Pcs(_, SiblingNode("u13a"), _) => () } should not be empty
   }
 }

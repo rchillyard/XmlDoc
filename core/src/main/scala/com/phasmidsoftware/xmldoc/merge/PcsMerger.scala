@@ -1,4 +1,4 @@
-package com.phasmidsoftware.xmldoc.idml
+package com.phasmidsoftware.xmldoc.merge
 
 import com.phasmidsoftware.xmldoc.xml.GenericElement
 
@@ -49,15 +49,16 @@ object PcsMerger {
   /**
    * Merges `left` and `right`, both relative to `base`.
    *
-   * @param base  the common ancestor.
-   * @param left  one independently modified version.
-   * @param right the other independently modified version.
+   * @param base              the common ancestor.
+   * @param left              one independently modified version.
+   * @param right             the other independently modified version.
+   * @param ignoredAttributes forwarded to `PcsEditDetector.detectEdits` - see there.
    * @return the resolved relation set, plus every conflict found.
    */
-  def merge(base: GenericElement, left: GenericElement, right: GenericElement): StructuralMergeResult = {
+  def merge(base: GenericElement, left: GenericElement, right: GenericElement, ignoredAttributes: Set[String] = Set.empty): StructuralMergeResult = {
     val baseRelations = Pcs.relations(base)
-    val leftEdits = PcsEditDetector.detectEdits(base, left)
-    val rightEdits = PcsEditDetector.detectEdits(base, right)
+    val leftEdits = PcsEditDetector.detectEdits(base, left, ignoredAttributes)
+    val rightEdits = PcsEditDetector.detectEdits(base, right, ignoredAttributes)
 
     val baseContent = baseRelations.content.map(c => c.label -> c).toMap
     val (contentEdits, contentConflicts) = reconcile(

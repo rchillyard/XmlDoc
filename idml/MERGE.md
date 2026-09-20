@@ -217,6 +217,18 @@ original CS6 file as the base.
 
 ## PCS relation utilities (built 2026-09-18)
 
+**Relocated 2026-09-20**: this whole layer - `TreeMatcher`/`NodePath`/`NodeRef`, `Pcs`,
+`PcsEditDetector`, `PcsMerger`, `PcsTreeBuilder` - turned out to depend on nothing idml-specific
+except one hardcoded string (`NodeRef.self`'s literal lookup of the `"Self"` attribute), everything
+else operating purely on `GenericElement`. It now lives in `core`, package
+`com.phasmidsoftware.xmldoc.merge`, so it's available to `kml` or any future module too, not just
+`idml`. Each class's synthetic-tree tests moved with it (`core/src/test/.../merge/*Spec.scala`);
+whatever needed a real `.idml` fixture (or the idml-specific `EditDetector`) stayed behind as a
+same-named `*IdmlSpec` in this module (e.g. `PcsMergerSpec` in `core` plus `PcsMergerIdmlSpec` here).
+`Merger`/`EditDetector`/`ThreeWayMerger` themselves stay in `idml`, since they're genuinely built
+around `Self`-matching, not generic. This document stays in `idml/` too - it's fundamentally the
+narrative of *this* research project, even where the code it describes now lives elsewhere.
+
 There is now an illustrated walkthrough of the Lindholm paper, `doc/Three-way_XML_Merge.html`
 (generated from the paper, not authoritative for its exact statements/formulas - `doc/Lindholm.pdf`
 still is), section "§2.3 Ordered trees & PCS" in particular. It's what prompted actually building
@@ -323,9 +335,10 @@ consistent - so nothing about the walk itself would ever have caught it. Checkin
 front is a real fix, not a redundant belt-and-braces check.
 
 With all three structural consistency rules built, the remaining named gaps for the structural
-(`Pcs`-level) path itself are: thread-reference repair, insertion ordering across independent
-inserts, story-text-level diffing, and cross-reference conflicts (`ParentStory`, `NextTextFrame`) -
-see Kaining's cross-check below.
+(`Pcs`-level) path itself are: thread-reference repair, story-text-level diffing, and cross-reference
+conflicts (`ParentStory`, `NextTextFrame`) - see Kaining's cross-check below. (Insertion ordering and
+z-order both turned out to already fall out of the same successor/predecessor mechanism, with no
+extra code needed - see there too.)
 
 ## Built next (2026-09-20): wiring `Merger` and `PcsMerger` together - `ThreeWayMerger`
 
@@ -353,16 +366,16 @@ ever does, `ThreeWayMerger` keeps `PcsMerger`'s own content conflicts only for p
 (`Self`-less) nodes - `Merger`'s finer-grained report always wins for anything with a real `Self`.
 Confirmed against the real `Mergeable-Left`/`-Right` trio: exactly one conflict for `u11c`, not two.
 
-**A real, unplanned finding from wiring this up against actual files**: merging the *whole*
-`HelloWorld2A`/`HelloWorld2B`/`HelloWorld2C` spread end to end does *not* come back clean - `Merger`
-correctly reports a genuine, unrelated `LinkImportTime` conflict on a Link (`u10d`) that both A and B
-happened to touch independently. This is a real instance of the paper's own §7 caveat ("document
+**A real, unplanned finding from wiring this up against actual files - fixed 2026-09-20**: merging
+the *whole* `HelloWorld2A`/`HelloWorld2B`/`HelloWorld2C` spread end to end did *not* come back clean
+- `Merger` reported a genuine, unrelated `LinkImportTime` conflict on a Link (`u10d`) that both A and
+B happened to touch independently. This was a real instance of the paper's own §7 caveat ("document
 metadata often changes inconsistently on both sides"), not a bug - `MergerSpec`'s and
 `PcsMergerSpec`'s own real-file tests never noticed it because each only ever inspected `u13d`'s own
-outcomes, never asked "does the *whole* merge succeed?" `ThreeWayMergerSpec` demonstrates both: the u13d
-subtree merges exactly as cleanly as ever when scoped down to it directly, and the whole-Spread
-merge correctly reports the real `LinkImportTime` conflict rather than silently dropping one side's
-change to it.
+outcomes, never asked "does the *whole* merge succeed?" See "volatile/auto-stamped attributes" below
+for the fix, now built: `ThreeWayMergerSpec` confirms the whole real Spread merges cleanly with it in
+place, and that the conflict reappears if a caller explicitly opts out (`ignoredAttributes =
+Set.empty`) - so the fix is doing something, not just coincidentally passing.
 
 Not yet done: nothing consumes `ThreeWayMerger.merge`'s `GenericElement` result end to end (writing
 it back into a real `.idml` package, or the git-merge-driver integration below) - it's the merge
@@ -398,14 +411,16 @@ actual test cases to build toward):
 - **Thread-reference repair** (02's parenthetical, `06b`, `11`) - deleting or inserting a linked
   `TextFrame` needs to fix up `Previous`/`NextTextFrame` on its neighbors, not just vanish/appear
   and leave dangling references.
-- **Structural moves / z-order** (`03`, `05`, `09`) - "pinned to top" and z-order changes are
-  almost certainly child-*order* changes within the Spread, not attribute changes at all.
-  `EditDetector` currently only diffs attributes on matched nodes - it never compares whether a
-  node's position among its siblings changed. This is the "Structural moves" item already in the
-  open questions below, now with three concrete cases.
-- **Insertion ordering** (`04`) - two independent inserts at different positions both get kept
-  (each already shows up as its own `MergedInsert`), but *where* they land relative to each other
-  in the merged order isn't resolved at all yet.
+- ~~**Structural moves / z-order** (`03`, `05`, `09`)~~ **Done**: `PcsMerger`'s successor/predecessor
+  rules (`EditDetector`/`Merger` alone never compared child order at all). `09` in particular turned
+  out not to need anything special: "move r1 forward, after r2" and "move r2 backward, before r1"
+  produce the *identical* resulting order, so both sides' edits agree at every touched relation slot
+  and merge with no conflict - z-order is just a plain reorder wearing different vocabulary, and a
+  genuinely contradictory z-order change is caught by the same mechanism as `05` (`PcsMergerSpec`).
+- ~~**Insertion ordering** (`04`)~~ **Done**: also falls out of the same mechanism with no extra
+  code - two inserts at different anchors touch different `(parent, predecessor)` keys, so both
+  apply independently and the resulting order is whatever following the chain from `ListStart`
+  produces (`PcsMergerSpec`'s `04-both-add-diff-pos`).
 - **Story-text-level diffing** (`07`, `08`, `08b`) - entirely out of scope of what exists: only
   page-item *attributes* are diffed, never the actual paragraph/word content inside a `Story`.
   `08b` in particular pins down a real granularity decision not yet made: word-level diffing would
@@ -416,6 +431,30 @@ actual test cases to build toward):
   edits the story that used to feed that frame. A genuinely different *category* from anything
   handled now - not two edits to the same node, but two edits to two different nodes that
   reference each other.
+
+~~**A new gap, not from Kaining's table** - **volatile/auto-stamped attributes**~~ **Done
+(2026-09-20)**: InDesign re-stamps some attributes on every export regardless of user action
+(`LinkImportTime` on a `Link`, confirmed directly against `HelloWorld2A`/`B`/`C`; the `ModifyDate`/
+`InstanceID`/history bookkeeping in `META-INF/metadata.xml`, per the earlier `Mergeable`/
+`Mergeable-2` finding, is the same phenomenon one level up, in a different part). Both `Merger`'s
+attribute diff and `Pcs`'s whole-blob `Content` comparison treated these exactly like any other
+attribute - so two independently re-exported copies, with *no* real user edit overlap at all, could
+still surface a false conflict purely from this bookkeeping.
+
+Fixed with an `ignoredAttributes: Set[String]` parameter, threaded through `EditDetector.detectEdits`/
+`Merger.merge` (idml-specific, so it carries a real default - `EditDetector.defaultIgnoredAttributes
+= Set("LinkImportTime")`) and `PcsEditDetector.detectEdits`/`PcsMerger.merge` (generic, so their
+default is empty - a caller decides). `ThreeWayMerger.merge` takes the same parameter and forwards it
+to *both* mergers, not just one: a node whose only difference is an ignored attribute must look
+unchanged to both, since if only one merger ignores it, the other still reports a conflict that
+`ThreeWayMerger`'s dedup logic can't catch (it only defers to the *other* merger's report when that
+merger had *some* opinion on the node - none, if it never even saw an edit there). The generic
+`PcsEditDetector` fix compares two `Content` values ignoring specified keys, without stripping those
+keys from what's actually stored - an ignored attribute never causes a false edit, but its real value
+is still carried along intact wherever a genuine edit *is* recorded, so nothing is ever silently
+dropped from a real IDML file. `ThreeWayMergerSpec` confirms both directions against the real trio:
+the whole Spread merges cleanly with the default in place, and the `LinkImportTime` conflict
+reappears if a caller explicitly opts out (`ignoredAttributes = Set.empty`).
 
 ## Eventual integration: a git merge driver
 

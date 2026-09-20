@@ -1,10 +1,8 @@
-package com.phasmidsoftware.xmldoc.idml
+package com.phasmidsoftware.xmldoc.merge
 
 import com.phasmidsoftware.xmldoc.xml.GenericElement
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
-
-import java.io.File
 
 class PcsEditDetectorSpec extends AnyFlatSpec with should.Matchers {
 
@@ -54,18 +52,5 @@ class PcsEditDetectorSpec extends AnyFlatSpec with should.Matchers {
       Pcs("us", SiblingNode("u2"), ListEnd),
       Pcs("u2", ListStart, ListEnd) // the new (childless) node's own chain link
     )
-  }
-
-  behavior of "PcsEditDetector.detectEdits, real HelloWorld2 files"
-
-  private def spread(resourceName: String, path: String): GenericElement =
-    IdmlPackage.open(new File(getClass.getResource(resourceName).toURI)).get.loadPart(path).get
-      .childElements.find(_.tag == "Spread").get
-
-  it should "find the new Rectangle's Content among the edits from HelloWorld2 to HelloWorld2D" in {
-    val base = spread("HelloWorld2.idml", "Spreads/Spread_ud1.xml")
-    val d = spread("HelloWorld2D.idml", "Spreads/Spread_ud1.xml")
-    val edits = PcsEditDetector.detectEdits(base, d)
-    edits.content.map(_.label) should contain("u141") // the new Rectangle added in D, per TreeMatcherSpec
   }
 }
