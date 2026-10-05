@@ -125,7 +125,19 @@ with both sides' `PcsEditDetector` edits and resolves each contested "slot" (whi
 has; which successor follows a given predecessor under a given parent; which predecessor precedes a
 given successor) the same way for all three - untouched-by-both stands, one side's edit wins if the
 other didn't touch it, agreeing edits win, and disagreeing edits are reported as a `StructuralConflict`
-rather than guessed at. `PcsMergerSpec` checks a clean one-sided reorder and insertion apply with no
+rather than guessed at. This union is exactly what licenses computing over edit sets instead of whole
+trees: with
+
+$$D = T_o \cup T_l \cup T_r, \qquad E_l = T_l - T_o, \qquad E_r = T_r - T_o$$
+
+the identity $T \cup (S - T) = T \cup S$ gives $T_o \cup E_l = T_o \cup T_l$ and
+$T_o \cup E_r = T_o \cup T_r$, so
+
+$$D = T_o \cup E_l \cup E_r$$
+
+too - `PcsMerger.merge` only ever needs `base`'s relations plus each side's `PcsEditDetector` diff,
+never the full modified trees themselves. `PcsMergerSpec` checks a clean one-sided reorder and
+insertion apply with no
 conflicts, an Insert/Insert `Self` collision with differing content conflicts (agreeing content
 doesn't), and - the sharpest test - Kaining's `05-move-move-divergent` (`u1` moved to the end by one
 side, to the middle by the other) produces exactly the two conflicts the "unique successor" and
