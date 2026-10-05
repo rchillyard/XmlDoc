@@ -1,7 +1,7 @@
 package com.phasmidsoftware.xmldoc.idml
 
 import com.phasmidsoftware.xmldoc.merge.{PcsMerger, PcsTreeBuilder}
-import com.phasmidsoftware.xmldoc.xml.{GenericCData, GenericElement, GenericText}
+import com.phasmidsoftware.xmldoc.xml.GenericElement
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -17,17 +17,6 @@ class PcsTreeBuilderIdmlSpec extends AnyFlatSpec with should.Matchers {
     IdmlPackage.open(new File(getClass.getResource(resourceName).toURI)).get.loadPart(path).get
       .childElements.find(_.tag == "Spread").get
 
-  // Pcs.relations keeps a text-only leaf's text (Pcs.leafText), including whether it was uniformly
-  // CDATA (Pcs.leafIsCData), but never the whitespace GenericText nodes real files are full of
-  // between element children - this projects a real tree down to that same shape (leaf text kept,
-  // inter-element whitespace dropped) before comparing.
-  private def normalize(e: GenericElement): GenericElement =
-    if (e.childElements.isEmpty) {
-      val text = e.children.collect { case GenericText(t) => t; case GenericCData(t) => t }.mkString
-      val isCData = e.children.nonEmpty && e.children.forall(_.isInstanceOf[GenericCData])
-      GenericElement(e.tag, e.attributes, if (text.isEmpty) Nil else Seq(if (isCData) GenericCData(text) else GenericText(text)))
-    } else GenericElement(e.tag, e.attributes, e.childElements.map(normalize))
-
   behavior of "PcsTreeBuilder.build, real HelloWorld2 files"
 
   it should "rebuild HelloWorld2D's real insertion end to end through PcsMerger" in {
@@ -37,6 +26,6 @@ class PcsTreeBuilderIdmlSpec extends AnyFlatSpec with should.Matchers {
     result.conflicts shouldBe Nil
     val rebuilt = PcsTreeBuilder.build(result).get
     rebuilt.childElements.flatMap(_.attributes.collectFirst { case ("Self", v) => v }) should contain("u141")
-    rebuilt shouldBe normalize(d)
+    rebuilt shouldBe d
   }
 }

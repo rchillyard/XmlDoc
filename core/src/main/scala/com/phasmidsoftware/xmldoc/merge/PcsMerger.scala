@@ -176,10 +176,15 @@ object PcsMerger {
   }
 
   private def render(c: Content): String = {
-    val attrs = if (c.attributes.isEmpty) "" else c.attributes.map { case (k, v) => s"""$k="$v"""" }.mkString(" ", " ", "")
-    c.text match {
-      case Some(t) => s"<${c.tag}$attrs>$t</${c.tag}>"
-      case None => s"<${c.tag}$attrs>"
+    c.kind match {
+      case TextNode => c.text.getOrElse("")
+      case CDataNode => s"<![CDATA[${c.text.getOrElse("")}]]>"
+      case ElementNode =>
+        val attrs = if (c.attributes.isEmpty) "" else c.attributes.map { case (k, v) => s"""$k="$v"""" }.mkString(" ", " ", "")
+        c.text match {
+          case Some(t) => s"<${c.tag}$attrs>$t</${c.tag}>"
+          case None => s"<${c.tag}$attrs>"
+        }
     }
   }
 }

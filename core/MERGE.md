@@ -90,10 +90,9 @@ representation, in `Pcs.scala`:
 - `Sibling` (`SiblingNode(label)` / `ListStart` / `ListEnd`) stands in for Lindholm's `⊣`/`⊢`
   boundary markers, so every real child has both a predecessor and a successor even at either end
   of the list.
-- `Pcs(parent, predecessor, successor)` is his `pcs(r, p, s)`; `Content(label, tag, attributes)` is
-  his `c(n, content)` - collapsed to the whole `(tag, attributes)` pair, since attribute-by-attribute
-  detail is `idml`'s own `EditDetector`'s job, not this relation's. (`Content` as originally built
-  here; it later grew `text`/`textIsCData` too - see "Fixed: text-node blindness" below.)
+- `Pcs(parent, predecessor, successor)` is his `pcs(r, p, s)`; `Content` is his `c(n, content)`.
+  Element, text, and CDATA nodes now each receive their own `Content` relation; see "Fixed: mixed
+  content" below for the evolution from the original element-only/leaf-folding representation.
 - `Pcs.relations(root): RelationSet` decomposes a whole tree into these two relation sets - the
   "T\* expressed as a set" step his algorithm's pseudocode starts from.
 - **The one real design decision**: what identifies a node that has no stable identity attribute at
@@ -273,12 +272,45 @@ needed updating to preserve CDATA-ness too, once the real rebuild started doing 
 
 **Verified**: `PcsSpec`/`PcsEditDetectorSpec`/`PcsMergerSpec`/`PcsTreeBuilderSpec` (`core`) each
 gained direct unit tests (leaf capture, edit detection, clean merge, conflict, and round-trip, all
-using plain text content); `idml`'s `PcsTreeBuilderIdmlSpec`'s real `HelloWorld2`/`HelloWorld2D`
-round-trip test needed its own comparison helper updated to match (leaf text now kept, not stripped,
-while inter-element whitespace still is). `KmlMergeSpec` is the direct confirmation this was
+using plain text content); at that stage, `idml`'s `PcsTreeBuilderIdmlSpec` comparison kept leaf text
+but still stripped inter-element whitespace (that projection was removed by the complete mixed-
+content fix below). `KmlMergeSpec` is the direct confirmation this was
 actually built for: a `Placemark`'s real `<name>`/`<description>` text now survives `PcsMerger`/
 `PcsTreeBuilder` intact, and the "disjoint edits merge cleanly" test now edits real description text
 directly rather than standing in with attributes.
+
+## Fixed: mixed content, with text as real PCS nodes (2026-10-05)
+
+The leaf-only fix above preserved `<Content>Hello</Content>`, but still did not implement the
+paper's actual node model: text is a child node participating in the same order relation as element
+children. Consequently `<p>Hello <b>world</b>!</p>` lost both `Hello ` and `!`, and a text edit could
+not be merged independently from an attribute edit to its parent.
+
+`Pcs.relations` now walks `GenericElement.children`, not just `childElements`. Every
+`GenericText`/`GenericCData` gets:
+
+- a synthetic label scoped by the already-matched parent label and its character-data ordinal;
+- its own `Content` relation, distinguished by `TextNode` or `CDataNode`; and
+- an ordinary place in the parent's `Pcs` chain, plus its own empty child chain.
+
+Element paths deliberately continue to count only element children, preserving existing
+`NodePath` labels. Character-data ordinals likewise ignore element children, so moving or inserting
+an element does not rename otherwise untouched text. There is no truly stable identity available
+for XML text nodes, however: inserting a new text/CDATA node before another character-data node can
+still shift these synthetic identities. This is the same matching limitation as any other node with
+no stable ID, not a loss in the PCS representation itself.
+
+`PcsTreeBuilder` now rebuilds a generic ordered sequence of element, text, and CDATA children, while
+retaining a compatibility path for old externally-constructed `Content(..., text = ...)` relation
+sets. Whitespace text between structural elements now participates too. That makes the generic
+layer faithful to the XML tree and to Lindholm's model; callers that want formatting-insensitive
+merges should normalize ignorable whitespace before constructing `GenericElement`, rather than
+silently discarding all mixed text inside PCS.
+
+Tests cover the exact `<p>Hello <b>world</b>!</p>` chain, mixed text/element/CDATA round-tripping,
+text edit detection, divergent text conflicts, and the important disjoint case where one branch
+changes mixed text while the other changes the parent element's attribute: those now merge without
+a false Update/Update conflict.
 
 ## Fixed: weak/no-identity documents silently losing edits (2026-09-20)
 
@@ -335,9 +367,9 @@ each side (the case that motivated this), weaker with more.
 
 ## Open questions specific to this layer
 
-- Mixed content (text interleaved with element children at the same level) is still entirely
-  uncaptured - see "Fixed: text-node blindness" above. Not demonstrated as a real problem in either
-  IDML or KML yet.
+- Text/CDATA labels are parent-scoped ordinals because XML supplies no stable identity for character
+  data. A new character-data node inserted before an existing one can therefore shift identities;
+  matching those nodes by content/context would be a further matcher improvement.
 - Reparenting recognition and multi-way ambiguous-remainder matching for `ContentMatcher` (see
   "Fixed: weak/no-identity documents" above) - both need real algorithmic work (a global search for
   the former, fuzzy content similarity along the lines of 3dm's own q-gram distance for the latter),

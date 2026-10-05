@@ -1,6 +1,6 @@
 package com.phasmidsoftware.xmldoc.merge
 
-import com.phasmidsoftware.xmldoc.xml.{GenericCData, GenericElement, GenericText}
+import com.phasmidsoftware.xmldoc.xml.{GenericCData, GenericContent, GenericElement, GenericText}
 
 /**
  * One end of a `Pcs` chain: the two children-list boundary markers from Lindholm's paper ("A
@@ -25,20 +25,44 @@ case object ListEnd extends Sibling // ⊢
  */
 case class Pcs(parent: String, predecessor: Sibling, successor: Sibling)
 
+/** The kind of XML node described by a [[Content]] relation. */
+sealed trait ContentKind
+
+case object ElementNode extends ContentKind
+
+case object TextNode extends ContentKind
+
+case object CDataNode extends ContentKind
+
 /**
- * The content relation `c(label, tag, attributes, text)`: the node identified by `label` has this
- * tag, these attributes, and (for a text-only leaf - see `Pcs.leafText`) this text. Attribute-by-
- * attribute detail is `EditDetector`'s job, not this relation's - `Content` only needs to say "this
- * node's content is/isn't identical to that one's", which comparing the whole tuple already gives
- * for free.
+ * The content relation `c(label, content)`. Elements, plain-text nodes and CDATA nodes all get
+ * their own identity and their own relation, matching Lindholm's model instead of folding a leaf's
+ * character data into its parent element.
  *
- * `textIsCData` records whether `text` should come back as a `GenericCData` (`PcsTreeBuilder`) -
- * true only when *every* text/CDATA child was itself CDATA (`Pcs.leafText`'s own doc); a genuine
- * mix of plain text and CDATA in the same leaf (rare) just comes back as plain `GenericText`, same
- * kind of acceptable-for-now gap `GenericElement.fromNode` already documents for comments and
- * entity references.
+ * `tag` and `attributes` are meaningful for [[ElementNode]]. `text` is meaningful for
+ * [[TextNode]]/[[CDataNode]]. The old fields and defaults are retained so callers constructing an
+ * element `Content(label, tag, attributes)` remain source-compatible; new code should prefer the
+ * factories in [[Content]].
  */
-case class Content(label: String, tag: String, attributes: Seq[(String, String)], text: Option[String] = None, textIsCData: Boolean = false)
+case class Content(
+  label: String,
+  tag: String,
+  attributes: Seq[(String, String)],
+  text: Option[String] = None,
+  textIsCData: Boolean = false,
+  kind: ContentKind = ElementNode
+)
+
+object Content {
+  def element(label: String, tag: String, attributes: Seq[(String, String)]): Content =
+    Content(label, tag, attributes)
+
+  def text(label: String, value: String): Content =
+    Content(label, "", Nil, Some(value), textIsCData = false, TextNode)
+
+  def cdata(label: String, value: String): Content =
+    Content(label, "", Nil, Some(value), textIsCData = true, CDataNode)
+}
 
 /**
  * A tree, fully decomposed into `Pcs` and `Content` relations - Lindholm's representation of a
@@ -51,6 +75,15 @@ case class Content(label: String, tag: String, attributes: Seq[(String, String)]
 case class RelationSet(pcs: Set[Pcs], content: Set[Content])
 
 object Pcs {
+
+  /**
+   * Synthetic identity for character-data children. XML text nodes have no `Self`, so their
+   * identity is scoped to their already-identified parent and their ordinal among that parent's
+   * character-data children. Keeping the ordinal independent of element children means inserting
+   * or moving an element does not unnecessarily rename otherwise untouched text nodes.
+   */
+  private[merge] def characterDataLabel(parentLabel: String, ordinal: Int): String =
+    s"$parentLabel::text[$ordinal]"
 
   /**
    * The node's identity label for relation purposes: its `Self` when it has one - stable across
@@ -67,20 +100,7 @@ object Pcs {
    */
   def label(ref: NodeRef): String = ref.self.getOrElse(ref.path.toString)
 
-  /**
-   * An element's own text, when it's a text-only leaf - `childElements.isEmpty` (no element
-   * children at all) and at least one `GenericText`/`GenericCData` child (concatenated, in order,
-   * if there's more than one - e.g. either side of an entity reference). `None` for anything else,
-   * including a structural container that happens to *also* mix in some text alongside real element
-   * children (rare in both IDML and KML; a real remaining gap, not addressed here) - capturing that
-   * unconditionally would mean two copies that only differ in incidental whitespace between element
-   * children looking like a content change, which is worse than not capturing it at all.
-   *
-   * This is exactly the gap found empirically merging real KML: `<name>`/`<description>`/
-   * `<coordinates>` are precisely this shape (one element, no element children, one text child) -
-   * IDML barely has any of these (it puts everything in attributes), which is why this was invisible
-   * until `kml` was tried.
-   */
+  /** Legacy convenience for reading all character data from a text-only leaf. */
   def leafText(e: GenericElement): Option[String] =
     if (e.childElements.nonEmpty) None
     else e.children.collect { case GenericText(t) => t; case GenericCData(t) => t } match {
@@ -88,12 +108,7 @@ object Pcs {
       case texts => Some(texts.mkString)
     }
 
-  /**
-   * Whether `leafText(e)` (if any) should come back as `GenericCData` rather than plain
-   * `GenericText` - true only when `e` is a text-only leaf (same condition as `leafText`) *and*
-   * every one of its text/CDATA children was itself `GenericCData`, so a single plain-text child
-   * (or a genuine mix) is never wrongly promoted to CDATA.
-   */
+  /** Legacy convenience paired with [[leafText]]. PCS conversion no longer folds text into leaves. */
   def leafIsCData(e: GenericElement): Boolean =
     e.childElements.isEmpty && e.children.nonEmpty && e.children.forall {
       case _: GenericCData => true
@@ -112,12 +127,36 @@ object Pcs {
    */
   def relations(root: GenericElement, labelOf: NodeRef => String = label): RelationSet = {
     def go(ref: NodeRef): RelationSet = {
-      val here = Content(labelOf(ref), ref.element.tag, ref.element.attributes, leafText(ref.element), leafIsCData(ref.element))
-      val kids = ref.element.childElements.zipWithIndex.map { case (c, i) => NodeRef(ref.path.child(i), c) }
-      val siblings: Seq[Sibling] = kids.map(k => SiblingNode(labelOf(k)))
+      val parentLabel = labelOf(ref)
+      val here = Content.element(parentLabel, ref.element.tag, ref.element.attributes)
+      var elementOrdinal = 0
+      var characterDataOrdinal = 0
+      val kids: Seq[(String, Either[NodeRef, GenericContent])] = ref.element.children.map {
+        case e: GenericElement =>
+          val child = NodeRef(ref.path.child(elementOrdinal), e)
+          elementOrdinal += 1
+          labelOf(child) -> Left(child)
+        case text: GenericText =>
+          val childLabel = characterDataLabel(parentLabel, characterDataOrdinal)
+          characterDataOrdinal += 1
+          childLabel -> Right(text)
+        case cdata: GenericCData =>
+          val childLabel = characterDataLabel(parentLabel, characterDataOrdinal)
+          characterDataOrdinal += 1
+          childLabel -> Right(cdata)
+      }
+      val siblings: Seq[Sibling] = kids.map(k => SiblingNode(k._1))
       val chain = (ListStart +: siblings) zip (siblings :+ ListEnd)
-      val pcsHere = chain.map { case (p, s) => Pcs(labelOf(ref), p, s) }.toSet
-      val below = kids.map(go)
+      val pcsHere = chain.map { case (p, s) => Pcs(parentLabel, p, s) }.toSet
+      val below = kids.map {
+        case (_, Left(child)) => go(child)
+        case (childLabel, Right(GenericText(value))) =>
+          RelationSet(Set(Pcs(childLabel, ListStart, ListEnd)), Set(Content.text(childLabel, value)))
+        case (childLabel, Right(GenericCData(value))) =>
+          RelationSet(Set(Pcs(childLabel, ListStart, ListEnd)), Set(Content.cdata(childLabel, value)))
+        case (_, Right(_: GenericElement)) =>
+          throw new IllegalStateException("element children must be represented by the left branch")
+      }
       RelationSet(pcsHere ++ below.flatMap(_.pcs), Set(here) ++ below.flatMap(_.content))
     }
 

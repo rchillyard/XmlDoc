@@ -73,19 +73,45 @@ class PcsSpec extends AnyFlatSpec with should.Matchers {
     Pcs.leafIsCData(GenericElement("Point", Nil, Nil)) shouldBe false
   }
 
-  behavior of "Pcs.relations, text-only leaves"
+  behavior of "Pcs.relations, character-data nodes"
 
-  it should "carry a leaf's text into its own Content relation, not as a separate Pcs sibling" in {
+  it should "represent a leaf's text as an independent Content relation and Pcs child" in {
     val root = GenericElement("Placemark", Nil, Seq(
       GenericElement("name", Nil, Seq(GenericText("Simple placemark"))),
       GenericElement("description", Nil, Seq(GenericText("Attached to the ground.")))
     ))
     val rs = Pcs.relations(root)
     rs.content should contain allOf(
-      Content("/0", "name", Nil, Some("Simple placemark")),
-      Content("/1", "description", Nil, Some("Attached to the ground."))
+      Content.element("/0", "name", Nil),
+      Content.text("/0::text[0]", "Simple placemark"),
+      Content.element("/1", "description", Nil),
+      Content.text("/1::text[0]", "Attached to the ground.")
     )
-    // the structural chain is exactly as if the leaves were childless - no extra relation for the text itself
-    rs.pcs should contain allOf(Pcs("/0", ListStart, ListEnd), Pcs("/1", ListStart, ListEnd))
+    rs.pcs should contain allOf(
+      Pcs("/0", ListStart, SiblingNode("/0::text[0]")),
+      Pcs("/0", SiblingNode("/0::text[0]"), ListEnd),
+      Pcs("/0::text[0]", ListStart, ListEnd)
+    )
+  }
+
+  it should "put text, elements and trailing text in one ordered Pcs chain" in {
+    val root = GenericElement("p", Nil, Seq(
+      GenericText("Hello "),
+      GenericElement("b", Seq("Self" -> "bold"), Seq(GenericText("world"))),
+      GenericText("!")
+    ))
+    val rs = Pcs.relations(root)
+
+    rs.pcs should contain allOf(
+      Pcs("/", ListStart, SiblingNode("/::text[0]")),
+      Pcs("/", SiblingNode("/::text[0]"), SiblingNode("bold")),
+      Pcs("/", SiblingNode("bold"), SiblingNode("/::text[1]")),
+      Pcs("/", SiblingNode("/::text[1]"), ListEnd)
+    )
+    rs.content should contain allOf(
+      Content.text("/::text[0]", "Hello "),
+      Content.element("bold", "b", Seq("Self" -> "bold")),
+      Content.text("/::text[1]", "!")
+    )
   }
 }

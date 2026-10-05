@@ -70,8 +70,10 @@ class IdmlMergeDriverSpec extends AnyFlatSpec with should.Matchers with BeforeAn
     val conflicts = IdmlMergeDriver.merge(base, ours, theirs).get
     conflicts.map(_.src) shouldBe Seq("Stories/Story_ued.xml")
     val slots = conflicts.flatMap(_.conflicts)
-    slots.map(_.leftValue) should contain(Some("<Content>Hello World2A!</Content>"))
-    slots.map(_.rightValue) should contain(Some("<Content>Hello World2B!</Content>"))
+    // Text is an independent PCS node, so the conflict reports the exact character-data payload
+    // rather than rendering its parent <Content> element around it.
+    slots.map(_.leftValue) should contain(Some("Hello World2A!"))
+    slots.map(_.rightValue) should contain(Some("Hello World2B!"))
 
     Files.readAllBytes(ours.toPath) shouldBe oursBytesBefore // untouched - byte for byte
   }

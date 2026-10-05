@@ -39,6 +39,16 @@ class PcsTreeBuilderSpec extends AnyFlatSpec with should.Matchers {
     PcsTreeBuilder.build(Pcs.relations(tree), "/") shouldBe Success(tree)
   }
 
+  it should "round-trip mixed text, elements and CDATA in their exact original order" in {
+    val tree = GenericElement("p", Nil, Seq(
+      GenericText("Hello "),
+      GenericElement("b", Nil, Seq(GenericText("world"))),
+      GenericCData("<raw>"),
+      GenericText("!")
+    ))
+    PcsTreeBuilder.build(Pcs.relations(tree), "/") shouldBe Success(tree)
+  }
+
   behavior of "PcsTreeBuilder.build, after a clean PcsMerger.merge (no conflicts)"
 
   it should "rebuild a one-sided reorder exactly as the modifying side arranged it" in {

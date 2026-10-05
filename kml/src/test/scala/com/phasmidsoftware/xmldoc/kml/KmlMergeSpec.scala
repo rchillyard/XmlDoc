@@ -21,12 +21,9 @@ import scala.xml.XML
  *     essentially everything of interest in attributes, but KML's actual content (`<name>`,
  *     `<description>`, `<coordinates>`) lives almost entirely in element-wrapped *text*, so a
  *     document merged through `PcsTreeBuilder` came back with its element skeleton intact but that
- *     text gone completely. Fixed via `Pcs.leafText` and `Content.text`: a text-only leaf (no
- *     element children of its own - exactly the shape of `<name>`/`<description>`/`<coordinates>`)
- *     now keeps its text through the whole detect/merge/rebuild pipeline. Still a real, *smaller*
- *     remaining gap: genuinely mixed content (text interleaved with element children at the same
- *     level) isn't captured at all, and `GenericCData` collapses to plain text on rebuild - see
- *     `Content`'s and `PcsTreeBuilder`'s own docs.
+ *     text gone completely. The first fix folded text-only leaves into their parent `Content`;
+ *     the complete fix now gives text and CDATA their own `Content` relation and place in the PCS
+ *     child chain, preserving mixed content and node kind through detect/merge/rebuild.
  *   - **No stable per-node identity, unlike IDML's `Self` (found and fixed 2026-09-20)**: KML
  *     content elements (`Placemark`, `Folder`, `Document`) have no equivalent - real fixtures only
  *     ever populate `id` on `Style`/`StyleMap` (confirmed by inspection), never on content.
@@ -134,9 +131,9 @@ class KmlMergeSpec extends AnyFlatSpec with should.Matchers {
     val result = PcsMerger.mergeByContent(base, left, right)
     // the Placemark itself (label "/0") matches cleanly either way - it has no attributes of its
     // own, so left's and right's edits are indistinguishable at that level; the real conflict is on
-    // the <description> child's own label ("/0/1"), matched independently by ContentMatcher's
-    // recursion into (A, A-left)/(A, A-right).
-    val contentConflicts = result.conflicts.filter(_.slot == "content of /0/1")
+    // the <description> child's independent text-node label ("/0/1::text[0]"), under the element
+    // matched by ContentMatcher's recursion into (A, A-left)/(A, A-right).
+    val contentConflicts = result.conflicts.filter(_.slot == "content of /0/1::text[0]")
     contentConflicts should have size 1
     contentConflicts.head.leftValue.get should include("descA-left")
     contentConflicts.head.rightValue.get should include("descA-right")

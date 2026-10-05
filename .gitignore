@@ -18,4 +18,8 @@ sampleOutput.kml
 
 work
 
+# Prevent an embedded clone of this repository from becoming an accidental gitlink again.
+/XmlDoc/
+
 doc/Lindholm.pdf
+.DS_Store
