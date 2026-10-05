@@ -54,11 +54,11 @@ class PcsEditDetectorSpec extends AnyFlatSpec with should.Matchers {
     )
   }
 
-  it should "report a Content edit for a text-only leaf whose text changed, structure untouched" in {
+  it should "report a Content edit for the independent text node whose text changed, structure untouched" in {
     val base = GenericElement("Placemark", Nil, Seq(GenericElement("name", Nil, Seq(GenericText("Simple placemark")))))
     val renamed = GenericElement("Placemark", Nil, Seq(GenericElement("name", Nil, Seq(GenericText("Renamed placemark")))))
     val edits = PcsEditDetector.detectEdits(base, renamed)
     edits.pcs shouldBe Set.empty
-    edits.content shouldBe Set(Content("/0", "name", Nil, Some("Renamed placemark")))
+    edits.content shouldBe Set(Content.text("/0::text[0]", "Renamed placemark"))
   }
 }

@@ -128,7 +128,7 @@ class PcsMergerSpec extends AnyFlatSpec with should.Matchers {
     val left = spreadOf("us", leaf("name", "Renamed placemark"))
     val result = PcsMerger.merge(base, left, base)
     result.conflicts shouldBe Nil
-    result.relations.content should contain(Content("/0", "name", Nil, Some("Renamed placemark")))
+    result.relations.content should contain(Content.text("/0::text[0]", "Renamed placemark"))
   }
 
   it should "report a conflict when both sides change the same leaf's text differently" in {
@@ -136,10 +136,27 @@ class PcsMergerSpec extends AnyFlatSpec with should.Matchers {
     val left = spreadOf("us", leaf("name", "Left's name"))
     val right = spreadOf("us", leaf("name", "Right's name"))
     val result = PcsMerger.merge(base, left, right)
-    val contentConflicts = result.conflicts.filter(_.slot == "content of /0")
+    val contentConflicts = result.conflicts.filter(_.slot == "content of /0::text[0]")
     contentConflicts should have size 1
     contentConflicts.head.leftValue.get should include("Left's name")
     contentConflicts.head.rightValue.get should include("Right's name")
+  }
+
+  it should "merge a mixed-content text edit independently from a parent attribute edit" in {
+    def paragraph(style: String, greeting: String): GenericElement =
+      GenericElement("p", Seq("Self" -> "p1", "style" -> style), Seq(
+        GenericText(greeting),
+        GenericElement("b", Seq("Self" -> "b1"), Seq(GenericText("world"))),
+        GenericText("!")
+      ))
+
+    val base = paragraph("plain", "Hello ")
+    val left = paragraph("plain", "Hi ")
+    val right = paragraph("loud", "Hello ")
+    val result = PcsMerger.merge(base, left, right)
+
+    result.conflicts shouldBe Nil
+    PcsTreeBuilder.build(result) shouldBe scala.util.Success(paragraph("loud", "Hi "))
   }
 
   behavior of "PcsMerger.mergeByContent, weak/no-identity documents (found and fixed merging real KML)"

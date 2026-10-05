@@ -12,10 +12,8 @@ import scala.util.{Failure, Success, Try}
  * but that `PcsMerger` deliberately stops short of, since it's only meaningful once the relation
  * set is actually consistent.
  *
- * A rebuilt text-only leaf (`Pcs.leafText`) gets its text back as `GenericCData` when the original
- * was uniformly CDATA (`Content.textIsCData`), plain `GenericText` otherwise. Still lossy for
- * genuinely mixed content (text interleaved with element children at the same level) -
- * `Pcs.relations` never captures that shape at all, only the text-only-leaf one.
+ * Elements, text and CDATA are all independent PCS nodes, so reconstruction preserves their exact
+ * order even for mixed content such as `<p>Hello <b>world</b>!</p>`.
  */
 object PcsTreeBuilder {
 
@@ -69,27 +67,48 @@ object PcsTreeBuilder {
       loop(ListStart, Set(ListStart))
     }
 
-    def buildNode(label: String, ancestors: Set[String]): Try[GenericElement] =
+    def buildNode(label: String, ancestors: Set[String]): Try[GenericContent] =
       if (ancestors(label))
         Failure(XmlException(s"PcsTreeBuilder: cyclic parent chain - $label is its own ancestor"))
-      else for {
-        content <- contentByLabel.get(label) match {
-          case Some(c) => Success(c)
-          case None => Failure(XmlException(s"PcsTreeBuilder: no content recorded for $label"))
-        }
-        labels <- childLabels(label)
-        children <- labels.foldLeft[Try[Vector[GenericElement]]](Success(Vector.empty)) { (acc, childLabel) =>
+      else contentByLabel.get(label) match {
+        case None => Failure(XmlException(s"PcsTreeBuilder: no content recorded for $label"))
+        case Some(content) if content.kind == TextNode =>
+          content.text match {
+            case Some(value) => childLabels(label).flatMap {
+              case Nil => Success(GenericText(value))
+              case _ => Failure(XmlException(s"PcsTreeBuilder: text node $label cannot have children"))
+            }
+            case None => Failure(XmlException(s"PcsTreeBuilder: text node $label has no text payload"))
+          }
+        case Some(content) if content.kind == CDataNode =>
+          content.text match {
+            case Some(value) => childLabels(label).flatMap {
+              case Nil => Success(GenericCData(value))
+              case _ => Failure(XmlException(s"PcsTreeBuilder: CDATA node $label cannot have children"))
+            }
+            case None => Failure(XmlException(s"PcsTreeBuilder: CDATA node $label has no text payload"))
+          }
+        case Some(content) =>
           for {
-            built <- acc
-            child <- buildNode(childLabel, ancestors + label)
-          } yield built :+ child
-        }
-      } yield {
-        val textChild: Seq[GenericContent] = content.text.map(t => if (content.textIsCData) GenericCData(t) else GenericText(t)).toSeq
-        GenericElement(content.tag, content.attributes, children ++ textChild)
+            labels <- childLabels(label)
+            children <- labels.foldLeft[Try[Vector[GenericContent]]](Success(Vector.empty)) { (acc, childLabel) =>
+              for {
+                built <- acc
+                child <- buildNode(childLabel, ancestors + label)
+              } yield built :+ child
+            }
+          } yield {
+            // `text`/`textIsCData` are kept as a compatibility path for relation sets created by
+            // the earlier leaf-folding representation. New `Pcs.relations` never puts text here.
+            val legacyText = content.text.map(t => if (content.textIsCData) GenericCData(t) else GenericText(t)).toSeq
+            GenericElement(content.tag, content.attributes, children ++ legacyText)
+          }
       }
 
-    buildNode(rootLabel, Set.empty)
+    buildNode(rootLabel, Set.empty).flatMap {
+      case root: GenericElement => Success(root)
+      case _ => Failure(XmlException(s"PcsTreeBuilder: root $rootLabel is not an element"))
+    }
   }
 
   private def render(s: Sibling): String = s match {
