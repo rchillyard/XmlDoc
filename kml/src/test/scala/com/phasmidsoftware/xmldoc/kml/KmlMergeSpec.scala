@@ -145,12 +145,15 @@ class KmlMergeSpec extends AnyFlatSpec with should.Matchers {
   // every http:// href to https://, retouches a couple of style attributes (LineStyle width,
   // PolyStyle color), bumps an altitude, fixes a typo inside a CDATA description, and reflows some
   // description text onto single lines - all disjoint, scattered edits across the whole document,
-  // none of them touching Placemark identity. _B instead deletes one whole Placemark ("Building 42")
-  // and trims two coordinate tuples out of two different <coordinates> text blobs elsewhere. Neither
-  // side's edits overlap the other's, but A's edits land at positions B's deletion shifts - exactly
-  // the scenario `mergeByContent`'s `ContentMatcher` exists for (see the synthetic test above). This
-  // is the real end-to-end case the rest of this spec was building toward.
-  it should "cleanly combine A's https/style/CDATA edits with B's Placemark and coordinates deletions" in {
+  // none of them touching Placemark identity. _B deletes one whole Placemark ("Building 42"), trims
+  // two coordinate tuples out of two different <coordinates> text blobs elsewhere, and (the one case
+  // A doesn't cover) edits an `overlayXY`-family element's own `x`/`y` attribute text directly -
+  // `size`'s `y` on the "Dynamic Positioning: Top of screen" ScreenOverlay, an attribute-only element
+  // with no text content at all, sibling to (not inside) the `<Icon><href>` A retouches in the same
+  // ScreenOverlay. Neither side's edits overlap the other's, but A's edits land at positions B's
+  // deletion shifts - exactly the scenario `mergeByContent`'s `ContentMatcher` exists for (see the
+  // synthetic test above). This is the real end-to-end case the rest of this spec was building toward.
+  it should "cleanly combine A's https/style/CDATA edits with B's Placemark, coordinates and attribute-text edits" in {
     val base = loadKml("/KML_Samples.kml")
     val a = loadKml("/KML_Samples_A.kml")
     val b = loadKml("/KML_Samples_B.kml")
@@ -163,11 +166,15 @@ class KmlMergeSpec extends AnyFlatSpec with should.Matchers {
     merged should not include "-112.3331289492913,36.14780840132443,100"
     merged should not include "-112.3358353861232,36.1489624162954,100"
 
+    // B's attribute-text edit survives
+    merged should include("""<size x="1" y="0.3" xunits="fraction" yunits="fraction"/>""")
+
     // A's scattered edits survive, all of them
     merged should not include "http://maps.google.com"
     merged should not include "http://developers.google.com"
     merged should not include "http://earth.google.com"
     merged should include("https://maps.google.com/mapfiles/kml/pal4/icon28.png")
+    merged should include("https://developers.google.com/kml/documentation/images/dynamic_screenoverlay.jpg")
     merged should include("<width>3</width>")
     merged should include("7fff01ff")
     merged should include("<altitude>100</altitude>")
