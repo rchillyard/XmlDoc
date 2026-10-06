@@ -139,6 +139,47 @@ class KmlMergeSpec extends AnyFlatSpec with should.Matchers {
     contentConflicts.head.rightValue.get should include("descA-right")
   }
 
+  behavior of "PcsMerger.mergeByContent, a full real-document 3-way merge"
+
+  // The real files, not a hand-built excerpt: KML_Samples.kml is the common ancestor, _A rewrites
+  // every http:// href to https://, retouches a couple of style attributes (LineStyle width,
+  // PolyStyle color), bumps an altitude, fixes a typo inside a CDATA description, and reflows some
+  // description text onto single lines - all disjoint, scattered edits across the whole document,
+  // none of them touching Placemark identity. _B instead deletes one whole Placemark ("Building 42")
+  // and trims two coordinate tuples out of two different <coordinates> text blobs elsewhere. Neither
+  // side's edits overlap the other's, but A's edits land at positions B's deletion shifts - exactly
+  // the scenario `mergeByContent`'s `ContentMatcher` exists for (see the synthetic test above). This
+  // is the real end-to-end case the rest of this spec was building toward.
+  it should "cleanly combine A's https/style/CDATA edits with B's Placemark and coordinates deletions" in {
+    val base = loadKml("/KML_Samples.kml")
+    val a = loadKml("/KML_Samples_A.kml")
+    val b = loadKml("/KML_Samples_B.kml")
+    val result = PcsMerger.mergeByContent(base, a, b)
+    result.conflicts shouldBe Nil
+    val merged = GenericElement.toXmlString(PcsTreeBuilder.build(result).get)
+
+    // B's deletions survive
+    merged should not include "Building 42"
+    merged should not include "-112.3331289492913,36.14780840132443,100"
+    merged should not include "-112.3358353861232,36.1489624162954,100"
+
+    // A's scattered edits survive, all of them
+    merged should not include "http://maps.google.com"
+    merged should not include "http://developers.google.com"
+    merged should not include "http://earth.google.com"
+    merged should include("https://maps.google.com/mapfiles/kml/pal4/icon28.png")
+    merged should include("<width>3</width>")
+    merged should include("7fff01ff")
+    merged should include("<altitude>100</altitude>")
+    merged should include("the line follows a simple straight-line path")
+
+    // the KML namespace URI is not an href A touched, so it's still plain http
+    merged should include("http://www.opengis.net/kml/2.2")
+  }
+
+  private def loadKml(resourceName: String): GenericElement =
+    GenericElement.fromElem(XML.loadFile(getClass.getResource(resourceName).getFile))
+
   private def placemark(name: String, description: String): GenericElement =
     GenericElement("Placemark", Nil, Seq(
       GenericElement("name", Nil, Seq(GenericText(name))),
