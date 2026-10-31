@@ -1,5 +1,6 @@
 package com.phasmidsoftware.xmldoc.idml
 
+import com.phasmidsoftware.xmldoc.merge.NodeRef
 import com.phasmidsoftware.xmldoc.xml.GenericElement
 
 /**
@@ -46,21 +47,24 @@ case class Conflict(self: String, key: String, baseValue: Option[String], leftVa
  * disagrees with Lindholm's stated default of letting deletion win silently).
  *
  * Deliberately narrow, matching `EditDetector`'s own scope: only attribute-level content is
- * reconciled, not child order/position (Lindholm's node-context/guard machinery, not yet built).
+ * reconciled, not child order/position - `PcsMerger` handles that; `ThreeWayMerger` combines the
+ * two.
  */
 object Merger {
 
   /**
    * Merges `left` and `right`, both relative to `base`.
    *
-   * @param base  the common ancestor.
-   * @param left  one independently modified version.
-   * @param right the other independently modified version.
+   * @param base              the common ancestor.
+   * @param left              one independently modified version.
+   * @param right             the other independently modified version.
+   * @param ignoredAttributes forwarded to `EditDetector.detectEdits` - see
+   *                          `EditDetector.defaultIgnoredAttributes`.
    * @return every insertion, deletion, safe attribute change, and conflict found.
    */
-  def merge(base: GenericElement, left: GenericElement, right: GenericElement): Seq[MergeOutcome] = {
-    val leftBySelf = bySelf(EditDetector.detectEdits(base, left))
-    val rightBySelf = bySelf(EditDetector.detectEdits(base, right))
+  def merge(base: GenericElement, left: GenericElement, right: GenericElement, ignoredAttributes: Set[String] = EditDetector.defaultIgnoredAttributes): Seq[MergeOutcome] = {
+    val leftBySelf = bySelf(EditDetector.detectEdits(base, left, ignoredAttributes))
+    val rightBySelf = bySelf(EditDetector.detectEdits(base, right, ignoredAttributes))
     (leftBySelf.keySet ++ rightBySelf.keySet).toSeq.sorted.flatMap { self =>
       (leftBySelf.get(self), rightBySelf.get(self)) match {
         case (Some(e), None) => toOutcomes(self, e)
