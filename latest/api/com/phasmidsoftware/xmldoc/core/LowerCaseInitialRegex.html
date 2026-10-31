@@ -1,0 +1,1162 @@
+<!DOCTYPE html><html data-pathToRoot="../../../../" data-rawLocation="com/phasmidsoftware/xmldoc/core/LowerCaseInitialRegex" data-dynamicSideMenu="false"><head><meta charset="utf-8"></meta><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta><title>LowerCaseInitialRegex</title><link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico"></link><script type="text/javascript" src="../../../../scripts/theme.js"></script><script type="text/javascript" src="../../../../scripts/searchData.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/scastieConfiguration.js" defer="true"></script><link rel="stylesheet" href="../../../../styles/theme/bundle.css"></link><link rel="stylesheet" href="../../../../styles/theme/components/bundle.css"></link><link rel="stylesheet" href="../../../../styles/theme/components/button/bundle.css"></link><link rel="stylesheet" href="../../../../styles/theme/layout/bundle.css"></link><link rel="stylesheet" href="../../../../styles/dotty-icons.css"></link><link rel="stylesheet" href="../../../../styles/filter-bar.css"></link><link rel="stylesheet" href="../../../../styles/searchbar.css"></link><link rel="stylesheet" href="../../../../styles/social-links.css"></link><link rel="stylesheet" href="../../../../styles/versions-dropdown.css"></link><link rel="stylesheet" href="../../../../styles/content-contributors.css"></link><script type="text/javascript" src="../../../../hljs/highlight.pack.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/hljs-scala3.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/ux.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/common/component.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/common/utils.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/components/FilterBar.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/components/DocumentableList.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/components/Input.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/components/FilterGroup.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/components/Filter.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/scaladoc-scalajs.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/contributors.js" defer="true"></script><script type="text/javascript" src="https://d3js.org/d3.v6.min.js" defer="true"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/graphlib-dot@0.6.2/dist/graphlib-dot.min.js" defer="true"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.1/dagre-d3.min.js" defer="true"></script><script type="text/javascript" src="https://scastie.scala-lang.org/embedded.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/data.js" defer="true"></script><script>var pathToRoot = "../../../../";</script></head><body><div id=""><div id="header" class="body-small"><div class="header-container-left"><a href="../../../../" class="logo-container"><span class="project-name h300">XmlDoc</span></a><span onclick="dropdownHandler(event)" class="text-button with-arrow" id="dropdown-trigger"><a></a></span><div id="version-dropdown" class="dropdown-menu"></div></div><div class="header-container-right"><button id="search-toggle" class="icon-button"></button><span id="theme-toggle" class="icon-button"></span><span id="mobile-menu-toggle" class="icon-button hamburger"></span></div></div><div id="mobile-menu"><div class="mobile-menu-header body-small"><span class="mobile-menu-logo"><span class="project-name h300">XmlDoc</span></span><button id="mobile-menu-close" class="icon-button close"></button></div><div class="mobile-menu-container body-medium"><input id="mobile-scaladoc-searchbar-input" class="scaladoc-searchbar-input" type="search" placeholder="Find anything"></input><span id="mobile-theme-toggle" class="mobile-menu-item mode"></span></div></div><span id="mobile-sidebar-toggle" class="floating-button"></span><div id="leftColumn" class="body-small"><div class="switcher-container"><a id="api-nav-button" class="switcher h100 selected" href="../../../../index.html">API</a></div><nav id="api-nav" class="side-menu"><div class="ni n0 expanded"><span class="nh h100 expanded cs"><button class="ar icon-button expanded"></button><a href="../../xmldoc.html"><span class="micon pa"></span><span>com.phasmidsoftware.xmldoc</span></a></span><div class="ni n1 expanded"><span class="nh h100 expanded cs"><button class="ar icon-button expanded"></button><a href="../core.html"><span class="micon pa"></span><span>core</span></a></span><div class="ni n2 "><span class="nh "><a href="CDATA.html"><span class="micon cl"></span><span>CDATA</span></a></span></div><div class="ni n2 "><span class="nh "><a href="CDATA$.html"><span class="micon ob"></span><span>CDATA</span></a></span></div><div class="ni n2 "><span class="nh "><a href="Cartesian.html"><span class="micon cl"></span><span>Cartesian</span></a></span></div><div class="ni n2 "><span class="nh "><a href="FP$.html"><span class="micon ob"></span><span>FP</span></a></span></div><div class="ni n2 "><span class="nh "><a href="FPException.html"><span class="micon cl"></span><span>FPException</span></a></span></div><div class="ni n2 expanded"><span class="nh h100 selected"><a href="#"><span class="micon cl"></span><span>LowerCaseInitialRegex</span></a></span></div><div class="ni n2 "><span class="nh "><a href="MappableRegex.html"><span class="micon cl"></span><span>MappableRegex</span></a></span></div><div class="ni n2 "><span class="nh "><a href="Mergeable$.html"><span class="micon ob"></span><span>Mergeable</span></a></span></div><div class="ni n2 "><span class="nh "><a href="Mergeable.html"><span class="micon tr"></span><span>Mergeable</span></a></span></div><div class="ni n2 "><span class="nh "><a href="MissingFieldException.html"><span class="micon cl"></span><span>MissingFieldException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="PCData.html"><span class="micon cl"></span><span>PCData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="PCData$.html"><span class="micon ob"></span><span>PCData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="Reflection$.html"><span class="micon ob"></span><span>Reflection</span></a></span></div><div class="ni n2 "><span class="nh "><a href="Reflection.html"><span class="micon cl"></span><span>Reflection</span></a></span></div><div class="ni n2 "><span class="nh "><a href="ReflectionException.html"><span class="micon cl"></span><span>ReflectionException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="SmartBuffer$.html"><span class="micon ob"></span><span>SmartBuffer</span></a></span></div><div class="ni n2 "><span class="nh "><a href="SmartBuffer.html"><span class="micon cl"></span><span>SmartBuffer</span></a></span></div><div class="ni n2 "><span class="nh "><a href="TagProperties$.html"><span class="micon ob"></span><span>TagProperties</span></a></span></div><div class="ni n2 "><span class="nh "><a href="Text$.html"><span class="micon ob"></span><span>Text</span></a></span></div><div class="ni n2 "><span class="nh "><a href="Text.html"><span class="micon cl"></span><span>Text</span></a></span></div><div class="ni n2 "><span class="nh "><a href="TryUsing$.html"><span class="micon ob"></span><span>TryUsing</span></a></span></div><div class="ni n2 "><span class="nh "><a href="Utilities$.html"><span class="micon ob"></span><span>Utilities</span></a></span></div><div class="ni n2 "><span class="nh "><a href="XML$.html"><span class="micon ob"></span><span>XML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="XmlBaseException.html"><span class="micon cl"></span><span>XmlBaseException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="XmlException$.html"><span class="micon ob"></span><span>XmlException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="XmlException.html"><span class="micon cl"></span><span>XmlException</span></a></span></div></div><div class="ni n1"><span class="nh "><button class="ar icon-button "></button><a href="../idml.html"><span class="micon pa"></span><span>idml</span></a></span><div class="ni n2 "><span class="nh "><a href="../idml/IdmlPackage$.html"><span class="micon ob"></span><span>IdmlPackage</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../idml/IdmlPackage.html"><span class="micon cl"></span><span>IdmlPackage</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../idml/PackagePart.html"><span class="micon cl"></span><span>PackagePart</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../idml/Story.html"><span class="micon cl"></span><span>Story</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../idml/Story$.html"><span class="micon ob"></span><span>Story</span></a></span></div></div><div class="ni n1"><span class="nh "><button class="ar icon-button "></button><a href="../kml.html"><span class="micon pa"></span><span>kml</span></a></span><div class="ni n2 "><span class="nh "><a href="../kml/AbstractView.html"><span class="micon tr"></span><span>AbstractView</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/AbstractView$.html"><span class="micon ob"></span><span>AbstractView</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/AbstractViewData$.html"><span class="micon ob"></span><span>AbstractViewData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/AbstractViewData.html"><span class="micon cl"></span><span>AbstractViewData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Alias.html"><span class="micon cl"></span><span>Alias</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Alias$.html"><span class="micon ob"></span><span>Alias</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Altitude.html"><span class="micon cl"></span><span>Altitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Altitude$.html"><span class="micon ob"></span><span>Altitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/AltitudeMode$.html"><span class="micon ob"></span><span>AltitudeMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/AltitudeMode.html"><span class="micon cl"></span><span>AltitudeMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/AltitudeModeEnum$.html"><span class="micon ob"></span><span>AltitudeModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/AxisScale.html"><span class="micon cl"></span><span>AxisScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/AxisScale$.html"><span class="micon ob"></span><span>AxisScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/BalloonStyle$.html"><span class="micon ob"></span><span>BalloonStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/BalloonStyle.html"><span class="micon cl"></span><span>BalloonStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/BaseOverlay.html"><span class="micon cl"></span><span>BaseOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/BgColor$.html"><span class="micon ob"></span><span>BgColor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/BgColor.html"><span class="micon cl"></span><span>BgColor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Camera.html"><span class="micon cl"></span><span>Camera</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Camera$.html"><span class="micon ob"></span><span>Camera</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Color$.html"><span class="micon ob"></span><span>Color</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Color.html"><span class="micon cl"></span><span>Color</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ColorMode.html"><span class="micon cl"></span><span>ColorMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ColorMode$.html"><span class="micon ob"></span><span>ColorMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ColorModeEnum$.html"><span class="micon ob"></span><span>ColorModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ColorStyle$.html"><span class="micon ob"></span><span>ColorStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ColorStyle.html"><span class="micon tr"></span><span>ColorStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ColorStyleData$.html"><span class="micon ob"></span><span>ColorStyleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ColorStyleData.html"><span class="micon cl"></span><span>ColorStyleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Container$.html"><span class="micon ob"></span><span>Container</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Container.html"><span class="micon tr"></span><span>Container</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ContainerData.html"><span class="micon cl"></span><span>ContainerData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ContainerData$.html"><span class="micon ob"></span><span>ContainerData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Coordinate$.html"><span class="micon ob"></span><span>Coordinate</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Coordinate.html"><span class="micon cl"></span><span>Coordinate</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Coordinates$.html"><span class="micon ob"></span><span>Coordinates</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Coordinates.html"><span class="micon cl"></span><span>Coordinates</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Data.html"><span class="micon cl"></span><span>Data</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Data$.html"><span class="micon ob"></span><span>Data</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/DisplayMode.html"><span class="micon cl"></span><span>DisplayMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/DisplayMode$.html"><span class="micon ob"></span><span>DisplayMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/DisplayModeEnum$.html"><span class="micon ob"></span><span>DisplayModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Document$.html"><span class="micon ob"></span><span>Document</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Document.html"><span class="micon cl"></span><span>Document</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/DrawOrder$.html"><span class="micon ob"></span><span>DrawOrder</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/DrawOrder.html"><span class="micon cl"></span><span>DrawOrder</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Element.html"><span class="micon cl"></span><span>Element</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ExtendedData$.html"><span class="micon ob"></span><span>ExtendedData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ExtendedData.html"><span class="micon cl"></span><span>ExtendedData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Extrude$.html"><span class="micon ob"></span><span>Extrude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Extrude.html"><span class="micon cl"></span><span>Extrude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Feature.html"><span class="micon tr"></span><span>Feature</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Feature$.html"><span class="micon ob"></span><span>Feature</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/FeatureData.html"><span class="micon cl"></span><span>FeatureData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/FeatureData$.html"><span class="micon ob"></span><span>FeatureData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Fill.html"><span class="micon cl"></span><span>Fill</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Fill$.html"><span class="micon ob"></span><span>Fill</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/FlyToView$.html"><span class="micon ob"></span><span>FlyToView</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/FlyToView.html"><span class="micon cl"></span><span>FlyToView</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Folder.html"><span class="micon cl"></span><span>Folder</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Folder$.html"><span class="micon ob"></span><span>Folder</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Geometry.html"><span class="micon tr"></span><span>Geometry</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Geometry$.html"><span class="micon ob"></span><span>Geometry</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/GeometryData.html"><span class="micon cl"></span><span>GeometryData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/GeometryData$.html"><span class="micon ob"></span><span>GeometryData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/GroundOverlay.html"><span class="micon cl"></span><span>GroundOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/GroundOverlay$.html"><span class="micon ob"></span><span>GroundOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/HasFeatures$.html"><span class="micon ob"></span><span>HasFeatures</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/HasFeatures.html"><span class="micon tr"></span><span>HasFeatures</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/HasName.html"><span class="micon tr"></span><span>HasName</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Heading$.html"><span class="micon ob"></span><span>Heading</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Heading.html"><span class="micon cl"></span><span>Heading</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Helper$.html"><span class="micon ob"></span><span>Helper</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Hex4$.html"><span class="micon ob"></span><span>Hex4</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Hex4.html"><span class="micon cl"></span><span>Hex4</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/HotSpot$.html"><span class="micon ob"></span><span>HotSpot</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/HotSpot.html"><span class="micon cl"></span><span>HotSpot</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Icon$.html"><span class="micon ob"></span><span>Icon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Icon.html"><span class="micon cl"></span><span>Icon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/IconStyle$.html"><span class="micon ob"></span><span>IconStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/IconStyle.html"><span class="micon cl"></span><span>IconStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ImagePyramid.html"><span class="micon cl"></span><span>ImagePyramid</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ImagePyramid$.html"><span class="micon ob"></span><span>ImagePyramid</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/InnerBoundaryIs.html"><span class="micon cl"></span><span>InnerBoundaryIs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/InnerBoundaryIs$.html"><span class="micon ob"></span><span>InnerBoundaryIs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Invertible.html"><span class="micon tr"></span><span>Invertible</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ItemIcon.html"><span class="micon cl"></span><span>ItemIcon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ItemIcon$.html"><span class="micon ob"></span><span>ItemIcon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ItemIconModeEnum$.html"><span class="micon ob"></span><span>ItemIconModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KML.html"><span class="micon cl"></span><span>KML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KML$.html"><span class="micon ob"></span><span>KML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KMLCompanion$.html"><span class="micon ob"></span><span>KMLCompanion</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KMLDoc.html"><span class="micon cl"></span><span>KMLDoc</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KMLEditParser$.html"><span class="micon ob"></span><span>KMLEditParser</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KMLEditParser.html"><span class="micon cl"></span><span>KMLEditParser</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KMLEditor.html"><span class="micon cl"></span><span>KMLEditor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KMLEditor$.html"><span class="micon ob"></span><span>KMLEditor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KML_Binding.html"><span class="micon cl"></span><span>KML_Binding</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KML_Binding$.html"><span class="micon ob"></span><span>KML_Binding</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Key.html"><span class="micon cl"></span><span>Key</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Key$.html"><span class="micon ob"></span><span>Key</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KmlData.html"><span class="micon cl"></span><span>KmlData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KmlData$.html"><span class="micon ob"></span><span>KmlData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KmlEdit$.html"><span class="micon ob"></span><span>KmlEdit</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KmlEdit.html"><span class="micon cl"></span><span>KmlEdit</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KmlException.html"><span class="micon cl"></span><span>KmlException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KmlObject.html"><span class="micon tr"></span><span>KmlObject</span></a></span></div><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="../kml/KmlRenderers$.html"><span class="micon ob"></span><span>KmlRenderers</span></a></span><div class="ni n3 "><span class="nh "><a href="../kml/KmlRenderers$$FormatCoordinate.html"><span class="micon cl"></span><span>FormatCoordinate</span></a></span></div></div><div class="ni n2 "><span class="nh "><a href="../kml/LabelStyle$.html"><span class="micon ob"></span><span>LabelStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LabelStyle.html"><span class="micon cl"></span><span>LabelStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LatLonBox.html"><span class="micon cl"></span><span>LatLonBox</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LatLonBox$.html"><span class="micon ob"></span><span>LatLonBox</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Latitude.html"><span class="micon cl"></span><span>Latitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Latitude$.html"><span class="micon ob"></span><span>Latitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LineString.html"><span class="micon cl"></span><span>LineString</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LineString$.html"><span class="micon ob"></span><span>LineString</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LineStyle$.html"><span class="micon ob"></span><span>LineStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LineStyle.html"><span class="micon cl"></span><span>LineStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LinearRing$.html"><span class="micon ob"></span><span>LinearRing</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LinearRing.html"><span class="micon cl"></span><span>LinearRing</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Link.html"><span class="micon cl"></span><span>Link</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Link$.html"><span class="micon ob"></span><span>Link</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ListItemType.html"><span class="micon cl"></span><span>ListItemType</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ListItemType$.html"><span class="micon ob"></span><span>ListItemType</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ListItemTypeEnum$.html"><span class="micon ob"></span><span>ListItemTypeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ListStyle.html"><span class="micon cl"></span><span>ListStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ListStyle$.html"><span class="micon ob"></span><span>ListStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Location$.html"><span class="micon ob"></span><span>Location</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Location.html"><span class="micon cl"></span><span>Location</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Longitude$.html"><span class="micon ob"></span><span>Longitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Longitude.html"><span class="micon cl"></span><span>Longitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LookAt$.html"><span class="micon ob"></span><span>LookAt</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LookAt.html"><span class="micon cl"></span><span>LookAt</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Model.html"><span class="micon cl"></span><span>Model</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Model$.html"><span class="micon ob"></span><span>Model</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ModelScale.html"><span class="micon cl"></span><span>ModelScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ModelScale$.html"><span class="micon ob"></span><span>ModelScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/MultiGeometry$.html"><span class="micon ob"></span><span>MultiGeometry</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/MultiGeometry.html"><span class="micon cl"></span><span>MultiGeometry</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/MultiLineException.html"><span class="micon cl"></span><span>MultiLineException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/NetworkLink.html"><span class="micon cl"></span><span>NetworkLink</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/NetworkLink$.html"><span class="micon ob"></span><span>NetworkLink</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Open.html"><span class="micon cl"></span><span>Open</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Open$.html"><span class="micon ob"></span><span>Open</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Orientation$.html"><span class="micon ob"></span><span>Orientation</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Orientation.html"><span class="micon cl"></span><span>Orientation</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/OuterBoundaryIs$.html"><span class="micon ob"></span><span>OuterBoundaryIs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/OuterBoundaryIs.html"><span class="micon cl"></span><span>OuterBoundaryIs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Outline.html"><span class="micon cl"></span><span>Outline</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Outline$.html"><span class="micon ob"></span><span>Outline</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Overlay.html"><span class="micon tr"></span><span>Overlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Overlay$.html"><span class="micon ob"></span><span>Overlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/OverlayData$.html"><span class="micon ob"></span><span>OverlayData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/OverlayData.html"><span class="micon cl"></span><span>OverlayData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/OverlayXY$.html"><span class="micon ob"></span><span>OverlayXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/OverlayXY.html"><span class="micon cl"></span><span>OverlayXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Pair$.html"><span class="micon ob"></span><span>Pair</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Pair.html"><span class="micon cl"></span><span>Pair</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ParserException.html"><span class="micon cl"></span><span>ParserException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/PhotoOverlay$.html"><span class="micon ob"></span><span>PhotoOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/PhotoOverlay.html"><span class="micon cl"></span><span>PhotoOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Placemark.html"><span class="micon cl"></span><span>Placemark</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Placemark$.html"><span class="micon ob"></span><span>Placemark</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Point.html"><span class="micon cl"></span><span>Point</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Point$.html"><span class="micon ob"></span><span>Point</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/PolyStyle$.html"><span class="micon ob"></span><span>PolyStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/PolyStyle.html"><span class="micon cl"></span><span>PolyStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Polygon.html"><span class="micon cl"></span><span>Polygon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Polygon$.html"><span class="micon ob"></span><span>Polygon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Range.html"><span class="micon cl"></span><span>Range</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Range$.html"><span class="micon ob"></span><span>Range</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RefreshInterval$.html"><span class="micon ob"></span><span>RefreshInterval</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RefreshInterval.html"><span class="micon cl"></span><span>RefreshInterval</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RefreshMode.html"><span class="micon cl"></span><span>RefreshMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RefreshMode$.html"><span class="micon ob"></span><span>RefreshMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RefreshModeEnum$.html"><span class="micon ob"></span><span>RefreshModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RefreshVisibility$.html"><span class="micon ob"></span><span>RefreshVisibility</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RefreshVisibility.html"><span class="micon cl"></span><span>RefreshVisibility</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ResourceMap$.html"><span class="micon ob"></span><span>ResourceMap</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ResourceMap.html"><span class="micon cl"></span><span>ResourceMap</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Roll$.html"><span class="micon ob"></span><span>Roll</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Roll.html"><span class="micon cl"></span><span>Roll</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Rotation.html"><span class="micon cl"></span><span>Rotation</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Rotation$.html"><span class="micon ob"></span><span>Rotation</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RotationXY.html"><span class="micon cl"></span><span>RotationXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RotationXY$.html"><span class="micon ob"></span><span>RotationXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Scale.html"><span class="micon cl"></span><span>Scale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Scale$.html"><span class="micon ob"></span><span>Scale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/SchemaData.html"><span class="micon cl"></span><span>SchemaData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/SchemaData$.html"><span class="micon ob"></span><span>SchemaData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ScreenOverlay.html"><span class="micon cl"></span><span>ScreenOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ScreenOverlay$.html"><span class="micon ob"></span><span>ScreenOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ScreenXY.html"><span class="micon cl"></span><span>ScreenXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ScreenXY$.html"><span class="micon ob"></span><span>ScreenXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Shape$.html"><span class="micon ob"></span><span>Shape</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Shape.html"><span class="micon cl"></span><span>Shape</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ShapeEnum$.html"><span class="micon ob"></span><span>ShapeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/SimpleData$.html"><span class="micon ob"></span><span>SimpleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/SimpleData.html"><span class="micon cl"></span><span>SimpleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Size.html"><span class="micon cl"></span><span>Size</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Size$.html"><span class="micon ob"></span><span>Size</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/State$.html"><span class="micon ob"></span><span>State</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/State.html"><span class="micon cl"></span><span>State</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Style$.html"><span class="micon ob"></span><span>Style</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Style.html"><span class="micon cl"></span><span>Style</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleMap$.html"><span class="micon ob"></span><span>StyleMap</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleMap.html"><span class="micon cl"></span><span>StyleMap</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleSelector.html"><span class="micon tr"></span><span>StyleSelector</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleSelector$.html"><span class="micon ob"></span><span>StyleSelector</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleSelectorData.html"><span class="micon cl"></span><span>StyleSelectorData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleSelectorData$.html"><span class="micon ob"></span><span>StyleSelectorData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleStateEnum$.html"><span class="micon ob"></span><span>StyleStateEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleURL$.html"><span class="micon ob"></span><span>StyleURL</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleURL.html"><span class="micon cl"></span><span>StyleURL</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/SubStyle.html"><span class="micon tr"></span><span>SubStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/SubStyle$.html"><span class="micon ob"></span><span>SubStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/SubStyleData.html"><span class="micon cl"></span><span>SubStyleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/SubStyleData$.html"><span class="micon ob"></span><span>SubStyleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Tessellate$.html"><span class="micon ob"></span><span>Tessellate</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Tessellate.html"><span class="micon cl"></span><span>Tessellate</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/TestKML.html"><span class="micon cl"></span><span>TestKML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/TextColor$.html"><span class="micon ob"></span><span>TextColor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/TextColor.html"><span class="micon cl"></span><span>TextColor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Tilt.html"><span class="micon cl"></span><span>Tilt</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Tilt$.html"><span class="micon ob"></span><span>Tilt</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/UnitsEnum$.html"><span class="micon ob"></span><span>UnitsEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewBoundScale$.html"><span class="micon ob"></span><span>ViewBoundScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewBoundScale.html"><span class="micon cl"></span><span>ViewBoundScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewRefreshEnum$.html"><span class="micon ob"></span><span>ViewRefreshEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewRefreshMode$.html"><span class="micon ob"></span><span>ViewRefreshMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewRefreshMode.html"><span class="micon cl"></span><span>ViewRefreshMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewRefreshTime.html"><span class="micon cl"></span><span>ViewRefreshTime</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewRefreshTime$.html"><span class="micon ob"></span><span>ViewRefreshTime</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewVolume$.html"><span class="micon ob"></span><span>ViewVolume</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewVolume.html"><span class="micon cl"></span><span>ViewVolume</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Visibility.html"><span class="micon cl"></span><span>Visibility</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Visibility$.html"><span class="micon ob"></span><span>Visibility</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Width$.html"><span class="micon ob"></span><span>Width</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Width.html"><span class="micon cl"></span><span>Width</span></a></span></div></div><div class="ni n1"><span class="nh "><button class="ar icon-button "></button><a href="../render.html"><span class="micon pa"></span><span>render</span></a></span><div class="ni n2 "><span class="nh "><a href="../render/BaseFormat.html"><span class="micon cl"></span><span>BaseFormat</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../render/Format.html"><span class="micon tr"></span><span>Format</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../render/FormatIndented.html"><span class="micon cl"></span><span>FormatIndented</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../render/FormatText.html"><span class="micon cl"></span><span>FormatText</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../render/FormatXML$.html"><span class="micon ob"></span><span>FormatXML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../render/FormatXML.html"><span class="micon cl"></span><span>FormatXML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../render/Renderer.html"><span class="micon tr"></span><span>Renderer</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../render/Renderer$.html"><span class="micon ob"></span><span>Renderer</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../render/Renderers.html"><span class="micon tr"></span><span>Renderers</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../render/Renderers$.html"><span class="micon ob"></span><span>Renderers</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../render/StateR$.html"><span class="micon ob"></span><span>StateR</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../render/StateR.html"><span class="micon cl"></span><span>StateR</span></a></span></div></div><div class="ni n1"><span class="nh "><button class="ar icon-button "></button><a href="../xml.html"><span class="micon pa"></span><span>xml</span></a></span><div class="ni n2 "><span class="nh "><a href="../xml/ChildNames$.html"><span class="micon ob"></span><span>ChildNames</span></a></span></div><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="../xml/Extractor$.html"><span class="micon ob"></span><span>Extractor</span></a></span><div class="ni n3 "><span class="nh "><a href="../xml/Extractor$$charSequenceExtractor$.html"><span class="micon ob"></span><span>charSequenceExtractor</span></a></span></div></div><div class="ni n2 "><span class="nh "><a href="../xml/Extractor.html"><span class="micon tr"></span><span>Extractor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/Extractors.html"><span class="micon tr"></span><span>Extractors</span></a></span></div><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="../xml/Extractors$.html"><span class="micon ob"></span><span>Extractors</span></a></span><div class="ni n3 "><span class="nh "><a href="../xml/Extractors$$BooleanMultiExtractor$.html"><span class="micon ob"></span><span>BooleanMultiExtractor</span></a></span></div><div class="ni n3 "><span class="nh "><a href="../xml/Extractors$$DoubleMultiExtractor$.html"><span class="micon ob"></span><span>DoubleMultiExtractor</span></a></span></div><div class="ni n3 "><span class="nh "><a href="../xml/Extractors$$IntMultiExtractor$.html"><span class="micon ob"></span><span>IntMultiExtractor</span></a></span></div><div class="ni n3 "><span class="nh "><a href="../xml/Extractors$$LongMultiExtractor$.html"><span class="micon ob"></span><span>LongMultiExtractor</span></a></span></div></div><div class="ni n2 "><span class="nh "><a href="../xml/GenericCData.html"><span class="micon cl"></span><span>GenericCData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/GenericContent.html"><span class="micon tr"></span><span>GenericContent</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/GenericElement.html"><span class="micon cl"></span><span>GenericElement</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/GenericElement$.html"><span class="micon ob"></span><span>GenericElement</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/GenericText.html"><span class="micon cl"></span><span>GenericText</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/MultiExtractor$.html"><span class="micon ob"></span><span>MultiExtractor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/MultiExtractor.html"><span class="micon tr"></span><span>MultiExtractor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/MultiExtractorBase$.html"><span class="micon ob"></span><span>MultiExtractorBase</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/MultiExtractorBase.html"><span class="micon cl"></span><span>MultiExtractorBase</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/NamedFunction.html"><span class="micon tr"></span><span>NamedFunction</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/NamedFunction$.html"><span class="micon ob"></span><span>NamedFunction</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/NodeParser$.html"><span class="micon ob"></span><span>NodeParser</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/Plural$.html"><span class="micon ob"></span><span>Plural</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/RichXml.html"><span class="micon cl"></span><span>RichXml</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/SubclassExtractor.html"><span class="micon cl"></span><span>SubclassExtractor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/TagToExtractorFunc.html"><span class="micon tr"></span><span>TagToExtractorFunc</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/TagToSequenceExtractorFunc.html"><span class="micon tr"></span><span>TagToSequenceExtractorFunc</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/Zip$.html"><span class="micon ob"></span><span>Zip</span></a></span></div></div></div></nav></div><div id="footer" class="body-small"><div class="left-container">Generated with</div><div class="right-container"><div class="text"></div></div><div class="text-mobile"></div></div><div id="scaladoc-searchBar"></div><div id="main"><div class="breadcrumbs container"><a href="../../../../index.html">XmlDoc</a>/<a href="../../xmldoc.html">com.phasmidsoftware.xmldoc</a>/<a href="../core.html">com.phasmidsoftware.xmldoc.core</a>/<a href="LowerCaseInitialRegex.html">LowerCaseInitialRegex</a></div><div id="content" class="body-medium"><div><div class="cover-header">
+ <span class="icon"><span class="micon cl"></span></span>
+ <h1 class="h600 single">LowerCaseInitialRegex</h1>
+</div>
+<div class="fqname body-large">
+ <span>com.phasmidsoftware.xmldoc.core.LowerCaseInitialRegex</span>
+</div>
+<div class="main-signature mono-small-block">
+ <div class="signature">
+  <span class="signature-short"><span class="modifiers"></span><span class="kind"><span t="k">class </span></span><a href="LowerCaseInitialRegex.html" t="n" class="documentableName ">LowerCaseInitialRegex</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">r</span>: <span data-unresolved-link="" t="t">String</span>)<span t="k"> extends </span><a href="MappableRegex.html" t="t">MappableRegex</a></span><span class="signature-long"></span>
+ </div>
+</div>
+<div class="cover">
+ <div class="doc">
+  <p>A specialized regular expression class that extends <code>MappableRegex</code> to provide functionality where the first character of each matched group is converted to lowercase, while the rest of the characters remain unchanged.</p>
+ </div>
+ <section id="attributes">
+  <h2 class="h500">Value parameters</h2>
+  <dl class="attributes">
+   <dt class="body-small">r</dt>
+   <dd class="body-medium">
+    <p>The regular expression pattern as a string.</p>
+   </dd>
+  </dl>
+  <h2 class="h500">Attributes</h2>
+  <dl class="attributes">
+   <dt class="body-small">Constructor</dt>
+   <dd class="body-medium">
+    <p>Creates a <code>LowerCaseInitialRegex</code> instance with a specified regular expression pattern to apply the lowercase transformation to matched groups.</p>
+   </dd>
+   <dt class="body-small">Graph</dt>
+   <dd class="body-medium">
+    <div id="inheritance-diagram" class="diagram-class showGraph">
+     <button type="button" class="label-only-button" onclick="zoomOut()">Reset zoom</button><button type="button" class="label-only-button" onclick="hideGraph()">Hide graph</button><button type="button" class="label-only-button" onclick="showGraph()">Show graph</button>
+     <svg id="graph"></svg>
+     <script type="text/dot" id="dot"> digraph g {
+ node0 [id=node0, label="<span style=\"color: #FFFFFF;\">class <a href=\"LowerCaseInitialRegex.html\" t=\"n\">LowerCaseInitialRegex</a></span>", class="class vertex"];
+node1 [id=node1, label="<span style=\"color: #FFFFFF;\">class <a href=\"MappableRegex.html\" t=\"n\">MappableRegex</a></span>", class="class vertex"];
+node2 [id=node2, label="<span style=\"color: #FFFFFF;\">class <span data-unresolved-link=\"\" t=\"n\">Regex</span></span>", class="class vertex"];
+node3 [id=node3, label="<span style=\"color: #FFFFFF;\">class <span data-unresolved-link=\"\" t=\"n\">Object</span></span>", class="class vertex"];
+node4 [id=node4, label="<span style=\"color: #FFFFFF;\">class <span data-unresolved-link=\"\" t=\"n\">Any</span></span>", class="class vertex"];
+node5 [id=node5, label="<span style=\"color: #FFFFFF;\">trait <span data-unresolved-link=\"\" t=\"n\">Matchable</span></span>", class="trait vertex"];
+node6 [id=node6, label="<span style=\"color: #FFFFFF;\">class <span data-unresolved-link=\"\" t=\"n\">Serializable</span></span>", class="class vertex"];
+
+
+ node0 -> node1;
+node1 -> node2;
+node2 -> node3;
+node3 -> node4;
+node3 -> node5;
+node5 -> node4;
+node2 -> node6;
+node6 -> node4;
+
+}
+</script>
+    </div>
+   </dd>
+   <dt class="body-small">Supertypes</dt>
+   <dd class="body-medium">
+    <div class="mono-small-block supertypes">
+     <div>
+      class <a href="MappableRegex.html" t="n">MappableRegex</a>
+     </div>
+     <div>
+      class <span data-unresolved-link="" t="n">Regex</span>
+     </div>
+     <div>
+      trait <span data-unresolved-link="" t="n">Serializable</span>
+     </div>
+     <div>
+      class <span data-unresolved-link="" t="n">Object</span>
+     </div>
+     <div>
+      trait <span data-unresolved-link="" t="n">Matchable</span>
+     </div>
+     <div>
+      class <span data-unresolved-link="" t="n">Any</span>
+     </div>
+     <span class="show-all-code show-content text-button h100">Show all</span>
+    </div>
+   </dd>
+  </dl>
+ </section>
+</div>
+<section id="members-list">
+ <h2 class="h500">Members list</h2>
+ <div class="documentableFilter">
+  <div class="filtersContainer"></div>
+  <input class="filterableInput" placeholder="Filter by any phrase" data-test-id="filterBarInput" type="search"><button class="clearButton label-only-button" data-test-id="filterBarClearButton">Clear all</button>
+ </div>
+ <div class="membersList expand">
+  <div class="tabs">
+   <div class="contents">
+    <section id="Value-members">
+     <div data-togglable="Value members" class="tab expand">
+      <div class="member-group-header">
+       <h3 data-togglable="Value members" class="h400">Value members</h3>
+      </div>
+      <section id="Inherited-methods">
+       <div class="documentableList expand">
+        <div class="documentableList-expander">
+         <button class="icon-button show-content expand"></button>
+         <h4 class="groupHeader h200">Inherited methods</h4>
+        </div>
+        <div class="documentableElement" id="anchored-0" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#anchored-0" t="n" class="documentableName ">anchored</a>: <span data-unresolved-link="" t="t">Regex</span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="cover">
+             <div class="doc"></div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="findAllIn-17a" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#findAllIn-17a" t="n" class="documentableName ">findAllIn</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">source</span>: <span data-unresolved-link="" t="t">CharSequence</span>): <span data-unresolved-link="" t="t">MatchIterator</span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Returns all non-overlapping matches of this <code>Regex</code> in the given character sequence as a <span data-unresolved-link="">scala.util.matching.Regex.MatchIterator</span>, which is a special <span data-unresolved-link="">scala.collection.Iterator</span> that returns the matched strings but can also be queried for more data about the last match, such as capturing groups and start position.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Returns all non-overlapping matches of this <code>Regex</code> in the given character sequence as a <span data-unresolved-link="">scala.util.matching.Regex.MatchIterator</span>, which is a special <span data-unresolved-link="">scala.collection.Iterator</span> that returns the matched strings but can also be queried for more data about the last match, such as capturing groups and start position.</p>
+              <p>A <code>MatchIterator</code> can also be converted into an iterator that returns objects of type <span data-unresolved-link="">scala.util.matching.Regex.Match</span>, such as is normally returned by <code>findAllMatchIn</code>.</p>
+              <p>Where potential matches overlap, the first possible match is returned, followed by the next match that follows the input consumed by the first match:</p>
+              <div class="snippet mono-small-block" scala-snippet="" runnable="">
+               <pre><code class="language-scala"><span line-number="1" class=""><span class="tooltip-container"></span>val hat  = "hat[^a]+".r
+</span><span line-number="2" class=""><span class="tooltip-container"></span>val hathaway = "hathatthattthatttt"
+</span><span line-number="3" class=""><span class="tooltip-container"></span>val hats = hat.findAllIn(hathaway).toList                     // List(hath, hattth)
+</span><span line-number="4" class=""><span class="tooltip-container"></span>val pos  = hat.findAllMatchIn(hathaway).map(_.start).toList   // List(0, 7)
+</span></code></pre>
+               <div class="buttons"></div>
+              </div>
+              <p>To return overlapping matches, it is possible to formulate a regular expression with lookahead (<code>?=</code>) that does not consume the overlapping region.</p>
+              <div class="snippet mono-small-block" scala-snippet="" runnable="">
+               <pre><code class="language-scala"><span line-number="1" class=""><span class="tooltip-container"></span>val madhatter = "(h)(?=(at[^a]+))".r
+</span><span line-number="2" class=""><span class="tooltip-container"></span>val hathaway = "hathatthattthatttt"
+</span><span line-number="3" class=""><span class="tooltip-container"></span>val madhats   = madhatter.findAllMatchIn(hathaway).map {
+</span><span line-number="4" class=""><span class="tooltip-container"></span>  case madhatter(x,y) =&gt; s"$x$y"
+</span><span line-number="5" class=""><span class="tooltip-container"></span>}.toList                                       // List(hath, hatth, hattth, hatttt)
+</span></code></pre>
+               <div class="buttons"></div>
+              </div>
+              <p>Attempting to retrieve match information after exhausting the iterator results in <span data-unresolved-link="">java.lang.IllegalStateException</span>. See <span data-unresolved-link="">scala.util.matching.Regex.MatchIterator</span> for details.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">source</dt>
+              <dd class="body-medium">
+               <p>The text to match against.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>A <span data-unresolved-link="">scala.util.matching.Regex.MatchIterator</span> of matched substrings.</p>
+              </dd>
+              <dt class="body-small">Example</dt>
+              <dd class="body-medium">
+               <div>
+                <div>
+                 <div class="snippet mono-small-block">
+                  <pre><code class="language-"><span line-number="1" class=""><span class="tooltip-container"></span>
+</span></code></pre>
+                  <div class="buttons"></div>
+                 </div>
+                </div>
+               </div>
+              </dd>
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="findAllMatchIn-30b" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#findAllMatchIn-30b" t="n" class="documentableName ">findAllMatchIn</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">source</span>: <span data-unresolved-link="" t="t">CharSequence</span>): <span data-unresolved-link="" t="t">Iterator</span>[<span data-unresolved-link="" t="t">Match</span>]
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Returns all non-overlapping matches of this regexp in given character sequence as a <span data-unresolved-link="">scala.collection.Iterator</span> of <span data-unresolved-link="">scala.util.matching.Regex.Match</span>.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Returns all non-overlapping matches of this regexp in given character sequence as a <span data-unresolved-link="">scala.collection.Iterator</span> of <span data-unresolved-link="">scala.util.matching.Regex.Match</span>.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">source</dt>
+              <dd class="body-medium">
+               <p>The text to match against.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>A <span data-unresolved-link="">scala.collection.Iterator</span> of <span data-unresolved-link="">scala.util.matching.Regex.Match</span> for all matches.</p>
+              </dd>
+              <dt class="body-small">Example</dt>
+              <dd class="body-medium">
+               <div>
+                <div>
+                 <div class="snippet mono-small-block">
+                  <pre><code class="language-"><span line-number="1" class=""><span class="tooltip-container"></span>for (words &lt;- """\w+""".r findAllMatchIn "A simple example.") yield words.start
+</span></code></pre>
+                  <div class="buttons"></div>
+                 </div>
+                </div>
+               </div>
+              </dd>
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="findFirstIn-fffffe48" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#findFirstIn-fffffe48" t="n" class="documentableName ">findFirstIn</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">source</span>: <span data-unresolved-link="" t="t">CharSequence</span>): <span data-unresolved-link="" t="t">Option</span>[<span data-unresolved-link="" t="t">String</span>]
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Returns an optional first matching string of this <code>Regex</code> in the given character sequence, or None if there is no match.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Returns an optional first matching string of this <code>Regex</code> in the given character sequence, or None if there is no match.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">source</dt>
+              <dd class="body-medium">
+               <p>The text to match against.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>An <span data-unresolved-link="">scala.Option</span> of the first matching string in the text.</p>
+              </dd>
+              <dt class="body-small">Example</dt>
+              <dd class="body-medium">
+               <div>
+                <div>
+                 <div class="snippet mono-small-block">
+                  <pre><code class="language-"><span line-number="1" class=""><span class="tooltip-container"></span>"""\w+""".r findFirstIn "A simple example." foreach println // prints "A"
+</span></code></pre>
+                  <div class="buttons"></div>
+                 </div>
+                </div>
+               </div>
+              </dd>
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="findFirstMatchIn-fffffe48" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#findFirstMatchIn-fffffe48" t="n" class="documentableName ">findFirstMatchIn</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">source</span>: <span data-unresolved-link="" t="t">CharSequence</span>): <span data-unresolved-link="" t="t">Option</span>[<span data-unresolved-link="" t="t">Match</span>]
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Returns an optional first match of this <code>Regex</code> in the given character sequence, or <code>None</code> if it does not exist.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Returns an optional first match of this <code>Regex</code> in the given character sequence, or <code>None</code> if it does not exist.</p>
+              <p>If the match is successful, the <span data-unresolved-link="">scala.util.matching.Regex.Match</span> can be queried for more data.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">source</dt>
+              <dd class="body-medium">
+               <p>The text to match against.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>A <span data-unresolved-link="">scala.Option</span> of <span data-unresolved-link="">scala.util.matching.Regex.Match</span> of the first matching string in the text.</p>
+              </dd>
+              <dt class="body-small">Example</dt>
+              <dd class="body-medium">
+               <div>
+                <div>
+                 <div class="snippet mono-small-block">
+                  <pre><code class="language-"><span line-number="1" class=""><span class="tooltip-container"></span>("""[a-z]""".r findFirstMatchIn "A simple example.") map (_.start) // returns `Some(2)`, the index of the first match in the text
+</span></code></pre>
+                  <div class="buttons"></div>
+                 </div>
+                </div>
+               </div>
+              </dd>
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="findPrefixMatchOf-fffffe48" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#findPrefixMatchOf-fffffe48" t="n" class="documentableName ">findPrefixMatchOf</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">source</span>: <span data-unresolved-link="" t="t">CharSequence</span>): <span data-unresolved-link="" t="t">Option</span>[<span data-unresolved-link="" t="t">Match</span>]
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Returns an optional match of this <code>Regex</code> at the beginning of the given character sequence, or <code>None</code> if it matches no prefix of the character sequence.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Returns an optional match of this <code>Regex</code> at the beginning of the given character sequence, or <code>None</code> if it matches no prefix of the character sequence.</p>
+              <p>Unlike <code>findFirstMatchIn</code>, this method will only return a match at the beginning of the input.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">source</dt>
+              <dd class="body-medium">
+               <p>The text to match against.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>A <span data-unresolved-link="">scala.Option</span> of the <span data-unresolved-link="">scala.util.matching.Regex.Match</span> of the matched string.</p>
+              </dd>
+              <dt class="body-small">Example</dt>
+              <dd class="body-medium">
+               <div>
+                <div>
+                 <div class="snippet mono-small-block">
+                  <pre><code class="language-"><span line-number="1" class=""><span class="tooltip-container"></span>"""\w+""".r findPrefixMatchOf "A simple example." map (_.after) // returns `Some(" simple example.")`
+</span></code></pre>
+                  <div class="buttons"></div>
+                 </div>
+                </div>
+               </div>
+              </dd>
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="findPrefixOf-fffffe48" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#findPrefixOf-fffffe48" t="n" class="documentableName ">findPrefixOf</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">source</span>: <span data-unresolved-link="" t="t">CharSequence</span>): <span data-unresolved-link="" t="t">Option</span>[<span data-unresolved-link="" t="t">String</span>]
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Returns an optional match of this <code>Regex</code> at the beginning of the given character sequence, or <code>None</code> if it matches no prefix of the character sequence.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Returns an optional match of this <code>Regex</code> at the beginning of the given character sequence, or <code>None</code> if it matches no prefix of the character sequence.</p>
+              <p>Unlike <code>findFirstIn</code>, this method will only return a match at the beginning of the input.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">source</dt>
+              <dd class="body-medium">
+               <p>The text to match against.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>A <span data-unresolved-link="">scala.Option</span> of the matched prefix.</p>
+              </dd>
+              <dt class="body-small">Example</dt>
+              <dd class="body-medium">
+               <div>
+                <div>
+                 <div class="snippet mono-small-block">
+                  <pre><code class="language-"><span line-number="1" class=""><span class="tooltip-container"></span>"""\p{Lower}""".r findPrefixOf "A simple example." // returns `None`, since the text does not begin with a lowercase letter
+</span></code></pre>
+                  <div class="buttons"></div>
+                 </div>
+                </div>
+               </div>
+              </dd>
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="matches-b5" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#matches-b5" t="n" class="documentableName ">matches</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">source</span>: <span data-unresolved-link="" t="t">CharSequence</span>): <span data-unresolved-link="" t="t">Boolean</span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Returns whether this <code>Regex</code> matches the given character sequence.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Returns whether this <code>Regex</code> matches the given character sequence.</p>
+              <p>Like the extractor, this method takes anchoring into account.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">source</dt>
+              <dd class="body-medium">
+               <p>The text to match against</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>true if and only if <code>source</code> matches this <code>Regex</code>.</p>
+              </dd>
+              <dt class="body-small">See also</dt>
+              <dd class="body-medium">
+               <div>
+                <div>
+                 <p><span data-unresolved-link="">Regex#unanchored</span></p>
+                </div>
+               </div>
+              </dd>
+              <dt class="body-small">Example</dt>
+              <dd class="body-medium">
+               <div>
+                <div>
+                 <div class="snippet mono-small-block">
+                  <pre><code class="language-"><span line-number="1" class=""><span class="tooltip-container"></span>"""\d+""".r matches "123" // returns true
+</span></code></pre>
+                  <div class="buttons"></div>
+                 </div>
+                </div>
+               </div>
+              </dd>
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="regex-0" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#regex-0" t="n" class="documentableName ">regex</a>: <span data-unresolved-link="" t="t">String</span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="cover">
+             <div class="doc"></div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="replaceAllIn-70b" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#replaceAllIn-70b" t="n" class="documentableName ">replaceAllIn</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">target</span>: <span data-unresolved-link="" t="t">CharSequence</span>, <span t="k"></span><span data-unresolved-link="" t="n">replacer</span>: <span data-unresolved-link="" t="t">Match</span> <span t="k">=&gt;</span> <span data-unresolved-link="" t="t">String</span>): <span data-unresolved-link="" t="t">String</span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Replaces all matches using a replacer function. The replacer function takes a <span data-unresolved-link="">scala.util.matching.Regex.Match</span> so that extra information can be obtained from the match. For example:</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Replaces all matches using a replacer function. The replacer function takes a <span data-unresolved-link="">scala.util.matching.Regex.Match</span> so that extra information can be obtained from the match. For example:</p>
+              <div class="snippet mono-small-block" scala-snippet="" runnable="">
+               <pre><code class="language-scala"><span line-number="1" class=""><span class="tooltip-container"></span>import scala.util.matching.Regex
+</span><span line-number="2" class=""><span class="tooltip-container"></span>val datePattern = new Regex("""(\d\d\d\d)-(\d\d)-(\d\d)""", "year", "month", "day")
+</span><span line-number="3" class=""><span class="tooltip-container"></span>val text = "From 2011-07-15 to 2011-07-17"
+</span><span line-number="4" class=""><span class="tooltip-container"></span>val repl = datePattern replaceAllIn (text, m =&gt; s"${m group "month"}/${m group "day"}")
+</span></code></pre>
+               <div class="buttons"></div>
+              </div>
+              <p>In the replacement String, a dollar sign (<code>$</code>) followed by a number will be interpreted as a reference to a group in the matched pattern, with numbers 1 through 9 corresponding to the first nine groups, and 0 standing for the whole match. Any other character is an error. The backslash (<code>\</code>) character will be interpreted as an escape character and can be used to escape the dollar sign. Use <code>Regex.quoteReplacement</code> to escape these characters.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">replacer</dt>
+              <dd class="body-medium">
+               <p>The function which maps a match to another string.</p>
+              </dd>
+              <dt class="body-small">target</dt>
+              <dd class="body-medium">
+               <p>The string to match.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>The target string after replacements.</p>
+              </dd>
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="replaceAllIn-755" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#replaceAllIn-755" t="n" class="documentableName ">replaceAllIn</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">target</span>: <span data-unresolved-link="" t="t">CharSequence</span>, <span t="k"></span><span data-unresolved-link="" t="n">replacement</span>: <span data-unresolved-link="" t="t">String</span>): <span data-unresolved-link="" t="t">String</span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Replaces all matches by a string.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Replaces all matches by a string.</p>
+              <p>In the replacement String, a dollar sign (<code>$</code>) followed by a number will be interpreted as a reference to a group in the matched pattern, with numbers 1 through 9 corresponding to the first nine groups, and 0 standing for the whole match. Any other character is an error. The backslash (<code>\</code>) character will be interpreted as an escape character and can be used to escape the dollar sign. Use <code>Regex.quoteReplacement</code> to escape these characters.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">replacement</dt>
+              <dd class="body-medium">
+               <p>The string that will replace each match</p>
+              </dd>
+              <dt class="body-small">target</dt>
+              <dd class="body-medium">
+               <p>The string to match</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>The resulting string</p>
+              </dd>
+              <dt class="body-small">Example</dt>
+              <dd class="body-medium">
+               <div>
+                <div>
+                 <div class="snippet mono-small-block">
+                  <pre><code class="language-"><span line-number="1" class=""><span class="tooltip-container"></span>"""\d+""".r replaceAllIn ("July 15", "&lt;NUMBER&gt;") // returns "July &lt;NUMBER&gt;"
+</span></code></pre>
+                  <div class="buttons"></div>
+                 </div>
+                </div>
+               </div>
+              </dd>
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="replaceFirstIn-755" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#replaceFirstIn-755" t="n" class="documentableName ">replaceFirstIn</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">target</span>: <span data-unresolved-link="" t="t">CharSequence</span>, <span t="k"></span><span data-unresolved-link="" t="n">replacement</span>: <span data-unresolved-link="" t="t">String</span>): <span data-unresolved-link="" t="t">String</span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Replaces the first match by a string.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Replaces the first match by a string.</p>
+              <p>In the replacement String, a dollar sign (<code>$</code>) followed by a number will be interpreted as a reference to a group in the matched pattern, with numbers 1 through 9 corresponding to the first nine groups, and 0 standing for the whole match. Any other character is an error. The backslash (<code>\</code>) character will be interpreted as an escape character and can be used to escape the dollar sign. Use <code>Regex.quoteReplacement</code> to escape these characters.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">replacement</dt>
+              <dd class="body-medium">
+               <p>The string that will replace the match</p>
+              </dd>
+              <dt class="body-small">target</dt>
+              <dd class="body-medium">
+               <p>The string to match</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>The resulting string</p>
+              </dd>
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="replaceSomeIn-70b" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#replaceSomeIn-70b" t="n" class="documentableName ">replaceSomeIn</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">target</span>: <span data-unresolved-link="" t="t">CharSequence</span>, <span t="k"></span><span data-unresolved-link="" t="n">replacer</span>: <span data-unresolved-link="" t="t">Match</span> <span t="k">=&gt;</span> <span data-unresolved-link="" t="t">Option</span>[<span data-unresolved-link="" t="t">String</span>]): <span data-unresolved-link="" t="t">String</span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Replaces some of the matches using a replacer function that returns an <span data-unresolved-link="">scala.Option</span>. The replacer function takes a <span data-unresolved-link="">scala.util.matching.Regex.Match</span> so that extra information can be obtained from the match. For example:</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Replaces some of the matches using a replacer function that returns an <span data-unresolved-link="">scala.Option</span>. The replacer function takes a <span data-unresolved-link="">scala.util.matching.Regex.Match</span> so that extra information can be obtained from the match. For example:</p>
+              <div class="snippet mono-small-block" scala-snippet="" runnable="">
+               <pre><code class="language-scala"><span line-number="1" class=""><span class="tooltip-container"></span>import scala.util.matching.Regex._
+</span><span line-number="2" class=""><span class="tooltip-container"></span>
+</span><span line-number="3" class=""><span class="tooltip-container"></span>val vars = Map("x" -&gt; "a var", "y" -&gt; """some $ and \ signs""")
+</span><span line-number="4" class=""><span class="tooltip-container"></span>val text = "A text with variables %x, %y and %z."
+</span><span line-number="5" class=""><span class="tooltip-container"></span>val varPattern = """%(\w+)""".r
+</span><span line-number="6" class=""><span class="tooltip-container"></span>val mapper = (m: Match) =&gt; vars get (m group 1) map (quoteReplacement(_))
+</span><span line-number="7" class=""><span class="tooltip-container"></span>val repl = varPattern replaceSomeIn (text, mapper)
+</span></code></pre>
+               <div class="buttons"></div>
+              </div>
+              <p>In the replacement String, a dollar sign (<code>$</code>) followed by a number will be interpreted as a reference to a group in the matched pattern, with numbers 1 through 9 corresponding to the first nine groups, and 0 standing for the whole match. Any other character is an error. The backslash (<code>\</code>) character will be interpreted as an escape character and can be used to escape the dollar sign. Use <code>Regex.quoteReplacement</code> to escape these characters.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">replacer</dt>
+              <dd class="body-medium">
+               <p>The function which optionally maps a match to another string.</p>
+              </dd>
+              <dt class="body-small">target</dt>
+              <dd class="body-medium">
+               <p>The string to match.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>The target string after replacements.</p>
+              </dd>
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="split-fffff052" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#split-fffff052" t="n" class="documentableName ">split</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">toSplit</span>: <span data-unresolved-link="" t="t">CharSequence</span>): <span data-unresolved-link="" t="t">Array</span>[<span data-unresolved-link="" t="t">String</span>]
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Splits the provided character sequence around matches of this regexp.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Splits the provided character sequence around matches of this regexp.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">toSplit</dt>
+              <dd class="body-medium">
+               <p>The character sequence to split</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>The array of strings computed by splitting the input around matches of this regexp</p>
+              </dd>
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="toString-665" data-f-keywords="override" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">override </span></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#toString-665" t="n" class="documentableName ">toString</a>(<span t="k"></span>): <span data-unresolved-link="" t="t">String</span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>The string defining the regular expression.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>The string defining the regular expression.</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Definition Classes</dt>
+              <dd class="body-medium">
+               <div>
+                <span data-unresolved-link="">Regex</span> -&gt; <span data-unresolved-link="">Any</span>
+               </div>
+              </dd>
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="unanchored-0" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#unanchored-0" t="n" class="documentableName ">unanchored</a>: <span data-unresolved-link="" t="t">UnanchoredRegex</span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Creates a new Regex with the same pattern, but no requirement that the entire String matches in extractor patterns and <span data-unresolved-link="">Regex#matches</span>.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Creates a new Regex with the same pattern, but no requirement that the entire String matches in extractor patterns and <span data-unresolved-link="">Regex#matches</span>.</p>
+              <p>Normally, matching on <code>date</code> behaves as though the pattern were enclosed in anchors, <code>"^pattern$"</code>.</p>
+              <p>The unanchored <code>Regex</code> behaves as though those anchors were removed.</p>
+              <p>Note that this method does not actually strip any matchers from the pattern.</p>
+              <p>Calling <code>anchored</code> returns the original <code>Regex</code>.</p>
+              <div class="snippet mono-small-block" scala-snippet="" runnable="">
+               <pre><code class="language-scala"><span line-number="1" class=""><span class="tooltip-container"></span>val date = """(\d\d\d\d)-(\d\d)-(\d\d)""".r.unanchored
+</span><span line-number="2" class=""><span class="tooltip-container"></span>
+</span><span line-number="3" class="snippet-warn tooltip"><span class="tooltip-container" label="pattern binding uses refutable extractor `scala.util.matching.Snippet.date`
+
+If this usage is intentional, this can be communicated by adding `.runtimeChecked` after the expression,
+which may result in a MatchError at runtime."></span>val date(year, month, day) = "Date 2011-07-15"                       // OK
+</span><span line-number="4" class=""><span class="tooltip-container"></span>
+</span><span line-number="5" class=""><span class="tooltip-container"></span>val copyright: String = "Date of this document: 2011-07-15" match {
+</span><span line-number="6" class=""><span class="tooltip-container"></span>  case date(year, month, day) =&gt; s"Copyright $year"                  // OK
+</span><span line-number="7" class=""><span class="tooltip-container"></span>  case _                      =&gt; "No copyright"
+</span><span line-number="8" class=""><span class="tooltip-container"></span>}
+</span></code></pre>
+               <div class="buttons"></div>
+              </div>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>The new unanchored regex</p>
+              </dd>
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="unapplySeq-fffffe48" data-f-keywords="override" data-f-inherited="MappableRegex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">override </span></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#unapplySeq-fffffe48" t="n" class="documentableName ">unapplySeq</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">s</span>: <span data-unresolved-link="" t="t">CharSequence</span>): <span data-unresolved-link="" t="t">Option</span>[<span data-unresolved-link="" t="t">List</span>[<span data-unresolved-link="" t="t">String</span>]]
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Extracts matched groups from the provided character sequence and applies a transformation function to the list of matched groups.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Extracts matched groups from the provided character sequence and applies a transformation function to the list of matched groups.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">s</dt>
+              <dd class="body-medium">
+               <p>The character sequence to match against the regular expression.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>An Option containing a transformed list of matched groups if the input matches the regular expression, or None if there is no match.</p>
+              </dd>
+              <dt class="body-small">Definition Classes</dt>
+              <dd class="body-medium">
+               <div>
+                <a href="MappableRegex.html#unapplySeq-fffffe48">MappableRegex</a> -&gt; <span data-unresolved-link="">Regex</span>
+               </div>
+              </dd>
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <a href="MappableRegex.html#unapplySeq-fffffe48">MappableRegex</a>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="unapplySeq-fffff91e" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#unapplySeq-fffff91e" t="n" class="documentableName ">unapplySeq</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">m</span>: <span data-unresolved-link="" t="t">Match</span>): <span data-unresolved-link="" t="t">Option</span>[<span data-unresolved-link="" t="t">List</span>[<span data-unresolved-link="" t="t">String</span><span t="k"> | </span><span data-unresolved-link="" t="t">Null</span>]]
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Tries to match on a <span data-unresolved-link="">scala.util.matching.Regex.Match</span>.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Tries to match on a <span data-unresolved-link="">scala.util.matching.Regex.Match</span>.</p>
+              <p>A previously failed match results in None.</p>
+              <p>If a successful match was made against the current pattern, then that result is used.</p>
+              <p>Otherwise, this Regex is applied to the previously matched input, and the result of that match is used.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">m</dt>
+              <dd class="body-medium">
+               <p>the <code>Match</code> to extract groups from</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>the matched groups, or <code>None</code> if the match was unsuccessful</p>
+              </dd>
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="unapplySeq-fffffc5b" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="LowerCaseInitialRegex.html#unapplySeq-fffffc5b" t="n" class="documentableName ">unapplySeq</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">c</span>: <span data-unresolved-link="" t="t">Char</span>): <span data-unresolved-link="" t="t">Option</span>[<span data-unresolved-link="" t="t">List</span>[<span data-unresolved-link="" t="t">Char</span>]]
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Tries to match the String representation of a <span data-unresolved-link="">scala.Char</span>.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Tries to match the String representation of a <span data-unresolved-link="">scala.Char</span>.</p>
+              <p>If the match succeeds, the result is the first matching group if any groups are defined, or an empty Sequence otherwise.</p>
+              <p>For example:</p>
+              <div class="snippet mono-small-block" scala-snippet="" runnable="">
+               <pre><code class="language-scala"><span line-number="1" class=""><span class="tooltip-container"></span>val cat = "cat"
+</span><span line-number="2" class=""><span class="tooltip-container"></span>// the case must consume the group to match
+</span><span line-number="3" class=""><span class="tooltip-container"></span>val r = """(\p{Lower})""".r
+</span><span line-number="4" class=""><span class="tooltip-container"></span>cat(0) match { case r(x) =&gt; true }
+</span><span line-number="5" class=""><span class="tooltip-container"></span>cat(0) match { case r(_) =&gt; true }
+</span><span line-number="6" class=""><span class="tooltip-container"></span>cat(0) match { case r(_*) =&gt; true }
+</span><span line-number="7" class=""><span class="tooltip-container"></span>cat(0) match { case r() =&gt; true }     // no match
+</span><span line-number="8" class=""><span class="tooltip-container"></span>
+</span><span line-number="9" class=""><span class="tooltip-container"></span>// there is no group to extract
+</span><span line-number="10" class=""><span class="tooltip-container"></span>val r2 = """\p{Lower}""".r
+</span><span line-number="11" class=""><span class="tooltip-container"></span>cat(0) match { case r2(x) =&gt; true }    // no match
+</span><span line-number="12" class=""><span class="tooltip-container"></span>cat(0) match { case r2(_) =&gt; true }    // no match
+</span><span line-number="13" class=""><span class="tooltip-container"></span>cat(0) match { case r2(_*) =&gt; true }   // matches
+</span><span line-number="14" class=""><span class="tooltip-container"></span>cat(0) match { case r2() =&gt; true }     // matches
+</span><span line-number="15" class=""><span class="tooltip-container"></span>
+</span><span line-number="16" class=""><span class="tooltip-container"></span>// even if there are multiple groups, only one is returned
+</span><span line-number="17" class=""><span class="tooltip-container"></span>val r3 = """((.))""".r
+</span><span line-number="18" class=""><span class="tooltip-container"></span>cat(0) match { case r3(_) =&gt; true }    // matches
+</span><span line-number="19" class=""><span class="tooltip-container"></span>cat(0) match { case r3(_,_) =&gt; true }  // no match
+</span></code></pre>
+               <div class="buttons"></div>
+              </div>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">c</dt>
+              <dd class="body-medium">
+               <p>The Char to match</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>The match</p>
+              </dd>
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </section>
+      <section id="Inherited-fields">
+       <div class="documentableList expand">
+        <div class="documentableList-expander">
+         <button class="icon-button show-content expand"></button>
+         <h4 class="groupHeader h200">Inherited fields</h4>
+        </div>
+        <div class="documentableElement" id="pattern-0" data-f-inherited="Regex">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">val </span></span><a href="LowerCaseInitialRegex.html#pattern-0" t="n" class="documentableName ">pattern</a>: <span data-unresolved-link="" t="t">Pattern</span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="cover">
+             <div class="doc"></div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Inherited from:</dt>
+              <dd class="body-medium">
+               <span data-unresolved-link="">Regex</span>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </section>
+     </div>
+    </section>
+   </div>
+  </div>
+ </div>
+</section></div><div id="toc" class="body-small"><div id="toc-container"><span class="toc-title h200">In this article</span><nav class="toc-nav"><ul class="toc-list"><li><a href="#attributes">Value parameters</a></li><li><a href="#members-list">Members list</a><ul><li><a href="#Value-members">Value members</a><ul><li><a href="#Inherited-methods">Inherited methods</a></li><li><a href="#Inherited-fields">Inherited fields</a></li></ul></li></ul></li></ul></nav></div></div></div><div id="footer" class="body-small mobile-footer"><div class="left-container">Generated with</div><div class="right-container"><div class="text"></div></div><div class="text-mobile"></div></div></div></div></body></html>

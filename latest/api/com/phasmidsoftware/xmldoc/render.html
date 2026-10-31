@@ -1,0 +1,1133 @@
+<!DOCTYPE html><html data-pathToRoot="../../../" data-rawLocation="com/phasmidsoftware/xmldoc/render" data-dynamicSideMenu="false"><head><meta charset="utf-8"></meta><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta><title>com.phasmidsoftware.xmldoc.render</title><link rel="shortcut icon" type="image/x-icon" href="../../../favicon.ico"></link><script type="text/javascript" src="../../../scripts/theme.js"></script><script type="text/javascript" src="../../../scripts/searchData.js" defer="true"></script><script type="text/javascript" src="../../../scripts/scastieConfiguration.js" defer="true"></script><link rel="stylesheet" href="../../../styles/theme/bundle.css"></link><link rel="stylesheet" href="../../../styles/theme/components/bundle.css"></link><link rel="stylesheet" href="../../../styles/theme/components/button/bundle.css"></link><link rel="stylesheet" href="../../../styles/theme/layout/bundle.css"></link><link rel="stylesheet" href="../../../styles/dotty-icons.css"></link><link rel="stylesheet" href="../../../styles/filter-bar.css"></link><link rel="stylesheet" href="../../../styles/searchbar.css"></link><link rel="stylesheet" href="../../../styles/social-links.css"></link><link rel="stylesheet" href="../../../styles/versions-dropdown.css"></link><link rel="stylesheet" href="../../../styles/content-contributors.css"></link><script type="text/javascript" src="../../../hljs/highlight.pack.js" defer="true"></script><script type="text/javascript" src="../../../scripts/hljs-scala3.js" defer="true"></script><script type="text/javascript" src="../../../scripts/ux.js" defer="true"></script><script type="text/javascript" src="../../../scripts/common/component.js" defer="true"></script><script type="text/javascript" src="../../../scripts/common/utils.js" defer="true"></script><script type="text/javascript" src="../../../scripts/components/FilterBar.js" defer="true"></script><script type="text/javascript" src="../../../scripts/components/DocumentableList.js" defer="true"></script><script type="text/javascript" src="../../../scripts/components/Input.js" defer="true"></script><script type="text/javascript" src="../../../scripts/components/FilterGroup.js" defer="true"></script><script type="text/javascript" src="../../../scripts/components/Filter.js" defer="true"></script><script type="text/javascript" src="../../../scripts/scaladoc-scalajs.js" defer="true"></script><script type="text/javascript" src="../../../scripts/contributors.js" defer="true"></script><script type="text/javascript" src="https://d3js.org/d3.v6.min.js" defer="true"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/graphlib-dot@0.6.2/dist/graphlib-dot.min.js" defer="true"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.1/dagre-d3.min.js" defer="true"></script><script type="text/javascript" src="https://scastie.scala-lang.org/embedded.js" defer="true"></script><script type="text/javascript" src="../../../scripts/data.js" defer="true"></script><script>var pathToRoot = "../../../";</script></head><body><div id=""><div id="header" class="body-small"><div class="header-container-left"><a href="../../../" class="logo-container"><span class="project-name h300">XmlDoc</span></a><span onclick="dropdownHandler(event)" class="text-button with-arrow" id="dropdown-trigger"><a></a></span><div id="version-dropdown" class="dropdown-menu"></div></div><div class="header-container-right"><button id="search-toggle" class="icon-button"></button><span id="theme-toggle" class="icon-button"></span><span id="mobile-menu-toggle" class="icon-button hamburger"></span></div></div><div id="mobile-menu"><div class="mobile-menu-header body-small"><span class="mobile-menu-logo"><span class="project-name h300">XmlDoc</span></span><button id="mobile-menu-close" class="icon-button close"></button></div><div class="mobile-menu-container body-medium"><input id="mobile-scaladoc-searchbar-input" class="scaladoc-searchbar-input" type="search" placeholder="Find anything"></input><span id="mobile-theme-toggle" class="mobile-menu-item mode"></span></div></div><span id="mobile-sidebar-toggle" class="floating-button"></span><div id="leftColumn" class="body-small"><div class="switcher-container"><a id="api-nav-button" class="switcher h100 selected" href="../../../index.html">API</a></div><nav id="api-nav" class="side-menu"><div class="ni n0 expanded"><span class="nh h100 expanded cs"><button class="ar icon-button expanded"></button><a href="../xmldoc.html"><span class="micon pa"></span><span>com.phasmidsoftware.xmldoc</span></a></span><div class="ni n1"><span class="nh "><button class="ar icon-button "></button><a href="core.html"><span class="micon pa"></span><span>core</span></a></span><div class="ni n2 "><span class="nh "><a href="core/CDATA.html"><span class="micon cl"></span><span>CDATA</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/CDATA$.html"><span class="micon ob"></span><span>CDATA</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/Cartesian.html"><span class="micon cl"></span><span>Cartesian</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/FP$.html"><span class="micon ob"></span><span>FP</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/FPException.html"><span class="micon cl"></span><span>FPException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/LowerCaseInitialRegex.html"><span class="micon cl"></span><span>LowerCaseInitialRegex</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/MappableRegex.html"><span class="micon cl"></span><span>MappableRegex</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/Mergeable$.html"><span class="micon ob"></span><span>Mergeable</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/Mergeable.html"><span class="micon tr"></span><span>Mergeable</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/MissingFieldException.html"><span class="micon cl"></span><span>MissingFieldException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/PCData.html"><span class="micon cl"></span><span>PCData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/PCData$.html"><span class="micon ob"></span><span>PCData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/Reflection$.html"><span class="micon ob"></span><span>Reflection</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/Reflection.html"><span class="micon cl"></span><span>Reflection</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/ReflectionException.html"><span class="micon cl"></span><span>ReflectionException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/SmartBuffer$.html"><span class="micon ob"></span><span>SmartBuffer</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/SmartBuffer.html"><span class="micon cl"></span><span>SmartBuffer</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/TagProperties$.html"><span class="micon ob"></span><span>TagProperties</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/Text$.html"><span class="micon ob"></span><span>Text</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/Text.html"><span class="micon cl"></span><span>Text</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/TryUsing$.html"><span class="micon ob"></span><span>TryUsing</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/Utilities$.html"><span class="micon ob"></span><span>Utilities</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/XML$.html"><span class="micon ob"></span><span>XML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/XmlBaseException.html"><span class="micon cl"></span><span>XmlBaseException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/XmlException$.html"><span class="micon ob"></span><span>XmlException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/XmlException.html"><span class="micon cl"></span><span>XmlException</span></a></span></div></div><div class="ni n1"><span class="nh "><button class="ar icon-button "></button><a href="idml.html"><span class="micon pa"></span><span>idml</span></a></span><div class="ni n2 "><span class="nh "><a href="idml/IdmlPackage$.html"><span class="micon ob"></span><span>IdmlPackage</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/IdmlPackage.html"><span class="micon cl"></span><span>IdmlPackage</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/PackagePart.html"><span class="micon cl"></span><span>PackagePart</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/Story.html"><span class="micon cl"></span><span>Story</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/Story$.html"><span class="micon ob"></span><span>Story</span></a></span></div></div><div class="ni n1"><span class="nh "><button class="ar icon-button "></button><a href="kml.html"><span class="micon pa"></span><span>kml</span></a></span><div class="ni n2 "><span class="nh "><a href="kml/AbstractView.html"><span class="micon tr"></span><span>AbstractView</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/AbstractView$.html"><span class="micon ob"></span><span>AbstractView</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/AbstractViewData$.html"><span class="micon ob"></span><span>AbstractViewData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/AbstractViewData.html"><span class="micon cl"></span><span>AbstractViewData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Alias.html"><span class="micon cl"></span><span>Alias</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Alias$.html"><span class="micon ob"></span><span>Alias</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Altitude.html"><span class="micon cl"></span><span>Altitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Altitude$.html"><span class="micon ob"></span><span>Altitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/AltitudeMode$.html"><span class="micon ob"></span><span>AltitudeMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/AltitudeMode.html"><span class="micon cl"></span><span>AltitudeMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/AltitudeModeEnum$.html"><span class="micon ob"></span><span>AltitudeModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/AxisScale.html"><span class="micon cl"></span><span>AxisScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/AxisScale$.html"><span class="micon ob"></span><span>AxisScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/BalloonStyle$.html"><span class="micon ob"></span><span>BalloonStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/BalloonStyle.html"><span class="micon cl"></span><span>BalloonStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/BaseOverlay.html"><span class="micon cl"></span><span>BaseOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/BgColor$.html"><span class="micon ob"></span><span>BgColor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/BgColor.html"><span class="micon cl"></span><span>BgColor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Camera.html"><span class="micon cl"></span><span>Camera</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Camera$.html"><span class="micon ob"></span><span>Camera</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Color$.html"><span class="micon ob"></span><span>Color</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Color.html"><span class="micon cl"></span><span>Color</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ColorMode.html"><span class="micon cl"></span><span>ColorMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ColorMode$.html"><span class="micon ob"></span><span>ColorMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ColorModeEnum$.html"><span class="micon ob"></span><span>ColorModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ColorStyle$.html"><span class="micon ob"></span><span>ColorStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ColorStyle.html"><span class="micon tr"></span><span>ColorStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ColorStyleData$.html"><span class="micon ob"></span><span>ColorStyleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ColorStyleData.html"><span class="micon cl"></span><span>ColorStyleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Container$.html"><span class="micon ob"></span><span>Container</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Container.html"><span class="micon tr"></span><span>Container</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ContainerData.html"><span class="micon cl"></span><span>ContainerData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ContainerData$.html"><span class="micon ob"></span><span>ContainerData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Coordinate$.html"><span class="micon ob"></span><span>Coordinate</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Coordinate.html"><span class="micon cl"></span><span>Coordinate</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Coordinates$.html"><span class="micon ob"></span><span>Coordinates</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Coordinates.html"><span class="micon cl"></span><span>Coordinates</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Data.html"><span class="micon cl"></span><span>Data</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Data$.html"><span class="micon ob"></span><span>Data</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/DisplayMode.html"><span class="micon cl"></span><span>DisplayMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/DisplayMode$.html"><span class="micon ob"></span><span>DisplayMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/DisplayModeEnum$.html"><span class="micon ob"></span><span>DisplayModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Document$.html"><span class="micon ob"></span><span>Document</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Document.html"><span class="micon cl"></span><span>Document</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/DrawOrder$.html"><span class="micon ob"></span><span>DrawOrder</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/DrawOrder.html"><span class="micon cl"></span><span>DrawOrder</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Element.html"><span class="micon cl"></span><span>Element</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ExtendedData$.html"><span class="micon ob"></span><span>ExtendedData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ExtendedData.html"><span class="micon cl"></span><span>ExtendedData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Extrude$.html"><span class="micon ob"></span><span>Extrude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Extrude.html"><span class="micon cl"></span><span>Extrude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Feature.html"><span class="micon tr"></span><span>Feature</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Feature$.html"><span class="micon ob"></span><span>Feature</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/FeatureData.html"><span class="micon cl"></span><span>FeatureData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/FeatureData$.html"><span class="micon ob"></span><span>FeatureData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Fill.html"><span class="micon cl"></span><span>Fill</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Fill$.html"><span class="micon ob"></span><span>Fill</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/FlyToView$.html"><span class="micon ob"></span><span>FlyToView</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/FlyToView.html"><span class="micon cl"></span><span>FlyToView</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Folder.html"><span class="micon cl"></span><span>Folder</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Folder$.html"><span class="micon ob"></span><span>Folder</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Geometry.html"><span class="micon tr"></span><span>Geometry</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Geometry$.html"><span class="micon ob"></span><span>Geometry</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/GeometryData.html"><span class="micon cl"></span><span>GeometryData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/GeometryData$.html"><span class="micon ob"></span><span>GeometryData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/GroundOverlay.html"><span class="micon cl"></span><span>GroundOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/GroundOverlay$.html"><span class="micon ob"></span><span>GroundOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/HasFeatures$.html"><span class="micon ob"></span><span>HasFeatures</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/HasFeatures.html"><span class="micon tr"></span><span>HasFeatures</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/HasName.html"><span class="micon tr"></span><span>HasName</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Heading$.html"><span class="micon ob"></span><span>Heading</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Heading.html"><span class="micon cl"></span><span>Heading</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Helper$.html"><span class="micon ob"></span><span>Helper</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Hex4$.html"><span class="micon ob"></span><span>Hex4</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Hex4.html"><span class="micon cl"></span><span>Hex4</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/HotSpot$.html"><span class="micon ob"></span><span>HotSpot</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/HotSpot.html"><span class="micon cl"></span><span>HotSpot</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Icon$.html"><span class="micon ob"></span><span>Icon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Icon.html"><span class="micon cl"></span><span>Icon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/IconStyle$.html"><span class="micon ob"></span><span>IconStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/IconStyle.html"><span class="micon cl"></span><span>IconStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ImagePyramid.html"><span class="micon cl"></span><span>ImagePyramid</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ImagePyramid$.html"><span class="micon ob"></span><span>ImagePyramid</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/InnerBoundaryIs.html"><span class="micon cl"></span><span>InnerBoundaryIs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/InnerBoundaryIs$.html"><span class="micon ob"></span><span>InnerBoundaryIs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Invertible.html"><span class="micon tr"></span><span>Invertible</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ItemIcon.html"><span class="micon cl"></span><span>ItemIcon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ItemIcon$.html"><span class="micon ob"></span><span>ItemIcon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ItemIconModeEnum$.html"><span class="micon ob"></span><span>ItemIconModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KML.html"><span class="micon cl"></span><span>KML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KML$.html"><span class="micon ob"></span><span>KML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KMLCompanion$.html"><span class="micon ob"></span><span>KMLCompanion</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KMLDoc.html"><span class="micon cl"></span><span>KMLDoc</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KMLEditParser$.html"><span class="micon ob"></span><span>KMLEditParser</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KMLEditParser.html"><span class="micon cl"></span><span>KMLEditParser</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KMLEditor.html"><span class="micon cl"></span><span>KMLEditor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KMLEditor$.html"><span class="micon ob"></span><span>KMLEditor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KML_Binding.html"><span class="micon cl"></span><span>KML_Binding</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KML_Binding$.html"><span class="micon ob"></span><span>KML_Binding</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Key.html"><span class="micon cl"></span><span>Key</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Key$.html"><span class="micon ob"></span><span>Key</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KmlData.html"><span class="micon cl"></span><span>KmlData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KmlData$.html"><span class="micon ob"></span><span>KmlData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KmlEdit$.html"><span class="micon ob"></span><span>KmlEdit</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KmlEdit.html"><span class="micon cl"></span><span>KmlEdit</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KmlException.html"><span class="micon cl"></span><span>KmlException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KmlObject.html"><span class="micon tr"></span><span>KmlObject</span></a></span></div><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="kml/KmlRenderers$.html"><span class="micon ob"></span><span>KmlRenderers</span></a></span><div class="ni n3 "><span class="nh "><a href="kml/KmlRenderers$$FormatCoordinate.html"><span class="micon cl"></span><span>FormatCoordinate</span></a></span></div></div><div class="ni n2 "><span class="nh "><a href="kml/LabelStyle$.html"><span class="micon ob"></span><span>LabelStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LabelStyle.html"><span class="micon cl"></span><span>LabelStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LatLonBox.html"><span class="micon cl"></span><span>LatLonBox</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LatLonBox$.html"><span class="micon ob"></span><span>LatLonBox</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Latitude.html"><span class="micon cl"></span><span>Latitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Latitude$.html"><span class="micon ob"></span><span>Latitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LineString.html"><span class="micon cl"></span><span>LineString</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LineString$.html"><span class="micon ob"></span><span>LineString</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LineStyle$.html"><span class="micon ob"></span><span>LineStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LineStyle.html"><span class="micon cl"></span><span>LineStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LinearRing$.html"><span class="micon ob"></span><span>LinearRing</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LinearRing.html"><span class="micon cl"></span><span>LinearRing</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Link.html"><span class="micon cl"></span><span>Link</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Link$.html"><span class="micon ob"></span><span>Link</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ListItemType.html"><span class="micon cl"></span><span>ListItemType</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ListItemType$.html"><span class="micon ob"></span><span>ListItemType</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ListItemTypeEnum$.html"><span class="micon ob"></span><span>ListItemTypeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ListStyle.html"><span class="micon cl"></span><span>ListStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ListStyle$.html"><span class="micon ob"></span><span>ListStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Location$.html"><span class="micon ob"></span><span>Location</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Location.html"><span class="micon cl"></span><span>Location</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Longitude$.html"><span class="micon ob"></span><span>Longitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Longitude.html"><span class="micon cl"></span><span>Longitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LookAt$.html"><span class="micon ob"></span><span>LookAt</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LookAt.html"><span class="micon cl"></span><span>LookAt</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Model.html"><span class="micon cl"></span><span>Model</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Model$.html"><span class="micon ob"></span><span>Model</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ModelScale.html"><span class="micon cl"></span><span>ModelScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ModelScale$.html"><span class="micon ob"></span><span>ModelScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/MultiGeometry$.html"><span class="micon ob"></span><span>MultiGeometry</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/MultiGeometry.html"><span class="micon cl"></span><span>MultiGeometry</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/MultiLineException.html"><span class="micon cl"></span><span>MultiLineException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/NetworkLink.html"><span class="micon cl"></span><span>NetworkLink</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/NetworkLink$.html"><span class="micon ob"></span><span>NetworkLink</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Open.html"><span class="micon cl"></span><span>Open</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Open$.html"><span class="micon ob"></span><span>Open</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Orientation$.html"><span class="micon ob"></span><span>Orientation</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Orientation.html"><span class="micon cl"></span><span>Orientation</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/OuterBoundaryIs$.html"><span class="micon ob"></span><span>OuterBoundaryIs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/OuterBoundaryIs.html"><span class="micon cl"></span><span>OuterBoundaryIs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Outline.html"><span class="micon cl"></span><span>Outline</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Outline$.html"><span class="micon ob"></span><span>Outline</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Overlay.html"><span class="micon tr"></span><span>Overlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Overlay$.html"><span class="micon ob"></span><span>Overlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/OverlayData$.html"><span class="micon ob"></span><span>OverlayData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/OverlayData.html"><span class="micon cl"></span><span>OverlayData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/OverlayXY$.html"><span class="micon ob"></span><span>OverlayXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/OverlayXY.html"><span class="micon cl"></span><span>OverlayXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Pair$.html"><span class="micon ob"></span><span>Pair</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Pair.html"><span class="micon cl"></span><span>Pair</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ParserException.html"><span class="micon cl"></span><span>ParserException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/PhotoOverlay$.html"><span class="micon ob"></span><span>PhotoOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/PhotoOverlay.html"><span class="micon cl"></span><span>PhotoOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Placemark.html"><span class="micon cl"></span><span>Placemark</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Placemark$.html"><span class="micon ob"></span><span>Placemark</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Point.html"><span class="micon cl"></span><span>Point</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Point$.html"><span class="micon ob"></span><span>Point</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/PolyStyle$.html"><span class="micon ob"></span><span>PolyStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/PolyStyle.html"><span class="micon cl"></span><span>PolyStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Polygon.html"><span class="micon cl"></span><span>Polygon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Polygon$.html"><span class="micon ob"></span><span>Polygon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Range.html"><span class="micon cl"></span><span>Range</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Range$.html"><span class="micon ob"></span><span>Range</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RefreshInterval$.html"><span class="micon ob"></span><span>RefreshInterval</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RefreshInterval.html"><span class="micon cl"></span><span>RefreshInterval</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RefreshMode.html"><span class="micon cl"></span><span>RefreshMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RefreshMode$.html"><span class="micon ob"></span><span>RefreshMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RefreshModeEnum$.html"><span class="micon ob"></span><span>RefreshModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RefreshVisibility$.html"><span class="micon ob"></span><span>RefreshVisibility</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RefreshVisibility.html"><span class="micon cl"></span><span>RefreshVisibility</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ResourceMap$.html"><span class="micon ob"></span><span>ResourceMap</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ResourceMap.html"><span class="micon cl"></span><span>ResourceMap</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Roll$.html"><span class="micon ob"></span><span>Roll</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Roll.html"><span class="micon cl"></span><span>Roll</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Rotation.html"><span class="micon cl"></span><span>Rotation</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Rotation$.html"><span class="micon ob"></span><span>Rotation</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RotationXY.html"><span class="micon cl"></span><span>RotationXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RotationXY$.html"><span class="micon ob"></span><span>RotationXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Scale.html"><span class="micon cl"></span><span>Scale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Scale$.html"><span class="micon ob"></span><span>Scale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/SchemaData.html"><span class="micon cl"></span><span>SchemaData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/SchemaData$.html"><span class="micon ob"></span><span>SchemaData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ScreenOverlay.html"><span class="micon cl"></span><span>ScreenOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ScreenOverlay$.html"><span class="micon ob"></span><span>ScreenOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ScreenXY.html"><span class="micon cl"></span><span>ScreenXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ScreenXY$.html"><span class="micon ob"></span><span>ScreenXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Shape$.html"><span class="micon ob"></span><span>Shape</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Shape.html"><span class="micon cl"></span><span>Shape</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ShapeEnum$.html"><span class="micon ob"></span><span>ShapeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/SimpleData$.html"><span class="micon ob"></span><span>SimpleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/SimpleData.html"><span class="micon cl"></span><span>SimpleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Size.html"><span class="micon cl"></span><span>Size</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Size$.html"><span class="micon ob"></span><span>Size</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/State$.html"><span class="micon ob"></span><span>State</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/State.html"><span class="micon cl"></span><span>State</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Style$.html"><span class="micon ob"></span><span>Style</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Style.html"><span class="micon cl"></span><span>Style</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleMap$.html"><span class="micon ob"></span><span>StyleMap</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleMap.html"><span class="micon cl"></span><span>StyleMap</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleSelector.html"><span class="micon tr"></span><span>StyleSelector</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleSelector$.html"><span class="micon ob"></span><span>StyleSelector</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleSelectorData.html"><span class="micon cl"></span><span>StyleSelectorData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleSelectorData$.html"><span class="micon ob"></span><span>StyleSelectorData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleStateEnum$.html"><span class="micon ob"></span><span>StyleStateEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleURL$.html"><span class="micon ob"></span><span>StyleURL</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleURL.html"><span class="micon cl"></span><span>StyleURL</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/SubStyle.html"><span class="micon tr"></span><span>SubStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/SubStyle$.html"><span class="micon ob"></span><span>SubStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/SubStyleData.html"><span class="micon cl"></span><span>SubStyleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/SubStyleData$.html"><span class="micon ob"></span><span>SubStyleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Tessellate$.html"><span class="micon ob"></span><span>Tessellate</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Tessellate.html"><span class="micon cl"></span><span>Tessellate</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/TestKML.html"><span class="micon cl"></span><span>TestKML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/TextColor$.html"><span class="micon ob"></span><span>TextColor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/TextColor.html"><span class="micon cl"></span><span>TextColor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Tilt.html"><span class="micon cl"></span><span>Tilt</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Tilt$.html"><span class="micon ob"></span><span>Tilt</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/UnitsEnum$.html"><span class="micon ob"></span><span>UnitsEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewBoundScale$.html"><span class="micon ob"></span><span>ViewBoundScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewBoundScale.html"><span class="micon cl"></span><span>ViewBoundScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewRefreshEnum$.html"><span class="micon ob"></span><span>ViewRefreshEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewRefreshMode$.html"><span class="micon ob"></span><span>ViewRefreshMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewRefreshMode.html"><span class="micon cl"></span><span>ViewRefreshMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewRefreshTime.html"><span class="micon cl"></span><span>ViewRefreshTime</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewRefreshTime$.html"><span class="micon ob"></span><span>ViewRefreshTime</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewVolume$.html"><span class="micon ob"></span><span>ViewVolume</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewVolume.html"><span class="micon cl"></span><span>ViewVolume</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Visibility.html"><span class="micon cl"></span><span>Visibility</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Visibility$.html"><span class="micon ob"></span><span>Visibility</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Width$.html"><span class="micon ob"></span><span>Width</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Width.html"><span class="micon cl"></span><span>Width</span></a></span></div></div><div class="ni n1 expanded"><span class="nh h100 selected"><button class="ar icon-button expanded"></button><a href="#"><span class="micon pa"></span><span>render</span></a></span><div class="ni n2 "><span class="nh "><a href="render/BaseFormat.html"><span class="micon cl"></span><span>BaseFormat</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/Format.html"><span class="micon tr"></span><span>Format</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/FormatIndented.html"><span class="micon cl"></span><span>FormatIndented</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/FormatText.html"><span class="micon cl"></span><span>FormatText</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/FormatXML$.html"><span class="micon ob"></span><span>FormatXML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/FormatXML.html"><span class="micon cl"></span><span>FormatXML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/Renderer.html"><span class="micon tr"></span><span>Renderer</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/Renderer$.html"><span class="micon ob"></span><span>Renderer</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/Renderers.html"><span class="micon tr"></span><span>Renderers</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/Renderers$.html"><span class="micon ob"></span><span>Renderers</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/StateR$.html"><span class="micon ob"></span><span>StateR</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/StateR.html"><span class="micon cl"></span><span>StateR</span></a></span></div></div><div class="ni n1"><span class="nh "><button class="ar icon-button "></button><a href="xml.html"><span class="micon pa"></span><span>xml</span></a></span><div class="ni n2 "><span class="nh "><a href="xml/ChildNames$.html"><span class="micon ob"></span><span>ChildNames</span></a></span></div><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="xml/Extractor$.html"><span class="micon ob"></span><span>Extractor</span></a></span><div class="ni n3 "><span class="nh "><a href="xml/Extractor$$charSequenceExtractor$.html"><span class="micon ob"></span><span>charSequenceExtractor</span></a></span></div></div><div class="ni n2 "><span class="nh "><a href="xml/Extractor.html"><span class="micon tr"></span><span>Extractor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/Extractors.html"><span class="micon tr"></span><span>Extractors</span></a></span></div><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="xml/Extractors$.html"><span class="micon ob"></span><span>Extractors</span></a></span><div class="ni n3 "><span class="nh "><a href="xml/Extractors$$BooleanMultiExtractor$.html"><span class="micon ob"></span><span>BooleanMultiExtractor</span></a></span></div><div class="ni n3 "><span class="nh "><a href="xml/Extractors$$DoubleMultiExtractor$.html"><span class="micon ob"></span><span>DoubleMultiExtractor</span></a></span></div><div class="ni n3 "><span class="nh "><a href="xml/Extractors$$IntMultiExtractor$.html"><span class="micon ob"></span><span>IntMultiExtractor</span></a></span></div><div class="ni n3 "><span class="nh "><a href="xml/Extractors$$LongMultiExtractor$.html"><span class="micon ob"></span><span>LongMultiExtractor</span></a></span></div></div><div class="ni n2 "><span class="nh "><a href="xml/GenericCData.html"><span class="micon cl"></span><span>GenericCData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/GenericContent.html"><span class="micon tr"></span><span>GenericContent</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/GenericElement.html"><span class="micon cl"></span><span>GenericElement</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/GenericElement$.html"><span class="micon ob"></span><span>GenericElement</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/GenericText.html"><span class="micon cl"></span><span>GenericText</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/MultiExtractor$.html"><span class="micon ob"></span><span>MultiExtractor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/MultiExtractor.html"><span class="micon tr"></span><span>MultiExtractor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/MultiExtractorBase$.html"><span class="micon ob"></span><span>MultiExtractorBase</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/MultiExtractorBase.html"><span class="micon cl"></span><span>MultiExtractorBase</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/NamedFunction.html"><span class="micon tr"></span><span>NamedFunction</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/NamedFunction$.html"><span class="micon ob"></span><span>NamedFunction</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/NodeParser$.html"><span class="micon ob"></span><span>NodeParser</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/Plural$.html"><span class="micon ob"></span><span>Plural</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/RichXml.html"><span class="micon cl"></span><span>RichXml</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/SubclassExtractor.html"><span class="micon cl"></span><span>SubclassExtractor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/TagToExtractorFunc.html"><span class="micon tr"></span><span>TagToExtractorFunc</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/TagToSequenceExtractorFunc.html"><span class="micon tr"></span><span>TagToSequenceExtractorFunc</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/Zip$.html"><span class="micon ob"></span><span>Zip</span></a></span></div></div></div></nav></div><div id="footer" class="body-small"><div class="left-container">Generated with</div><div class="right-container"><div class="text"></div></div><div class="text-mobile"></div></div><div id="scaladoc-searchBar"></div><div id="main"><div class="breadcrumbs container"><a href="../../../index.html">XmlDoc</a>/<a href="../xmldoc.html">com.phasmidsoftware.xmldoc</a>/<a href="render.html">com.phasmidsoftware.xmldoc.render</a></div><div id="content" class="body-medium"><div><div class="cover-header">
+ <span class="icon"><span class="micon pa"></span></span>
+ <h1 class="h600 single">com.phasmidsoftware.xmldoc.render</h1>
+</div>
+<div class="fqname body-large">
+ <span></span>
+</div>
+<div class="main-signature mono-small-block">
+ <div class="signature">
+  <span class="modifiers"></span><span class="kind"><span t="k">package </span></span><a href="render.html" t="n" class="documentableName ">com.phasmidsoftware.xmldoc.render</a>
+ </div>
+</div>
+<section id="members-list">
+ <h2 class="h500">Members list</h2>
+ <div class="documentableFilter">
+  <div class="filtersContainer"></div>
+  <input class="filterableInput" placeholder="Filter by any phrase" data-test-id="filterBarInput" type="search"><button class="clearButton label-only-button" data-test-id="filterBarClearButton">Clear all</button>
+ </div>
+ <div class="membersList expand">
+  <div class="tabs">
+   <div class="contents">
+    <section id="Type-members">
+     <div data-togglable="Type members" class="tab expand">
+      <div class="member-group-header">
+       <h3 data-togglable="Type members" class="h400">Type members</h3>
+      </div>
+      <section id="Classlikes">
+       <div class="documentableList expand">
+        <div class="documentableList-expander">
+         <button class="icon-button show-content expand"></button>
+         <h4 class="groupHeader h200">Classlikes</h4>
+        </div>
+        <div class="documentableElement" data-f-keywords="abstract">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="signature-short"><span class="modifiers"><span t="k">abstract </span></span><span class="kind"><span t="k">class </span></span><a href="render/BaseFormat.html" t="n" class="documentableName ">BaseFormat</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">indents</span>: <span data-unresolved-link="" t="t">Int</span>)<span t="k"> extends </span><a href="render/Format.html" t="t">Format</a></span><span class="signature-long"></span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>The <code>BaseFormat</code> abstract class provides a foundational implementation of common formatting operations, extending the <code>Format</code> trait. It includes methods and definitions for handling indentation, newline formatting, and rendering class names within a specific rendering state.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>The <code>BaseFormat</code> abstract class provides a foundational implementation of common formatting operations, extending the <code>Format</code> trait. It includes methods and definitions for handling indentation, newline formatting, and rendering class names within a specific rendering state.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">indents</dt>
+              <dd class="body-medium">
+               <p>The number of indent levels to be used in formatting, affecting the structure of the formatted output.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <a href="render/Format.html" t="n">Format</a>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+              <dt class="body-small">Known subtypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block subtypes">
+                <div>
+                 class <a href="kml/KmlRenderers$$FormatCoordinate.html" t="n">FormatCoordinate</a>
+                </div>
+                <div>
+                 class <a href="render/FormatIndented.html" t="n">FormatIndented</a>
+                </div>
+                <div>
+                 class <a href="render/FormatText.html" t="n">FormatText</a>
+                </div>
+                <div>
+                 class <a href="render/FormatXML.html" t="n">FormatXML</a>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">trait </span></span><a href="render/Format.html" t="n" class="documentableName ">Format</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>The <code>Format</code> trait defines a blueprint for handling various formatting operations such as indentation, flattening, delimiters, sequencing, and line breaks. It is designed as a flexible interface to be implemented by specific formatting strategies.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>The <code>Format</code> trait defines a blueprint for handling various formatting operations such as indentation, flattening, delimiters, sequencing, and line breaks. It is designed as a flexible interface to be implemented by specific formatting strategies.</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+              <dt class="body-small">Known subtypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block subtypes">
+                <div>
+                 class <a href="render/BaseFormat.html" t="n">BaseFormat</a>
+                </div>
+                <div>
+                 class <a href="kml/KmlRenderers$$FormatCoordinate.html" t="n">FormatCoordinate</a>
+                </div>
+                <div>
+                 class <a href="render/FormatIndented.html" t="n">FormatIndented</a>
+                </div>
+                <div>
+                 class <a href="render/FormatText.html" t="n">FormatText</a>
+                </div>
+                <div>
+                 class <a href="render/FormatXML.html" t="n">FormatXML</a>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="signature-short"><span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">class </span></span><a href="render/FormatIndented.html" t="n" class="documentableName ">FormatIndented</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">indents</span>: <span data-unresolved-link="" t="t">Int</span>)<span t="k"> extends </span><a href="render/BaseFormat.html" t="t">BaseFormat</a></span><span class="signature-long"></span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="cover">
+             <div class="doc"></div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 class <a href="render/BaseFormat.html" t="n">BaseFormat</a>
+                </div>
+                <div>
+                 trait <a href="render/Format.html" t="n">Format</a>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="signature-short"><span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">class </span></span><a href="render/FormatText.html" t="n" class="documentableName ">FormatText</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">indents</span>: <span data-unresolved-link="" t="t">Int</span>)<span t="k"> extends </span><a href="render/BaseFormat.html" t="t">BaseFormat</a></span><span class="signature-long"></span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p><code>FormatText</code> is a case class that extends the functionality of <code>BaseFormat</code> for text-based formatting purposes. It provides mechanisms for handling hierarchical indentation, formatting class names within a rendering state, and generating sequences or enclosed structures based on an open/close state.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p><code>FormatText</code> is a case class that extends the functionality of <code>BaseFormat</code> for text-based formatting purposes. It provides mechanisms for handling hierarchical indentation, formatting class names within a rendering state, and generating sequences or enclosed structures based on an open/close state.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">indents</dt>
+              <dd class="body-medium">
+               <p>The number of initial indentation levels to apply.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 class <a href="render/BaseFormat.html" t="n">BaseFormat</a>
+                </div>
+                <div>
+                 trait <a href="render/Format.html" t="n">Format</a>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="render/FormatXML$.html" t="n" class="documentableName ">FormatXML</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Companion object for the <code>FormatXML</code> class.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Companion object for the <code>FormatXML</code> class.</p>
+              <p>Provides factory methods to create instances of <code>FormatXML</code> with specified or default indentation levels.</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Companion</dt>
+              <dd class="body-medium">
+               <a href="render/FormatXML.html">class</a>
+              </dd>
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Mirror</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+              <dt class="body-small">Self type</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="render/FormatXML$.html" t="n">FormatXML</a>.<span t="k">type</span>
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="signature-short"><span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">class </span></span><a href="render/FormatXML.html" t="n" class="documentableName ">FormatXML</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">indents</span>: <span data-unresolved-link="" t="t">Int</span>, <span t="k"></span><span data-unresolved-link="" t="n">flat</span>: <span data-unresolved-link="" t="t">Boolean</span> = ...)<span t="k"> extends </span><a href="render/BaseFormat.html" t="t">BaseFormat</a></span><span class="signature-long"></span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>The <code>FormatXML</code> case class provides a specialized implementation for formatting content in XML-like structures. It inherits from <code>BaseFormat</code> and offers additional functionality for handling XML-specific formatting operations, including indentation, flattening, delimiters, and opening/closing tag formatting.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>The <code>FormatXML</code> case class provides a specialized implementation for formatting content in XML-like structures. It inherits from <code>BaseFormat</code> and offers additional functionality for handling XML-specific formatting operations, including indentation, flattening, delimiters, and opening/closing tag formatting.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">flat</dt>
+              <dd class="body-medium">
+               <p>A boolean flag indicating whether the format should be flattened, eliminating structural indentation.</p>
+              </dd>
+              <dt class="body-small">indents</dt>
+              <dd class="body-medium">
+               <p>The number of indentation levels to be applied in formatting.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Companion</dt>
+              <dd class="body-medium">
+               <a href="render/FormatXML$.html">object</a>
+              </dd>
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 class <a href="render/BaseFormat.html" t="n">BaseFormat</a>
+                </div>
+                <div>
+                 trait <a href="render/Format.html" t="n">Format</a>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="signature-short"><span class="modifiers"></span><span class="kind"><span t="k">trait </span></span><a href="render/Renderer.html" t="n" class="documentableName ">Renderer</a>[<span t="k"></span><span data-unresolved-link="" t="t">T</span>]<span t="k"> extends </span><a href="xml/NamedFunction.html" t="t">NamedFunction</a>[<a href="render/Renderer.html" t="t">Renderer</a>[<span t="t">T</span>]]</span><span class="signature-long"></span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Typeclass to specify the required behavior of an object that you want to render as a String.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Typeclass to specify the required behavior of an object that you want to render as a String.</p>
+             </div>
+             <h2 class="h200">Type parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">T</dt>
+              <dd class="body-medium">
+               <p>the type of the object.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Companion</dt>
+              <dd class="body-medium">
+               <a href="render/Renderer$.html">object</a>
+              </dd>
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <a href="xml/NamedFunction.html" t="n">NamedFunction</a>[<a href="render/Renderer.html" t="t">Renderer</a>[<span t="t">T</span>]]
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="render/Renderer$.html" t="n" class="documentableName ">Renderer</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Utility object for working with the <code>Renderer</code> typeclass. Provides methods to build, manipulate, and use instances of <code>Renderer</code> for rendering various types as strings.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Utility object for working with the <code>Renderer</code> typeclass. Provides methods to build, manipulate, and use instances of <code>Renderer</code> for rendering various types as strings.</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Companion</dt>
+              <dd class="body-medium">
+               <a href="render/Renderer.html">trait</a>
+              </dd>
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+              <dt class="body-small">Self type</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="render/Renderer$.html" t="n">Renderer</a>.<span t="k">type</span>
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">trait </span></span><a href="render/Renderers.html" t="n" class="documentableName ">Renderers</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Trait which defines generic and standard renderers.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Trait which defines generic and standard renderers.</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Companion</dt>
+              <dd class="body-medium">
+               <a href="render/Renderers$.html">object</a>
+              </dd>
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+              <dt class="body-small">Known subtypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block subtypes">
+                <div>
+                 object <a href="kml/AbstractView$.html" t="n">AbstractView</a>
+                </div>
+                <div>
+                 object <a href="kml/AbstractViewData$.html" t="n">AbstractViewData</a>
+                </div>
+                <div>
+                 object <a href="kml/Alias$.html" t="n">Alias</a>
+                </div>
+                <div>
+                 object <a href="kml/Altitude$.html" t="n">Altitude</a>
+                </div>
+                <div>
+                 object <a href="kml/AltitudeMode$.html" t="n">AltitudeMode</a>
+                </div>
+                <div>
+                 object <a href="kml/AltitudeModeEnum$.html" t="n">AltitudeModeEnum</a>
+                </div>
+                <div>
+                 object <a href="kml/AxisScale$.html" t="n">AxisScale</a>
+                </div>
+                <div>
+                 object <a href="kml/BalloonStyle$.html" t="n">BalloonStyle</a>
+                </div>
+                <div>
+                 object <a href="kml/BgColor$.html" t="n">BgColor</a>
+                </div>
+                <div>
+                 object <a href="kml/Camera$.html" t="n">Camera</a>
+                </div>
+                <div>
+                 object <a href="kml/Color$.html" t="n">Color</a>
+                </div>
+                <div>
+                 object <a href="kml/ColorMode$.html" t="n">ColorMode</a>
+                </div>
+                <div>
+                 object <a href="kml/ColorModeEnum$.html" t="n">ColorModeEnum</a>
+                </div>
+                <div>
+                 object <a href="kml/ColorStyle$.html" t="n">ColorStyle</a>
+                </div>
+                <div>
+                 object <a href="kml/ColorStyleData$.html" t="n">ColorStyleData</a>
+                </div>
+                <div>
+                 object <a href="kml/Container$.html" t="n">Container</a>
+                </div>
+                <div>
+                 object <a href="kml/ContainerData$.html" t="n">ContainerData</a>
+                </div>
+                <div>
+                 object <a href="kml/Coordinates$.html" t="n">Coordinates</a>
+                </div>
+                <div>
+                 object <a href="kml/Data$.html" t="n">Data</a>
+                </div>
+                <div>
+                 object <a href="kml/DisplayMode$.html" t="n">DisplayMode</a>
+                </div>
+                <div>
+                 object <a href="kml/DisplayModeEnum$.html" t="n">DisplayModeEnum</a>
+                </div>
+                <div>
+                 object <a href="kml/Document$.html" t="n">Document</a>
+                </div>
+                <div>
+                 object <a href="kml/DrawOrder$.html" t="n">DrawOrder</a>
+                </div>
+                <div>
+                 object <a href="kml/ExtendedData$.html" t="n">ExtendedData</a>
+                </div>
+                <div>
+                 object <a href="kml/Extrude$.html" t="n">Extrude</a>
+                </div>
+                <div>
+                 object <a href="kml/Feature$.html" t="n">Feature</a>
+                </div>
+                <div>
+                 object <a href="kml/FeatureData$.html" t="n">FeatureData</a>
+                </div>
+                <div>
+                 object <a href="kml/Fill$.html" t="n">Fill</a>
+                </div>
+                <div>
+                 object <a href="kml/FlyToView$.html" t="n">FlyToView</a>
+                </div>
+                <div>
+                 object <a href="kml/Folder$.html" t="n">Folder</a>
+                </div>
+                <div>
+                 object <a href="kml/Geometry$.html" t="n">Geometry</a>
+                </div>
+                <div>
+                 object <a href="kml/GeometryData$.html" t="n">GeometryData</a>
+                </div>
+                <div>
+                 object <a href="kml/GroundOverlay$.html" t="n">GroundOverlay</a>
+                </div>
+                <div>
+                 object <a href="kml/Heading$.html" t="n">Heading</a>
+                </div>
+                <div>
+                 object <a href="kml/HotSpot$.html" t="n">HotSpot</a>
+                </div>
+                <div>
+                 object <a href="kml/Icon$.html" t="n">Icon</a>
+                </div>
+                <div>
+                 object <a href="kml/IconStyle$.html" t="n">IconStyle</a>
+                </div>
+                <div>
+                 object <a href="kml/ImagePyramid$.html" t="n">ImagePyramid</a>
+                </div>
+                <div>
+                 object <a href="kml/InnerBoundaryIs$.html" t="n">InnerBoundaryIs</a>
+                </div>
+                <div>
+                 object <a href="kml/ItemIcon$.html" t="n">ItemIcon</a>
+                </div>
+                <div>
+                 object <a href="kml/ItemIconModeEnum$.html" t="n">ItemIconModeEnum</a>
+                </div>
+                <div>
+                 object <a href="kml/KML$.html" t="n">KML</a>
+                </div>
+                <div>
+                 object <a href="kml/Key$.html" t="n">Key</a>
+                </div>
+                <div>
+                 object <a href="kml/KmlData$.html" t="n">KmlData</a>
+                </div>
+                <div>
+                 object <a href="kml/KmlRenderers$.html" t="n">KmlRenderers</a>
+                </div>
+                <div>
+                 object <a href="kml/LabelStyle$.html" t="n">LabelStyle</a>
+                </div>
+                <div>
+                 object <a href="kml/LatLonBox$.html" t="n">LatLonBox</a>
+                </div>
+                <div>
+                 object <a href="kml/Latitude$.html" t="n">Latitude</a>
+                </div>
+                <div>
+                 object <a href="kml/LineString$.html" t="n">LineString</a>
+                </div>
+                <div>
+                 object <a href="kml/LineStyle$.html" t="n">LineStyle</a>
+                </div>
+                <div>
+                 object <a href="kml/LinearRing$.html" t="n">LinearRing</a>
+                </div>
+                <div>
+                 object <a href="kml/Link$.html" t="n">Link</a>
+                </div>
+                <div>
+                 object <a href="kml/ListItemType$.html" t="n">ListItemType</a>
+                </div>
+                <div>
+                 object <a href="kml/ListItemTypeEnum$.html" t="n">ListItemTypeEnum</a>
+                </div>
+                <div>
+                 object <a href="kml/ListStyle$.html" t="n">ListStyle</a>
+                </div>
+                <div>
+                 object <a href="kml/Location$.html" t="n">Location</a>
+                </div>
+                <div>
+                 object <a href="kml/Longitude$.html" t="n">Longitude</a>
+                </div>
+                <div>
+                 object <a href="kml/LookAt$.html" t="n">LookAt</a>
+                </div>
+                <div>
+                 object <a href="kml/Model$.html" t="n">Model</a>
+                </div>
+                <div>
+                 object <a href="kml/ModelScale$.html" t="n">ModelScale</a>
+                </div>
+                <div>
+                 object <a href="kml/MultiGeometry$.html" t="n">MultiGeometry</a>
+                </div>
+                <div>
+                 object <a href="kml/NetworkLink$.html" t="n">NetworkLink</a>
+                </div>
+                <div>
+                 object <a href="kml/Open$.html" t="n">Open</a>
+                </div>
+                <div>
+                 object <a href="kml/Orientation$.html" t="n">Orientation</a>
+                </div>
+                <div>
+                 object <a href="kml/OuterBoundaryIs$.html" t="n">OuterBoundaryIs</a>
+                </div>
+                <div>
+                 object <a href="kml/Outline$.html" t="n">Outline</a>
+                </div>
+                <div>
+                 object <a href="kml/Overlay$.html" t="n">Overlay</a>
+                </div>
+                <div>
+                 object <a href="kml/OverlayData$.html" t="n">OverlayData</a>
+                </div>
+                <div>
+                 object <a href="kml/OverlayXY$.html" t="n">OverlayXY</a>
+                </div>
+                <div>
+                 object <a href="kml/Pair$.html" t="n">Pair</a>
+                </div>
+                <div>
+                 object <a href="kml/PhotoOverlay$.html" t="n">PhotoOverlay</a>
+                </div>
+                <div>
+                 object <a href="kml/Placemark$.html" t="n">Placemark</a>
+                </div>
+                <div>
+                 object <a href="kml/Point$.html" t="n">Point</a>
+                </div>
+                <div>
+                 object <a href="kml/PolyStyle$.html" t="n">PolyStyle</a>
+                </div>
+                <div>
+                 object <a href="kml/Polygon$.html" t="n">Polygon</a>
+                </div>
+                <div>
+                 object <a href="kml/Range$.html" t="n">Range</a>
+                </div>
+                <div>
+                 object <a href="kml/RefreshInterval$.html" t="n">RefreshInterval</a>
+                </div>
+                <div>
+                 object <a href="kml/RefreshMode$.html" t="n">RefreshMode</a>
+                </div>
+                <div>
+                 object <a href="kml/RefreshModeEnum$.html" t="n">RefreshModeEnum</a>
+                </div>
+                <div>
+                 object <a href="kml/RefreshVisibility$.html" t="n">RefreshVisibility</a>
+                </div>
+                <div>
+                 object <a href="kml/ResourceMap$.html" t="n">ResourceMap</a>
+                </div>
+                <div>
+                 object <a href="kml/Roll$.html" t="n">Roll</a>
+                </div>
+                <div>
+                 object <a href="kml/Rotation$.html" t="n">Rotation</a>
+                </div>
+                <div>
+                 object <a href="kml/RotationXY$.html" t="n">RotationXY</a>
+                </div>
+                <div>
+                 object <a href="kml/Scale$.html" t="n">Scale</a>
+                </div>
+                <div>
+                 object <a href="kml/SchemaData$.html" t="n">SchemaData</a>
+                </div>
+                <div>
+                 object <a href="kml/ScreenOverlay$.html" t="n">ScreenOverlay</a>
+                </div>
+                <div>
+                 object <a href="kml/ScreenXY$.html" t="n">ScreenXY</a>
+                </div>
+                <div>
+                 object <a href="kml/Shape$.html" t="n">Shape</a>
+                </div>
+                <div>
+                 object <a href="kml/ShapeEnum$.html" t="n">ShapeEnum</a>
+                </div>
+                <div>
+                 object <a href="kml/SimpleData$.html" t="n">SimpleData</a>
+                </div>
+                <div>
+                 object <a href="kml/Size$.html" t="n">Size</a>
+                </div>
+                <div>
+                 object <a href="kml/State$.html" t="n">State</a>
+                </div>
+                <div>
+                 object <a href="kml/Style$.html" t="n">Style</a>
+                </div>
+                <div>
+                 object <a href="kml/StyleSelector$.html" t="n">StyleSelector</a>
+                </div>
+                <div>
+                 object <a href="kml/StyleSelectorData$.html" t="n">StyleSelectorData</a>
+                </div>
+                <div>
+                 object <a href="kml/StyleStateEnum$.html" t="n">StyleStateEnum</a>
+                </div>
+                <div>
+                 object <a href="kml/StyleURL$.html" t="n">StyleURL</a>
+                </div>
+                <div>
+                 object <a href="kml/SubStyle$.html" t="n">SubStyle</a>
+                </div>
+                <div>
+                 object <a href="kml/SubStyleData$.html" t="n">SubStyleData</a>
+                </div>
+                <div>
+                 object <a href="kml/Tessellate$.html" t="n">Tessellate</a>
+                </div>
+                <div>
+                 object <a href="kml/TextColor$.html" t="n">TextColor</a>
+                </div>
+                <div>
+                 object <a href="kml/Tilt$.html" t="n">Tilt</a>
+                </div>
+                <div>
+                 object <a href="kml/UnitsEnum$.html" t="n">UnitsEnum</a>
+                </div>
+                <div>
+                 object <a href="kml/ViewBoundScale$.html" t="n">ViewBoundScale</a>
+                </div>
+                <div>
+                 object <a href="kml/ViewRefreshEnum$.html" t="n">ViewRefreshEnum</a>
+                </div>
+                <div>
+                 object <a href="kml/ViewRefreshMode$.html" t="n">ViewRefreshMode</a>
+                </div>
+                <div>
+                 object <a href="kml/ViewRefreshTime$.html" t="n">ViewRefreshTime</a>
+                </div>
+                <div>
+                 object <a href="kml/ViewVolume$.html" t="n">ViewVolume</a>
+                </div>
+                <div>
+                 object <a href="kml/Visibility$.html" t="n">Visibility</a>
+                </div>
+                <div>
+                 object <a href="kml/Width$.html" t="n">Width</a>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="render/Renderers$.html" t="n" class="documentableName ">Renderers</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Object containing various <code>Renderer</code> instances and utility methods for rendering objects into string representations with optional attributes and specific formatting rules.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Object containing various <code>Renderer</code> instances and utility methods for rendering objects into string representations with optional attributes and specific formatting rules.</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Companion</dt>
+              <dd class="body-medium">
+               <a href="render/Renderers.html">trait</a>
+              </dd>
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+              <dt class="body-small">Self type</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="render/Renderers$.html" t="n">Renderers</a>.<span t="k">type</span>
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="render/StateR$.html" t="n" class="documentableName ">StateR</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>The <code>StateR</code> companion object provides factory methods for creating instances of the <code>StateR</code> class. These methods allow for the creation of a <code>StateR</code> instance either with a specified name or with no name.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>The <code>StateR</code> companion object provides factory methods for creating instances of the <code>StateR</code> class. These methods allow for the creation of a <code>StateR</code> instance either with a specified name or with no name.</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Companion</dt>
+              <dd class="body-medium">
+               <a href="render/StateR.html">class</a>
+              </dd>
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Mirror</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+              <dt class="body-small">Self type</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="render/StateR$.html" t="n">StateR</a>.<span t="k">type</span>
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="signature-short"><span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">class </span></span><a href="render/StateR.html" t="n" class="documentableName ">StateR</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">maybeName</span>: <span data-unresolved-link="" t="t">Option</span>[<span data-unresolved-link="" t="t">String</span>], <span t="k"></span><span data-unresolved-link="" t="n">attributes</span>: <a href="core/SmartBuffer.html" t="t">SmartBuffer</a>, <span t="k"></span><span data-unresolved-link="" t="n">interior</span>: <span data-unresolved-link="" t="t">Boolean</span>)<span t="k"> extends </span><span data-unresolved-link="" t="t">AutoCloseable</span></span><span class="signature-long"></span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Case class intended to take care of the state of rendering. Rendering is complex for several reasons: (1) a method such as render5 invokes render4, render3, etc. in order to process all of the members of a Product. (2) attributes are special and need to be rendered within the opening tag of the top-level element.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Case class intended to take care of the state of rendering. Rendering is complex for several reasons: (1) a method such as render5 invokes render4, render3, etc. in order to process all of the members of a Product. (2) attributes are special and need to be rendered within the opening tag of the top-level element.</p>
+              <p>NOTE: attributes is mutable (it's a SmartBuffer). It is retained as we do operations such as setName, recurse. However, we must be careful to ensure that no attribute gets left behind.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">attributes</dt>
+              <dd class="body-medium">
+               <p>a (private) SmartBuffer: accessible via addAttribute or getAttributes.</p>
+              </dd>
+              <dt class="body-small">interior</dt>
+              <dd class="body-medium">
+               <p>false if we are at the top level of an element; true if we have been invoked from above.</p>
+              </dd>
+              <dt class="body-small">maybeName</dt>
+              <dd class="body-medium">
+               <p>an optional String.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Companion</dt>
+              <dd class="body-medium">
+               <a href="render/StateR$.html">object</a>
+              </dd>
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">AutoCloseable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </section>
+     </div>
+    </section>
+   </div>
+  </div>
+ </div>
+</section></div><div id="toc" class="body-small"><div id="toc-container"><span class="toc-title h200">In this article</span><nav class="toc-nav"><ul class="toc-list"><li><a href="#members-list">Members list</a><ul><li><a href="#Type-members">Type members</a><ul><li><a href="#Classlikes">Classlikes</a></li></ul></li></ul></li></ul></nav></div></div></div><div id="footer" class="body-small mobile-footer"><div class="left-container">Generated with</div><div class="right-container"><div class="text"></div></div><div class="text-mobile"></div></div></div></div></body></html>

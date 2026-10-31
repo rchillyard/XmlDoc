@@ -1,0 +1,343 @@
+<!DOCTYPE html><html data-pathToRoot="../../../../" data-rawLocation="com/phasmidsoftware/xmldoc/render/Renderer$" data-dynamicSideMenu="false"><head><meta charset="utf-8"></meta><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta><title>Renderer</title><link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico"></link><script type="text/javascript" src="../../../../scripts/theme.js"></script><script type="text/javascript" src="../../../../scripts/searchData.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/scastieConfiguration.js" defer="true"></script><link rel="stylesheet" href="../../../../styles/theme/bundle.css"></link><link rel="stylesheet" href="../../../../styles/theme/components/bundle.css"></link><link rel="stylesheet" href="../../../../styles/theme/components/button/bundle.css"></link><link rel="stylesheet" href="../../../../styles/theme/layout/bundle.css"></link><link rel="stylesheet" href="../../../../styles/dotty-icons.css"></link><link rel="stylesheet" href="../../../../styles/filter-bar.css"></link><link rel="stylesheet" href="../../../../styles/searchbar.css"></link><link rel="stylesheet" href="../../../../styles/social-links.css"></link><link rel="stylesheet" href="../../../../styles/versions-dropdown.css"></link><link rel="stylesheet" href="../../../../styles/content-contributors.css"></link><script type="text/javascript" src="../../../../hljs/highlight.pack.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/hljs-scala3.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/ux.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/common/component.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/common/utils.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/components/FilterBar.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/components/DocumentableList.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/components/Input.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/components/FilterGroup.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/components/Filter.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/scaladoc-scalajs.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/contributors.js" defer="true"></script><script type="text/javascript" src="https://d3js.org/d3.v6.min.js" defer="true"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/graphlib-dot@0.6.2/dist/graphlib-dot.min.js" defer="true"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.1/dagre-d3.min.js" defer="true"></script><script type="text/javascript" src="https://scastie.scala-lang.org/embedded.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/data.js" defer="true"></script><script>var pathToRoot = "../../../../";</script></head><body><div id=""><div id="header" class="body-small"><div class="header-container-left"><a href="../../../../" class="logo-container"><span class="project-name h300">XmlDoc</span></a><span onclick="dropdownHandler(event)" class="text-button with-arrow" id="dropdown-trigger"><a></a></span><div id="version-dropdown" class="dropdown-menu"></div></div><div class="header-container-right"><button id="search-toggle" class="icon-button"></button><span id="theme-toggle" class="icon-button"></span><span id="mobile-menu-toggle" class="icon-button hamburger"></span></div></div><div id="mobile-menu"><div class="mobile-menu-header body-small"><span class="mobile-menu-logo"><span class="project-name h300">XmlDoc</span></span><button id="mobile-menu-close" class="icon-button close"></button></div><div class="mobile-menu-container body-medium"><input id="mobile-scaladoc-searchbar-input" class="scaladoc-searchbar-input" type="search" placeholder="Find anything"></input><span id="mobile-theme-toggle" class="mobile-menu-item mode"></span></div></div><span id="mobile-sidebar-toggle" class="floating-button"></span><div id="leftColumn" class="body-small"><div class="switcher-container"><a id="api-nav-button" class="switcher h100 selected" href="../../../../index.html">API</a></div><nav id="api-nav" class="side-menu"><div class="ni n0 expanded"><span class="nh h100 expanded cs"><button class="ar icon-button expanded"></button><a href="../../xmldoc.html"><span class="micon pa"></span><span>com.phasmidsoftware.xmldoc</span></a></span><div class="ni n1"><span class="nh "><button class="ar icon-button "></button><a href="../core.html"><span class="micon pa"></span><span>core</span></a></span><div class="ni n2 "><span class="nh "><a href="../core/CDATA.html"><span class="micon cl"></span><span>CDATA</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/CDATA$.html"><span class="micon ob"></span><span>CDATA</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/Cartesian.html"><span class="micon cl"></span><span>Cartesian</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/FP$.html"><span class="micon ob"></span><span>FP</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/FPException.html"><span class="micon cl"></span><span>FPException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/LowerCaseInitialRegex.html"><span class="micon cl"></span><span>LowerCaseInitialRegex</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/MappableRegex.html"><span class="micon cl"></span><span>MappableRegex</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/Mergeable$.html"><span class="micon ob"></span><span>Mergeable</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/Mergeable.html"><span class="micon tr"></span><span>Mergeable</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/MissingFieldException.html"><span class="micon cl"></span><span>MissingFieldException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/PCData.html"><span class="micon cl"></span><span>PCData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/PCData$.html"><span class="micon ob"></span><span>PCData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/Reflection$.html"><span class="micon ob"></span><span>Reflection</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/Reflection.html"><span class="micon cl"></span><span>Reflection</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/ReflectionException.html"><span class="micon cl"></span><span>ReflectionException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/SmartBuffer$.html"><span class="micon ob"></span><span>SmartBuffer</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/SmartBuffer.html"><span class="micon cl"></span><span>SmartBuffer</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/TagProperties$.html"><span class="micon ob"></span><span>TagProperties</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/Text$.html"><span class="micon ob"></span><span>Text</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/Text.html"><span class="micon cl"></span><span>Text</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/TryUsing$.html"><span class="micon ob"></span><span>TryUsing</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/Utilities$.html"><span class="micon ob"></span><span>Utilities</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/XML$.html"><span class="micon ob"></span><span>XML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/XmlBaseException.html"><span class="micon cl"></span><span>XmlBaseException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/XmlException$.html"><span class="micon ob"></span><span>XmlException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../core/XmlException.html"><span class="micon cl"></span><span>XmlException</span></a></span></div></div><div class="ni n1"><span class="nh "><button class="ar icon-button "></button><a href="../idml.html"><span class="micon pa"></span><span>idml</span></a></span><div class="ni n2 "><span class="nh "><a href="../idml/IdmlPackage$.html"><span class="micon ob"></span><span>IdmlPackage</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../idml/IdmlPackage.html"><span class="micon cl"></span><span>IdmlPackage</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../idml/PackagePart.html"><span class="micon cl"></span><span>PackagePart</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../idml/Story.html"><span class="micon cl"></span><span>Story</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../idml/Story$.html"><span class="micon ob"></span><span>Story</span></a></span></div></div><div class="ni n1"><span class="nh "><button class="ar icon-button "></button><a href="../kml.html"><span class="micon pa"></span><span>kml</span></a></span><div class="ni n2 "><span class="nh "><a href="../kml/AbstractView.html"><span class="micon tr"></span><span>AbstractView</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/AbstractView$.html"><span class="micon ob"></span><span>AbstractView</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/AbstractViewData$.html"><span class="micon ob"></span><span>AbstractViewData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/AbstractViewData.html"><span class="micon cl"></span><span>AbstractViewData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Alias.html"><span class="micon cl"></span><span>Alias</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Alias$.html"><span class="micon ob"></span><span>Alias</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Altitude.html"><span class="micon cl"></span><span>Altitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Altitude$.html"><span class="micon ob"></span><span>Altitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/AltitudeMode$.html"><span class="micon ob"></span><span>AltitudeMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/AltitudeMode.html"><span class="micon cl"></span><span>AltitudeMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/AltitudeModeEnum$.html"><span class="micon ob"></span><span>AltitudeModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/AxisScale.html"><span class="micon cl"></span><span>AxisScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/AxisScale$.html"><span class="micon ob"></span><span>AxisScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/BalloonStyle$.html"><span class="micon ob"></span><span>BalloonStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/BalloonStyle.html"><span class="micon cl"></span><span>BalloonStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/BaseOverlay.html"><span class="micon cl"></span><span>BaseOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/BgColor$.html"><span class="micon ob"></span><span>BgColor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/BgColor.html"><span class="micon cl"></span><span>BgColor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Camera.html"><span class="micon cl"></span><span>Camera</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Camera$.html"><span class="micon ob"></span><span>Camera</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Color$.html"><span class="micon ob"></span><span>Color</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Color.html"><span class="micon cl"></span><span>Color</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ColorMode.html"><span class="micon cl"></span><span>ColorMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ColorMode$.html"><span class="micon ob"></span><span>ColorMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ColorModeEnum$.html"><span class="micon ob"></span><span>ColorModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ColorStyle$.html"><span class="micon ob"></span><span>ColorStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ColorStyle.html"><span class="micon tr"></span><span>ColorStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ColorStyleData$.html"><span class="micon ob"></span><span>ColorStyleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ColorStyleData.html"><span class="micon cl"></span><span>ColorStyleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Container$.html"><span class="micon ob"></span><span>Container</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Container.html"><span class="micon tr"></span><span>Container</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ContainerData.html"><span class="micon cl"></span><span>ContainerData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ContainerData$.html"><span class="micon ob"></span><span>ContainerData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Coordinate$.html"><span class="micon ob"></span><span>Coordinate</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Coordinate.html"><span class="micon cl"></span><span>Coordinate</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Coordinates$.html"><span class="micon ob"></span><span>Coordinates</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Coordinates.html"><span class="micon cl"></span><span>Coordinates</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Data.html"><span class="micon cl"></span><span>Data</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Data$.html"><span class="micon ob"></span><span>Data</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/DisplayMode.html"><span class="micon cl"></span><span>DisplayMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/DisplayMode$.html"><span class="micon ob"></span><span>DisplayMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/DisplayModeEnum$.html"><span class="micon ob"></span><span>DisplayModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Document$.html"><span class="micon ob"></span><span>Document</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Document.html"><span class="micon cl"></span><span>Document</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/DrawOrder$.html"><span class="micon ob"></span><span>DrawOrder</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/DrawOrder.html"><span class="micon cl"></span><span>DrawOrder</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Element.html"><span class="micon cl"></span><span>Element</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ExtendedData$.html"><span class="micon ob"></span><span>ExtendedData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ExtendedData.html"><span class="micon cl"></span><span>ExtendedData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Extrude$.html"><span class="micon ob"></span><span>Extrude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Extrude.html"><span class="micon cl"></span><span>Extrude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Feature.html"><span class="micon tr"></span><span>Feature</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Feature$.html"><span class="micon ob"></span><span>Feature</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/FeatureData.html"><span class="micon cl"></span><span>FeatureData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/FeatureData$.html"><span class="micon ob"></span><span>FeatureData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Fill.html"><span class="micon cl"></span><span>Fill</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Fill$.html"><span class="micon ob"></span><span>Fill</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/FlyToView$.html"><span class="micon ob"></span><span>FlyToView</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/FlyToView.html"><span class="micon cl"></span><span>FlyToView</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Folder.html"><span class="micon cl"></span><span>Folder</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Folder$.html"><span class="micon ob"></span><span>Folder</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Geometry.html"><span class="micon tr"></span><span>Geometry</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Geometry$.html"><span class="micon ob"></span><span>Geometry</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/GeometryData.html"><span class="micon cl"></span><span>GeometryData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/GeometryData$.html"><span class="micon ob"></span><span>GeometryData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/GroundOverlay.html"><span class="micon cl"></span><span>GroundOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/GroundOverlay$.html"><span class="micon ob"></span><span>GroundOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/HasFeatures$.html"><span class="micon ob"></span><span>HasFeatures</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/HasFeatures.html"><span class="micon tr"></span><span>HasFeatures</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/HasName.html"><span class="micon tr"></span><span>HasName</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Heading$.html"><span class="micon ob"></span><span>Heading</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Heading.html"><span class="micon cl"></span><span>Heading</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Helper$.html"><span class="micon ob"></span><span>Helper</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Hex4$.html"><span class="micon ob"></span><span>Hex4</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Hex4.html"><span class="micon cl"></span><span>Hex4</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/HotSpot$.html"><span class="micon ob"></span><span>HotSpot</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/HotSpot.html"><span class="micon cl"></span><span>HotSpot</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Icon$.html"><span class="micon ob"></span><span>Icon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Icon.html"><span class="micon cl"></span><span>Icon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/IconStyle$.html"><span class="micon ob"></span><span>IconStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/IconStyle.html"><span class="micon cl"></span><span>IconStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ImagePyramid.html"><span class="micon cl"></span><span>ImagePyramid</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ImagePyramid$.html"><span class="micon ob"></span><span>ImagePyramid</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/InnerBoundaryIs.html"><span class="micon cl"></span><span>InnerBoundaryIs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/InnerBoundaryIs$.html"><span class="micon ob"></span><span>InnerBoundaryIs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Invertible.html"><span class="micon tr"></span><span>Invertible</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ItemIcon.html"><span class="micon cl"></span><span>ItemIcon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ItemIcon$.html"><span class="micon ob"></span><span>ItemIcon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ItemIconModeEnum$.html"><span class="micon ob"></span><span>ItemIconModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KML.html"><span class="micon cl"></span><span>KML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KML$.html"><span class="micon ob"></span><span>KML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KMLCompanion$.html"><span class="micon ob"></span><span>KMLCompanion</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KMLDoc.html"><span class="micon cl"></span><span>KMLDoc</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KMLEditParser$.html"><span class="micon ob"></span><span>KMLEditParser</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KMLEditParser.html"><span class="micon cl"></span><span>KMLEditParser</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KMLEditor.html"><span class="micon cl"></span><span>KMLEditor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KMLEditor$.html"><span class="micon ob"></span><span>KMLEditor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KML_Binding.html"><span class="micon cl"></span><span>KML_Binding</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KML_Binding$.html"><span class="micon ob"></span><span>KML_Binding</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Key.html"><span class="micon cl"></span><span>Key</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Key$.html"><span class="micon ob"></span><span>Key</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KmlData.html"><span class="micon cl"></span><span>KmlData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KmlData$.html"><span class="micon ob"></span><span>KmlData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KmlEdit$.html"><span class="micon ob"></span><span>KmlEdit</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KmlEdit.html"><span class="micon cl"></span><span>KmlEdit</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KmlException.html"><span class="micon cl"></span><span>KmlException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/KmlObject.html"><span class="micon tr"></span><span>KmlObject</span></a></span></div><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="../kml/KmlRenderers$.html"><span class="micon ob"></span><span>KmlRenderers</span></a></span><div class="ni n3 "><span class="nh "><a href="../kml/KmlRenderers$$FormatCoordinate.html"><span class="micon cl"></span><span>FormatCoordinate</span></a></span></div></div><div class="ni n2 "><span class="nh "><a href="../kml/LabelStyle$.html"><span class="micon ob"></span><span>LabelStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LabelStyle.html"><span class="micon cl"></span><span>LabelStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LatLonBox.html"><span class="micon cl"></span><span>LatLonBox</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LatLonBox$.html"><span class="micon ob"></span><span>LatLonBox</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Latitude.html"><span class="micon cl"></span><span>Latitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Latitude$.html"><span class="micon ob"></span><span>Latitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LineString.html"><span class="micon cl"></span><span>LineString</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LineString$.html"><span class="micon ob"></span><span>LineString</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LineStyle$.html"><span class="micon ob"></span><span>LineStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LineStyle.html"><span class="micon cl"></span><span>LineStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LinearRing$.html"><span class="micon ob"></span><span>LinearRing</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LinearRing.html"><span class="micon cl"></span><span>LinearRing</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Link.html"><span class="micon cl"></span><span>Link</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Link$.html"><span class="micon ob"></span><span>Link</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ListItemType.html"><span class="micon cl"></span><span>ListItemType</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ListItemType$.html"><span class="micon ob"></span><span>ListItemType</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ListItemTypeEnum$.html"><span class="micon ob"></span><span>ListItemTypeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ListStyle.html"><span class="micon cl"></span><span>ListStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ListStyle$.html"><span class="micon ob"></span><span>ListStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Location$.html"><span class="micon ob"></span><span>Location</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Location.html"><span class="micon cl"></span><span>Location</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Longitude$.html"><span class="micon ob"></span><span>Longitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Longitude.html"><span class="micon cl"></span><span>Longitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LookAt$.html"><span class="micon ob"></span><span>LookAt</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/LookAt.html"><span class="micon cl"></span><span>LookAt</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Model.html"><span class="micon cl"></span><span>Model</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Model$.html"><span class="micon ob"></span><span>Model</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ModelScale.html"><span class="micon cl"></span><span>ModelScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ModelScale$.html"><span class="micon ob"></span><span>ModelScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/MultiGeometry$.html"><span class="micon ob"></span><span>MultiGeometry</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/MultiGeometry.html"><span class="micon cl"></span><span>MultiGeometry</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/MultiLineException.html"><span class="micon cl"></span><span>MultiLineException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/NetworkLink.html"><span class="micon cl"></span><span>NetworkLink</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/NetworkLink$.html"><span class="micon ob"></span><span>NetworkLink</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Open.html"><span class="micon cl"></span><span>Open</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Open$.html"><span class="micon ob"></span><span>Open</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Orientation$.html"><span class="micon ob"></span><span>Orientation</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Orientation.html"><span class="micon cl"></span><span>Orientation</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/OuterBoundaryIs$.html"><span class="micon ob"></span><span>OuterBoundaryIs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/OuterBoundaryIs.html"><span class="micon cl"></span><span>OuterBoundaryIs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Outline.html"><span class="micon cl"></span><span>Outline</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Outline$.html"><span class="micon ob"></span><span>Outline</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Overlay.html"><span class="micon tr"></span><span>Overlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Overlay$.html"><span class="micon ob"></span><span>Overlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/OverlayData$.html"><span class="micon ob"></span><span>OverlayData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/OverlayData.html"><span class="micon cl"></span><span>OverlayData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/OverlayXY$.html"><span class="micon ob"></span><span>OverlayXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/OverlayXY.html"><span class="micon cl"></span><span>OverlayXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Pair$.html"><span class="micon ob"></span><span>Pair</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Pair.html"><span class="micon cl"></span><span>Pair</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ParserException.html"><span class="micon cl"></span><span>ParserException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/PhotoOverlay$.html"><span class="micon ob"></span><span>PhotoOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/PhotoOverlay.html"><span class="micon cl"></span><span>PhotoOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Placemark.html"><span class="micon cl"></span><span>Placemark</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Placemark$.html"><span class="micon ob"></span><span>Placemark</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Point.html"><span class="micon cl"></span><span>Point</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Point$.html"><span class="micon ob"></span><span>Point</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/PolyStyle$.html"><span class="micon ob"></span><span>PolyStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/PolyStyle.html"><span class="micon cl"></span><span>PolyStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Polygon.html"><span class="micon cl"></span><span>Polygon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Polygon$.html"><span class="micon ob"></span><span>Polygon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Range.html"><span class="micon cl"></span><span>Range</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Range$.html"><span class="micon ob"></span><span>Range</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RefreshInterval$.html"><span class="micon ob"></span><span>RefreshInterval</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RefreshInterval.html"><span class="micon cl"></span><span>RefreshInterval</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RefreshMode.html"><span class="micon cl"></span><span>RefreshMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RefreshMode$.html"><span class="micon ob"></span><span>RefreshMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RefreshModeEnum$.html"><span class="micon ob"></span><span>RefreshModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RefreshVisibility$.html"><span class="micon ob"></span><span>RefreshVisibility</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RefreshVisibility.html"><span class="micon cl"></span><span>RefreshVisibility</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ResourceMap$.html"><span class="micon ob"></span><span>ResourceMap</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ResourceMap.html"><span class="micon cl"></span><span>ResourceMap</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Roll$.html"><span class="micon ob"></span><span>Roll</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Roll.html"><span class="micon cl"></span><span>Roll</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Rotation.html"><span class="micon cl"></span><span>Rotation</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Rotation$.html"><span class="micon ob"></span><span>Rotation</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RotationXY.html"><span class="micon cl"></span><span>RotationXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/RotationXY$.html"><span class="micon ob"></span><span>RotationXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Scale.html"><span class="micon cl"></span><span>Scale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Scale$.html"><span class="micon ob"></span><span>Scale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/SchemaData.html"><span class="micon cl"></span><span>SchemaData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/SchemaData$.html"><span class="micon ob"></span><span>SchemaData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ScreenOverlay.html"><span class="micon cl"></span><span>ScreenOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ScreenOverlay$.html"><span class="micon ob"></span><span>ScreenOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ScreenXY.html"><span class="micon cl"></span><span>ScreenXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ScreenXY$.html"><span class="micon ob"></span><span>ScreenXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Shape$.html"><span class="micon ob"></span><span>Shape</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Shape.html"><span class="micon cl"></span><span>Shape</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ShapeEnum$.html"><span class="micon ob"></span><span>ShapeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/SimpleData$.html"><span class="micon ob"></span><span>SimpleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/SimpleData.html"><span class="micon cl"></span><span>SimpleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Size.html"><span class="micon cl"></span><span>Size</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Size$.html"><span class="micon ob"></span><span>Size</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/State$.html"><span class="micon ob"></span><span>State</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/State.html"><span class="micon cl"></span><span>State</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Style$.html"><span class="micon ob"></span><span>Style</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Style.html"><span class="micon cl"></span><span>Style</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleMap$.html"><span class="micon ob"></span><span>StyleMap</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleMap.html"><span class="micon cl"></span><span>StyleMap</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleSelector.html"><span class="micon tr"></span><span>StyleSelector</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleSelector$.html"><span class="micon ob"></span><span>StyleSelector</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleSelectorData.html"><span class="micon cl"></span><span>StyleSelectorData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleSelectorData$.html"><span class="micon ob"></span><span>StyleSelectorData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleStateEnum$.html"><span class="micon ob"></span><span>StyleStateEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleURL$.html"><span class="micon ob"></span><span>StyleURL</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/StyleURL.html"><span class="micon cl"></span><span>StyleURL</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/SubStyle.html"><span class="micon tr"></span><span>SubStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/SubStyle$.html"><span class="micon ob"></span><span>SubStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/SubStyleData.html"><span class="micon cl"></span><span>SubStyleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/SubStyleData$.html"><span class="micon ob"></span><span>SubStyleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Tessellate$.html"><span class="micon ob"></span><span>Tessellate</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Tessellate.html"><span class="micon cl"></span><span>Tessellate</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/TestKML.html"><span class="micon cl"></span><span>TestKML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/TextColor$.html"><span class="micon ob"></span><span>TextColor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/TextColor.html"><span class="micon cl"></span><span>TextColor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Tilt.html"><span class="micon cl"></span><span>Tilt</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Tilt$.html"><span class="micon ob"></span><span>Tilt</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/UnitsEnum$.html"><span class="micon ob"></span><span>UnitsEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewBoundScale$.html"><span class="micon ob"></span><span>ViewBoundScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewBoundScale.html"><span class="micon cl"></span><span>ViewBoundScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewRefreshEnum$.html"><span class="micon ob"></span><span>ViewRefreshEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewRefreshMode$.html"><span class="micon ob"></span><span>ViewRefreshMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewRefreshMode.html"><span class="micon cl"></span><span>ViewRefreshMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewRefreshTime.html"><span class="micon cl"></span><span>ViewRefreshTime</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewRefreshTime$.html"><span class="micon ob"></span><span>ViewRefreshTime</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewVolume$.html"><span class="micon ob"></span><span>ViewVolume</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/ViewVolume.html"><span class="micon cl"></span><span>ViewVolume</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Visibility.html"><span class="micon cl"></span><span>Visibility</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Visibility$.html"><span class="micon ob"></span><span>Visibility</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Width$.html"><span class="micon ob"></span><span>Width</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../kml/Width.html"><span class="micon cl"></span><span>Width</span></a></span></div></div><div class="ni n1 expanded"><span class="nh h100 expanded cs"><button class="ar icon-button expanded"></button><a href="../render.html"><span class="micon pa"></span><span>render</span></a></span><div class="ni n2 "><span class="nh "><a href="BaseFormat.html"><span class="micon cl"></span><span>BaseFormat</span></a></span></div><div class="ni n2 "><span class="nh "><a href="Format.html"><span class="micon tr"></span><span>Format</span></a></span></div><div class="ni n2 "><span class="nh "><a href="FormatIndented.html"><span class="micon cl"></span><span>FormatIndented</span></a></span></div><div class="ni n2 "><span class="nh "><a href="FormatText.html"><span class="micon cl"></span><span>FormatText</span></a></span></div><div class="ni n2 "><span class="nh "><a href="FormatXML$.html"><span class="micon ob"></span><span>FormatXML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="FormatXML.html"><span class="micon cl"></span><span>FormatXML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="Renderer.html"><span class="micon tr"></span><span>Renderer</span></a></span></div><div class="ni n2 expanded"><span class="nh h100 selected"><a href="#"><span class="micon ob"></span><span>Renderer</span></a></span></div><div class="ni n2 "><span class="nh "><a href="Renderers.html"><span class="micon tr"></span><span>Renderers</span></a></span></div><div class="ni n2 "><span class="nh "><a href="Renderers$.html"><span class="micon ob"></span><span>Renderers</span></a></span></div><div class="ni n2 "><span class="nh "><a href="StateR$.html"><span class="micon ob"></span><span>StateR</span></a></span></div><div class="ni n2 "><span class="nh "><a href="StateR.html"><span class="micon cl"></span><span>StateR</span></a></span></div></div><div class="ni n1"><span class="nh "><button class="ar icon-button "></button><a href="../xml.html"><span class="micon pa"></span><span>xml</span></a></span><div class="ni n2 "><span class="nh "><a href="../xml/ChildNames$.html"><span class="micon ob"></span><span>ChildNames</span></a></span></div><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="../xml/Extractor$.html"><span class="micon ob"></span><span>Extractor</span></a></span><div class="ni n3 "><span class="nh "><a href="../xml/Extractor$$charSequenceExtractor$.html"><span class="micon ob"></span><span>charSequenceExtractor</span></a></span></div></div><div class="ni n2 "><span class="nh "><a href="../xml/Extractor.html"><span class="micon tr"></span><span>Extractor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/Extractors.html"><span class="micon tr"></span><span>Extractors</span></a></span></div><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="../xml/Extractors$.html"><span class="micon ob"></span><span>Extractors</span></a></span><div class="ni n3 "><span class="nh "><a href="../xml/Extractors$$BooleanMultiExtractor$.html"><span class="micon ob"></span><span>BooleanMultiExtractor</span></a></span></div><div class="ni n3 "><span class="nh "><a href="../xml/Extractors$$DoubleMultiExtractor$.html"><span class="micon ob"></span><span>DoubleMultiExtractor</span></a></span></div><div class="ni n3 "><span class="nh "><a href="../xml/Extractors$$IntMultiExtractor$.html"><span class="micon ob"></span><span>IntMultiExtractor</span></a></span></div><div class="ni n3 "><span class="nh "><a href="../xml/Extractors$$LongMultiExtractor$.html"><span class="micon ob"></span><span>LongMultiExtractor</span></a></span></div></div><div class="ni n2 "><span class="nh "><a href="../xml/GenericCData.html"><span class="micon cl"></span><span>GenericCData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/GenericContent.html"><span class="micon tr"></span><span>GenericContent</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/GenericElement.html"><span class="micon cl"></span><span>GenericElement</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/GenericElement$.html"><span class="micon ob"></span><span>GenericElement</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/GenericText.html"><span class="micon cl"></span><span>GenericText</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/MultiExtractor$.html"><span class="micon ob"></span><span>MultiExtractor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/MultiExtractor.html"><span class="micon tr"></span><span>MultiExtractor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/MultiExtractorBase$.html"><span class="micon ob"></span><span>MultiExtractorBase</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/MultiExtractorBase.html"><span class="micon cl"></span><span>MultiExtractorBase</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/NamedFunction.html"><span class="micon tr"></span><span>NamedFunction</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/NamedFunction$.html"><span class="micon ob"></span><span>NamedFunction</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/NodeParser$.html"><span class="micon ob"></span><span>NodeParser</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/Plural$.html"><span class="micon ob"></span><span>Plural</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/RichXml.html"><span class="micon cl"></span><span>RichXml</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/SubclassExtractor.html"><span class="micon cl"></span><span>SubclassExtractor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/TagToExtractorFunc.html"><span class="micon tr"></span><span>TagToExtractorFunc</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/TagToSequenceExtractorFunc.html"><span class="micon tr"></span><span>TagToSequenceExtractorFunc</span></a></span></div><div class="ni n2 "><span class="nh "><a href="../xml/Zip$.html"><span class="micon ob"></span><span>Zip</span></a></span></div></div></div></nav></div><div id="footer" class="body-small"><div class="left-container">Generated with</div><div class="right-container"><div class="text"></div></div><div class="text-mobile"></div></div><div id="scaladoc-searchBar"></div><div id="main"><div class="breadcrumbs container"><a href="../../../../index.html">XmlDoc</a>/<a href="../../xmldoc.html">com.phasmidsoftware.xmldoc</a>/<a href="../render.html">com.phasmidsoftware.xmldoc.render</a>/<a href="Renderer$.html">Renderer</a></div><div id="content" class="body-medium"><div><div class="cover-header">
+ <a href="Renderer.html"><span class="icon"><span class="micon ob"></span><span class="micon companion tr"></span></span></a>
+ <h1 class="h600 multi">Renderer</h1>
+</div>
+<div class="fqname body-large">
+ <span>com.phasmidsoftware.xmldoc.render.Renderer</span>
+</div>
+<div class="companion-badge body-small">
+ <span>See the<span class="micon tr"></span><a href="Renderer.html">Renderer</a> companion trait</span>
+</div>
+<div class="main-signature mono-small-block">
+ <div class="signature">
+  <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="Renderer$.html" t="n" class="documentableName ">Renderer</a>
+ </div>
+</div>
+<div class="cover">
+ <div class="doc">
+  <p>Utility object for working with the <code>Renderer</code> typeclass. Provides methods to build, manipulate, and use instances of <code>Renderer</code> for rendering various types as strings.</p>
+ </div>
+ <section id="attributes">
+  <h2 class="h500">Attributes</h2>
+  <dl class="attributes">
+   <dt class="body-small">Companion</dt>
+   <dd class="body-medium">
+    <a href="Renderer.html">trait</a>
+   </dd>
+   <dt class="body-small">Graph</dt>
+   <dd class="body-medium">
+    <div id="inheritance-diagram" class="diagram-class showGraph">
+     <button type="button" class="label-only-button" onclick="zoomOut()">Reset zoom</button><button type="button" class="label-only-button" onclick="hideGraph()">Hide graph</button><button type="button" class="label-only-button" onclick="showGraph()">Show graph</button>
+     <svg id="graph"></svg>
+     <script type="text/dot" id="dot"> digraph g {
+ node0 [id=node0, label="<span style=\"color: #FFFFFF;\">object <a href=\"Renderer$.html\" t=\"n\">Renderer</a></span>", class="object vertex"];
+node1 [id=node1, label="<span style=\"color: #FFFFFF;\">class <span data-unresolved-link=\"\" t=\"n\">Object</span></span>", class="class vertex"];
+node2 [id=node2, label="<span style=\"color: #FFFFFF;\">class <span data-unresolved-link=\"\" t=\"n\">Any</span></span>", class="class vertex"];
+node3 [id=node3, label="<span style=\"color: #FFFFFF;\">trait <span data-unresolved-link=\"\" t=\"n\">Matchable</span></span>", class="trait vertex"];
+
+
+ node0 -> node1;
+node1 -> node2;
+node1 -> node3;
+node3 -> node2;
+
+}
+</script>
+    </div>
+   </dd>
+   <dt class="body-small">Supertypes</dt>
+   <dd class="body-medium">
+    <div class="mono-small-block supertypes">
+     <div>
+      class <span data-unresolved-link="" t="n">Object</span>
+     </div>
+     <div>
+      trait <span data-unresolved-link="" t="n">Matchable</span>
+     </div>
+     <div>
+      class <span data-unresolved-link="" t="n">Any</span>
+     </div>
+     <span></span>
+    </div>
+   </dd>
+   <dt class="body-small">Self type</dt>
+   <dd class="body-medium">
+    <div class="mono-small-block supertypes">
+     <span></span>
+     <div>
+      <a href="Renderer$.html" t="n">Renderer</a>.<span t="k">type</span>
+     </div>
+    </div>
+   </dd>
+  </dl>
+ </section>
+</div>
+<section id="members-list">
+ <h2 class="h500">Members list</h2>
+ <div class="documentableFilter">
+  <div class="filtersContainer"></div>
+  <input class="filterableInput" placeholder="Filter by any phrase" data-test-id="filterBarInput" type="search"><button class="clearButton label-only-button" data-test-id="filterBarClearButton">Clear all</button>
+ </div>
+ <div class="membersList expand">
+  <div class="tabs">
+   <div class="contents">
+    <section id="Value-members">
+     <div data-togglable="Value members" class="tab expand">
+      <div class="member-group-header">
+       <h3 data-togglable="Value members" class="h400">Value members</h3>
+      </div>
+      <section id="Concrete-methods">
+       <div class="documentableList expand">
+        <div class="documentableList-expander">
+         <button class="icon-button show-content expand"></button>
+         <h4 class="groupHeader h200">Concrete methods</h4>
+        </div>
+        <div class="documentableElement" id="apply-fffff966">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="Renderer$.html#apply-fffff966" t="n" class="documentableName ">apply</a>[<span t="k"></span><span data-unresolved-link="" t="t">T</span>](<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">function</span>: (<span data-unresolved-link="" t="t">T</span>, <a href="Format.html" t="t">Format</a>, <a href="StateR.html" t="t">StateR</a>) <span t="k">=&gt;</span> <span data-unresolved-link="" t="t">Try</span>[<span data-unresolved-link="" t="t">String</span>]): <a href="Renderer.html" t="t">Renderer</a>[<span data-unresolved-link="" t="t">T</span>]
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Method which allows us to wrap a function as a Renderer.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Method which allows us to wrap a function as a Renderer.</p>
+             </div>
+             <h2 class="h200">Type parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">T</dt>
+              <dd class="body-medium">
+               <p>the type to be rendered.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">function</dt>
+              <dd class="body-medium">
+               <p>the function to be wrapped. It has the same signature as this apply method so it is simply a syntactic convenience.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>a Renderer[T].</p>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="createLazy-fffffd23">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="Renderer$.html#createLazy-fffffd23" t="n" class="documentableName ">createLazy</a>[<span t="k"></span><span data-unresolved-link="" t="t">T</span>](<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">tr</span>: <span t="k">=&gt;</span> <a href="Renderer.html" t="t">Renderer</a>[<span data-unresolved-link="" t="t">T</span>]): <a href="Renderer.html" t="t">Renderer</a>[<span data-unresolved-link="" t="t">T</span>]
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Method to create a lazy Renderer[T] from an explicit Renderer[T] which is call-by-name. The purpose of this method is to break the infinite recursion caused when implicit values are defined recursively. See the Play JSON library method in JsPath called lazyRead.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Method to create a lazy Renderer[T] from an explicit Renderer[T] which is call-by-name. The purpose of this method is to break the infinite recursion caused when implicit values are defined recursively. See the Play JSON library method in JsPath called lazyRead.</p>
+             </div>
+             <h2 class="h200">Type parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">T</dt>
+              <dd class="body-medium">
+               <p>the underlying type of the Renderer required.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">tr</dt>
+              <dd class="body-medium">
+               <p>a Renderer[T].</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>a Renderer[T].</p>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="maybeAttributeName-fffff26c">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="Renderer$.html#maybeAttributeName-fffff26c" t="n" class="documentableName ">maybeAttributeName</a>[<span t="k"></span><span data-unresolved-link="" t="t">R</span><span t="k"> &lt;: </span><span data-unresolved-link="" t="t">Product</span>](<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">r</span>: <span data-unresolved-link="" t="t">R</span>, <span t="k"></span><span data-unresolved-link="" t="n">index</span>: <span data-unresolved-link="" t="t">Int</span>, <span t="k"></span><span data-unresolved-link="" t="n">useName</span>: <span data-unresolved-link="" t="t">Boolean</span> = ...): <span data-unresolved-link="" t="t">Option</span>[<span data-unresolved-link="" t="t">String</span>]
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Determines an attribute name based on the given index and product element name, with an option to override behavior using a flag.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Determines an attribute name based on the given index and product element name, with an option to override behavior using a flag.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">index</dt>
+              <dd class="body-medium">
+               <p>the zero-based index of the element to inspect in the product.</p>
+              </dd>
+              <dt class="body-small">r</dt>
+              <dd class="body-medium">
+               <p>the instance of a Product from which the attribute name is determined.</p>
+              </dd>
+              <dt class="body-small">useName</dt>
+              <dd class="body-medium">
+               <p>a flag indicating whether to use the element name directly if no attribute extraction is possible; defaults to false.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>an Option containing the determined attribute name as a String, or None if no valid attribute name can be resolved.</p>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="render-fffffbd9">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="Renderer$.html#render-fffffbd9" t="n" class="documentableName ">render</a>[<span t="k"></span><span data-unresolved-link="" t="t">T</span> : <a href="Renderer.html" t="t">Renderer</a>](<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">t</span>: <span data-unresolved-link="" t="t">T</span>, <span t="k"></span><span data-unresolved-link="" t="n">format</span>: <a href="Format.html" t="t">Format</a>, <span t="k"></span><span data-unresolved-link="" t="n">stateR</span>: <a href="StateR.html" t="t">StateR</a>): <span data-unresolved-link="" t="t">Try</span>[<span data-unresolved-link="" t="t">String</span>]
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Render the T value using the implicitly found Renderer[T]. Debug-log the renderer and its result.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Render the T value using the implicitly found Renderer[T]. Debug-log the renderer and its result.</p>
+             </div>
+             <h2 class="h200">Type parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">T</dt>
+              <dd class="body-medium">
+               <p>the type of t.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">format</dt>
+              <dd class="body-medium">
+               <p>the Format.</p>
+              </dd>
+              <dt class="body-small">stateR</dt>
+              <dd class="body-medium">
+               <p>the StateR.</p>
+              </dd>
+              <dt class="body-small">t</dt>
+              <dd class="body-medium">
+               <p>the value to be rendered.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>a String.</p>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="renderAttribute-fffff99f">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="Renderer$.html#renderAttribute-fffff99f" t="n" class="documentableName ">renderAttribute</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">w</span>: <span data-unresolved-link="" t="t">CharSequence</span>, <span t="k"></span><span data-unresolved-link="" t="n">maybeName</span>: <span data-unresolved-link="" t="t">Option</span>[<span data-unresolved-link="" t="t">String</span>]): <span data-unresolved-link="" t="t">Try</span>[<span data-unresolved-link="" t="t">String</span>]
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Renders an attribute in a string format based on the given name and value. If a name is provided in <code>maybeName</code>, the result will be formatted as <code>name="value"</code>. Otherwise, only the value will be returned as a string.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Renders an attribute in a string format based on the given name and value. If a name is provided in <code>maybeName</code>, the result will be formatted as <code>name="value"</code>. Otherwise, only the value will be returned as a string.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">maybeName</dt>
+              <dd class="body-medium">
+               <p>an optional string representing the attribute name.</p>
+              </dd>
+              <dt class="body-small">w</dt>
+              <dd class="body-medium">
+               <p>the value to be rendered as a <code>CharSequence</code>.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Returns</dt>
+              <dd class="body-medium">
+               <p>a <code>Try[String]</code> containing the rendered attribute or an exception if the operation fails.</p>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </section>
+     </div>
+    </section>
+   </div>
+  </div>
+ </div>
+</section></div><div id="toc" class="body-small"><div id="toc-container"><span class="toc-title h200">In this article</span><nav class="toc-nav"><ul class="toc-list"><li><a href="#attributes">Attributes</a></li><li><a href="#members-list">Members list</a><ul><li><a href="#Value-members">Value members</a><ul><li><a href="#Concrete-methods">Concrete methods</a></li></ul></li></ul></li></ul></nav></div></div></div><div id="footer" class="body-small mobile-footer"><div class="left-container">Generated with</div><div class="right-container"><div class="text"></div></div><div class="text-mobile"></div></div></div></div></body></html>
