@@ -41,6 +41,7 @@ libraryDependencies ++= Seq(
 ```
 
 (see the Maven Central badges above for the current published version).
+XmlDoc 1.1.3 and later need Scala 3.9 or later; for Scala 3.8, use 1.1.2. (No release supports Scala 3.3.)
 
 ```scala
 import com.phasmidsoftware.xmldoc.kml.*
