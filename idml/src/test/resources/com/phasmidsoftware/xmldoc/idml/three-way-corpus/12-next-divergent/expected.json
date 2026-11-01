@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "case": "12-next-divergent",
+  "requirement": "Divergent NextTextFrame references",
+  "expectedStatus": "conflict",
+  "acceptedEdits": [],
+  "conflicts": [
+    {
+      "type": "reference-divergence",
+      "target": "tf1@NextTextFrame",
+      "left": "tfA",
+      "right": "tfB",
+      "resolution": "manual"
+    }
+  ],
+  "invariants": {
+    "commonBase": true,
+    "unchangedSelfValuesStable": true,
+    "reciprocalThreadReferencesRequired": true
+  },
+  "artifacts": {
+    "base.idml": {
+      "sha256": "c8f7a0666f5697949997bf5225d2466c61ef17610af7efa06facdd62f8616485",
+      "bytes": 39547
+    },
+    "left.idml": {
+      "sha256": "0ec39ae3bf913b8050cbf38f26c622524dc075970d8b36dbb5de05401c0b9186",
+      "bytes": 39544
+    },
+    "right.idml": {
+      "sha256": "0b307f29be323c24a8d890e2b09e3e9064af16eb8820cbb02846fb7ab51231a0",
+      "bytes": 39544
+    }
+  },
+  "note": null
+}

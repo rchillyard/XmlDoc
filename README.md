@@ -41,6 +41,7 @@ libraryDependencies ++= Seq(
 ```
 
 (see the Maven Central badges above for the current published version).
+XmlDoc 1.1.3 and later need Scala 3.9 or later; for Scala 3.8, use 1.1.2. (No release supports Scala 3.3.)
 
 ```scala
 import com.phasmidsoftware.xmldoc.kml.*
@@ -60,6 +61,13 @@ see `kml/src/test/scala/.../KmlSpec.scala` for realistic examples, including edi
 `Placemark`s.
 
 ## Versions
+
+Version 1.1.3 Adds 3-way merging of XML trees to `core` (package `merge`): a PCS representation of
+trees, after Lindholm (`Pcs`), edit detection (`PcsEditDetector`), reconciliation of two edit sets
+(`PcsMerger`), and reconstruction of the merged tree (`PcsTreeBuilder`). The `idml` module wires
+these together end to end (`ThreeWayMerger`) and adds a runnable git merge driver for `.idml`
+files (`IdmlMergeDriver`); `kml` gets a full real-document 3-way merge test. Built with Scala 3.9.0
+(the current LTS), so it needs Scala 3.9 or later (1.1.2 needs 3.8). Uses Flog 1.1.0 and Args 2.1.0.
 
 Version 1.1.0 Split into `core`/`kml`/`kml-it` modules; renamed KmlDoc → XmlDoc; published to
 Maven Central. `idml` module added (early stage, unreleased). The `kml` round-trip tests were

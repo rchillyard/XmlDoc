@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "case": "01-single-add",
+  "requirement": "Single-sided insertion",
+  "expectedStatus": "accept",
+  "acceptedEdits": [
+    {
+      "side": "left",
+      "type": "insert",
+      "target": "r5",
+      "description": "Insert r5 after r2."
+    }
+  ],
+  "conflicts": [],
+  "invariants": {
+    "commonBase": true,
+    "unchangedSelfValuesStable": true,
+    "reciprocalThreadReferencesRequired": true
+  },
+  "artifacts": {
+    "base.idml": {
+      "sha256": "4ea1cd74b72ebf52ddb3fdec329d66b8058c8181a5d472978322af3d8841f33d",
+      "bytes": 39544
+    },
+    "left.idml": {
+      "sha256": "8376959a0a412cc55f9e03b6fcbcf7431d47b88aba44faa791ccd6b59fcc5a14",
+      "bytes": 39580
+    },
+    "right.idml": {
+      "sha256": "4ea1cd74b72ebf52ddb3fdec329d66b8058c8181a5d472978322af3d8841f33d",
+      "bytes": 39544
+    }
+  },
+  "note": null
+}

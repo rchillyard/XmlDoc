@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "case": "09-zorder",
+  "requirement": "Z-order changes",
+  "expectedStatus": "accept",
+  "acceptedEdits": [
+    {
+      "side": "left",
+      "type": "z-order",
+      "target": "r1",
+      "description": "Constrain r1 after r2."
+    },
+    {
+      "side": "right",
+      "type": "z-order",
+      "target": "r2",
+      "description": "Constrain r2 before r1."
+    }
+  ],
+  "conflicts": [],
+  "invariants": {
+    "commonBase": true,
+    "unchangedSelfValuesStable": true,
+    "reciprocalThreadReferencesRequired": true
+  },
+  "artifacts": {
+    "base.idml": {
+      "sha256": "1baeb5ea3d4314e65060c0d8041a4b87be30bbbd4f98cd7aec7a1b150be40d46",
+      "bytes": 39542
+    },
+    "left.idml": {
+      "sha256": "c218bd7fb32a224d0183ab45e3598f63ddeee87d5ac347bc6bb792236c103ca0",
+      "bytes": 39543
+    },
+    "right.idml": {
+      "sha256": "c218bd7fb32a224d0183ab45e3598f63ddeee87d5ac347bc6bb792236c103ca0",
+      "bytes": 39543
+    }
+  },
+  "note": "Both branches encode the compatible order r2, r1."
+}

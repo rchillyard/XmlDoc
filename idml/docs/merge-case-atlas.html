@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3-way merge case atlas — ordered trees &amp; graphs (IDML)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FBFCFE; --panel:#FFFFFF; --ink:#16202F; --muted:#59626F; --faint:#8A93A1;
+  --line:#E4E8EE; --line2:#EEF1F6;
+  --u-bg:#EDF0F4; --u-bd:#DDE2E9; --u-tx:#2A3444;
+  --ins-bg:#E3F5EB; --ins-bd:#B4E1C5; --ins-tx:#0E7A46;
+  --del-bg:#FBE8EA; --del-bd:#F0C1C6; --del-tx:#B4353C;
+  --mv-bg:#E6EEFC; --mv-bd:#C2D5F4; --mv-tx:#1F55B0;
+  --mod-bg:#FAF0DA; --mod-bd:#E8D5A4; --mod-tx:#946512;
+  --gh-bd:#C7CDD7; --gh-tx:#8A93A1;
+  --accept:#12875A; --converge:#0E8A8A; --policy:#B4791A; --conflict:#C7343B; --meta:#8A93A1;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'IBM Plex Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px; margin:0 auto; padding:0 22px 96px}
+
+/* ---- sticky index ---- */
+.nav{position:sticky; top:0; z-index:20; background:rgba(251,252,254,.86);
+  backdrop-filter:saturate(1.4) blur(8px); border-bottom:1px solid var(--line);}
+.nav-in{max-width:1080px; margin:0 auto; padding:9px 22px; display:flex; gap:14px; align-items:center; overflow-x:auto}
+.nav-brand{font-weight:700; font-size:13px; letter-spacing:-.01em; white-space:nowrap; color:var(--ink); padding-right:4px}
+.nav a{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--muted); text-decoration:none;
+  padding:3px 8px; border-radius:6px; white-space:nowrap}
+.nav a:hover{color:var(--ink); background:var(--line2)}
+.nav a:focus-visible{outline:2px solid var(--mv-tx); outline-offset:2px}
+
+/* ---- masthead ---- */
+.mast{padding:44px 0 8px}
+h1{font-size:31px; line-height:1.12; letter-spacing:-.015em; font-weight:700; margin:0 0 14px}
+.lede{max-width:70ch; color:var(--muted); margin:0 0 26px; font-size:15px}
+.lede b{color:var(--ink); font-weight:600}
+
+/* ---- legend ---- */
+.legend{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px 34px;
+  border:1px solid var(--line); background:var(--panel); border-radius:12px; padding:20px 22px}
+.leg-h{font-size:11.5px; font-weight:600; color:var(--faint); letter-spacing:.04em; margin-bottom:11px; text-transform:lowercase}
+.leg-row{display:flex; align-items:baseline; gap:10px; margin:7px 0; font-size:13px; color:var(--muted)}
+.leg-row .chip{flex:0 0 auto}
+.leg-key{font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--ink); flex:0 0 auto; min-width:0}
+.notation{font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--muted); line-height:1.9}
+.notation b{color:var(--ink); font-weight:600}
+@media(max-width:720px){ .legend{grid-template-columns:1fr} }
+
+/* ---- section ---- */
+.sect{margin-top:52px; scroll-margin-top:60px}
+.sect-h{display:flex; gap:14px; align-items:flex-start; padding-bottom:16px; border-bottom:1px solid var(--line)}
+.sect-num{font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:14px; color:var(--ink);
+  background:var(--u-bg); border:1px solid var(--u-bd); border-radius:8px; padding:5px 9px; line-height:1; margin-top:2px}
+.sect-h h2{margin:0; font-size:19px; font-weight:600; letter-spacing:-.01em}
+.sect-p{margin:3px 0 0; color:var(--muted); font-size:13.5px; max-width:74ch}
+
+/* ---- case card ---- */
+.cases{display:flex; flex-direction:column; gap:14px; margin-top:20px}
+.case{background:var(--panel); border:1px solid var(--line); border-left-width:4px; border-radius:10px; padding:15px 17px 16px}
+.edge-accept{border-left-color:var(--accept)}
+.edge-converge{border-left-color:var(--converge)}
+.edge-policy{border-left-color:var(--policy)}
+.edge-conflict{border-left-color:var(--conflict)}
+.edge-meta{border-left-color:var(--meta)}
+.case-h{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px}
+.cid{font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; color:var(--ink)}
+.case-b{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+.badge{display:inline-flex; align-items:center; gap:6px; font-size:11.5px; font-weight:600;
+  padding:3px 9px 3px 8px; border-radius:20px; border:1px solid}
+.badge .dot{width:6px; height:6px; border-radius:50%}
+.b-accept{color:var(--accept); border-color:var(--ins-bd); background:var(--ins-bg)} .b-accept .dot{background:var(--accept)}
+.b-converge{color:var(--converge); border-color:#B6E2E2; background:#E1F4F4} .b-converge .dot{background:var(--converge)}
+.b-policy{color:var(--policy); border-color:var(--mod-bd); background:var(--mod-bg)} .b-policy .dot{background:var(--policy)}
+.b-conflict{color:var(--conflict); border-color:var(--del-bd); background:var(--del-bg)} .b-conflict .dot{background:var(--conflict)}
+.b-meta{color:var(--meta); border-color:var(--u-bd); background:var(--u-bg)} .b-meta .dot{background:var(--meta)}
+.tag{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--faint); padding:2px 6px; border:1px dashed var(--line); border-radius:6px}
+
+/* ---- lanes ---- */
+.lanes{display:flex; flex-direction:column; gap:2px}
+.lane{display:grid; grid-template-columns:66px 1fr; gap:12px; align-items:start; padding:4px 0}
+.lane.sep{border-top:1px solid var(--line2); margin-top:3px; padding-top:9px}
+.role{font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:var(--faint); display:flex; align-items:center; gap:6px; padding-top:4px}
+.role::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--faint); flex:0 0 auto}
+.role-left::before{background:#5b7fd0}
+.role-right::before{background:#b07ac0}
+.role-merged, .role-result{color:var(--ink); font-weight:600}
+.role-merged::before, .role-result::before{background:var(--ink)}
+.body{min-width:0}
+.op{font-size:12px; color:var(--muted); margin-top:6px}
+.op b{color:var(--ink); font-weight:600}
+.uc{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--faint); margin-left:6px}
+.sub{font-size:11.5px; color:var(--faint); margin-top:3px; font-style:italic}
+
+/* ---- chips ---- */
+.seq{display:flex; flex-wrap:wrap; gap:5px; align-items:center}
+.chip{font-family:'IBM Plex Mono',monospace; font-size:12.5px; font-weight:500; line-height:1;
+  padding:5px 8px; border-radius:6px; border:1px solid var(--u-bd); background:var(--u-bg); color:var(--u-tx);
+  display:inline-flex; align-items:center; gap:2px; white-space:nowrap}
+.chip .g{font-weight:600; opacity:.85; margin-right:1px}
+.st-ins{background:var(--ins-bg); border-color:var(--ins-bd); color:var(--ins-tx)}
+.st-del{background:var(--del-bg); border-color:var(--del-bd); color:var(--del-tx); text-decoration:line-through; text-decoration-thickness:1.5px}
+.st-mv{background:var(--mv-bg); border-color:var(--mv-bd); color:var(--mv-tx)}
+.st-mod{background:var(--mod-bg); border-color:var(--mod-bd); color:var(--mod-tx)}
+.st-ghost{background:transparent; border:1px dashed var(--gh-bd); color:var(--gh-tx); font-style:italic; opacity:.85}
+.arrow{color:var(--faint); font-family:'IBM Plex Mono',monospace; font-size:12px; margin:0 1px}
+
+/* ---- groups (reparenting) ---- */
+.groups{display:flex; flex-wrap:wrap; gap:9px; align-items:flex-start}
+.grp{border:1px solid var(--line); border-radius:8px; padding:6px 8px 8px; background:#FCFDFE; min-width:44px}
+.grp-label{display:block; font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--faint); margin-bottom:6px}
+.grp.gone{border-style:dashed; opacity:.7}
+.grp.gone .grp-label{color:var(--del-tx); text-decoration:line-through}
+
+/* ---- refline ---- */
+.refline{font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--muted);
+  background:#FBFAF3; border:1px solid var(--mod-bd); border-radius:6px; padding:5px 9px; display:inline-block}
+.ref-val{color:var(--mod-tx); font-weight:600}
+
+/* ---- richtext ---- */
+.rich{font-size:13.5px; line-height:1.7; color:var(--ink)}
+.r-del{color:var(--del-tx); text-decoration:line-through; text-decoration-thickness:1.5px}
+.r-ins{color:var(--ins-tx); background:var(--ins-bg); border-radius:3px; padding:0 2px}
+.r-mod{color:var(--mod-tx); background:var(--mod-bg); border-radius:3px; padding:0 2px}
+.r-ov{background:var(--del-bg); border-bottom:2px solid var(--conflict); border-radius:3px 3px 0 0; padding:0 1px}
+
+/* ---- conflict / policy strips ---- */
+.conflict, .policy-strip{border-radius:8px; padding:9px 11px; font-size:13px}
+.conflict{background:var(--del-bg); border:1px solid var(--del-bd); color:var(--del-tx)}
+.policy-strip{background:var(--mod-bg); border:1px solid var(--mod-bd); color:var(--mod-tx)}
+.cx, .px{font-weight:600; display:block}
+.cand{margin-top:9px; display:flex; flex-direction:column; gap:6px}
+.cand-row{display:flex; gap:9px; align-items:center; flex-wrap:wrap}
+.cand-lbl{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--muted); min-width:64px}
+
+/* ---- footer ---- */
+.foot{margin-top:60px; padding-top:22px; border-top:1px solid var(--line); color:var(--faint); font-size:12.5px; max-width:78ch}
+.foot code{font-family:'IBM Plex Mono',monospace; color:var(--muted)}
+
+@media(max-width:560px){
+  .lane{grid-template-columns:1fr; gap:4px}
+  .role{padding-top:0}
+  h1{font-size:26px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav"><div class="nav-in" id="navin"><span class="nav-brand">merge case atlas</span></div></nav>
+
+<div class="wrap">
+  <header class="mast">
+    <h1>3-way merge case atlas — ordered trees &amp; graphs (IDML)</h1>
+    <p class="lede">One parent holds <b>1..n</b> children. Each case is a common ancestor (<b>base</b>) with two independent edits (<b>left</b>, <b>right</b>) and the expected merge. Position is stored as a <b>(predecessor Self, successor Self)</b> pair — relative to concrete siblings, never an ordinal index that shifts when siblings are added or removed. Every rule must behave identically whether a parent holds 3 children or 30.</p>
+
+    <div class="legend">
+      <div>
+        <div class="leg-h">node states</div>
+        <div class="leg-row"><span class="chip st-u">A</span><span class="leg-key">unchanged</span></div>
+        <div class="leg-row"><span class="chip st-ins"><span class="g">+</span>X</span><span class="leg-key">inserted</span></div>
+        <div class="leg-row"><span class="chip st-del">C</span><span class="leg-key">deleted</span></div>
+        <div class="leg-row"><span class="chip st-mv"><span class="g">↦</span>C</span><span class="leg-key">moved (new slot)</span></div>
+        <div class="leg-row"><span class="chip st-ghost">C</span><span class="leg-key">vacated slot</span></div>
+        <div class="leg-row"><span class="chip st-mod"><span class="g">Δ</span>C</span><span class="leg-key">modified</span></div>
+      </div>
+      <div>
+        <div class="leg-h">outcome</div>
+        <div class="leg-row"><span class="badge b-accept"><span class="dot"></span>Accept</span><span class="leg-key" style="font-family:inherit;color:var(--muted)">both edits apply</span></div>
+        <div class="leg-row"><span class="badge b-converge"><span class="dot"></span>Converge</span><span class="leg-key" style="font-family:inherit;color:var(--muted)">both branches reach one state</span></div>
+        <div class="leg-row"><span class="badge b-policy"><span class="dot"></span>Policy</span><span class="leg-key" style="font-family:inherit;color:var(--muted)">a fixed tie-break decides order</span></div>
+        <div class="leg-row"><span class="badge b-conflict"><span class="dot"></span>Conflict</span><span class="leg-key" style="font-family:inherit;color:var(--muted)">incompatible, manual resolve</span></div>
+        <div class="leg-h" style="margin-top:16px">notation</div>
+        <div class="notation"><b>[A,B,C,D]</b> sibling order &nbsp;·&nbsp; <b>∅</b> head/tail boundary<br><b>gap</b> = the slot between two siblings<br><b>↦ P2</b> = re-parented into P2</div>
+      </div>
+    </div>
+  </header>
+
+  <div id="root"></div>
+
+  <footer class="foot">
+    Extends the base atlas (<code>uc01</code>–<code>uc13</code>) along the multi-sibling axis. The genuinely new categories — ones that cannot be reasoned about from a 2-child intuition — are <code>N2</code> same-gap multi-insert &amp; intra-branch chains, all of <code>N5</code> (anchor-fallback cascades), <code>N7-cycle</code> (graph-only), <code>N8</code> reference/order consistency, and <code>N9</code> script-overlap granularity. Store each as <code>case-name/{base,left,right}.idml</code> + <code>expected.json</code> with keys <code>ordering_policy</code>, <code>anchor_fallback</code>, <code>conflict_type</code>.
+  </footer>
+</div>
+
+<script>
+const u  = id => ({id, st:'u'});
+const ins= id => ({id, st:'ins'});
+const del= id => ({id, st:'del'});
+const mv = id => ({id, st:'mv'});
+const gh = id => ({id, st:'ghost'});
+const mod= id => ({id, st:'mod'});
+
+const ROLE = {base:'base', left:'left', right:'right', merged:'merged', result:'result'};
+
+const SECTIONS = [
+{ num:'N1', id:'n1', title:'Single-side anchor correctness',
+  purpose:'Validate the anchor model itself. Not conflict cases — all accept. Boundary anchors (null predecessor / successor) behave differently from a mid gap once n≥3, so they are listed separately.',
+  cases:[
+    { id:'n1-insert-head', badge:'accept', tag:'boundary anchor',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'result', seq:[ins('X'),u('A'),u('B'),u('C'),u('D')], op:'insert X — <b>pred=∅</b>, succ=A'} ]},
+    { id:'n1-insert-mid', badge:'accept',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'result', seq:[u('A'),u('B'),ins('X'),u('C'),u('D')], op:'insert X into the B–C gap'} ]},
+    { id:'n1-insert-tail', badge:'accept', tag:'boundary anchor',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'result', seq:[u('A'),u('B'),u('C'),u('D'),ins('X')], op:'insert X — pred=D, <b>succ=∅</b>'} ]},
+    { id:'n1-delete-mid', badge:'accept',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'result', seq:[u('A'),u('B'),del('C'),u('D')], op:'delete C — survivors keep order A, B, D'} ]},
+    { id:'n1-move-mid-to-mid', badge:'accept',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'result', seq:[u('A'),mv('C'),u('B'),gh('C'),u('D')], op:'move C to <b>(pred=A, succ=B)</b>'} ]},
+    { id:'n1-move-to-head/tail', badge:'accept', tag:'boundary anchor',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'result', seq:[mv('B'),u('A'),gh('B'),u('C'),u('D')], op:'move B to head (pred=∅)', sub:'tail variant: move B to (pred=D, succ=∅)'} ]},
+  ]},
+
+{ num:'N2', id:'n2', title:'Concurrent insertion — gap arbitration',
+  purpose:'The only category where content cannot decide order. Same-gap outcomes need a fixed, deterministic tie-break; otherwise two "correct" implementations disagree. Multi-insert (kvm) and intra-branch chains appear only at n≥3.',
+  cases:[
+    { id:'n2-diff-gap', badge:'accept',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),ins('X'),u('B'),u('C'),u('D')], op:'insert X after A'},
+              {role:'right', seq:[u('A'),u('B'),u('C'),ins('Y'),u('D')], op:'insert Y after C'},
+              {role:'merged', seq:[u('A'),ins('X'),u('B'),u('C'),ins('Y'),u('D')], op:'disjoint gaps — no arbitration needed'} ]},
+    { id:'n2-same-gap-1v1', badge:'policy', tag:'same gap', uc:'uc04',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),u('B'),ins('X'),u('C'),u('D')], op:'insert X after B'},
+              {role:'right', seq:[u('A'),u('B'),ins('Y'),u('C'),u('D')], op:'insert Y after B'},
+              {role:'merged', seq:[u('A'),u('B'),ins('X'),ins('Y'),u('C'),u('D')], op:'<b>ordering_policy</b>: left before right'} ]},
+    { id:'n2-same-gap-kvm', badge:'policy', tag:'block order',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),u('B'),ins('X1'),ins('X2'),u('C'),u('D')], op:'insert X1, X2 after B'},
+              {role:'right', seq:[u('A'),u('B'),ins('Y1'),ins('Y2'),u('C'),u('D')], op:'insert Y1, Y2 after B'},
+              {role:'merged', seq:[u('A'),u('B'),ins('X1'),ins('X2'),ins('Y1'),ins('Y2'),u('C'),u('D')], op:'policy: <b>block concatenation</b> (vs interleave)', sub:'"left before right" alone is under-specified for multi-node blocks'} ]},
+    { id:'n2-same-boundary-head', badge:'policy', tag:'boundary gap',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[ins('X'),u('A'),u('B'),u('C'),u('D')], op:'insert X at head'},
+              {role:'right', seq:[ins('Y'),u('A'),u('B'),u('C'),u('D')], op:'insert Y at head'},
+              {role:'merged', seq:[ins('X'),ins('Y'),u('A'),u('B'),u('C'),u('D')], op:'policy on the <b>pred=∅</b> gap'} ]},
+    { id:'n2-same-boundary-tail', badge:'policy', tag:'boundary gap',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),u('B'),u('C'),u('D'),ins('X')], op:'insert X at tail'},
+              {role:'right', seq:[u('A'),u('B'),u('C'),u('D'),ins('Y')], op:'insert Y at tail'},
+              {role:'merged', seq:[u('A'),u('B'),u('C'),u('D'),ins('X'),ins('Y')], op:'policy on the <b>succ=∅</b> gap'} ]},
+    { id:'n2-intra-branch-chain', badge:'policy', tag:'chain vs single',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),u('B'),ins('X'),ins('Z'),u('C'),u('D')], op:'insert X after B, then Z after X'},
+              {role:'right', seq:[u('A'),u('B'),ins('Y'),u('C'),u('D')], op:'insert Y after B'},
+              {role:'merged', seq:[u('A'),u('B'),ins('X'),ins('Z'),ins('Y'),u('C'),u('D')], op:'left chain (X,Z) stays a <b>block</b>, then Y by policy'} ]},
+  ]},
+
+{ num:'N3', id:'n3', title:'Concurrent deletion',
+  purpose:'Deleting the same node converges rather than conflicts. Deleting different nodes composes. Adjacency of the remaining survivors must be preserved.',
+  cases:[
+    { id:'n3-same-node', badge:'converge',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),u('B'),del('C'),u('D')], op:'delete C'},
+              {role:'right', seq:[u('A'),u('B'),del('C'),u('D')], op:'delete C'},
+              {role:'merged', seq:[u('A'),u('B'),u('D')], op:'same target — converges, not a conflict'} ]},
+    { id:'n3-diff-node', badge:'accept',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),del('B'),u('C'),u('D')], op:'delete B'},
+              {role:'right', seq:[u('A'),u('B'),u('C'),del('D')], op:'delete D'},
+              {role:'merged', seq:[u('A'),u('C')], op:'both deletes apply'} ]},
+    { id:'n3-adjacent', badge:'accept',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),del('B'),u('C'),u('D')], op:'delete B'},
+              {role:'right', seq:[u('A'),u('B'),del('C'),u('D')], op:'delete C'},
+              {role:'merged', seq:[u('A'),u('D')], op:'A and D become adjacent'} ]},
+  ]},
+
+{ num:'N4', id:'n4', title:'Move interaction — same-parent reorder',
+  purpose:'Moving the same node into different gaps is a move-move conflict (generalizes uc05). Moving into the same gap converges. A move and an insert landing in the same gap is a policy call.',
+  cases:[
+    { id:'n4-move-move-diff-gap', badge:'conflict', tag:'move-move', uc:'uc05',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),mv('C'),u('B'),gh('C'),u('D')], op:'move C after A'},
+              {role:'right', seq:[u('A'),u('B'),gh('C'),u('D'),mv('C')], op:'move C after D'},
+              {role:'merged', conflict:{reason:'move-move on C', candidates:[
+                 {label:'left says', seq:[u('A'),mv('C'),u('B'),u('D')]},
+                 {label:'right says', seq:[u('A'),u('B'),u('D'),mv('C')]} ]}} ]},
+    { id:'n4-move-move-same-gap', badge:'converge',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),mv('C'),u('B'),gh('C'),u('D')], op:'move C after A'},
+              {role:'right', seq:[u('A'),mv('C'),u('B'),gh('C'),u('D')], op:'move C after A'},
+              {role:'merged', seq:[u('A'),mv('C'),u('B'),u('D')], op:'identical target — converges'} ]},
+    { id:'n4-move-vs-insert-samegap', badge:'policy', tag:'move / insert same gap',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),mv('C'),u('B'),gh('C'),u('D')], op:'move C after A'},
+              {role:'right', seq:[u('A'),ins('Y'),u('B'),u('C'),u('D')], op:'insert Y after A'},
+              {role:'merged', seq:[u('A'),mv('C'),ins('Y'),u('B'),u('D')], op:'policy orders the A-gap occupants (moved node + insert)'} ]},
+    { id:'n4-move-diff-nodes', badge:'accept',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),gh('B'),u('C'),u('D'),mv('B')], op:'move B after D'},
+              {role:'right', seq:[u('A'),mv('C'),u('B'),gh('C'),u('D')], op:'move C after A'},
+              {role:'merged', seq:[u('A'),mv('C'),u('D'),mv('B')], op:'no gap collision — both moves apply'} ]},
+  ]},
+
+{ num:'N5', id:'n5', title:'Anchor failure / cascade',
+  purpose:'A neighbor used as an anchor is deleted or moved by the other branch, so the anchor dangles. This is the core new problem at n≥3. Record both predecessor and successor; on failure fall back to the nearest surviving neighbor.',
+  cases:[
+    { id:'n5-anchor-deleted', badge:'accept', tag:'anchor fallback',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),u('B'),ins('X'),u('C'),u('D')], op:'insert X after B (anchor = B)'},
+              {role:'right', seq:[u('A'),del('B'),u('C'),u('D')], op:'delete B'},
+              {role:'merged', seq:[u('A'),ins('X'),u('C'),u('D')], op:'anchor B gone → X falls back between survivors A, C'} ]},
+    { id:'n5-anchor-moved', badge:'policy', tag:'anchor moved',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),u('B'),ins('X'),u('C'),u('D')], op:'insert X after B'},
+              {role:'right', seq:[u('A'),gh('B'),u('C'),u('D'),mv('B')], op:'move B after D'},
+              {role:'merged', policy:{reason:'define: does X track its anchor or its slot?', candidates:[
+                 {label:'track anchor', seq:[u('A'),u('C'),u('D'),mv('B'),ins('X')]},
+                 {label:'keep slot', seq:[u('A'),ins('X'),u('C'),u('D'),mv('B')]} ]}} ]},
+    { id:'n5-both-neighbors-deleted', badge:'accept', tag:'double fallback',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),u('B'),ins('X'),u('C'),u('D')], op:'insert X in the B–C gap'},
+              {role:'right', seq:[u('A'),del('B'),del('C'),u('D')], op:'delete B and C'},
+              {role:'merged', seq:[u('A'),ins('X'),u('D')], op:'both anchors gone → fall back to A, D'} ]},
+    { id:'n5-move-anchor-deleted', badges:['accept','conflict'], edge:'policy', tag:'move anchor deleted',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),mv('C'),u('B'),gh('C'),u('D')], op:'move C to after A'},
+              {role:'right', seq:[del('A'),u('B'),u('C'),u('D')], op:'delete A'},
+              {role:'merged', policy:{reason:'move target A deleted — depends on anchor_fallback', candidates:[
+                 {label:'lenient', seq:[mv('C'),u('B'),u('D')]},
+                 {label:'strict', seq:[del('A')]} ]}, sub:'strict fallback reports "move target lost" as a conflict'} ]},
+    { id:'n5-delete-vs-successor-anchor', badge:'accept', tag:'successor fallback',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),u('B'),ins('X'),u('C'),u('D')], op:'insert X — pred=B, succ=C'},
+              {role:'right', seq:[u('A'),u('B'),del('C'),u('D')], op:'delete C'},
+              {role:'merged', seq:[u('A'),u('B'),ins('X'),u('D')], op:'successor C gone → fall back to next survivor D'} ]},
+  ]},
+
+{ num:'N6', id:'n6', title:'Delete vs modify — structure vs content',
+  purpose:'One branch removes a node while the other changes it. There is no safe merge — a discarded change or a resurrected node either way. Generalizes uc06 / uc06b, including cascades through a deleted container.',
+  cases:[
+    { id:'n6-delete-vs-attr', badge:'conflict', tag:'delete-modify', uc:'uc06',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),u('B'),del('C'),u('D')], op:'delete C'},
+              {role:'right', seq:[u('A'),u('B'),mod('C'),u('D')], op:'modify C attribute (e.g. fill=red)'},
+              {role:'merged', conflict:{reason:'delete-modify on C'}} ]},
+    { id:'n6-delete-vs-subtree', badge:'conflict', tag:'structure + content', uc:'uc06b',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')], sub:'C is a container: C ▸ [c1, c2]'},
+              {role:'left', seq:[u('A'),u('B'),del('C'),u('D')], op:'delete C (whole subtree)'},
+              {role:'right', groups:[{parent:'C ▸', seq:[mod('c1'),u('c2')]}], op:'modify child c1 inside C'},
+              {role:'merged', conflict:{reason:'delete subtree vs modify child'}} ]},
+    { id:'n6-delete-container-vs-grandchild', badge:'conflict', tag:'cascade delete-modify',
+      lanes:[ {role:'base', groups:[{parent:'P', seq:[u('A'),u('B'),u('C')]}], sub:'grandchild path: P ▸ A ▸ a1'},
+              {role:'left', groups:[{parent:'P', seq:[del('A'),del('B'),del('C')], gone:true}], op:'delete container P (cascades to all descendants)'},
+              {role:'right', groups:[{parent:'A ▸', seq:[mod('a1')]}], op:'modify grandchild a1'},
+              {role:'merged', conflict:{reason:'cascade delete-modify — P removed, a1 changed'}} ]},
+  ]},
+
+{ num:'N7', id:'n7', title:'Cross-parent move / re-parenting (graph, not pure tree)',
+  purpose:'Nodes leave one parent and join another. Beyond ordered-tree territory: two branches re-parenting the same node conflict, and mutual re-parenting can form a cycle — a graph-only case that a tree never produces and that needs explicit detection.',
+  cases:[
+    { id:'n7-reparent-single', badge:'accept', tag:'re-parent',
+      lanes:[ {role:'base', groups:[{parent:'P1', seq:[u('A'),u('B'),u('C')]},{parent:'P2', seq:[u('D'),u('E')]}]},
+              {role:'left', groups:[{parent:'P1', seq:[u('A'),u('B'),gh('C')]},{parent:'P2', seq:[u('D'),u('E'),mv('C')]}], op:'move C from P1 to P2'},
+              {role:'result', groups:[{parent:'P1', seq:[u('A'),u('B')]},{parent:'P2', seq:[u('D'),u('E'),mv('C')]}], op:'C ordered by anchor inside P2'} ]},
+    { id:'n7-reparent-move-move', badge:'conflict', tag:'cross-parent move-move',
+      lanes:[ {role:'base', groups:[{parent:'P1', seq:[u('A'),u('B'),u('C')]},{parent:'P2', seq:[u('D')]},{parent:'P3', seq:[u('E')]}]},
+              {role:'left', groups:[{parent:'P1', seq:[u('A'),u('B'),gh('C')]},{parent:'P2', seq:[u('D'),mv('C')]}], op:'move C to P2'},
+              {role:'right', groups:[{parent:'P1', seq:[u('A'),u('B'),gh('C')]},{parent:'P3', seq:[u('E'),mv('C')]}], op:'move C to P3'},
+              {role:'merged', conflict:{reason:'cross-parent move-move on C (P2 vs P3)'}} ]},
+    { id:'n7-reparent-vs-delete', badge:'conflict', tag:'delete-move',
+      lanes:[ {role:'base', groups:[{parent:'P1', seq:[u('A'),u('B'),u('C')]},{parent:'P2', seq:[u('D')]}]},
+              {role:'left', groups:[{parent:'P1', seq:[u('A'),u('B'),gh('C')]},{parent:'P2', seq:[u('D'),mv('C')]}], op:'move C to P2'},
+              {role:'right', groups:[{parent:'P1', seq:[u('A'),u('B'),del('C')]}], op:'delete C'},
+              {role:'merged', conflict:{reason:'delete-move on C'}} ]},
+    { id:'n7-move-into-deleted-parent', badge:'conflict', tag:'target parent deleted',
+      lanes:[ {role:'base', groups:[{parent:'P1', seq:[u('A'),u('B'),u('C')]},{parent:'P2', seq:[u('D')]}]},
+              {role:'left', groups:[{parent:'P1', seq:[u('A'),u('B'),gh('C')]},{parent:'P2', seq:[u('D'),mv('C')]}], op:'move C to P2'},
+              {role:'right', groups:[{parent:'P2', seq:[del('D')], gone:true}], op:'delete parent P2'},
+              {role:'merged', conflict:{reason:'target parent P2 dangling'}} ]},
+    { id:'n7-group-ungroup', badge:'conflict', tag:'structural-parent-change', uc:'uc10',
+      lanes:[ {role:'base', groups:[{parent:'g1', seq:[u('o1'),u('o2'),u('o3')]}]},
+              {role:'left', groups:[{parent:'root', seq:[u('o1'),u('o2'),u('o3')]}], op:'ungroup g1 → children lifted to root'},
+              {role:'right', groups:[{parent:'g1', seq:[u('o1'),u('o3'),mv('o2')]}], op:'move child o2 inside g1'},
+              {role:'merged', conflict:{reason:'structural-parent-change: g1 removed vs move inside g1'}} ]},
+    { id:'n7-cycle', badge:'conflict', tag:'cycle — needs detection',
+      lanes:[ {role:'base', groups:[{parent:'root', seq:[u('A'),u('B')]}]},
+              {role:'left', groups:[{parent:'root', seq:[u('B')]},{parent:'B ▸', seq:[mv('A')]}], op:'move A under B'},
+              {role:'right', groups:[{parent:'root', seq:[u('A')]},{parent:'A ▸', seq:[mv('B')]}], op:'move B under A'},
+              {role:'merged', conflict:{reason:'cycle — A↦child-of-B and B↦child-of-A'}} ]},
+  ]},
+
+{ num:'N8', id:'n8', title:'Reference-driven order (IDML edges beyond parent–child)',
+  purpose:'Order and identity carried by references — thread links (Previous/Next TextFrame), ParentStory — not by sibling position. Divergent reference targets conflict; a reference change vs a sibling move must stay consistent. Systematizes uc11 / uc12 / uc13.',
+  cases:[
+    { id:'n8-thread-insert', badge:'accept', tag:'reference update', uc:'uc11',
+      lanes:[ {role:'base', chain:[u('tf1'),u('tf2')]},
+              {role:'left', chain:[u('tf1'),ins('tfX'),u('tf2')], op:'insert tfX between; update Next / Previous'},
+              {role:'result', chain:[u('tf1'),ins('tfX'),u('tf2')], op:'thread re-linked tf1 → tfX → tf2'} ]},
+    { id:'n8-next-divergent', badge:'conflict', tag:'reference-divergence', uc:'uc12',
+      lanes:[ {role:'base', refline:'tf1.Next = tf2'},
+              {role:'left', refline:'tf1.Next = tfA', op:'redirect thread to tfA'},
+              {role:'right', refline:'tf1.Next = tfB', op:'redirect thread to tfB'},
+              {role:'merged', conflict:{reason:'reference-divergence on tf1.Next (tfA vs tfB)'}} ]},
+    { id:'n8-parentstory-vs-content', badge:'conflict', tag:'reference-divergence', uc:'uc13',
+      lanes:[ {role:'base', refline:'tf2.ParentStory = story1'},
+              {role:'left', refline:'tf2.ParentStory = story2', op:'re-link the frame to story2'},
+              {role:'right', refline:'edit story1 ▸ P2', op:'edit content that had flowed into tf2'},
+              {role:'merged', conflict:{reason:'reference-divergence — parent story vs its content'}} ]},
+    { id:'n8-thread-vs-sibling-move', badges:['policy','conflict'], edge:'policy', tag:'order vs chain',
+      lanes:[ {role:'base', chain:[u('tf1'),u('tf2'),u('tf3')]},
+              {role:'left', refline:'tf1.Next = tf3', op:'bypass tf2 in the thread'},
+              {role:'right', seq:[u('tf1'),u('tf3'),mv('tf2')], op:'move tf2 within the parent'},
+              {role:'merged', policy:{reason:'reconcile structural order with the reference chain', candidates:[
+                 {label:'consistent', seq:[u('tf1'),u('tf3'),mv('tf2')]} ]}, sub:'conflict if the sibling order and the chain end up disagreeing'} ]},
+  ]},
+
+{ num:'N9', id:'n9', title:'Composite edit-script merge',
+  purpose:'Align base / left / right Self sequences with LCS/diff3, then merge both edit scripts. Disjoint scripts compose. Scripts touching the same anchor conflict — this probes the granularity of conflict detection. Intra-script order must survive.',
+  cases:[
+    { id:'n9-disjoint-scripts', badge:'accept', tag:'script merge',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D'),u('E'),u('F')]},
+              {role:'left', seq:[u('A'),ins('X'),mv('C'),del('B'),u('D'),u('E'),u('F')], op:'front script: insert X after A; delete B; move C after X'},
+              {role:'right', seq:[u('A'),u('B'),u('C'),u('D'),u('E'),ins('Y'),del('F')], op:'back script: insert Y after E; delete F'},
+              {role:'merged', seq:[u('A'),ins('X'),mv('C'),u('D'),u('E'),ins('Y')], op:'regions disjoint (D untouched) → scripts merge cleanly'} ]},
+    { id:'n9-overlapping-anchors', badge:'conflict', tag:'anchor overlap',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'left', seq:[u('A'),mv('D'),u('B'),u('C'),gh('D')], op:'move D after A (pins A before D)'},
+              {role:'right', seq:[gh('A'),u('B'),u('C'),u('D'),mv('A')], op:'move A after D (pins A after D)'},
+              {role:'merged', conflict:{reason:'both scripts pin the A–D order, oppositely'}} ]},
+    { id:'n9-order-preservation', badge:'accept', tag:'intra-script order kept',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C'),u('D')]},
+              {role:'result', seq:[u('A'),u('B'),ins('X'),ins('Y'),u('C'),u('D')], op:'insert X after B, then Y after X — X must precede Y'} ]},
+  ]},
+
+{ num:'N10', id:'n10', title:'Degenerate cases &amp; scale',
+  purpose:'One-child and empty parents exercise the boundary gaps. The scale check confirms the anchor model introduces no new logic as sibling count grows — same operation, same result at n=3, 10, 30.',
+  cases:[
+    { id:'n10-single-child', badge:'accept', tag:'1 child',
+      lanes:[ {role:'base', groups:[{parent:'P', seq:[u('A')]}]},
+              {role:'left', groups:[{parent:'P', seq:[u('A'),ins('X')]}], op:'insert → now 2 children'},
+              {role:'right', groups:[{parent:'P', seq:[del('A')]}], op:'delete → now 0 children (empty)'} ]},
+    { id:'n10-empty-parent', badge:'policy', tag:'empty-parent head gap',
+      lanes:[ {role:'base', groups:[{parent:'P', seq:[]}]},
+              {role:'left', groups:[{parent:'P', seq:[ins('X')]}], op:'insert first child X'},
+              {role:'right', groups:[{parent:'P', seq:[ins('Y')]}], op:'insert first child Y'},
+              {role:'merged', groups:[{parent:'P', seq:[ins('X'),ins('Y')]}], op:'policy on the pred=∅ &amp; succ=∅ gap'} ]},
+    { id:'n10-scale-3-10-30', badge:'meta', tag:'independent of n',
+      lanes:[ {role:'base', seq:[u('A'),u('B'),u('C')], sub:'n = 3'},
+              {role:'result', seq:[u('A'),u('B'),ins('X'),u('C')], op:'insert X after B'},
+              {role:'base', seq:[u('A'),u('B'),u('C'),u('D'),u('E'),u('F'),u('G'),u('H'),u('I'),u('J')], sub:'n = 10'},
+              {role:'result', seq:[u('A'),u('B'),ins('X'),u('C'),u('D'),u('E'),u('F'),u('G'),u('H'),u('I'),u('J')], op:'insert X after B — result identical', sub:'n = 30: same rule, 30 siblings; a regression assert, no new logic'} ]},
+  ]},
+
+{ num:'N11', id:'n11', title:'Text child nodes (separate track)',
+  purpose:'ParagraphStyleRange / CharacterStyleRange have no stable Self — style slices are re-cut on re-export. Neighbor anchors do not apply; alignment is by position + content (LCS over tokens). Build these apart from the object cases (uc07 / uc08 / uc08b).',
+  cases:[
+    { id:'n11-diff-para', badge:'accept', uc:'uc07',
+      lanes:[ {role:'base', seq:[u('P1'),u('P2'),u('P3'),u('P4')]},
+              {role:'left', seq:[u('P1'),mod('P2'),u('P3'),u('P4')], op:'modify P2'},
+              {role:'right', seq:[u('P1'),u('P2'),u('P3'),mod('P4')], op:'modify P4'},
+              {role:'merged', seq:[u('P1'),mod('P2'),u('P3'),mod('P4')], op:'different paragraphs — both apply'} ]},
+    { id:'n11-same-para-overlap', badge:'conflict', tag:'text-overlap', uc:'uc08',
+      lanes:[ {role:'base', richtext:[{t:'The '},{t:'quick brown'},{t:' fox'}]},
+              {role:'left', richtext:[{t:'The '},{t:'quick',s:'del'},{t:'swift',s:'ins'},{t:' brown fox'}]},
+              {role:'right', richtext:[{t:'The '},{t:'quick brown',s:'del'},{t:'slow red',s:'ins'},{t:' fox'}]},
+              {role:'merged', conflict:{reason:'text-overlap — edit spans intersect on "quick"'}} ]},
+    { id:'n11-same-para-disjoint', badges:['accept','conflict'], edge:'policy', tag:'granularity-dependent', uc:'uc08b',
+      lanes:[ {role:'base', richtext:[{t:'The quick brown fox jumps over the lazy dog'}]},
+              {role:'left', richtext:[{t:'The '},{t:'quick',s:'del'},{t:'swift',s:'ins'},{t:' brown fox … the lazy dog'}]},
+              {role:'right', richtext:[{t:'The quick brown fox … the '},{t:'lazy',s:'del'},{t:'sleepy',s:'ins'},{t:' dog'}]},
+              {role:'merged', richtext:[{t:'The '},{t:'swift',s:'ins'},{t:' brown fox … the '},{t:'sleepy',s:'ins'},{t:' dog'}], op:'<b>token</b> granularity: disjoint spans → accept', sub:'paragraph-atomic granularity: two edits to one paragraph → conflict'} ]},
+    { id:'n11-range-resplit', badge:'meta', tag:'boundary re-slice robustness',
+      lanes:[ {role:'base', groups:[{parent:'para', seq:[u('R1: "The quick"'),u('R2: " brown fox"')]}], sub:'CharacterStyleRange slices — no stable Self'},
+              {role:'left', groups:[{parent:'para', seq:[mod('R1: "The"'),mod('R2: "quick brown fox"')]}], op:'shift the style-slice boundary (re-split)'},
+              {role:'right', richtext:[{t:'The quick '},{t:'brown',s:'del'},{t:'red',s:'ins'},{t:' fox'}], op:'edit content (a word)'},
+              {role:'merged', richtext:[{t:'verify: after re-export, ranges re-slice — alignment must hold by position + content (LCS), not by Self'}], sub:'a robustness assert, not a fixed accept/conflict verdict'} ]},
+  ]},
+];
+
+/* ---------- render ---------- */
+function chip(n){
+  const g = {ins:'+', mv:'↦', mod:'Δ'}[n.st] || '';
+  const glyph = g ? '<span class="g">'+g+'</span>' : '';
+  return '<span class="chip st-'+(n.st||'u')+'">'+glyph+n.id+'</span>';
+}
+function seqRow(seq){ return '<div class="seq">'+seq.map(chip).join('')+'</div>'; }
+function chainRow(seq){ return '<div class="seq">'+seq.map(chip).join('<span class="arrow">→</span>')+'</div>'; }
+function groupsRow(gs){
+  return '<div class="groups">'+gs.map(function(g){
+    return '<div class="grp'+(g.gone?' gone':'')+'"><span class="grp-label">'+g.parent+'</span>'+
+      (g.seq.length? '<div class="seq">'+g.seq.map(chip).join('')+'</div>' : '<div class="seq"><span class="chip st-ghost">∅</span></div>')+'</div>';
+  }).join('')+'</div>';
+}
+function refRow(s){
+  const parts = s.split('=');
+  if(parts.length<2) return '<div class="refline">'+s+'</div>';
+  return '<div class="refline">'+parts[0].trim()+' = <span class="ref-val">'+parts.slice(1).join('=').trim()+'</span></div>';
+}
+function richRow(spans){
+  return '<div class="rich">'+spans.map(function(s){ return s.s? '<span class="r-'+s.s+'">'+s.t+'</span>' : '<span>'+s.t+'</span>'; }).join('')+'</div>';
+}
+function candBlock(c){
+  if(!c.candidates) return '';
+  return '<div class="cand">'+c.candidates.map(function(k){
+    return '<div class="cand-row"><span class="cand-lbl">'+k.label+'</span>'+seqRow(k.seq)+'</div>';
+  }).join('')+'</div>';
+}
+function conflictRow(c){ return '<div class="conflict"><span class="cx">⚡ '+c.reason+'</span>'+candBlock(c)+'</div>'; }
+function policyRow(p){ return '<div class="policy-strip"><span class="px">⚖ '+p.reason+'</span>'+candBlock(p)+'</div>'; }
+function contentOf(l){
+  if(l.conflict) return conflictRow(l.conflict);
+  if(l.policy)   return policyRow(l.policy);
+  if(l.groups)   return groupsRow(l.groups);
+  if(l.chain)    return chainRow(l.chain);
+  if(l.refline)  return refRow(l.refline);
+  if(l.richtext) return richRow(l.richtext);
+  if(l.seq)      return seqRow(l.seq);
+  return '';
+}
+function laneRow(l){
+  const op  = l.op  ? '<div class="op">'+l.op+'</div>' : '';
+  const sub = l.sub ? '<div class="sub">'+l.sub+'</div>' : '';
+  const sep = (l.role==='merged'||l.role==='result') ? ' sep' : '';
+  return '<div class="lane'+sep+'"><div class="role role-'+l.role+'">'+(ROLE[l.role]||l.role)+'</div>'+
+         '<div class="body">'+contentOf(l)+op+sub+'</div></div>';
+}
+const BADGE = {accept:['Accept','b-accept'],converge:['Converge','b-converge'],policy:['Policy','b-policy'],conflict:['Conflict','b-conflict'],meta:['Robustness','b-meta']};
+function badge(b){ const m = BADGE[b]||[b,'b-meta']; return '<span class="badge '+m[1]+'"><span class="dot"></span>'+m[0]+'</span>'; }
+function caseCard(c){
+  const arr = c.badges || [c.badge];
+  const edge = c.edge || arr[0];
+  const tag = c.tag ? '<span class="tag">'+c.tag+'</span>' : '';
+  const uc  = c.uc  ? '<span class="uc">→ '+c.uc+'</span>' : '';
+  return '<article class="case edge-'+edge+'"><header class="case-h">'+
+    '<span class="cid">'+c.id+uc+'</span>'+
+    '<span class="case-b">'+arr.map(badge).join('')+tag+'</span></header>'+
+    '<div class="lanes">'+c.lanes.map(laneRow).join('')+'</div></article>';
+}
+function sectionBlock(s){
+  return '<section id="'+s.id+'" class="sect"><div class="sect-h">'+
+    '<span class="sect-num">'+s.num+'</span>'+
+    '<div><h2>'+s.title+'</h2><p class="sect-p">'+s.purpose+'</p></div></div>'+
+    '<div class="cases">'+s.cases.map(caseCard).join('')+'</div></section>';
+}
+document.getElementById('root').innerHTML = SECTIONS.map(sectionBlock).join('');
+document.getElementById('navin').insertAdjacentHTML('beforeend',
+  SECTIONS.map(function(s){ return '<a href="#'+s.id+'">'+s.num+'</a>'; }).join(''));
+</script>
+</body>
+</html>
