@@ -8,8 +8,6 @@ lazy val scalaModules = "org.scala-lang.modules"
 
 lazy val commonSettings = Seq(
   scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Wunused:all"),
-  // JUnit-style reports, collected by CircleCI
-  Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-reports"),
   libraryDependencies ++= Seq(
     "ch.qos.logback" % "logback-classic" % "1.6.2" % "runtime",
     "org.scalatest" %% "scalatest" % "3.2.20" % Test
