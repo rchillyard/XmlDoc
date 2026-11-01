@@ -2,12 +2,14 @@ ThisBuild / organization := "com.phasmidsoftware"
 
 ThisBuild / version := "1.1.2"
 
-ThisBuild / scalaVersion := "3.8.4"
+ThisBuild / scalaVersion := "3.9.0" // the current LTS
 
 lazy val scalaModules = "org.scala-lang.modules"
 
 lazy val commonSettings = Seq(
-  Compile / doc / scalacOptions ++= Seq("-explaintypes", "-Vimplicits", "-implicits-debug", "-implicits-show-all", "-unchecked", "-feature", "-Xcheckinit", "-deprecation", "-Ywarn-dead-code", "-Ywarn-value-discard", "-Ywarn-unused", "-Xsource:3", "-deprecation"),
+  scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Wunused:all"),
+  // JUnit-style reports, collected by CircleCI
+  Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-u", "target/test-reports"),
   libraryDependencies ++= Seq(
     "ch.qos.logback" % "logback-classic" % "1.6.2" % "runtime",
     "org.scalatest" %% "scalatest" % "3.2.20" % Test
@@ -51,8 +53,14 @@ lazy val idml = (project in file("idml"))
   )
 
 lazy val root = (project in file("."))
+  .enablePlugins(ScalaUnidocPlugin, GhpagesPlugin)
   .aggregate(core, kml, idml)
   .settings(
     name := "XmlDoc",
-    publish / skip := true
+    publish / skip := true,
+    // The unified Scaladoc is published to https://rchillyard.github.io/XmlDoc/latest/api/ by `sbt ghpagesPushSite`
+    ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(core, kml, idml),
+    ScalaUnidoc / siteSubdirName := "latest/api",
+    addMappingsToSiteDir(ScalaUnidoc / packageDoc / mappings, ScalaUnidoc / siteSubdirName),
+    git.remoteRepo := "git@github.com:rchillyard/XmlDoc.git"
   )

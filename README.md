@@ -1,11 +1,13 @@
 [![Maven Central (core)](https://img.shields.io/maven-central/v/com.phasmidsoftware/xmldoc-core_3?label=maven-central%3A%20core)](https://central.sonatype.com/artifact/com.phasmidsoftware/xmldoc-core_3)
 [![Maven Central (kml)](https://img.shields.io/maven-central/v/com.phasmidsoftware/xmldoc-kml_3?label=maven-central%3A%20kml)](https://central.sonatype.com/artifact/com.phasmidsoftware/xmldoc-kml_3)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/245437d8d4004bbe8ed41198b6f57419)](https://app.codacy.com/gh/rchillyard/XmlDoc/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-![GitHub Top Languages](https://img.shields.io/github/languages/top/rchillyard/XmlDoc)
-![GitHub](https://img.shields.io/github/license/rchillyard/XmlDoc)
-![GitHub last commit](https://img.shields.io/github/last-commit/rchillyard/XmlDoc)
-![GitHub issues](https://img.shields.io/github/issues-raw/rchillyard/XmlDoc)
-![GitHub issues by-label](https://img.shields.io/github/issues/rchillyard/XmlDoc/bug)
+[![API Docs](https://img.shields.io/badge/api-docs-blue)](https://rchillyard.github.io/XmlDoc/latest/api/)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/245437d8d4004bbe8ed41198b6f57419)](https://app.codacy.com/gh/rchillyard/XmlDoc/dashboard)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/rchillyard/XmlDoc/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/rchillyard/XmlDoc/tree/main)
+[![GitHub Top Languages](https://img.shields.io/github/languages/top/rchillyard/XmlDoc)](https://github.com/rchillyard/XmlDoc)
+[![GitHub](https://img.shields.io/github/license/rchillyard/XmlDoc)](https://github.com/rchillyard/XmlDoc/blob/main/LICENSE)
+[![GitHub last commit](https://img.shields.io/github/last-commit/rchillyard/XmlDoc)](https://github.com/rchillyard/XmlDoc/commits/main)
+[![GitHub issues](https://img.shields.io/github/issues-raw/rchillyard/XmlDoc)](https://github.com/rchillyard/XmlDoc/issues)
+[![GitHub issues by-label](https://img.shields.io/github/issues/rchillyard/XmlDoc/bug)](https://github.com/rchillyard/XmlDoc/issues?q=is%3Aissue+is%3Aopen+label%3Abug)
 
 # XmlDoc
 
@@ -17,6 +19,8 @@ modeling as its own type) and format-specific modules built on top of it.
 See [DESIGN.md](DESIGN.md) for how the extraction/rendering framework actually works — the type
 class hierarchy, the field-naming conventions, the combinator "arity ladder," and the escape
 hatches for irregular real-world XML. This README covers what the modules are and how to use them.
+
+Full Scaladoc is at <https://rchillyard.github.io/XmlDoc/latest/api/>.
 
 ## Modules
 
