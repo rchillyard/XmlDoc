@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "case": "08b-same-para-disjoint",
+  "requirement": "Disjoint edits in one paragraph",
+  "expectedStatus": "accept",
+  "acceptedEdits": [
+    {
+      "side": "left",
+      "type": "text-update",
+      "target": "story1/P2@quick",
+      "description": "Change quick to swift."
+    },
+    {
+      "side": "right",
+      "type": "text-update",
+      "target": "story1/P2@lazy",
+      "description": "Change lazy to sleepy."
+    }
+  ],
+  "conflicts": [],
+  "invariants": {
+    "commonBase": true,
+    "unchangedSelfValuesStable": true,
+    "reciprocalThreadReferencesRequired": true
+  },
+  "artifacts": {
+    "base.idml": {
+      "sha256": "258b2d9db1ee8ca1d21e8ba58ec48e776aa73a0ebccc3d050db7c97e6f0aa11e",
+      "bytes": 39553
+    },
+    "left.idml": {
+      "sha256": "0505ebd874f3ee7aff76936b948f170d00604da2f251302fe34119e1b2a9c37f",
+      "bytes": 39552
+    },
+    "right.idml": {
+      "sha256": "0a53851280d8b3dd1e21be6ecf1c16cee88d24f03eb8297b5b4dffd96ce5fcd3",
+      "bytes": 39554
+    }
+  },
+  "note": "The expected policy is token-aware. A paragraph-atomic implementation may instead report text-overlap."
+}

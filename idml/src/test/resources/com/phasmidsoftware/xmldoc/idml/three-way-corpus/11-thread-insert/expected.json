@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "case": "11-thread-insert",
+  "requirement": "Cross-node reference insertion",
+  "expectedStatus": "accept",
+  "acceptedEdits": [
+    {
+      "side": "left",
+      "type": "reference-insert",
+      "target": "tfX",
+      "description": "Set tf1.Next=tfX, tfX.Previous=tf1, tfX.Next=tf2, and tf2.Previous=tfX."
+    }
+  ],
+  "conflicts": [],
+  "invariants": {
+    "commonBase": true,
+    "unchangedSelfValuesStable": true,
+    "reciprocalThreadReferencesRequired": true
+  },
+  "artifacts": {
+    "base.idml": {
+      "sha256": "4bdca7567433e599716a29bb599de1c4f8531107b08b7f82df070c00e663f0c4",
+      "bytes": 39546
+    },
+    "left.idml": {
+      "sha256": "cdf3ab80991988dde2572e0b758123122645e35069464e194d9b1185e3280887",
+      "bytes": 39591
+    },
+    "right.idml": {
+      "sha256": "4bdca7567433e599716a29bb599de1c4f8531107b08b7f82df070c00e663f0c4",
+      "bytes": 39546
+    }
+  },
+  "note": null
+}

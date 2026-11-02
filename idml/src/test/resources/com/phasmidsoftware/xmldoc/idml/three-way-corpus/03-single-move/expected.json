@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "case": "03-single-move",
+  "requirement": "Single-sided move",
+  "expectedStatus": "accept",
+  "acceptedEdits": [
+    {
+      "side": "left",
+      "type": "move",
+      "target": "r1",
+      "description": "Move r1 after tfB (top of z-order)."
+    }
+  ],
+  "conflicts": [],
+  "invariants": {
+    "commonBase": true,
+    "unchangedSelfValuesStable": true,
+    "reciprocalThreadReferencesRequired": true
+  },
+  "artifacts": {
+    "base.idml": {
+      "sha256": "a6adf7e12175ebb13df6ca6322e102acb8444e4c2a67d3244f01bef6607ac6e3",
+      "bytes": 39546
+    },
+    "left.idml": {
+      "sha256": "1d481a4bd66014fbb66cf86c2bb17820b2a5835d773ebdc7e9694aa50518175c",
+      "bytes": 39566
+    },
+    "right.idml": {
+      "sha256": "a6adf7e12175ebb13df6ca6322e102acb8444e4c2a67d3244f01bef6607ac6e3",
+      "bytes": 39546
+    }
+  },
+  "note": null
+}

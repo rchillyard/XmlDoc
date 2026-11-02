@@ -68,4 +68,20 @@ object Zip {
         }
     }
   }
+
+  /**
+   * Method to delete a specific entry from an existing zip file, in place - the write-side
+   * counterpart to `writeEntry`, using the same zip filesystem provider. A no-op (`Success`) if
+   * the entry doesn't exist, same as `Files.deleteIfExists`.
+   *
+   * @param file      the zip file (must already exist).
+   * @param entryName the name of the entry to delete (e.g. "Spreads/Spread_ud1.xml").
+   * @return a Try[Unit], Success whether or not the entry was actually present.
+   */
+  def deleteEntry(file: File, entryName: String): Try[Unit] = {
+    val uri = URI.create("jar:" + file.toURI)
+    TryUsing(FileSystems.newFileSystem(uri, Map("create" -> "false").asJava)) {
+      zipfs => Try(Files.deleteIfExists(zipfs.getPath(entryName))).map(_ => ())
+    }
+  }
 }

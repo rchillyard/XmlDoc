@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "case": "07-same-story-diff-para",
+  "requirement": "Different paragraphs in the same Story",
+  "expectedStatus": "accept",
+  "acceptedEdits": [
+    {
+      "side": "left",
+      "type": "text-update",
+      "target": "story1/P2",
+      "description": "Change brown to auburn."
+    },
+    {
+      "side": "right",
+      "type": "text-update",
+      "target": "story1/P4",
+      "description": "Change closes to concludes."
+    }
+  ],
+  "conflicts": [],
+  "invariants": {
+    "commonBase": true,
+    "unchangedSelfValuesStable": true,
+    "reciprocalThreadReferencesRequired": true
+  },
+  "artifacts": {
+    "base.idml": {
+      "sha256": "583b88183b5dbad44622525afd3b2081c21ec4a55348b15fd694f873bacb10b3",
+      "bytes": 39552
+    },
+    "left.idml": {
+      "sha256": "e906174eb5514bf81a7392ed455af2a9f9e9fd88f0d21203594c329cbdf907ca",
+      "bytes": 39552
+    },
+    "right.idml": {
+      "sha256": "cfa69402ab104d703fcfbc38bbfcca66a3b5f810e7c3285edf3c46c2f307f60a",
+      "bytes": 39554
+    }
+  },
+  "note": null
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "case": "08-same-para-overlap",
+  "requirement": "Overlapping edits in one paragraph",
+  "expectedStatus": "conflict",
+  "acceptedEdits": [],
+  "conflicts": [
+    {
+      "type": "text-overlap",
+      "target": "story1/P2@The quick brown",
+      "left": "quick -> swift",
+      "right": "quick brown -> slow red",
+      "resolution": "manual"
+    }
+  ],
+  "invariants": {
+    "commonBase": true,
+    "unchangedSelfValuesStable": true,
+    "reciprocalThreadReferencesRequired": true
+  },
+  "artifacts": {
+    "base.idml": {
+      "sha256": "d4a5aeeb3aff7ea135173ae281c4d4a607cdea733b4e479add8c9b37c26f6de1",
+      "bytes": 39551
+    },
+    "left.idml": {
+      "sha256": "942487434cea11ff8722a6f90e2e9c280ec32855b831ae45c8b9c955f9c2a702",
+      "bytes": 39550
+    },
+    "right.idml": {
+      "sha256": "34284de7fdb198f016353973217a2432005a9b36519ac2f43d8b7cb7421ce90a",
+      "bytes": 39548
+    }
+  },
+  "note": null
+}

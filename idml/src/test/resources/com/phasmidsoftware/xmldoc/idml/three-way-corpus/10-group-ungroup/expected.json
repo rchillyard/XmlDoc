@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "case": "10-group-ungroup",
+  "requirement": "Group/ungroup and child movement",
+  "expectedStatus": "conflict",
+  "acceptedEdits": [],
+  "conflicts": [
+    {
+      "type": "structural-parent-change",
+      "target": "g1/r3",
+      "left": "g1 removed; r3 reparented to Spread",
+      "right": "r3 moved while parent remains g1",
+      "resolution": "manual"
+    }
+  ],
+  "invariants": {
+    "commonBase": true,
+    "unchangedSelfValuesStable": true,
+    "reciprocalThreadReferencesRequired": true
+  },
+  "artifacts": {
+    "base.idml": {
+      "sha256": "f009cf6b9fe75fad696cac902085bc56c6fd8bd1f72f53de81a05ef47acde12a",
+      "bytes": 39546
+    },
+    "left.idml": {
+      "sha256": "935b60132d1c799a12c1d2eb207ace9b4a8177c036854a63aed98c2c35323420",
+      "bytes": 39436
+    },
+    "right.idml": {
+      "sha256": "fe2fcc441100e349e1028b2266ad27bb104d0e48e051cc67ef91f79dee22cb5b",
+      "bytes": 39551
+    }
+  },
+  "note": null
+}

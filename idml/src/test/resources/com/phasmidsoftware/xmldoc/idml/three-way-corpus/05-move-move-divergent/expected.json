@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "case": "05-move-move-divergent",
+  "requirement": "Both sides move the same node",
+  "expectedStatus": "conflict",
+  "acceptedEdits": [],
+  "conflicts": [
+    {
+      "type": "move-move",
+      "target": "r1",
+      "left": "top of page-item stack",
+      "right": "bottom of page-item stack",
+      "resolution": "manual"
+    }
+  ],
+  "invariants": {
+    "commonBase": true,
+    "unchangedSelfValuesStable": true,
+    "reciprocalThreadReferencesRequired": true
+  },
+  "artifacts": {
+    "base.idml": {
+      "sha256": "bf51f2ccf46c172b709b6059cefd7e0c88488917f868a134412669dfb7467301",
+      "bytes": 39549
+    },
+    "left.idml": {
+      "sha256": "b29abbbd5dc4321205075e0dda5163b04af9c9b89d74634cee8d7da62c38cc19",
+      "bytes": 39568
+    },
+    "right.idml": {
+      "sha256": "1b6c2066786fa2b6dd1ea4536b6e653155cee9bfdc3860a8c19f70887f14cac7",
+      "bytes": 39548
+    }
+  },
+  "note": null
+}

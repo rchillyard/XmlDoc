@@ -1,0 +1,7 @@
+---
+# Files Codacy should not analyse.
+exclude_paths:
+  # Test fixtures: sample documents and the three-way merge corpus, with their READMEs.
+  - "**/src/test/resources/**"
+  # The Python script that generates the three-way merge corpus.
+  - "idml/tools/**"

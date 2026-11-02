@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "case": "13-parentstory-vs-content",
+  "requirement": "ParentStory reference versus story content",
+  "expectedStatus": "conflict",
+  "acceptedEdits": [],
+  "conflicts": [
+    {
+      "type": "reference-divergence",
+      "target": "tf2@ParentStory/story1",
+      "left": "tf2.ParentStory=story2",
+      "right": "story1 P2 changes jumps to leaps",
+      "resolution": "manual"
+    }
+  ],
+  "invariants": {
+    "commonBase": true,
+    "unchangedSelfValuesStable": true,
+    "reciprocalThreadReferencesRequired": true
+  },
+  "artifacts": {
+    "base.idml": {
+      "sha256": "73a18de929c5b27f2f722f2a694bed7b2d3fcc5eec22d9a62108de72306705c1",
+      "bytes": 39551
+    },
+    "left.idml": {
+      "sha256": "f1af3dc144e9606203da395d8d3bbe87bc85be0579a47c738008c5a3826837f8",
+      "bytes": 39537
+    },
+    "right.idml": {
+      "sha256": "40e59c0656816e4714b5e3b75a67443a8fa97c00d74b4e630ea7b84d4fcf71c4",
+      "bytes": 39550
+    }
+  },
+  "note": null
+}

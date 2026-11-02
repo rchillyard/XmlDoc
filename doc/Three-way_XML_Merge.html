@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Three-way Merge for XML Documents · Illustrated</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F6F8;
+  --panel:#FFFFFF;
+  --panel-2:#FAFCFD;
+  --ink:#15212C;
+  --ink-soft:#48596A;
+  --ink-faint:#7A8996;
+  --line:#DCE4EA;
+  --line-2:#C6D2DB;
+  --t0:#5C7080;   /* base tree */
+  --t1:#1590A6;   /* modified tree 1 */
+  --t2:#A24C86;   /* modified tree 2 */
+  --tm:#2C9C6A;   /* merged tree */
+  --ins:#2C9C6A;  /* insert */
+  --upd:#C67A1E;  /* update */
+  --del:#CE4B42;  /* delete */
+  --mov:#5B6CC4;  /* move / reorder */
+  --unc:#6E7F8C;  /* unchanged */
+  --link:#0E7C8E;
+  --font-cjk:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Noto Sans",sans-serif;
+  --font-mono:"JetBrains Mono","SF Mono",ui-monospace,Consolas,monospace;
+  --maxw:1180px;
+  --content:760px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:24px;}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--font-cjk);font-size:17px;line-height:1.7;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+code,.mono{font-family:var(--font-mono);}
+a{color:var(--link);text-decoration:none;border-bottom:1px solid rgba(14,124,142,.35);}
+a:hover{border-bottom-color:var(--link);}
+
+/* ---------- HERO ---------- */
+.hero{
+  position:relative;overflow:hidden;
+  background:
+    linear-gradient(180deg,#0F1B25 0%,#132532 100%);
+  color:#EAF1F5;padding:64px 24px 56px;
+}
+.hero .grid-bg{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:34px 34px;mask-image:radial-gradient(ellipse 80% 90% at 50% 30%,#000 40%,transparent 90%);
+}
+.hero-inner{position:relative;max-width:var(--maxw);margin:0 auto;}
+.kicker{
+  font-family:var(--font-mono);font-size:12.5px;letter-spacing:.02em;
+  color:#8FB6C4;margin:0 0 14px;
+}
+.hero h1{
+  font-size:clamp(30px,5vw,50px);line-height:1.12;margin:0 0 14px;
+  font-weight:800;letter-spacing:-.01em;
+}
+.hero .sub{max-width:660px;color:#B6C7D1;font-size:17.5px;margin:0 0 6px;line-height:1.55;}
+.hero .byline{font-family:var(--font-mono);color:#7E97A4;font-size:13px;margin-top:18px;}
+.hero-fig{margin-top:34px;width:100%;height:auto;max-width:820px;display:block;}
+
+/* ---------- LAYOUT ---------- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;
+  display:grid;grid-template-columns:236px minmax(0,1fr);gap:48px;align-items:start;}
+.toc{position:sticky;top:20px;align-self:start;padding:26px 0 40px;}
+.toc h4{font-size:12px;color:var(--ink-faint);font-weight:700;margin:0 0 12px;
+  font-family:var(--font-mono);letter-spacing:.03em;}
+.toc ol{list-style:none;margin:0;padding:0;}
+.toc li{margin:0;}
+.toc a{display:block;padding:5px 12px;border-left:2px solid var(--line);
+  color:var(--ink-soft);font-size:13.5px;line-height:1.45;border-bottom:none;
+  transition:color .15s,border-color .15s;}
+.toc a:hover{color:var(--ink);}
+.toc a.active{color:var(--t1);border-left-color:var(--t1);font-weight:600;}
+.toc a .n{font-family:var(--font-mono);color:var(--ink-faint);font-size:11.5px;margin-right:6px;}
+
+.content{min-width:0;max-width:var(--content);padding:36px 0 90px;}
+section{scroll-margin-top:24px;padding:24px 0 8px;border-top:1px solid var(--line);margin-top:32px;}
+section:first-of-type{border-top:none;margin-top:8px;}
+.sec-tag{font-family:var(--font-mono);font-size:12.5px;color:var(--t1);font-weight:600;
+  display:inline-block;margin-bottom:6px;}
+h2{font-size:26px;line-height:1.25;margin:2px 0 16px;font-weight:800;letter-spacing:-.005em;}
+h3{font-size:18.5px;margin:30px 0 10px;font-weight:700;color:var(--ink);}
+p{margin:14px 0;}
+.lead{font-size:18px;color:var(--ink-soft);}
+strong{font-weight:700;}
+.nt{font-family:var(--font-mono);background:#EAF0F3;border-radius:5px;
+  padding:1px 6px;font-size:.88em;color:#14323A;border:1px solid #DCE6EA;white-space:nowrap;}
+
+/* ---------- FIGURE ---------- */
+figure{margin:26px 0;background:var(--panel);border:1px solid var(--line);
+  border-radius:14px;padding:22px 20px 14px;}
+figure svg{width:100%;height:auto;display:block;}
+figcaption{font-size:13.5px;color:var(--ink-faint);margin-top:12px;line-height:1.6;
+  padding-top:10px;border-top:1px dashed var(--line);}
+figcaption b{color:var(--ink-soft);}
+
+/* legend */
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:14px 0 2px;font-size:12.5px;
+  font-family:var(--font-mono);color:var(--ink-soft);}
+.legend span{display:inline-flex;align-items:center;gap:6px;}
+.dot{width:12px;height:12px;border-radius:3px;display:inline-block;}
+
+/* callouts */
+.note{border-left:3px solid var(--tm);background:var(--panel-2);
+  border-radius:0 10px 10px 0;padding:14px 18px;margin:22px 0;font-size:15.5px;}
+.note .lbl{font-family:var(--font-mono);font-size:12px;color:var(--tm);
+  font-weight:700;display:block;margin-bottom:4px;}
+.note.warn{border-left-color:var(--del);}
+.note.warn .lbl{color:var(--del);}
+.note.info{border-left-color:var(--t1);}
+.note.info .lbl{color:var(--t1);}
+
+/* spec table */
+.spec{width:100%;border-collapse:collapse;margin:18px 0;font-size:15px;}
+.spec td{padding:10px 4px;border-bottom:1px solid var(--line);vertical-align:top;}
+.spec td:first-child{color:var(--ink-faint);width:170px;font-size:13.5px;
+  font-family:var(--font-mono);padding-right:14px;}
+
+/* code / pseudo */
+pre.algo{background:#10202B;color:#D6E3EA;border-radius:12px;padding:20px 20px;
+  overflow-x:auto;font-family:var(--font-mono);font-size:13px;line-height:1.72;margin:20px 0;}
+pre.algo .ln{color:#4E687A;user-select:none;display:inline-block;width:22px;}
+pre.algo .kw{color:#7FD4E0;}
+pre.algo .fn{color:#F2C97D;}
+pre.algo .cm{color:#5E7A8A;font-style:italic;}
+pre.algo .op{color:#E58F86;}
+
+.rules{list-style:none;margin:18px 0;padding:0;counter-reset:r;}
+.rules>li{position:relative;padding:12px 0 12px 44px;border-bottom:1px solid var(--line);}
+.rules>li:before{counter-increment:r;content:"R"counter(r);position:absolute;left:0;top:12px;
+  font-family:var(--font-mono);font-size:12px;font-weight:700;color:#fff;background:var(--t0);
+  width:30px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;}
+.rules b{color:var(--ink);}
+
+/* conflict tabs */
+.tabs{display:flex;gap:8px;margin:20px 0 0;flex-wrap:wrap;}
+.tab-btn{font-family:var(--font-mono);font-size:13px;padding:8px 14px;border-radius:8px;
+  border:1px solid var(--line-2);background:var(--panel);color:var(--ink-soft);cursor:pointer;
+  transition:.15s;}
+.tab-btn:hover{color:var(--ink);}
+.tab-btn.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.tab-panel{display:none;margin-top:16px;}
+.tab-panel.active{display:block;}
+.badge{display:inline-block;font-family:var(--font-mono);font-size:11px;font-weight:700;
+  padding:2px 8px;border-radius:20px;vertical-align:middle;}
+.badge.c{background:#FBE9E7;color:#B23A30;}
+.badge.o{background:#E7F1FB;color:#26658F;}
+
+/* footer */
+.foot{max-width:var(--maxw);margin:0 auto;padding:30px 24px 60px;color:var(--ink-faint);
+  font-size:13px;border-top:1px solid var(--line);}
+
+/* mobile toc toggle */
+.toc-toggle{display:none;}
+
+@media (max-width:920px){
+  .wrap{grid-template-columns:1fr;gap:0;}
+  .toc{position:static;padding:0;border-bottom:1px solid var(--line);}
+  .toc-toggle{display:block;width:100%;text-align:left;background:var(--panel);
+    border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:18px 0 0;
+    font-family:var(--font-mono);font-size:13px;color:var(--ink-soft);cursor:pointer;}
+  .toc ol{display:none;padding:10px 0 6px;}
+  .toc.open ol{display:block;}
+  .content{padding-top:20px;}
+}
+@media (max-width:560px){
+  body{font-size:16px;}
+  figure{padding:16px 12px 10px;}
+  .hero{padding:48px 18px 40px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="grid-bg"></div>
+  <div class="hero-inner">
+    <p class="kicker">DocEng '04 · Illustrated explainer</p>
+    <h1>A Three-way Merge for XML Documents</h1>
+    <p class="sub">Reintegrate two independent edits of a base document into a single document that contains both sets of changes — handling large-scale structural reorganization and fine-grained updates at the same time.</p>
+    <p class="byline">Tancred Lindholm · Helsinki Institute for Information Technology</p>
+
+    <!-- HERO DIAGRAM: three-way diamond -->
+    <svg class="hero-fig" viewBox="0 0 820 300" role="img" aria-label="Three-way merge overview">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#8FB6C4"/>
+        </marker>
+        <marker id="ahf" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,0 L10,5 L0,10 z" fill="#4C6472"/>
+        </marker>
+      </defs>
+
+      <!-- edges -->
+      <path d="M150,150 C230,150 250,80 322,80" fill="none" stroke="#8FB6C4" stroke-width="2" marker-end="url(#ah)"/>
+      <path d="M150,150 C230,150 250,222 322,222" fill="none" stroke="#8FB6C4" stroke-width="2" marker-end="url(#ah)"/>
+      <path d="M470,80 C545,80 560,150 632,150" fill="none" stroke="#8FB6C4" stroke-width="2" marker-end="url(#ah)"/>
+      <path d="M470,222 C545,222 560,150 632,150" fill="none" stroke="#8FB6C4" stroke-width="2" marker-end="url(#ah)"/>
+      <path d="M150,150 C360,150 470,150 632,150" fill="none" stroke="#4C6472" stroke-width="1.6" stroke-dasharray="5 5" marker-end="url(#ahf)"/>
+
+      <!-- edge labels -->
+      <text x="238" y="98" fill="#9CC0CD" font-family="JetBrains Mono" font-size="12">edit E1</text>
+      <text x="238" y="212" fill="#9CC0CD" font-family="JetBrains Mono" font-size="12">edit E2</text>
+      <text x="545" y="104" fill="#9CC0CD" font-family="JetBrains Mono" font-size="12">merge</text>
+      <text x="545" y="206" fill="#9CC0CD" font-family="JetBrains Mono" font-size="12">merge</text>
+      <text x="372" y="143" fill="#6E8896" font-family="JetBrains Mono" font-size="11">base used</text>
+
+      <!-- T0 (base) -->
+      <g transform="translate(96,150)">
+        <line x1="0" y1="-18" x2="-20" y2="14" stroke="#476070" stroke-width="2"/>
+        <line x1="0" y1="-18" x2="20" y2="14" stroke="#476070" stroke-width="2"/>
+        <circle cx="0" cy="-18" r="13" fill="#5C7080"/>
+        <circle cx="-20" cy="14" r="10" fill="#728794"/>
+        <circle cx="20" cy="14" r="10" fill="#728794"/>
+        <text x="0" y="-38" text-anchor="middle" fill="#CFE0E8" font-family="JetBrains Mono" font-size="13" font-weight="700">T0</text>
+        <text x="0" y="38" text-anchor="middle" fill="#8AA6B3" font-family="JetBrains Mono" font-size="10.5">base</text>
+      </g>
+
+      <!-- T1 -->
+      <g transform="translate(396,80)">
+        <line x1="0" y1="-18" x2="-20" y2="14" stroke="#0E7C8E" stroke-width="2"/>
+        <line x1="0" y1="-18" x2="20" y2="14" stroke="#0E7C8E" stroke-width="2"/>
+        <circle cx="0" cy="-18" r="13" fill="#1590A6"/>
+        <circle cx="-20" cy="14" r="10" fill="#3BA7BA"/>
+        <circle cx="20" cy="14" r="10" fill="#3BA7BA"/>
+        <text x="0" y="-30" text-anchor="middle" fill="#BEE6EE" font-family="JetBrains Mono" font-size="13" font-weight="700">T1</text>
+      </g>
+
+      <!-- T2 -->
+      <g transform="translate(396,222)">
+        <line x1="0" y1="-18" x2="-20" y2="14" stroke="#8E3F73" stroke-width="2"/>
+        <line x1="0" y1="-18" x2="20" y2="14" stroke="#8E3F73" stroke-width="2"/>
+        <circle cx="0" cy="-18" r="13" fill="#A24C86"/>
+        <circle cx="-20" cy="14" r="10" fill="#B96AA0"/>
+        <circle cx="20" cy="14" r="10" fill="#B96AA0"/>
+        <text x="0" y="40" text-anchor="middle" fill="#E4BFD6" font-family="JetBrains Mono" font-size="13" font-weight="700">T2</text>
+      </g>
+
+      <!-- Tm -->
+      <g transform="translate(676,150)">
+        <line x1="0" y1="-20" x2="-24" y2="14" stroke="#218254" stroke-width="2"/>
+        <line x1="0" y1="-20" x2="0" y2="14" stroke="#218254" stroke-width="2"/>
+        <line x1="0" y1="-20" x2="24" y2="14" stroke="#218254" stroke-width="2"/>
+        <circle cx="0" cy="-20" r="14" fill="#2C9C6A"/>
+        <circle cx="-24" cy="16" r="11" fill="#49B487"/>
+        <circle cx="0" cy="16" r="11" fill="#49B487"/>
+        <circle cx="24" cy="16" r="11" fill="#49B487"/>
+        <text x="0" y="-42" text-anchor="middle" fill="#BFEBD6" font-family="JetBrains Mono" font-size="14" font-weight="700">Tm</text>
+        <text x="0" y="42" text-anchor="middle" fill="#8FCFB1" font-family="JetBrains Mono" font-size="10.5">merged</text>
+      </g>
+    </svg>
+  </div>
+</header>
+
+<!-- ============ BODY ============ -->
+<div class="wrap">
+
+  <!-- TOC -->
+  <nav class="toc" id="toc">
+    <button class="toc-toggle" id="tocToggle">Contents ▾</button>
+    <h4>Contents</h4>
+    <ol>
+      <li><a href="#overview"><span class="n">00</span>Overview</a></li>
+      <li><a href="#s1"><span class="n">§1</span>Background</a></li>
+      <li><a href="#s2"><span class="n">§2</span>Two-phase framework</a></li>
+      <li><a href="#ex1"><span class="n">Fig 1</span>Structured doc merge</a></li>
+      <li><a href="#model"><span class="n">§2.3</span>Ordered trees &amp; PCS</a></li>
+      <li><a href="#s3"><span class="n">§3</span>Merge rules</a></li>
+      <li><a href="#fig3"><span class="n">Fig 3</span>Main example</a></li>
+      <li><a href="#s4"><span class="n">§4</span>Tree matching</a></li>
+      <li><a href="#s5"><span class="n">§5</span>Change model</a></li>
+      <li><a href="#s6"><span class="n">§6</span>Merge algorithm</a></li>
+      <li><a href="#trace"><span class="n">§6.2</span>Merge trace</a></li>
+      <li><a href="#conflict"><span class="n">§6.3</span>Conflict types</a></li>
+      <li><a href="#props"><span class="n">§6.4</span>Properties</a></li>
+      <li><a href="#complexity"><span class="n">§6.5</span>Complexity</a></li>
+      <li><a href="#s7"><span class="n">§7</span>Implementation</a></li>
+      <li><a href="#s89"><span class="n">§8-9</span>Related work &amp; conclusion</a></li>
+    </ol>
+  </nav>
+
+  <main class="content">
+
+    <!-- ===== OVERVIEW ===== -->
+    <section id="overview">
+      <span class="sec-tag">Overview</span>
+      <h2>Paper overview</h2>
+      <p class="lead">Three-way merging is a common scenario: a document has a base version, two people each copy it and edit independently, and the changes must be merged back into a single document. For plain text, <span class="nt">diff</span> / <span class="nt">patch</span> solved this long ago; but they treat a file as an "ordered list of text lines" and handle <strong>tree-structured</strong> data such as XML poorly.</p>
+      <p>This paper presents a three-way merge for "document-oriented XML" (rich text, structured text, drawings, and other formats naturally modeled as ordered trees). Its core idea is not to record edit operations, but to <strong>detect edits by comparing</strong> the base tree with the modified trees, and then reconcile those edits into a merged tree.</p>
+
+      <table class="spec">
+        <tr><td>Data model</td><td>Ordered tree with uniquely labeled nodes (XML encoding)</td></tr>
+        <tr><td>Core mechanism</td><td>Edit detection + reconciliation</td></tr>
+        <tr><td>Structural basis</td><td>Node context (parent + predecessor + successor)</td></tr>
+        <tr><td>Key capability</td><td>Handles structural reorganization and detail updates together; supports the "move" operation</td></tr>
+        <tr><td>Reference impl.</td><td>Open-source tool 3dm</td></tr>
+        <tr><td>Use-case eval.</td><td>35 of 37 study cases succeeded</td></tr>
+        <tr><td>Time complexity</td><td><span class="mono">O(n log n)</span>, n = total number of nodes</td></tr>
+      </table>
+
+      <div class="note info">
+        <span class="lbl">Color convention used throughout</span>
+        The four trees are consistently distinguished by one fixed color scheme — <b style="color:var(--t0)">T0 base tree</b>, <b style="color:var(--t1)">T1 modified tree</b>, <b style="color:var(--t2)">T2 modified tree</b>, <b style="color:var(--tm)">Tm merged tree</b>. Change types within a tree use a separate color scheme (insert / update / delete / move).
+      </div>
+    </section>
+
+    <!-- ===== §1 ===== -->
+    <section id="s1">
+      <span class="sec-tag">§1 · Introduction</span>
+      <h2>Background: from text merge to structural merge</h2>
+      <p>Line-based merge tools treat a file as a one-dimensional sequence of lines. That model is adequate for source code and similar text, but trees can be manipulated in more complex ways: a node can be <strong>moved</strong> elsewhere, and an entire subtree can be <strong>reorganized</strong>. In a "line sequence" such changes appear as large deletions plus insertions, and the tool cannot recognize that "this is the same content, moved" — so it often fails when reorganization and detail edits are combined.</p>
+
+      <figure>
+        <svg viewBox="0 0 720 260" role="img" aria-label="List model vs tree model">
+          <!-- left: line model -->
+          <text x="20" y="26" font-family="JetBrains Mono" font-size="13" font-weight="700" fill="#5C7080">List model (diff / patch)</text>
+          <g font-family="JetBrains Mono" font-size="12.5" fill="#48596A">
+            <rect x="20" y="40" width="150" height="26" rx="4" fill="#EEF3F5" stroke="#DCE4EA"/>
+            <text x="30" y="57">line 1</text>
+            <rect x="20" y="70" width="150" height="26" rx="4" fill="#EEF3F5" stroke="#DCE4EA"/>
+            <text x="30" y="87">line 2</text>
+            <rect x="20" y="100" width="150" height="26" rx="4" fill="#FBE9E7" stroke="#E9C6C1"/>
+            <text x="30" y="117" fill="#B23A30">line 3</text>
+            <rect x="20" y="130" width="150" height="26" rx="4" fill="#EEF3F5" stroke="#DCE4EA"/>
+            <text x="30" y="147">line 4</text>
+          </g>
+          <text x="20" y="188" font-family="var(--font-cjk)" font-size="12.5" fill="#7A8996">Only sees line add / delete,</text>
+          <text x="20" y="206" font-family="var(--font-cjk)" font-size="12.5" fill="#7A8996">not that a block moved elsewhere.</text>
+
+          <!-- divider -->
+          <line x1="360" y1="30" x2="360" y2="230" stroke="#DCE4EA" stroke-dasharray="4 4"/>
+
+          <!-- right: tree model -->
+          <text x="400" y="26" font-family="JetBrains Mono" font-size="13" font-weight="700" fill="#1590A6">Tree model (this work)</text>
+          <g>
+            <line x1="560" y1="62" x2="470" y2="118" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="560" y1="62" x2="650" y2="118" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="470" y1="118" x2="440" y2="180" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="470" y1="118" x2="500" y2="180" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="650" y1="118" x2="650" y2="180" stroke="#B7C2CC" stroke-width="1.6"/>
+            <g font-family="JetBrains Mono" font-size="13" font-weight="600" fill="#fff">
+              <circle cx="560" cy="62" r="16" fill="#6E7F8C"/><text x="560" y="63" text-anchor="middle" dominant-baseline="central">R</text>
+              <circle cx="470" cy="118" r="15" fill="#6E7F8C"/><text x="470" y="119" text-anchor="middle" dominant-baseline="central">a</text>
+              <circle cx="650" cy="118" r="15" fill="#6E7F8C"/><text x="650" y="119" text-anchor="middle" dominant-baseline="central">b</text>
+              <circle cx="440" cy="180" r="14" fill="#6E7F8C"/><text x="440" y="181" text-anchor="middle" dominant-baseline="central">d</text>
+              <circle cx="500" cy="180" r="14" fill="#6E7F8C"/><text x="500" y="181" text-anchor="middle" dominant-baseline="central">e</text>
+              <circle cx="650" cy="180" r="14" fill="#6E7F8C"/><text x="650" y="181" text-anchor="middle" dominant-baseline="central">g</text>
+            </g>
+          </g>
+          <text x="400" y="224" font-family="var(--font-cjk)" font-size="12.5" fill="#7A8996">Keeps hierarchy, so a node stays identifiable and can move.</text>
+        </svg>
+        <figcaption><b>Diagram:</b> the list model can only express line add/delete; the tree model keeps the hierarchy, providing a basis for recognizing "moves" and "reorganization".</figcaption>
+      </figure>
+
+      <p>The author concedes that different XML formats have different semantics, so there is no single "correct" definition of a generic XML merge. But formats that are naturally ordered trees share enough traits for a generalized merge. And — just as diff3 does not understand source-code semantics yet often gives usable results — <strong>a successful merge often does not require understanding the full semantics of the data</strong>. To that end, the paper deliberately uses an easy-to-understand change-detection model, and reports conflicts in ambiguous situations rather than "cleverly" guessing.</p>
+    </section>
+
+    <!-- ===== §2 ===== -->
+    <section id="s2">
+      <span class="sec-tag">§2 · Three-way merge framework</span>
+      <h2>Two-phase framework: edit detection and reconciliation</h2>
+      <p>The notation runs throughout: <span class="nt">T0</span> the base tree, <span class="nt">T1</span> and <span class="nt">T2</span> the two modified trees, <span class="nt">Tm</span> the merge result, and <span class="nt">T′</span> any one of the modified trees. Because the paper <strong>does not assume</strong> the actual edit scripts E1, E2 are known, the merge must proceed in two steps.</p>
+
+      <figure>
+        <svg viewBox="0 0 720 250" role="img" aria-label="Edit detection and reconciliation pipeline">
+          <defs>
+            <marker id="ah2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#9AA9B5"/>
+            </marker>
+          </defs>
+          <!-- inputs -->
+          <g font-family="JetBrains Mono" font-size="13" font-weight="700">
+            <rect x="16" y="40" width="120" height="40" rx="9" fill="#EBF6F8" stroke="#1590A6"/><text x="76" y="65" text-anchor="middle" fill="#0E7C8E">T1</text>
+            <rect x="16" y="105" width="120" height="40" rx="9" fill="#F1F3F5" stroke="#5C7080"/><text x="76" y="130" text-anchor="middle" fill="#4A5D6B">T0</text>
+            <rect x="16" y="170" width="120" height="40" rx="9" fill="#F6ECF2" stroke="#A24C86"/><text x="76" y="195" text-anchor="middle" fill="#8E3F73">T2</text>
+          </g>
+          <!-- phase 1 -->
+          <path d="M140,60 C180,60 200,110 232,110" fill="none" stroke="#9AA9B5" stroke-width="1.8" marker-end="url(#ah2)"/>
+          <path d="M140,125 L232,125" fill="none" stroke="#9AA9B5" stroke-width="1.8" marker-end="url(#ah2)"/>
+          <path d="M140,190 C180,190 200,140 232,140" fill="none" stroke="#9AA9B5" stroke-width="1.8" marker-end="url(#ah2)"/>
+          <rect x="236" y="76" width="180" height="98" rx="12" fill="#fff" stroke="#C6D2DB"/>
+          <text x="326" y="106" text-anchor="middle" font-family="var(--font-cjk)" font-size="14.5" font-weight="700" fill="#15212C">① Edit detection</text>
+          <text x="326" y="130" text-anchor="middle" font-family="var(--font-cjk)" font-size="12" fill="#7A8996">Compare base with</text>
+          <text x="326" y="148" text-anchor="middle" font-family="var(--font-cjk)" font-size="12" fill="#7A8996">modified; derive edits E</text>
+          <!-- phase 2 -->
+          <path d="M416,125 L468,125" fill="none" stroke="#9AA9B5" stroke-width="1.8" marker-end="url(#ah2)"/>
+          <rect x="472" y="76" width="150" height="98" rx="12" fill="#fff" stroke="#C6D2DB"/>
+          <text x="547" y="106" text-anchor="middle" font-family="var(--font-cjk)" font-size="14.5" font-weight="700" fill="#15212C">② Reconcile</text>
+          <text x="547" y="130" text-anchor="middle" font-family="var(--font-cjk)" font-size="12" fill="#7A8996">Apply edits to T0,</text>
+          <text x="547" y="148" text-anchor="middle" font-family="var(--font-cjk)" font-size="12" fill="#7A8996">resolve conflicts</text>
+          <!-- output -->
+          <path d="M622,125 L662,125" fill="none" stroke="#2C9C6A" stroke-width="2" marker-end="url(#ah2)"/>
+          <circle cx="690" cy="125" r="22" fill="#2C9C6A"/><text x="690" y="126" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="13" font-weight="700" fill="#fff">Tm</text>
+        </svg>
+        <figcaption><b>Two phases:</b> first detect the edit set from the "base vs modified" differences, then reconcile those edits into the merge result. If edit detection is accurate enough, the result equals directly applying the real edit scripts E1, E2.</figcaption>
+      </figure>
+
+      <div class="note">
+        <span class="lbl">Difference from operation-log methods</span>
+        Many merge methods rely on a "record of edit operations". This paper <strong>does not</strong> — it recovers edits by comparing the trees themselves. That yields a useful property: any two trees can be merged even when their relationship is unknown, with no need to know which was edited from which, and no revision history.
+      </div>
+    </section>
+
+    <!-- ===== Fig 1 ===== -->
+    <section id="ex1">
+      <span class="sec-tag">Fig 1 · Example 1</span>
+      <h2>Merging a structured document</h2>
+      <p>The paper uses a deliberately "change-packed" example to show what the merge can do. The base document T0 has two sibling <span class="nt">&lt;sect&gt;</span> elements. The two copies each make different kinds of edits, and in the end Tm integrates all of them.</p>
+
+      <figure>
+        <svg viewBox="0 0 720 300" role="img" aria-label="Example 1: two edits to one document merged">
+          <!-- T0 -->
+          <g transform="translate(0,0)">
+            <rect x="10" y="20" width="150" height="120" rx="10" fill="#F7F9FA" stroke="#5C7080"/>
+            <text x="24" y="42" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#4A5D6B">T0 base</text>
+            <text x="24" y="66" font-family="JetBrains Mono" font-size="11.5" fill="#48596A">sect "Jokse"</text>
+            <text x="24" y="86" font-family="JetBrains Mono" font-size="11.5" fill="#48596A">sect "Student"</text>
+            <text x="34" y="105" font-family="JetBrains Mono" font-size="11" fill="#7A8996">Q / A</text>
+            <text x="34" y="123" font-family="JetBrains Mono" font-size="11" fill="#7A8996">footnote</text>
+          </g>
+          <!-- T1 -->
+          <g transform="translate(0,0)">
+            <rect x="285" y="10" width="170" height="80" rx="10" fill="#EBF6F8" stroke="#1590A6"/>
+            <text x="299" y="30" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#0E7C8E">T1</text>
+            <text x="299" y="50" font-family="JetBrains Mono" font-size="11" fill="#C67A1E">✎ "Jokse"→"Jokes"</text>
+            <text x="299" y="67" font-family="JetBrains Mono" font-size="11" fill="#2C9C6A">＋ add answer A2</text>
+            <text x="299" y="84" font-family="JetBrains Mono" font-size="11" fill="#CE4B42">－ delete footnote</text>
+          </g>
+          <!-- T2 -->
+          <g transform="translate(0,0)">
+            <rect x="285" y="160" width="170" height="98" rx="10" fill="#F6ECF2" stroke="#A24C86"/>
+            <text x="299" y="180" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#8E3F73">T2</text>
+            <text x="299" y="200" font-family="JetBrains Mono" font-size="11" fill="#5B6CC4">↳ move sect2 into sect1</text>
+            <text x="299" y="217" font-family="JetBrains Mono" font-size="11" fill="#C67A1E">✎ update sect2 title</text>
+            <text x="299" y="234" font-family="JetBrains Mono" font-size="11" fill="#2C9C6A">＋ add intro paragraph</text>
+          </g>
+          <!-- arrows -->
+          <path d="M162,70 C230,70 220,50 283,50" fill="none" stroke="#B7C2CC" stroke-width="1.6" marker-end="url(#ah2)"/>
+          <path d="M162,90 C230,90 220,205 283,205" fill="none" stroke="#B7C2CC" stroke-width="1.6" marker-end="url(#ah2)"/>
+          <path d="M455,50 C520,50 530,120 588,120" fill="none" stroke="#B7C2CC" stroke-width="1.6" marker-end="url(#ah2)"/>
+          <path d="M455,205 C520,205 530,140 588,140" fill="none" stroke="#B7C2CC" stroke-width="1.6" marker-end="url(#ah2)"/>
+          <!-- Tm -->
+          <g transform="translate(0,0)">
+            <rect x="590" y="70" width="122" height="120" rx="10" fill="#EAF7F0" stroke="#2C9C6A"/>
+            <text x="604" y="92" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#218254">Tm merged</text>
+            <text x="604" y="114" font-family="JetBrains Mono" font-size="10.5" fill="#48596A">sect "Jokes"</text>
+            <text x="612" y="132" font-family="JetBrains Mono" font-size="10" fill="#48596A">intro para</text>
+            <text x="612" y="149" font-family="JetBrains Mono" font-size="10" fill="#48596A">sect2 (new title)</text>
+            <text x="620" y="166" font-family="JetBrains Mono" font-size="10" fill="#7A8996">Q/A + A2</text>
+            <text x="620" y="182" font-family="JetBrains Mono" font-size="10" fill="#7A8996">(no footnote)</text>
+          </g>
+        </svg>
+        <div class="legend">
+          <span><span class="dot" style="background:var(--ins)"></span>Insert</span>
+          <span><span class="dot" style="background:var(--upd)"></span>Update</span>
+          <span><span class="dot" style="background:var(--del)"></span>Delete</span>
+          <span><span class="dot" style="background:var(--mov)"></span>Move</span>
+        </div>
+        <figcaption><b>Key point:</b> T2 moves <span class="nt">sect2</span> to be a child of <span class="nt">sect1</span>, while T1 also inserts a new answer inside <span class="nt">sect2</span>. This "large-scale reorganization" layered on "local detail edits" is preserved simultaneously — exactly the case that diff / patch, which lack a notion of "move", struggle with.</figcaption>
+      </figure>
+    </section>
+
+    <!-- ===== §2.3 model ===== -->
+    <section id="model">
+      <span class="sec-tag">§2.3 · Data model</span>
+      <h2>The ordered-tree model and PCS relations</h2>
+      <p>An XML document is modeled as an <strong>ordered tree with labeled nodes</strong>. Labels are unique across all documents and serve as node identity. Each node has "content" (node type, text data, or element name and attributes). To focus on the merge itself, the model omits comments, DTDs, entities, and so on — but these can be accommodated by adding node types.</p>
+
+      <h3>Expressing a tree as a set of relations</h3>
+      <p>The paper's key move: instead of drawing a tree as a graph, it expresses it as a <strong>set</strong> of two kinds of relations. This set representation is the common "currency" for everything that follows.</p>
+      <ul>
+        <li><strong>Content relation</strong> <span class="nt">c(n, c)</span>: node n has content c.</li>
+        <li><strong>Parent-child-successor relation (PCS)</strong> <span class="nt">pcs(r, p, s)</span>: r is the parent of both p and s, and in r's child list s immediately follows p.</li>
+      </ul>
+      <p>The two ends of a child list use special markers: <span class="nt">⊣</span> sits before the first child, and <span class="nt">⊢</span> sits after the last. They cannot be edited, so any changed node can always be assumed to have a predecessor and a successor.</p>
+
+      <figure>
+        <svg viewBox="0 0 720 250" role="img" aria-label="PCS relation">
+          <!-- parent r -->
+          <line x1="360" y1="52" x2="150" y2="130" stroke="#B7C2CC" stroke-width="1.5"/>
+          <line x1="360" y1="52" x2="290" y2="130" stroke="#B7C2CC" stroke-width="1.5"/>
+          <line x1="360" y1="52" x2="430" y2="130" stroke="#B7C2CC" stroke-width="1.5"/>
+          <line x1="360" y1="52" x2="570" y2="130" stroke="#B7C2CC" stroke-width="1.5"/>
+          <circle cx="360" cy="40" r="18" fill="#6E7F8C"/><text x="360" y="41" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="14" font-weight="700" fill="#fff">r</text>
+
+          <!-- children row: ⊣ p s ⊢ -->
+          <g font-family="JetBrains Mono" font-size="14" font-weight="700">
+            <rect x="128" y="115" width="44" height="30" rx="6" fill="#EEF3F5" stroke="#C6D2DB"/><text x="150" y="130" text-anchor="middle" dominant-baseline="central" fill="#5C7080">⊣</text>
+            <circle cx="290" cy="130" r="17" fill="#1590A6"/><text x="290" y="131" text-anchor="middle" dominant-baseline="central" fill="#fff">p</text>
+            <circle cx="430" cy="130" r="17" fill="#A24C86"/><text x="430" y="131" text-anchor="middle" dominant-baseline="central" fill="#fff">s</text>
+            <rect x="548" y="115" width="44" height="30" rx="6" fill="#EEF3F5" stroke="#C6D2DB"/><text x="570" y="130" text-anchor="middle" dominant-baseline="central" fill="#5C7080">⊢</text>
+          </g>
+
+          <!-- successor arrow p->s -->
+          <path d="M310,130 L410,130" fill="none" stroke="#2C9C6A" stroke-width="2.4" marker-end="url(#ah2)"/>
+          <text x="360" y="118" text-anchor="middle" font-family="JetBrains Mono" font-size="12" fill="#218254" font-weight="700">successor</text>
+
+          <!-- labels -->
+          <text x="360" y="180" text-anchor="middle" font-family="JetBrains Mono" font-size="15" fill="#15212C" font-weight="700">pcs(r, p, s)</text>
+          <text x="360" y="204" text-anchor="middle" font-family="var(--font-cjk)" font-size="13" fill="#7A8996">"r is parent of p and s; s directly follows p in the child list"</text>
+          <text x="150" y="176" text-anchor="middle" font-family="JetBrains Mono" font-size="11.5" fill="#7A8996">list start</text>
+          <text x="570" y="176" text-anchor="middle" font-family="JetBrains Mono" font-size="11.5" fill="#7A8996">list end</text>
+        </svg>
+        <figcaption>A single <span class="nt">pcs(r,p,s)</span> encodes both "who is whose parent" and "the order among children". A whole child list is a chain of PCS relations linked end to end (from ⊣ to ⊢).</figcaption>
+      </figure>
+
+      <p>Below, the minimal fragment <span class="nt">&lt;a&gt;hello&lt;/a&gt;</span> is fully decomposed into a relation set, showing how this notation precisely captures a tree.</p>
+
+      <figure>
+        <svg viewBox="0 0 720 220" role="img" aria-label="XML fragment as a relation set">
+          <!-- tree -->
+          <g transform="translate(0,0)">
+            <line x1="90" y1="50" x2="90" y2="98" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="90" y1="120" x2="90" y2="158" stroke="#B7C2CC" stroke-width="1.6"/>
+            <text x="90" y="30" text-anchor="middle" font-family="JetBrains Mono" font-size="12" fill="#7A8996">⊥0</text>
+            <circle cx="90" cy="45" r="10" fill="#C6D2DB"/>
+            <circle cx="90" cy="110" r="18" fill="#5C7080"/><text x="90" y="111" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="13" font-weight="700" fill="#fff">a0</text>
+            <circle cx="90" cy="172" r="18" fill="#6E7F8C"/><text x="90" y="173" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="13" font-weight="700" fill="#fff">b0</text>
+            <text x="120" y="114" font-family="JetBrains Mono" font-size="11" fill="#7A8996">&lt;a&gt;</text>
+            <text x="120" y="176" font-family="JetBrains Mono" font-size="11" fill="#7A8996">"hello"</text>
+          </g>
+          <!-- arrow -->
+          <path d="M180,110 L232,110" fill="none" stroke="#9AA9B5" stroke-width="1.8" marker-end="url(#ah2)"/>
+          <!-- set -->
+          <g font-family="JetBrains Mono" font-size="11.5" fill="#2B3A46">
+            <rect x="240" y="20" width="470" height="180" rx="10" fill="#10202B"/>
+            <text x="258" y="46" fill="#7FD4E0">T0 = {</text>
+            <text x="278" y="68" fill="#D6E3EA">pcs(⊥0, ⊣, a0),  pcs(⊥0, a0, ⊢),</text>
+            <text x="278" y="90" fill="#D6E3EA">pcs(a0, ⊣, b0),  pcs(a0, b0, ⊢),</text>
+            <text x="278" y="112" fill="#D6E3EA">pcs(b0, ⊣, ⊢),</text>
+            <text x="278" y="138" fill="#F2C97D">c(a0, {type:element, name:a}),</text>
+            <text x="278" y="160" fill="#F2C97D">c(b0, {type:text, chardata:"hello"})</text>
+            <text x="258" y="184" fill="#7FD4E0">}</text>
+          </g>
+        </svg>
+        <figcaption>Tree ⇄ relation set is reversible: a consistent set of content/structure relations unambiguously reconstructs a tree. This is the premise for "doing the merge with set operations" later.</figcaption>
+      </figure>
+    </section>
+
+    <!-- ===== §3 rules ===== -->
+    <section id="s3">
+      <span class="sec-tag">§3 · Merge rules</span>
+      <h2>Merge rules: node context at the center</h2>
+      <p>The rules are not designed out of thin air; they are generalized from 37 hand-merged use cases (covering real scenarios such as concurrently editing a technical manual, maintaining web pages that share data, inline SVG updates, and a shared shopping list). The <strong>core concept from the analysis is "node context"</strong>: a node's parent, predecessor, and successor. The merge's handling of structure is essentially "which node contexts to preserve in Tm".</p>
+
+      <ul class="rules">
+        <li><b>Sameness.</b> To reconcile changes from different trees, one must first decide "this is the same node". Otherwise a move in T1 cannot be matched to an update in T2.</li>
+        <li><b>Node context.</b> The structure of the merge result is fixed by a set of node contexts required to appear in Tm.</li>
+        <li><b>Guard.</b> Some contexts are additionally preserved to <strong>inhibit</strong> merging of changes that are too close together to safely assume are semantically independent.</li>
+        <li><b>Content-update propagation.</b> A change to a node's content in T′ should also appear in Tm.</li>
+        <li><b>Insert propagation.</b> A node inserted in T′ should appear in Tm, keeping the same context.</li>
+        <li><b>Delete propagation (with guard).</b> A deleted node does not appear in Tm; but its context is preserved — if d is removed from the child list <span class="nt">adb</span>, then <span class="nt">ab</span> should appear as a sublist.</li>
+        <li><b>Move propagation.</b> A move is understood as a <strong>relative</strong> position, not an absolute one; the destination and source contexts of a move are both expressed and preserved as node contexts; moves too close together are, as an exception, not merged.</li>
+        <li><b>Conflict identification.</b> Certain combinations (e.g. both sides changing the same node's content) are treated as conflicts.</li>
+      </ul>
+
+      <div class="note">
+        <span class="lbl">Why context is the key</span>
+        Expressing "where a node is" as "its parent, predecessor, and successor" lets insert, delete, and move all be unified as "assert or preserve certain PCS relations in Tm". A move can coexist with structural edits precisely because it fixes only <strong>relative adjacency</strong>, not the absolute position of an entire subtree.
+      </div>
+    </section>
+
+    <!-- ===== Fig 3 ===== -->
+    <section id="fig3">
+      <span class="sec-tag">Fig 3 · Main example</span>
+      <h2>Walking through the main example</h2>
+      <p>This is the most important abstract example in the paper. The base tree T0 is edited into two trees; this section shows each side's changes and how the rules yield the merge result Tm.</p>
+
+      <figure>
+        <svg viewBox="0 0 720 340" role="img" aria-label="Fig 3: the four trees T0 T1 T2 Tm">
+          <!-- ===== T0 ===== -->
+          <g transform="translate(20,0)">
+            <text x="80" y="18" text-anchor="middle" font-family="JetBrains Mono" font-size="12.5" font-weight="700" fill="#4A5D6B">T0 base</text>
+            <!-- edges -->
+            <line x1="80" y1="40" x2="45" y2="82" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="80" y1="40" x2="115" y2="82" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="45" y1="82" x2="20" y2="124" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="45" y1="82" x2="45" y2="124" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="45" y1="82" x2="70" y2="124" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="115" y1="82" x2="115" y2="124" stroke="#B7C2CC" stroke-width="1.6"/>
+            <g font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">
+              <circle cx="80" cy="40" r="14" fill="#6E7F8C"/><text x="80" y="41" text-anchor="middle" dominant-baseline="central">R</text>
+              <circle cx="45" cy="82" r="13" fill="#6E7F8C"/><text x="45" y="83" text-anchor="middle" dominant-baseline="central">a</text>
+              <circle cx="115" cy="82" r="13" fill="#6E7F8C"/><text x="115" y="83" text-anchor="middle" dominant-baseline="central">b</text>
+              <circle cx="20" cy="124" r="12" fill="#6E7F8C"/><text x="20" y="125" text-anchor="middle" dominant-baseline="central">d</text>
+              <circle cx="45" cy="124" r="12" fill="#6E7F8C"/><text x="45" y="125" text-anchor="middle" dominant-baseline="central">e</text>
+              <circle cx="70" cy="124" r="12" fill="#6E7F8C"/><text x="70" y="125" text-anchor="middle" dominant-baseline="central">f</text>
+              <circle cx="115" cy="124" r="12" fill="#6E7F8C"/><text x="115" y="125" text-anchor="middle" dominant-baseline="central">g</text>
+            </g>
+          </g>
+
+          <!-- ===== T1 ===== -->
+          <g transform="translate(210,0)">
+            <text x="90" y="18" text-anchor="middle" font-family="JetBrains Mono" font-size="12.5" font-weight="700" fill="#0E7C8E">T1</text>
+            <line x1="90" y1="40" x2="40" y2="82" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="90" y1="40" x2="90" y2="82" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="90" y1="40" x2="150" y2="82" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="40" y1="82" x2="40" y2="124" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="90" y1="82" x2="68" y2="124" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="90" y1="82" x2="90" y2="124" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="90" y1="82" x2="112" y2="124" stroke="#B7C2CC" stroke-width="1.6"/>
+            <g font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">
+              <circle cx="90" cy="40" r="14" fill="#6E7F8C"/><text x="90" y="41" text-anchor="middle" dominant-baseline="central">R</text>
+              <!-- b, a swapped (move color ring) -->
+              <circle cx="40" cy="82" r="13" fill="#6E7F8C" stroke="#5B6CC4" stroke-width="3"/><text x="40" y="83" text-anchor="middle" dominant-baseline="central">b</text>
+              <circle cx="90" cy="82" r="13" fill="#6E7F8C" stroke="#5B6CC4" stroke-width="3"/><text x="90" y="83" text-anchor="middle" dominant-baseline="central">a</text>
+              <!-- i inserted -->
+              <circle cx="150" cy="82" r="13" fill="#2C9C6A"/><text x="150" y="83" text-anchor="middle" dominant-baseline="central">i</text>
+              <circle cx="40" cy="124" r="12" fill="#6E7F8C"/><text x="40" y="125" text-anchor="middle" dominant-baseline="central">g</text>
+              <circle cx="68" cy="124" r="12" fill="#6E7F8C"/><text x="68" y="125" text-anchor="middle" dominant-baseline="central">d</text>
+              <circle cx="90" cy="124" r="12" fill="#6E7F8C"/><text x="90" y="125" text-anchor="middle" dominant-baseline="central">e</text>
+              <circle cx="112" cy="124" r="12" fill="#6E7F8C"/><text x="112" y="125" text-anchor="middle" dominant-baseline="central">f</text>
+            </g>
+          </g>
+
+          <!-- ===== T2 ===== -->
+          <g transform="translate(430,0)">
+            <text x="80" y="18" text-anchor="middle" font-family="JetBrains Mono" font-size="12.5" font-weight="700" fill="#8E3F73">T2</text>
+            <line x1="80" y1="40" x2="45" y2="82" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="80" y1="40" x2="120" y2="82" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="45" y1="82" x2="20" y2="124" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="45" y1="82" x2="45" y2="124" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="45" y1="82" x2="70" y2="124" stroke="#B7C2CC" stroke-width="1.6"/>
+            <g font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">
+              <circle cx="80" cy="40" r="14" fill="#6E7F8C"/><text x="80" y="41" text-anchor="middle" dominant-baseline="central">R</text>
+              <circle cx="45" cy="82" r="13" fill="#6E7F8C"/><text x="45" y="83" text-anchor="middle" dominant-baseline="central">a</text>
+              <!-- b updated -> b' -->
+              <circle cx="120" cy="82" r="13" fill="#C67A1E"/><text x="120" y="83" text-anchor="middle" dominant-baseline="central">b′</text>
+              <!-- d,e swapped -> e d f (move ring on e,d) -->
+              <circle cx="20" cy="124" r="12" fill="#6E7F8C" stroke="#5B6CC4" stroke-width="3"/><text x="20" y="125" text-anchor="middle" dominant-baseline="central">e</text>
+              <circle cx="45" cy="124" r="12" fill="#6E7F8C" stroke="#5B6CC4" stroke-width="3"/><text x="45" y="125" text-anchor="middle" dominant-baseline="central">d</text>
+              <circle cx="70" cy="124" r="12" fill="#6E7F8C"/><text x="70" y="125" text-anchor="middle" dominant-baseline="central">f</text>
+            </g>
+            <!-- g deleted marker -->
+            <g transform="translate(120,124)">
+              <circle r="12" fill="none" stroke="#CE4B42" stroke-width="2" stroke-dasharray="3 3"/>
+              <text y="1" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="11" fill="#CE4B42">g</text>
+              <line x1="-9" y1="-9" x2="9" y2="9" stroke="#CE4B42" stroke-width="2"/>
+              <line x1="9" y1="-9" x2="-9" y2="9" stroke="#CE4B42" stroke-width="2"/>
+            </g>
+          </g>
+
+          <!-- ===== Tm ===== -->
+          <g transform="translate(240,190)">
+            <text x="90" y="14" text-anchor="middle" font-family="JetBrains Mono" font-size="13" font-weight="700" fill="#218254">Tm merged result</text>
+            <line x1="90" y1="40" x2="40" y2="82" stroke="#9FBDAD" stroke-width="1.8"/>
+            <line x1="90" y1="40" x2="90" y2="82" stroke="#9FBDAD" stroke-width="1.8"/>
+            <line x1="90" y1="40" x2="150" y2="82" stroke="#9FBDAD" stroke-width="1.8"/>
+            <line x1="90" y1="82" x2="68" y2="124" stroke="#9FBDAD" stroke-width="1.8"/>
+            <line x1="90" y1="82" x2="90" y2="124" stroke="#9FBDAD" stroke-width="1.8"/>
+            <line x1="90" y1="82" x2="112" y2="124" stroke="#9FBDAD" stroke-width="1.8"/>
+            <g font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">
+              <circle cx="90" cy="40" r="15" fill="#2C9C6A"/><text x="90" y="41" text-anchor="middle" dominant-baseline="central">R</text>
+              <circle cx="40" cy="82" r="13" fill="#C67A1E"/><text x="40" y="83" text-anchor="middle" dominant-baseline="central">b′</text>
+              <circle cx="90" cy="82" r="13" fill="#49B487"/><text x="90" y="83" text-anchor="middle" dominant-baseline="central">a</text>
+              <circle cx="150" cy="82" r="13" fill="#2C9C6A"/><text x="150" y="83" text-anchor="middle" dominant-baseline="central">i</text>
+              <circle cx="68" cy="124" r="12" fill="#49B487"/><text x="68" y="125" text-anchor="middle" dominant-baseline="central">e</text>
+              <circle cx="90" cy="124" r="12" fill="#49B487"/><text x="90" y="125" text-anchor="middle" dominant-baseline="central">d</text>
+              <circle cx="112" cy="124" r="12" fill="#49B487"/><text x="112" y="125" text-anchor="middle" dominant-baseline="central">f</text>
+            </g>
+            <!-- b' now empty note -->
+            <text x="40" y="118" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#CE4B42">(empty)</text>
+          </g>
+        </svg>
+        <div class="legend">
+          <span><span class="dot" style="background:var(--ins)"></span>Insert (i)</span>
+          <span><span class="dot" style="background:var(--upd)"></span>Update (b→b′)</span>
+          <span><span class="dot" style="background:var(--del)"></span>Delete (g)</span>
+          <span><span class="dot" style="border:3px solid var(--mov);background:transparent;width:9px;height:9px;border-radius:50%"></span>Move / reorder</span>
+        </div>
+        <figcaption>
+          <b>T1's changes:</b> swap a and b, and insert leaf i at the end.<br>
+          <b>T2's changes:</b> update b's content to b′, delete g, and swap d and e under a.<br>
+          <b>How Tm is derived:</b> R's child list is fixed to <span class="nt">b′ a i</span> by rules 5 and 7; b takes T2's new content and becomes empty because g is deleted; a's child list becomes <span class="nt">e d f</span> due to the swap. The two sides' changes do not interfere and are all preserved.
+        </figcaption>
+      </figure>
+
+      <div class="note info">
+        <span class="lbl">A subtle point worth noting</span>
+        The parent a of d, e, f is affected by the "swap" in T2, yet a's own position is <strong>not locked</strong> in Tm. Precisely because the swap fixes only the relative order among the children and not a's absolute position, it can coexist with "a and b being swapped into new positions".
+      </div>
+    </section>
+
+    <!-- ===== §4 matching ===== -->
+    <section id="s4">
+      <span class="sec-tag">§4 · Tree matching</span>
+      <h2>Tree matching: establishing node identity</h2>
+      <p>The first cornerstone of the merge is "sameness". Matching is expressed by the predicate <span class="nt">m(n,m)</span>: true if and only if n and m are the same node. A matching can be read naturally as edits — an unmatched base node was deleted, an unmatched modified node was inserted, differing content is an update, and a differing position is a move.</p>
+
+      <figure>
+        <svg viewBox="0 0 720 240" role="img" aria-label="Node matching across the three trees">
+          <!-- T0 -->
+          <text x="110" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#4A5D6B">T0</text>
+          <g font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">
+            <circle cx="110" cy="70" r="15" fill="#5C7080"/><text x="110" y="71" text-anchor="middle" dominant-baseline="central">a0</text>
+            <circle cx="110" cy="140" r="15" fill="#5C7080"/><text x="110" y="141" text-anchor="middle" dominant-baseline="central">b0</text>
+          </g>
+          <!-- T1 -->
+          <text x="360" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#0E7C8E">T1</text>
+          <g font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">
+            <circle cx="360" cy="60" r="15" fill="#1590A6"/><text x="360" y="61" text-anchor="middle" dominant-baseline="central">a1</text>
+            <circle cx="360" cy="130" r="15" fill="#1590A6"/><text x="360" y="131" text-anchor="middle" dominant-baseline="central">b1</text>
+          </g>
+          <!-- T2 -->
+          <text x="610" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#8E3F73">T2</text>
+          <g font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">
+            <circle cx="610" cy="70" r="15" fill="#A24C86"/><text x="610" y="71" text-anchor="middle" dominant-baseline="central">a2</text>
+            <circle cx="610" cy="150" r="15" fill="#C67A1E"/><text x="610" y="151" text-anchor="middle" dominant-baseline="central">b′</text>
+          </g>
+          <!-- match links -->
+          <path d="M125,70 C240,55 250,60 345,60" fill="none" stroke="#9AA9B5" stroke-width="1.6" stroke-dasharray="5 4"/>
+          <path d="M375,60 C480,55 500,65 595,70" fill="none" stroke="#9AA9B5" stroke-width="1.6" stroke-dasharray="5 4"/>
+          <path d="M125,140 C240,140 250,132 345,130" fill="none" stroke="#9AA9B5" stroke-width="1.6" stroke-dasharray="5 4"/>
+          <path d="M375,130 C480,140 500,148 595,150" fill="none" stroke="#9AA9B5" stroke-width="1.6" stroke-dasharray="5 4"/>
+          <!-- class labels -->
+          <rect x="300" y="192" width="130" height="26" rx="13" fill="#EAF7F0" stroke="#2C9C6A"/>
+          <text x="365" y="205" text-anchor="middle" font-family="JetBrains Mono" font-size="11.5" fill="#218254">node class {a0,a1,a2}</text>
+        </svg>
+        <figcaption>Mutually matched nodes form a <strong>node class (equivalence class)</strong>. Here a0, a1, a2 are the same node, and b0, b1, b′ are the same node — which is exactly why b's move in T1 can be matched to its content update in T2.</figcaption>
+      </figure>
+
+      <p>A matching must satisfy a set of constraints (R1–R5): each node has at most one match in each other tree (R1, which rules out "multi-node glue" and "copy" — treated as delete + insert when encountered); and the matching is required to be an <strong>equivalence relation</strong> — reflexive (R3), symmetric (R4), transitive (R5) — partitioning all nodes into disjoint node classes. The paper assumes the matching is given as input; how to build matchings efficiently for documents without unique identifiers is an important practical issue, not developed here.</p>
+    </section>
+
+    <!-- ===== §5 change model ===== -->
+    <section id="s5">
+      <span class="sec-tag">§5 · Change model</span>
+      <h2>Change model: content and structural changes</h2>
+      <p>The clever part: changes are expressed with <strong>exactly the same relations used to express a tree</strong>.</p>
+
+      <figure>
+        <svg viewBox="0 0 720 200" role="img" aria-label="Content change and structural change">
+          <!-- content change -->
+          <rect x="20" y="20" width="320" height="160" rx="12" fill="#FAFCFD" stroke="#DCE4EA"/>
+          <text x="40" y="46" font-family="var(--font-cjk)" font-size="14" font-weight="700" fill="#15212C">Content change</text>
+          <text x="40" y="70" font-family="JetBrains Mono" font-size="13" fill="#C67A1E" font-weight="700">c(n, c)</text>
+          <circle cx="120" cy="120" r="22" fill="#6E7F8C"/><text x="120" y="121" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="13" font-weight="700" fill="#fff">n</text>
+          <path d="M150,120 L200,120" fill="none" stroke="#C67A1E" stroke-width="2.2" marker-end="url(#ah2)"/>
+          <circle cx="230" cy="120" r="22" fill="#C67A1E"/><text x="230" y="121" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">c′</text>
+          <text x="180" y="106" text-anchor="middle" font-family="var(--font-cjk)" font-size="11.5" fill="#7A8996">content → c</text>
+
+          <!-- structural change -->
+          <rect x="380" y="20" width="320" height="160" rx="12" fill="#FAFCFD" stroke="#DCE4EA"/>
+          <text x="400" y="46" font-family="var(--font-cjk)" font-size="14" font-weight="700" fill="#15212C">Structural change</text>
+          <text x="400" y="70" font-family="JetBrains Mono" font-size="13" fill="#5B6CC4" font-weight="700">pcs(r, p, s)</text>
+          <line x1="540" y1="92" x2="500" y2="130" stroke="#B7C2CC" stroke-width="1.6"/>
+          <line x1="540" y1="92" x2="580" y2="130" stroke="#B7C2CC" stroke-width="1.6"/>
+          <circle cx="540" cy="90" r="16" fill="#6E7F8C"/><text x="540" y="91" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">r</text>
+          <circle cx="500" cy="142" r="15" fill="#6E7F8C"/><text x="500" y="143" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">p</text>
+          <circle cx="580" cy="142" r="15" fill="#6E7F8C"/><text x="580" y="143" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">s</text>
+          <path d="M517,142 L563,142" fill="none" stroke="#5B6CC4" stroke-width="2" marker-end="url(#ah2)"/>
+          <text x="540" y="172" text-anchor="middle" font-family="var(--font-cjk)" font-size="11.5" fill="#7A8996">arranged as parent-child-successor</text>
+        </svg>
+        <figcaption>A structural change is the formalization of "node context" (rule 2). Because changes, trees, and node contexts all use the same <span class="nt">c(...)</span> and <span class="nt">pcs(...)</span>, the merge can be reduced to operations on sets.</figcaption>
+      </figure>
+
+      <h3>Consistency: a change set must not contradict itself</h3>
+      <p>When multiple changes are placed in one set, it is required to be <strong>consistent</strong> — stating at most one content, one parent, one predecessor, and one successor for each node:</p>
+      <pre class="algo"><span class="op">1.</span> c(n,c) ∧ c(n,c′)        → c = c′      <span class="cm">unique content</span>
+<span class="op">2.</span> parent(r,n) ∧ parent(r′,n) → r = r′    <span class="cm">unique parent</span>
+<span class="op">3.</span> pcs(r,p,s) ∧ pcs(r,p′,s) → p = p′     <span class="cm">unique predecessor</span>
+<span class="op">4.</span> pcs(r,p,s) ∧ pcs(r,p,s′) → s = s′     <span class="cm">unique successor</span></pre>
+      <p>Conversely, a consistent relation set determines a tree unambiguously. The goal of the merge is to construct exactly such a consistent set.</p>
+    </section>
+
+    <!-- ===== §6 algorithm ===== -->
+    <section id="s6">
+      <span class="sec-tag">§6 · Merge definition</span>
+      <h2>The merge definition and algorithm</h2>
+      <p>The merge combines the three trees' relation sets into one and then resolves contradictions. A few key objects:</p>
+      <ul>
+        <li><strong>Class representative.</strong> Each node class picks a representative (the node from the tree with the smallest index). <span class="nt">T*</span> denotes the set after replacing every node with its class representative.</li>
+        <li><strong>Raw merge <span class="nt">T*</span>.</strong> The union of the three trees' relations. It is usually <strong>inconsistent</strong> — the same node carries conflicting content or positions from different trees. This is the "raw" merge.</li>
+        <li><strong>Edit set <span class="nt">E = T* − T*₀</span>.</strong> Any relation that appears in a modified tree but not in the base tree is a detected edit.</li>
+        <li><strong>Target <span class="nt">Δ</span>.</strong> A consistent set that contains all edits E and consists only of relations from the input trees (nothing is "made up").</li>
+      </ul>
+
+      <figure>
+        <svg viewBox="0 0 720 210" role="img" aria-label="From raw merge to a consistent result">
+          <!-- T* raw -->
+          <rect x="16" y="50" width="180" height="110" rx="12" fill="#FBEFEC" stroke="#CE4B42"/>
+          <text x="106" y="76" text-anchor="middle" font-family="JetBrains Mono" font-size="14" font-weight="700" fill="#B23A30">T* (raw merge)</text>
+          <text x="106" y="100" text-anchor="middle" font-family="var(--font-cjk)" font-size="12.5" fill="#7A8996">union of 3 trees</text>
+          <text x="106" y="122" text-anchor="middle" font-family="var(--font-cjk)" font-size="12.5" fill="#B23A30">inconsistent</text>
+          <text x="106" y="142" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#7A8996">contains all edits E</text>
+
+          <!-- arrow with op -->
+          <path d="M200,105 L300,105" fill="none" stroke="#9AA9B5" stroke-width="1.8" marker-end="url(#ah2)"/>
+          <rect x="238" y="118" width="220" height="66" rx="10" fill="#FAFCFD" stroke="#DCE4EA"/>
+          <text x="348" y="140" text-anchor="middle" font-family="var(--font-cjk)" font-size="12.5" font-weight="700" fill="#15212C">Drop base-side of conflicts</text>
+          <text x="348" y="162" text-anchor="middle" font-family="var(--font-cjk)" font-size="12" fill="#7A8996">No edit is ever dropped</text>
+
+          <!-- Delta -->
+          <path d="M456,105 L520,105" fill="none" stroke="#2C9C6A" stroke-width="2" marker-end="url(#ah2)"/>
+          <rect x="524" y="50" width="180" height="110" rx="12" fill="#EAF7F0" stroke="#2C9C6A"/>
+          <text x="614" y="82" text-anchor="middle" font-family="JetBrains Mono" font-size="16" font-weight="700" fill="#218254">Δ</text>
+          <text x="614" y="106" text-anchor="middle" font-family="var(--font-cjk)" font-size="12.5" fill="#7A8996">consistent forest</text>
+          <text x="614" y="128" text-anchor="middle" font-family="var(--font-cjk)" font-size="12.5" fill="#218254">= Tm + deleted subtrees</text>
+          <text x="614" y="148" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#7A8996">E ⊂ Δ</text>
+        </svg>
+        <figcaption>Core of reconciliation: starting from T*, whenever a contradiction is found, drop the relation that "comes from the base tree". Since edits never belong to T*₀, an edit is never dropped — so all edits are preserved into Δ. If nothing more can be dropped and it is still inconsistent, the two sides' edits genuinely conflict.</figcaption>
+      </figure>
+
+      <h3>Algorithm pseudocode</h3>
+      <pre class="algo"><span class="kw">procedure</span> merge(T0, T1, T2: Tree, m: Matching)
+<span class="ln">1</span> <span class="kw">for</span> 0 ≤ k &lt; 3:
+<span class="ln">2</span>     T := <span class="fn">asChangeSet</span>(Tk)
+<span class="ln">3</span>     T*k := <span class="fn">useClassRepresentative</span>(T, m)
+<span class="ln">5</span> Δ := ∪ T*k                       <span class="cm">initial = raw merge</span>
+<span class="ln">6</span> <span class="kw">for all</span> δ ∈ Δ:
+<span class="ln">7</span>     δ′ := nil
+<span class="ln">8</span>     δ′ := <span class="fn">getOtherContent</span>(Δ, δ)
+<span class="ln">9</span>     <span class="kw">if</span> δ′=nil <span class="kw">then</span> δ′ := <span class="fn">getOtherRoot</span>(Δ, δ)
+<span class="ln">10</span>    <span class="kw">if</span> δ′=nil <span class="kw">then</span> δ′ := <span class="fn">getOtherPredecessor</span>(Δ, δ)
+<span class="ln">11</span>    <span class="kw">if</span> δ′=nil <span class="kw">then</span> δ′ := <span class="fn">getOtherSuccessor</span>(Δ, δ)
+<span class="ln">12</span>    <span class="kw">if</span> δ′≠nil:                     <span class="cm">conflict found</span>
+<span class="ln">13</span>        <span class="kw">if</span> δ′ ∈ T*0:  Δ := Δ − {δ′}   <span class="cm">drop base side</span>
+<span class="ln">15</span>        <span class="kw">else if</span> δ ∈ T*0: Δ := Δ − {δ}
+<span class="ln">17</span>        <span class="kw">else</span>: <span class="fn">conflict</span>(δ, δ′)          <span class="cm">both are edits → conflict</span>
+<span class="ln">22</span> <span class="kw">return</span> Δ</pre>
+      <p>Tm can be reconstructed by traversing from <span class="nt">⊥0</span> level by level along the PCS relations in Δ. There is also a trick: if some data must appear verbatim in Tm, simply <strong>do not</strong> match it to a base node, and its relations will be treated as edits and forcibly preserved.</p>
+    </section>
+
+    <!-- ===== §6.2 trace ===== -->
+    <section id="trace">
+      <span class="sec-tag">§6.2 · Merge trace</span>
+      <h2>A merge trace: node b as an example</h2>
+      <p>For Fig 3, the paper tracks only the relations of node b, to keep the example legible. Assume b's content is <span class="nt">&lt;b&gt;</span> in T0 and T1, and <span class="nt">&lt;b2&gt;</span> in T2. The whole reconciliation goes as follows.</p>
+
+      <figure>
+        <svg viewBox="0 0 720 320" role="img" aria-label="Reconciling node b">
+          <!-- step boxes -->
+          <!-- inputs -->
+          <text x="20" y="26" font-family="var(--font-cjk)" font-size="13" font-weight="700" fill="#15212C">① Relations about b in the three trees</text>
+          <g font-family="JetBrains Mono" font-size="11.5">
+            <rect x="20" y="38" width="680" height="26" rx="6" fill="#F1F3F5" stroke="#DCE4EA"/>
+            <text x="34" y="55" fill="#4A5D6B">T0:  pcs(b, ⊣, g)   pcs(b, g, ⊢)   c(b, &lt;b&gt;)</text>
+            <rect x="20" y="68" width="680" height="26" rx="6" fill="#EBF6F8" stroke="#BFE1E8"/>
+            <text x="34" y="85" fill="#0E7C8E">T1:  pcs(b, ⊣, g)   pcs(b, g, ⊢)   c(b, &lt;b&gt;)</text>
+            <rect x="20" y="98" width="680" height="26" rx="6" fill="#F6ECF2" stroke="#E2C4D6"/>
+            <text x="34" y="115" fill="#8E3F73">T2:  pcs(b, ⊣, ⊢)                  c(b, &lt;b2&gt;)</text>
+          </g>
+
+          <!-- raw merge -->
+          <text x="20" y="152" font-family="var(--font-cjk)" font-size="13" font-weight="700" fill="#B23A30">② Raw merge T* (inconsistent)</text>
+          <rect x="20" y="162" width="680" height="48" rx="8" fill="#FBEFEC" stroke="#CE4B42"/>
+          <text x="34" y="182" font-family="JetBrains Mono" font-size="11.5" fill="#B23A30">pcs(b,⊣,g)  pcs(b,g,⊢)  pcs(b,⊣,⊢)   c(b,&lt;b&gt;)  c(b,&lt;b2&gt;)</text>
+          <text x="34" y="200" font-family="var(--font-cjk)" font-size="11.5" fill="#7A8996">successor of ⊣ is both g and ⊢; content is both &lt;b&gt; and &lt;b2&gt; — conflict</text>
+
+          <!-- edits & removals -->
+          <text x="20" y="240" font-family="var(--font-cjk)" font-size="13" font-weight="700" fill="#15212C">③ Edits E = T* − T*₀ (keep); base-side relations (drop)</text>
+          <rect x="20" y="250" width="335" height="46" rx="8" fill="#EAF7F0" stroke="#2C9C6A"/>
+          <text x="34" y="269" font-family="JetBrains Mono" font-size="11" fill="#218254">keep (edits): pcs(b,⊣,⊢)</text>
+          <text x="34" y="286" font-family="JetBrains Mono" font-size="11" fill="#218254">             c(b,&lt;b2&gt;)</text>
+          <rect x="365" y="250" width="335" height="46" rx="8" fill="#F7F3F1" stroke="#E4C9B8"/>
+          <text x="379" y="269" font-family="JetBrains Mono" font-size="11" fill="#B26A1E">drop (base): pcs(b,⊣,g) pcs(b,g,⊢)</text>
+          <text x="379" y="286" font-family="JetBrains Mono" font-size="11" fill="#B26A1E">            c(b,&lt;b&gt;)</text>
+        </svg>
+        <figcaption>
+          Result <span class="nt">Δ = { pcs(b,⊣,⊢), c(b,&lt;b2&gt;), … }</span>: b's content takes T2's new value <span class="nt">&lt;b2&gt;</span>, and its child list becomes empty (because T2 deleted g). Deleting g and updating b are cleanly merged together. The full trace in Fig 5 performs the same step-by-step derivation for every node — R, a, b, i, and so on.
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- ===== §6.3 conflicts ===== -->
+    <section id="conflict">
+      <span class="sec-tag">§6.3 · Conflicts</span>
+      <h2>Conflict types</h2>
+      <p>A good merge should report conflicts "neither too many nor too few": it should not invent conflicts where there are none, nor "cleverly" auto-resolve ambiguous situations. Conflicts fall into two categories — <span class="badge c">C core</span>, exposed when the algorithm fails to construct a consistent Δ; and <span class="badge o">O optional</span>, which need separate detection in post-processing (and can be turned off for a more permissive merge).</p>
+
+      <div class="tabs" role="tablist">
+        <button class="tab-btn active" data-tab="uu">Update / Update</button>
+        <button class="tab-btn" data-tab="pp">Position / Position</button>
+        <button class="tab-btn" data-tab="de">Delete / Edit</button>
+      </div>
+
+      <div class="tab-panel active" id="uu">
+        <p><span class="badge c">C</span> The same node's content is changed to different values in T1 and T2. The set contains both <span class="nt">c(n, c1)</span> and <span class="nt">c(n, c2)</span> with <span class="nt">c1 ≠ c2</span>, which cannot be consistent.</p>
+        <figure>
+          <svg viewBox="0 0 720 150" role="img" aria-label="Update/Update conflict">
+            <circle cx="200" cy="75" r="24" fill="#1590A6"/><text x="200" y="76" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">c1</text>
+            <circle cx="520" cy="75" r="24" fill="#A24C86"/><text x="520" y="76" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">c2</text>
+            <circle cx="360" cy="75" r="26" fill="none" stroke="#CE4B42" stroke-width="2.5" stroke-dasharray="4 4"/><text x="360" y="76" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#CE4B42">n?</text>
+            <path d="M226,75 L330,75" stroke="#9AA9B5" stroke-width="1.8" marker-end="url(#ah2)"/>
+            <path d="M494,75 L390,75" stroke="#9AA9B5" stroke-width="1.8" marker-end="url(#ah2)"/>
+            <text x="200" y="122" text-anchor="middle" font-family="JetBrains Mono" font-size="11.5" fill="#0E7C8E">T1 → c1</text>
+            <text x="520" y="122" text-anchor="middle" font-family="JetBrains Mono" font-size="11.5" fill="#8E3F73">T2 → c2</text>
+          </svg>
+          <figcaption>Both sides give the same node two different contents; Tm has no basis to choose — report a conflict.</figcaption>
+        </figure>
+      </div>
+
+      <div class="tab-panel" id="pp">
+        <p><span class="badge c">C</span> Node m in T1 and node n in T2 are positioned such that Δ cannot be made consistent. The positional change can be a move, insert, or delete, so it subdivides into move/move, move/insert, move/delete, delete/delete, etc. The implementation can offer <strong>speculative</strong> resolutions for several of these (e.g. ignoring the repositioning from one side).</p>
+        <figure>
+          <svg viewBox="0 0 720 160" role="img" aria-label="Position/Position conflict">
+            <circle cx="360" cy="40" r="16" fill="#6E7F8C"/><text x="360" y="41" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">r</text>
+            <line x1="360" y1="56" x2="260" y2="100" stroke="#B7C2CC" stroke-width="1.6"/>
+            <line x1="360" y1="56" x2="460" y2="100" stroke="#B7C2CC" stroke-width="1.6"/>
+            <circle cx="260" cy="112" r="16" fill="#1590A6"/><text x="260" y="113" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">m</text>
+            <circle cx="460" cy="112" r="16" fill="#A24C86"/><text x="460" y="113" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#fff">n</text>
+            <path d="M280,112 C330,112 340,112 360,112" stroke="#5B6CC4" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#ah2)"/>
+            <path d="M440,112 C390,112 380,112 362,112" stroke="#5B6CC4" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#ah2)"/>
+            <text x="360" y="150" text-anchor="middle" font-family="var(--font-cjk)" font-size="12" fill="#CE4B42">The two sides demand conflicting adjacency — cannot both hold</text>
+          </svg>
+          <figcaption>When both sides impose mutually exclusive requirements on the relative position of the same nodes, no consistent Δ can be constructed.</figcaption>
+        </figure>
+      </div>
+
+      <div class="tab-panel" id="de">
+        <p><span class="badge o">O</span> The basic merge <strong>allows</strong> further modifications inside a deleted subtree, so by default it does not treat "one side deletes, the other edits" as a conflict — which can lose edits, hence it is optional detection. When enabled, it checks <span class="nt">(Δ − Tm) ∩ E = ∅</span>, i.e. the deleted part should contain no edits.</p>
+        <figure>
+          <svg viewBox="0 0 720 160" role="img" aria-label="Delete/Edit conflict">
+            <!-- deleted subtree -->
+            <g opacity="0.9">
+              <line x1="230" y1="56" x2="230" y2="98" stroke="#E3B7B2" stroke-width="1.6"/>
+              <circle cx="230" cy="44" r="16" fill="none" stroke="#CE4B42" stroke-width="2" stroke-dasharray="3 3"/><text x="230" y="45" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="11" fill="#CE4B42">x</text>
+              <circle cx="230" cy="112" r="16" fill="#C67A1E"/><text x="230" y="113" text-anchor="middle" dominant-baseline="central" font-family="JetBrains Mono" font-size="11" fill="#fff">y′</text>
+              <text x="230" y="146" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#8E3F73">T1 deletes subtree x</text>
+            </g>
+            <text x="360" y="80" text-anchor="middle" font-family="var(--font-cjk)" font-size="20" fill="#9AA9B5">＋</text>
+            <g>
+              <text x="490" y="48" text-anchor="middle" font-family="var(--font-cjk)" font-size="12.5" fill="#15212C">but T2 updates y → y′ inside it</text>
+              <text x="490" y="72" text-anchor="middle" font-family="var(--font-cjk)" font-size="12.5" fill="#7A8996">that edit vanishes with the subtree</text>
+              <rect x="405" y="90" width="170" height="30" rx="8" fill="#FBE9E7" stroke="#E9C6C1"/>
+              <text x="490" y="105" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#B23A30">optional: flag as conflict</text>
+            </g>
+          </svg>
+          <figcaption>One side deletes an entire subtree while the other edits within it. Whether this counts as a conflict depends on policy, so it is left to optional detection.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ===== §6.4 props ===== -->
+    <section id="props">
+      <span class="sec-tag">§6.4 · Properties</span>
+      <h2>Properties of the merge</h2>
+      <table class="spec">
+        <tr><td>Symmetry</td><td>The result is independent of the order in which T1 and T2 are assigned — the merge only distinguishes "base vs modified", not which modified tree a node came from.</td></tr>
+        <tr><td>Edit preservation</td><td><span class="mono">E ⊂ Δ</span>, so all edits are preserved; if edits in deleted subtrees are treated as conflicts, then <span class="mono">E ⊂ Tm</span>.</td></tr>
+        <tr><td>Parallel edit model</td><td>Detected edits are inherently unordered and (within a single tree) independent of each other, avoiding any artificial ordering and the reconciliation complexity it would bring.</td></tr>
+        <tr><td>Extensibility</td><td>The formal model has been extended in later work to support "copy", and should generalize easily to an n-way merge.</td></tr>
+      </table>
+    </section>
+
+    <!-- ===== §6.5 complexity ===== -->
+    <section id="complexity">
+      <span class="sec-tag">§6.5 · Complexity</span>
+      <h2>Computational complexity</h2>
+      <p>Under the assumption that "the content size of an individual node has a constant bound", the algorithm runs in <span class="nt">O(n log n)</span> time, where n is the total number of nodes in the input trees. The analysis uses red-black trees (which give O(log n) lookup/insertion), and builds lookup tables for structural changes indexed by predecessor and successor — any lookup returns at most 3 relations (one per tree), so looking up a node's matches is constant-time.</p>
+
+      <figure>
+        <svg viewBox="0 0 720 240" role="img" aria-label="Per-stage complexity and growth curve">
+          <!-- table of stages -->
+          <g font-family="var(--font-cjk)" font-size="12.5">
+            <rect x="20" y="20" width="300" height="34" rx="7" fill="#FAFCFD" stroke="#DCE4EA"/>
+            <text x="34" y="42" fill="#15212C">Init (to sets + tables)</text>
+            <text x="300" y="42" text-anchor="end" font-family="JetBrains Mono" fill="#0E7C8E">O(n log n)</text>
+            <rect x="20" y="60" width="300" height="34" rx="7" fill="#FAFCFD" stroke="#DCE4EA"/>
+            <text x="34" y="82" fill="#15212C">Merge to raw set (dedup)</text>
+            <text x="300" y="82" text-anchor="end" font-family="JetBrains Mono" fill="#0E7C8E">O(n log n)</text>
+            <rect x="20" y="100" width="300" height="34" rx="7" fill="#FAFCFD" stroke="#DCE4EA"/>
+            <text x="34" y="122" fill="#15212C">Resolve conflicts (scan Δ)</text>
+            <text x="300" y="122" text-anchor="end" font-family="JetBrains Mono" fill="#0E7C8E">O(n log n)</text>
+            <rect x="20" y="146" width="300" height="34" rx="7" fill="#EAF7F0" stroke="#2C9C6A"/>
+            <text x="34" y="168" fill="#218254" font-weight="700">Total</text>
+            <text x="300" y="168" text-anchor="end" font-family="JetBrains Mono" fill="#218254" font-weight="700">O(n log n)</text>
+          </g>
+          <!-- growth curve -->
+          <g transform="translate(380,10)">
+            <line x1="30" y1="180" x2="30" y2="20" stroke="#C6D2DB" stroke-width="1.4"/>
+            <line x1="30" y1="180" x2="300" y2="180" stroke="#C6D2DB" stroke-width="1.4"/>
+            <text x="14" y="24" font-family="JetBrains Mono" font-size="11" fill="#7A8996">t</text>
+            <text x="298" y="196" font-family="JetBrains Mono" font-size="11" fill="#7A8996">n</text>
+            <!-- linear-ish fit line -->
+            <path d="M30,175 L300,40" fill="none" stroke="#5B6CC4" stroke-width="2"/>
+            <!-- scattered points -->
+            <g fill="#A24C86">
+              <circle cx="55" cy="168" r="2.6"/><circle cx="80" cy="158" r="2.6"/><circle cx="105" cy="150" r="2.6"/>
+              <circle cx="130" cy="136" r="2.6"/><circle cx="160" cy="122" r="2.6"/><circle cx="190" cy="104" r="2.6"/>
+              <circle cx="215" cy="92" r="2.6"/><circle cx="245" cy="72" r="2.6"/><circle cx="275" cy="52" r="2.6"/>
+              <circle cx="70" cy="164" r="2.6"/><circle cx="120" cy="140" r="2.6"/><circle cx="175" cy="112" r="2.6"/>
+              <circle cx="230" cy="80" r="2.6"/><circle cx="260" cy="60" r="2.6"/>
+            </g>
+            <text x="165" y="216" text-anchor="middle" font-family="var(--font-cjk)" font-size="11.5" fill="#7A8996">In 3dm, runtime is near-linear in n and e</text>
+          </g>
+        </svg>
+        <figcaption>The number of edits e also affects runtime (Δ's initial size grows with e), but e is at most O(n) because <span class="mono">|E| &lt; |T*| = O(n)</span>. The engineering implementation uses hash tables (often O(1)) instead of red-black trees; measured runtime is near-linear in both node count and edit count.</figcaption>
+      </figure>
+    </section>
+
+    <!-- ===== §7 ===== -->
+    <section id="s7">
+      <span class="sec-tag">§7 · Implementation &amp; evaluation</span>
+      <h2>Implementation and evaluation</h2>
+      <p>The method is implemented as the open-source tool <strong>3dm</strong> (which includes a heuristic tree matcher for building the matching). Of 37 study cases, <strong>35 succeeded</strong> (omitting the parts that demonstrate "copy"); the other two do not fit this merge model; symmetry was also verified. The evaluation surfaced a few practical findings:</p>
+      <ul>
+        <li><strong>Document metadata</strong> (e.g. OpenOffice's <span class="nt">&lt;meta:date&gt;</span>) often changes inconsistently on both sides, a nuisance in real use.</li>
+        <li><strong>A successful merge needs enough common structure around the changed area.</strong> For example, merging a paragraph <span class="nt">&lt;p&gt;…555-1234…&lt;/p&gt;</span> with a change to a separate <span class="nt">&lt;phone&gt;555-1234&lt;/phone&gt;</span> fails.</li>
+        <li><strong>Structural edits that are too close</strong> also fail: bolding and italicizing the same <span class="nt">&lt;li&gt;</span> makes the text and italic block two separate nodes. Introducing a <span class="nt">&lt;div&gt;</span> to group logical entities fixes it.</li>
+      </ul>
+      <p>These aside, overall performance is satisfactory, successfully merging the content of several concurrently edited OpenOffice, XML, and XHTML documents; the merge is also used for reconciling directory trees in a shared file system.</p>
+    </section>
+
+    <!-- ===== §8-9 ===== -->
+    <section id="s89">
+      <span class="sec-tag">§8–§9 · Related work &amp; conclusion</span>
+      <h2>Related work and conclusion</h2>
+      <p>The merge tools in Word, OpenOffice, and the like are based on pairwise comparison of documents, not three-way merging. The structured-merge methods in the literature (Asklund [12], Manger [8], DeltaXML [7], etc.) handle delete, update, and insert in largely the same way; <strong>the real difference is whether they support "move" and how they merge moves</strong>.</p>
+      <div class="note">
+        <span class="lbl">How this work positions itself</span>
+        Earlier methods' move rules are often tied to a specific domain (e.g. semantically aware source-code merging). This paper attempts to give <strong>more universally applicable</strong> move rules; this is also its main advantage over text-based merging and prior work — the ability to handle "large-scale reorganization" and "detail updates" at the same time.
+      </div>
+      <p><strong>Conclusion:</strong> the paper provides a set of examples, use cases, and rules for designing and testing three-way merges of document-oriented XML; the method is based on empirical rules, easy to implement, computationally efficient, and intuitive in its handling of node operations. <strong>Future directions:</strong> extend to unordered trees, and study how to specialize the merge with domain-specific knowledge, so as to efficiently reuse the functionality of a generalized merge.</p>
+    </section>
+
+  </main>
+</div>
+
+<footer class="foot">
+  Based on Tancred Lindholm, "A Three-way Merge for XML Documents", DocEng '04 (ACM, 2004). This page is an explanatory illustrated walkthrough; the diagrams are a schematic re-presentation of the paper's content, and the original paper is authoritative for its full statements and formulas.
+</footer>
+
+<script>
+// scroll-spy
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var map = {};
+  links.forEach(function(a){
+    var id = a.getAttribute('href').slice(1);
+    var el = document.getElementById(id);
+    if(el) map[id] = a;
+  });
+  var sections = Object.keys(map).map(function(id){return document.getElementById(id);});
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(l){l.classList.remove('active');});
+        var a = map[e.target.id];
+        if(a) a.classList.add('active');
+      }
+    });
+  },{rootMargin:'-20% 0px -70% 0px',threshold:0});
+  sections.forEach(function(s){obs.observe(s);});
+})();
+
+// conflict tabs
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var id = btn.getAttribute('data-tab');
+    document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+    document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+    btn.classList.add('active');
+    var panel = document.getElementById(id);
+    if(panel) panel.classList.add('active');
+  });
+});
+
+// mobile toc
+var tt = document.getElementById('tocToggle');
+if(tt){ tt.addEventListener('click',function(){document.getElementById('toc').classList.toggle('open');}); }
+document.querySelectorAll('.toc a').forEach(function(a){
+  a.addEventListener('click',function(){document.getElementById('toc').classList.remove('open');});
+});
+</script>
+</body>
+</html>

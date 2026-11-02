@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "case": "02-single-delete",
+  "requirement": "Single-sided deletion",
+  "expectedStatus": "accept",
+  "acceptedEdits": [
+    {
+      "side": "left",
+      "type": "delete",
+      "target": "r2",
+      "description": "Delete r2."
+    }
+  ],
+  "conflicts": [],
+  "invariants": {
+    "commonBase": true,
+    "unchangedSelfValuesStable": true,
+    "reciprocalThreadReferencesRequired": true
+  },
+  "artifacts": {
+    "base.idml": {
+      "sha256": "a395a4aadf541f8b70288233ae90fb2bc78da3b8b46ced7b1717701bffc67cb7",
+      "bytes": 39546
+    },
+    "left.idml": {
+      "sha256": "65de2079ee1b0d50b8124d31c799438e595fe291475c4ce645c337e78c3ae45d",
+      "bytes": 39506
+    },
+    "right.idml": {
+      "sha256": "a395a4aadf541f8b70288233ae90fb2bc78da3b8b46ced7b1717701bffc67cb7",
+      "bytes": 39546
+    }
+  },
+  "note": null
+}

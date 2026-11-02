@@ -1,6 +1,6 @@
 ThisBuild / organization := "com.phasmidsoftware"
 
-ThisBuild / version := "1.1.2"
+ThisBuild / version := "1.1.3"
 
 ThisBuild / scalaVersion := "3.9.0" // the current LTS
 
@@ -22,7 +22,7 @@ lazy val core = (project in file("core"))
       scalaModules %% "scala-xml" % "2.4.0",
       scalaModules %% "scala-parser-combinators" % "2.4.0",
       "org.typelevel" %% "cats-effect" % "3.7.0",
-      "com.phasmidsoftware" %% "flog" % "1.0.15",
+      "com.phasmidsoftware" %% "flog" % "1.1.0",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.9.6"
     )
   )
@@ -32,7 +32,7 @@ lazy val kml = (project in file("kml"))
   .settings(commonSettings)
   .settings(
     name := "xmldoc-kml",
-    libraryDependencies += "com.phasmidsoftware" %% "args" % "2.0.0"
+    libraryDependencies += "com.phasmidsoftware" %% "args" % "2.1.0"
   )
 
 lazy val kmlIt = (project in file("kml-it"))
