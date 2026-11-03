@@ -34,8 +34,8 @@ object Utilities {
    * @return an XML element.
    */
   def parseUnparsed(w: String): Elem = {
-    val unparsed = scala.xml.Unparsed(w) // NOTE: unparsed really is used (ignore warning).
-    <xml>$unparsed</xml>
+    val unparsed = scala.xml.Unparsed(w)
+    <xml>{unparsed}</xml>
   }
 
   /**

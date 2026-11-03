@@ -167,7 +167,7 @@ class ExtractorSpec extends AnyFlatSpec with should.Matchers {
 
   it should "not match innerBoundaryIs" in {
     "innerBoundaryIs" match {
-      case Plural(s) => fail("should not match")
+      case Plural(_) => fail("should not match")
       case _ =>
     }
   }

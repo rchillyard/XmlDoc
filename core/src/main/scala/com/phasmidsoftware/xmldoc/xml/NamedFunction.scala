@@ -1,5 +1,6 @@
 package com.phasmidsoftware.xmldoc.xml
 
+import scala.annotation.unused
 import scala.language.implicitConversions
 import scala.reflect.ClassTag
 
@@ -73,7 +74,7 @@ object NamedFunction {
      * @tparam T the class type associated with the named function, requiring evidence of `ClassTag`.
      * @return Unit, as this method performs a validation check without producing a result.
      */
-    def assertNamedNotNull[N: NamedFunction, T: ClassTag](caller: String): Unit = assertNamedNotNullMember("", "anonymous")
+    def assertNamedNotNull[N: NamedFunction, T: ClassTag](@unused caller: String): Unit = assertNamedNotNullMember("", "anonymous")
 
     /**
      * Provides the implicit `NamedFunction` instance for the specified type `P`.

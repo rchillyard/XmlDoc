@@ -17,7 +17,7 @@ case class SmartBuffer(sb: StringBuilder) {
    */
   def append(s: String): SmartBuffer = {
     val delimAppend = s.startsWith("\n")
-    if (delimAppend) trim
+    if (delimAppend) trim: Unit
     sb.append(s)
     if (sb.result().contains(" \n"))
       println(s"SmartBuffer: ${sb.result()}") // XXX what's going on here?

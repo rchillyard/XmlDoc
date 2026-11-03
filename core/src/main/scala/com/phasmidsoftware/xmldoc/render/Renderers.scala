@@ -4,7 +4,7 @@ import com.phasmidsoftware.xmldoc.core.{CDATA, Text, XmlException}
 import com.phasmidsoftware.xmldoc.render.Renderer.{doNestedRender, doRenderSequence, renderAttribute, renderOuter}
 import org.slf4j.{Logger, LoggerFactory}
 
-import scala.annotation.unused
+import scala.annotation.{nowarn, unused}
 import scala.reflect.ClassTag
 import scala.util.{Failure, Success, Try}
 
@@ -279,7 +279,7 @@ trait Renderers {
    * @tparam R the type of Renderer to be returned (must be a Product).
    * @return a Renderer[R].
    */
-  def renderer0Super[B: Renderer, R <: Product : ClassTag](construct: B => R)(lens: R => B): Renderer[R] = Renderer {
+  def renderer0Super[B: Renderer, R <: Product : ClassTag](@unused construct: B => R)(lens: R => B): Renderer[R] = Renderer {
     (r: R, format, stateR) =>
       for {
         wInner <- Renderer.render(lens(r), format, stateR.recurse)
@@ -684,6 +684,7 @@ trait Renderers {
    * @tparam R the underlying type to be rendered.
    * @return a Renderer of Seq[R].
    */
+  @nowarn("msg=unused implicit parameter") // R keeps its ClassTag bound, which this method doesn't use, so that its signature stays the same
   def sequenceRendererFormatted[R: Renderer : ClassTag](formatFunc: Int => Format): Renderer[Seq[R]] = Renderer {
     (rs, format, stateR) =>
       doRenderSequence(rs, formatFunc(format.indents), stateR.maybeName)
@@ -760,7 +761,7 @@ object Renderers {
   implicit val charSequenceRenderer: Renderer[CharSequence] = Renderer[CharSequence] {
     (x, format, stateR) =>
       (x, format) match {
-        case (c: CDATA, _XML) => c.toXML
+        case (c: CDATA, _) => c.toXML
         // CONSIDER turning all other CharSequence into CDATA if appropriate.
         case _ => renderAttribute(scrub(x), stateR.maybeName)
       }
@@ -783,7 +784,7 @@ object Renderers {
 
 
   implicit val byteRenderer: Renderer[Byte] = Renderer[Byte] {
-    (t, _, stateR) => Success(f"$t%02x")
+    (t, _, _) => Success(f"$t%02x")
 
 
   } ^^ "byteRenderer"

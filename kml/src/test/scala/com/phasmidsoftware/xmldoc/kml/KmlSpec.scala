@@ -1714,7 +1714,6 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
         </Icon>
         <hotSpot x="16" xunits="pixels" y="32" yunits="insetPixels"/>
       </IconStyle>
-    val extractor = summon[Extractor[IconStyle]]
     extract[IconStyle](xml) match {
       case Success(ss) =>
         ss match {

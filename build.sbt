@@ -6,8 +6,21 @@ ThisBuild / scalaVersion := "3.9.0" // the current LTS
 
 lazy val scalaModules = "org.scala-lang.modules"
 
+// The compiler options that all the Phasmid libraries share.
+ThisBuild / scalacOptions ++= Seq(
+  "-encoding", "UTF-8",
+  "-deprecation",
+  "-feature",
+  "-unchecked",
+  "-Wunused:all",
+  "-Wvalue-discard",
+  "-Wnonunit-statement"
+)
+// Tests may use a value as a statement (for example, in a matcher), so each project's tests skip -Wnonunit-statement.
+lazy val testScalacOptions = Test / scalacOptions ~= (_.filterNot(_ == "-Wnonunit-statement"))
+
 lazy val commonSettings = Seq(
-  scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Wunused:all"),
+  testScalacOptions,
   libraryDependencies ++= Seq(
     "ch.qos.logback" % "logback-classic" % "1.6.2" % "runtime",
     "org.scalatest" %% "scalatest" % "3.2.20" % Test
@@ -54,6 +67,7 @@ lazy val root = (project in file("."))
   .enablePlugins(ScalaUnidocPlugin, GhpagesPlugin)
   .aggregate(core, kml, idml)
   .settings(
+    testScalacOptions,
     name := "XmlDoc",
     publish / skip := true,
     // The unified Scaladoc is published to https://rchillyard.github.io/XmlDoc/latest/api/ by `sbt ghpagesPushSite`
