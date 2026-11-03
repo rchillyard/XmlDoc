@@ -2,6 +2,7 @@
 [![Maven Central (kml)](https://img.shields.io/maven-central/v/com.phasmidsoftware/xmldoc-kml_3?label=maven-central%3A%20kml)](https://central.sonatype.com/artifact/com.phasmidsoftware/xmldoc-kml_3)
 [![API Docs](https://img.shields.io/badge/api-docs-blue)](https://rchillyard.github.io/XmlDoc/latest/api/)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/245437d8d4004bbe8ed41198b6f57419)](https://app.codacy.com/gh/rchillyard/XmlDoc/dashboard)
+[![Codacy Coverage](https://app.codacy.com/project/badge/Coverage/245437d8d4004bbe8ed41198b6f57419)](https://app.codacy.com/gh/rchillyard/XmlDoc/dashboard)
 [![CircleCI](https://dl.circleci.com/status-badge/img/gh/rchillyard/XmlDoc/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/rchillyard/XmlDoc/tree/main)
 [![GitHub Top Languages](https://img.shields.io/github/languages/top/rchillyard/XmlDoc)](https://github.com/rchillyard/XmlDoc)
 [![GitHub](https://img.shields.io/github/license/rchillyard/XmlDoc)](https://github.com/rchillyard/XmlDoc/blob/main/LICENSE)
