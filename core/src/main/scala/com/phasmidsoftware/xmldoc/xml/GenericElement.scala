@@ -1,9 +1,9 @@
 package com.phasmidsoftware.xmldoc.xml
 
 import com.phasmidsoftware.xmldoc.core.XmlException
-import com.phasmidsoftware.xmldoc.render.{Format, Renderer}
+import com.phasmidsoftware.xmldoc.render.Renderer
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{Failure, Success}
 
 /**
  * A fully generic representation of XML content: used for anything that doesn't have

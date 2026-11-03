@@ -1,6 +1,6 @@
 package com.phasmidsoftware.xmldoc.idml
 
-import com.phasmidsoftware.xmldoc.merge.{Content, NodePath, NodeRef, Pcs, PcsMerger, PcsTreeBuilder, RelationSet, StructuralConflict}
+import com.phasmidsoftware.xmldoc.merge.{Content, Pcs, PcsMerger, PcsTreeBuilder, RelationSet, StructuralConflict}
 import com.phasmidsoftware.xmldoc.xml.GenericElement
 
 import scala.util.{Failure, Success}

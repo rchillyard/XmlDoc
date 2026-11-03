@@ -381,8 +381,6 @@ case class Altitude($: Double)
  */
 object Altitude extends Extractors with Renderers {
 
-  import Renderers.*
-
   implicit val extractor: Extractor[Altitude] = extractor10(apply) ^^ "extractorAltitude"
   implicit val extractorOpt: Extractor[Option[Altitude]] = extractor.lift ^^ "extractorOptAltitude"
   implicit val renderer: Renderer[Altitude] = renderer1(apply) ^^ "rendererAltitude"
@@ -443,8 +441,6 @@ case class AxisScale($: Double)
  * Companion object for the `AxisScale` case class, providing extractors and renderers.
  */
 object AxisScale extends Extractors with Renderers {
-
-  import Renderers.*
 
   implicit val extractor: Extractor[AxisScale] = extractor10(apply) ^^ "extractorAxisScale"
   implicit val renderer: Renderer[AxisScale] = renderer1(apply) ^^ "rendererAxisScale"
@@ -765,8 +761,6 @@ case class Coordinates(coordinates: Seq[Coordinate]) extends Mergeable[Coordinat
     sb.append("}").toString()
   }
 
-  private val result: Option[Cartesian] = for (last <- coordinates.lastOption; first <- coordinates.headOption; v <- first vector last) yield v
-
   /**
    * Computes the gap (distance) between this Coordinates instance and another Coordinates instance, if possible.
    *
@@ -971,8 +965,6 @@ case class DrawOrder($: Int)
  */
 object DrawOrder extends Extractors with Renderers {
 
-  import Renderers.*
-
   private val drawOrderExtractor: Extractor[DrawOrder] = extractor10(apply) ^^ "drawOrderExtractor"
   implicit val extractorOpt: Extractor[Option[DrawOrder]] = drawOrderExtractor.lift ^^ "extractorOptionDrawOrder"
   implicit val rendererOpt: Renderer[Option[DrawOrder]] = renderer1(apply).lift ^^ "rendererOptionDrawOrder"
@@ -1030,8 +1022,6 @@ case class Extrude($: Boolean)
  * - `rendererOpt`: Supplies rendering capabilities for optional `Extrude` instances.
  */
 object Extrude extends Extractors with Renderers {
-
-  import Renderers.*
 
   private val extrudeExtractor: Extractor[Extrude] = extractor10(apply) ^^ "extrudeExtractor"
   implicit val extractorOpt: Extractor[Option[Extrude]] = extrudeExtractor.lift ^^ "extractorOptionExtrude"
@@ -1166,8 +1156,6 @@ case class Fill(boolean: Boolean)
  */
 object Fill extends Extractors with Renderers {
 
-  import Renderers.*
-
   private val fillExtractor: Extractor[Fill] = extractor10(apply) ^^ "fillExtractor"
   implicit val extractorOpt: Extractor[Option[Fill]] = fillExtractor.lift ^^ "extractMaybeFill"
   implicit val rendererOpt: Renderer[Option[Fill]] = renderer1(apply).lift ^^ "rendererOptionFill"
@@ -1192,8 +1180,6 @@ case class FlyToView($: Boolean)
  * in data processing pipelines that require standardized extraction or rendering logic.
  */
 object FlyToView extends Extractors with Renderers {
-
-  import Renderers.*
 
   implicit val extractor: Extractor[FlyToView] = extractor10(apply) ^^ "extractorFlyToView"
   implicit val extractorOpt: Extractor[Option[FlyToView]] = extractor.lift ^^ "extractorOptionFlyToView"
@@ -1411,8 +1397,6 @@ case class Heading($: Double)
  */
 object Heading extends Extractors with Renderers {
 
-  import Renderers.*
-
   implicit val extractor: Extractor[Heading] = extractor10(apply) ^^ "extractorHeading"
   implicit val extractorOpt: Extractor[Option[Heading]] = extractor.lift ^^ "extractMaybeHeading"
   implicit val renderer: Renderer[Heading] = renderer1(apply) ^^ "rendererHeading"
@@ -1441,8 +1425,6 @@ case class HotSpot(_x: Int, _xunits: UnitsEnum.Value, _y: Int, _yunits: UnitsEnu
  * for parsing and generating the corresponding representations of `HotSpot`.
  */
 object HotSpot extends Extractors with Renderers {
-
-  import Renderers.*
 
   // XXX we need the (plain) extractor as a val only because it is required in KML_Spec
   implicit val extractor: Extractor[HotSpot] = extractor40(apply) ^^ "extractorHotspot"
@@ -1778,8 +1760,6 @@ case class Latitude($: Double)
  */
 object Latitude extends Extractors with Renderers {
 
-  import Renderers.*
-
   implicit val extractor: Extractor[Latitude] = extractor10(apply) ^^ "extractorLatitude"
   implicit val extractorOpt: Extractor[Option[Latitude]] = extractor.lift ^^ "extractorOptionLatitude"
   implicit val renderer: Renderer[Latitude] = renderer1(apply) ^^ "rendererLatitude"
@@ -2067,8 +2047,6 @@ case class Longitude($: Double)
  */
 object Longitude extends Extractors with Renderers {
 
-  import Renderers.*
-
   implicit val extractor: Extractor[Longitude] = extractor10(apply) ^^ "extractorLongitude"
   implicit val extractorOpt: Extractor[Option[Longitude]] = extractor.lift ^^ "extractorOptionLongitude"
   implicit val renderer: Renderer[Longitude] = renderer1(apply) ^^ "rendererLongitude"
@@ -2169,8 +2147,6 @@ case class ModelScale(x: AxisScale, y: AxisScale, z: AxisScale)
  */
 object ModelScale extends Extractors with Renderers {
 
-  import Renderers.*
-
   implicit val extractor: Extractor[ModelScale] = extractor30(apply) ^^ "extractorModelScale"
   implicit val extractorOpt: Extractor[Option[ModelScale]] = extractor.lift ^^ "extractorOptionModelScale"
   implicit val renderer: Renderer[ModelScale] = renderer3(apply) ^^ "rendererModelScale"
@@ -2262,8 +2238,6 @@ case class Open($: Boolean)
  */
 object Open extends Extractors with Renderers {
 
-  import Renderers.*
-
   private val openExtractor: Extractor[Open] = extractor10(apply) ^^ "openExtractor"
   implicit val extractorOpt: Extractor[Option[Open]] = openExtractor.lift ^^ "extractorOptionOpen"
   implicit val renderer: Renderer[Open] = renderer1(apply) ^^ "rendererOptionOpen"
@@ -2335,8 +2309,6 @@ case class Outline(boolean: Boolean)
  * - An `Extractor` for `Outline` objects, allowing the transformation of data into an `Outline` instance.
  * - An `Extractor` for `Option[Outline]`, supporting optional */
 object Outline extends Extractors with Renderers {
-
-  import Renderers.*
 
   private val outlineExtractor: Extractor[Outline] = extractor10(apply) ^^ "outlineExtractor"
   implicit val extractorOpt: Extractor[Option[Outline]] = outlineExtractor.lift ^^ "extractOptionOutline"
@@ -2815,8 +2787,6 @@ case class Range($: Double)
  */
 object Range extends Extractors with Renderers {
 
-  import Renderers.*
-
   implicit val extractor: Extractor[Range] = extractor10(apply) ^^ "extractorRange"
   implicit val renderer: Renderer[Range] = renderer1(apply) ^^ "rendererRange"
 }
@@ -2839,8 +2809,6 @@ case class RefreshInterval($: Double)
  * Companion object for the `RefreshInterval` case class, providing extractors and renderers.
  */
 object RefreshInterval extends Extractors with Renderers {
-
-  import Renderers.*
 
   implicit val extractor: Extractor[RefreshInterval] = extractor10(apply) ^^ "extractorRefreshInterval"
   implicit val extractorOpt: Extractor[Option[RefreshInterval]] = extractor.lift ^^ "extractorOptionRefreshInterval"
@@ -2894,8 +2862,6 @@ case class RefreshVisibility($: Boolean)
  */
 object RefreshVisibility extends Extractors with Renderers {
 
-  import Renderers.*
-
   implicit val extractor: Extractor[RefreshVisibility] = extractor10(apply) ^^ "extractorRefreshVisibility"
   implicit val extractorOpt: Extractor[Option[RefreshVisibility]] = extractor.lift ^^ "extractorOptionRefreshVisibility"
   implicit val renderer: Renderer[RefreshVisibility] = renderer1(apply) ^^ "rendererRefreshVisibility"
@@ -2945,8 +2911,6 @@ case class Roll($: Double)
  */
 object Roll extends Extractors with Renderers {
 
-  import Renderers.*
-
   implicit val extractor: Extractor[Roll] = extractor10(apply) ^^ "extractorRoll"
   implicit val renderer: Renderer[Roll] = renderer1(apply) ^^ "rendererRoll"
 }
@@ -2963,8 +2927,6 @@ case class Rotation($: Double)
  * Of type angle180.
  */
 object Rotation extends Extractors with Renderers {
-
-  import Renderers.*
 
   implicit val extractor: Extractor[Rotation] = extractor10(apply) ^^ "extractorRotation"
   implicit val extractorOpt: Extractor[Option[Rotation]] = extractor.lift ^^ "extractorOptionRotation"
@@ -3028,8 +2990,6 @@ case class Scale($: Double)(val kmlData: KmlData) extends KmlObject
  * - Utility factory methods for creating Scale objects.
  */
 object Scale extends Extractors with Renderers {
-
-  import Renderers.*
 
   implicit val extractor: Extractor[Scale] = extractorPartial[KmlData, Scale](extractorPartial10(apply)) ^^ "extractorScale"
   implicit val extractorOpt: Extractor[Option[Scale]] = extractor.lift ^^ "extractOptionScale"
@@ -3508,8 +3468,6 @@ case class Tessellate($: Boolean) extends Mergeable[Tessellate] {
  */
 object Tessellate extends Extractors with Renderers {
 
-  import Renderers.*
-
   implicit val extractor: Extractor[Tessellate] = extractor10(apply) ^^ "extractorTessellate"
   implicit val extractorOpt: Extractor[Option[Tessellate]] = extractor.lift ^^ "extractorOptionTessellate"
   implicit val renderer: Renderer[Tessellate] = renderer1(apply) ^^ "rendererTessellate"
@@ -3564,8 +3522,6 @@ case class Tilt($: Double)
  */
 object Tilt extends Extractors with Renderers {
 
-  import Renderers.*
-
   implicit val extractor: Extractor[Tilt] = extractor10(apply) ^^ "extractorTilt"
   implicit val extractorOpt: Extractor[Option[Tilt]] = extractor.lift ^^ "extractorOptionTilt"
   implicit val renderer: Renderer[Tilt] = renderer1(apply) ^^ "rendererTilt"
@@ -3587,8 +3543,6 @@ case class ViewBoundScale($: Double)
  * Companion object for the `ViewBoundScale` case class, providing extractors and renderers.
  */
 object ViewBoundScale extends Extractors with Renderers {
-
-  import Renderers.*
 
   implicit val extractor: Extractor[ViewBoundScale] = extractor10(apply) ^^ "extractorViewBoundScale"
   implicit val extractorOpt: Extractor[Option[ViewBoundScale]] = extractor.lift ^^ "extractorOptionViewBoundScale"
@@ -3637,8 +3591,6 @@ case class ViewRefreshTime($: Double)
  * Companion object for the `ViewRefreshTime` case class, providing extractors and renderers.
  */
 object ViewRefreshTime extends Extractors with Renderers {
-
-  import Renderers.*
 
   implicit val extractor: Extractor[ViewRefreshTime] = extractor10(apply) ^^ "extractorViewRefreshTime"
   implicit val extractorOpt: Extractor[Option[ViewRefreshTime]] = extractor.lift ^^ "extractorOptionViewRefreshTime"
@@ -3689,8 +3641,6 @@ case class Visibility($: Boolean)
  */
 object Visibility extends Extractors with Renderers {
 
-  import Renderers.*
-
   private val extractor: Extractor[Visibility] = extractor10(apply) ^^ "visibilityExtractor"
   implicit val extractorOpt: Extractor[Option[Visibility]] = extractor.lift ^^ "extractorOptionVisibility"
   implicit val rendererOpt: Renderer[Option[Visibility]] = renderer1(apply).lift ^^ "rendererOptionVisibility"
@@ -3717,8 +3667,6 @@ case class Width($: Double)
  * creating representations of `Width` instances or optional `Width` instances in a particular format.
  */
 object Width extends Extractors with Renderers {
-
-  import Renderers.*
 
   private val extractor: Extractor[Width] = extractor10(apply) ^^ "widthExtractor"
   implicit val extractorOpt: Extractor[Option[Width]] = extractor.lift ^^ "extractMaybeWidth"

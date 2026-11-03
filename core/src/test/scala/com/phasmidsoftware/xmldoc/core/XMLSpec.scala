@@ -19,7 +19,6 @@ class XMLSpec extends AnyFlatSpec with should.Matchers {
       """<BalloonStyle>
         |      <text>Hello World!</text>
         |    </BalloonStyle>""".stripMargin
-    val z = xml.child
     Using(new StringWriter()) {
       sw =>
         scala.xml.XML.write(sw, xml, "UTF-8", false, null)
@@ -40,7 +39,6 @@ class XMLSpec extends AnyFlatSpec with should.Matchers {
         |        &lt;h3&gt;$[name]&lt;/h3&gt;
         |      </text>
         |    </BalloonStyle>""".stripMargin
-    val z = xml.child
 
     Using(new StringWriter()) {
       writer =>

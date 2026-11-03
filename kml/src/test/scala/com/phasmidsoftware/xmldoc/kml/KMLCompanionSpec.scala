@@ -3,8 +3,7 @@ package com.phasmidsoftware.xmldoc.kml
 import cats.effect.IO
 import cats.effect.unsafe.implicits.global
 import com.phasmidsoftware.xmldoc.core.TryUsing
-import com.phasmidsoftware.xmldoc.kml.KMLCompanion.renderKMLAsFormat
-import com.phasmidsoftware.xmldoc.render.{FormatText, FormatXML, Renderer}
+import com.phasmidsoftware.xmldoc.render.{FormatXML, Renderer}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 import scala.util.Try

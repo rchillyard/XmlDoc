@@ -20,14 +20,12 @@ class FPSpec extends AnyFlatSpec with should.Matchers {
 
   it should "sequenceForgivingTransform" in {
 
-    val sb = new StringBuilder()
     val failure = Failure[Int](new NoSuchElementException("test"))
     val success = Success(1)
 
     val triedInts1: Seq[Try[Int]] = Seq()
     sequenceForgivingTransform[Int](triedInts1)(x => Success(Some(x)), _ => Success(None)) shouldBe Success(Nil)
     val triedInts2 = Seq(success, failure)
-    val z: Try[Seq[Int]] = sequenceForgivingTransform[Int](triedInts2)(x => Success(Some(x)), _ => Success(None))
     sequenceForgivingTransform[Int](triedInts2)(x => Success(Some(x)), _ => Success(None)) shouldBe Success(List(1))
   }
 

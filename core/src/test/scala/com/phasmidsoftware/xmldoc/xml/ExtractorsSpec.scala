@@ -372,15 +372,9 @@ class ExtractorsSpec extends AnyFlatSpec with should.Matchers with PrivateMethod
     extractedSeq should matchPattern { case Success(_ :: _ :: Nil) => }
   }
 
-  //noinspection ScalaUnusedSymbol
   it should "extractorEnum" in {
-    object Shapes extends Enumeration with Extractors {
-      type Shape = Value
-      val Rectangle, Cylinder, Sphere = Value
-      val extractor: Extractor[Shape] = extractorEnum[Shape, this.type](this)(s => s.toLowerCase)
-      private val xml = <shape>rectangle</shape>
-      extractor.extract(xml) shouldBe Success(Rectangle)
-    }
+    val xml = <shape>rectangle</shape>
+    EnumShapes.extractor.extract(xml) shouldBe Success(EnumShapes.rectangle)
   }
 
   case class MyContainer(simple1: Simple1, simple2: Simple1, simple4s: Seq[Simple4])
@@ -412,4 +406,10 @@ class ExtractorsSpec extends AnyFlatSpec with should.Matchers with PrivateMethod
     }
   }
 
+}
+
+object EnumShapes extends Enumeration with Extractors {
+  type Shape = Value
+  val rectangle, cylinder, sphere = Value
+  val extractor: Extractor[Shape] = extractorEnum[Shape, this.type](this)(s => s.toLowerCase)
 }

@@ -133,11 +133,11 @@ object Renderer {
    * @param objectOuter the outer object to be rendered, which must have an implicit Renderer in scope.
    * @param indexOuter  the index of the element within the product, used to determine naming context.
    * @param format      the format in which the outer object should be rendered.
-   * @tparam R the type of the product, constrained to types extending `Product`, with an implicit `ClassTag`.
+   * @tparam R the type of the product, constrained to types extending `Product`.
    * @tparam P the type of the outer object, which must have an implicit Renderer.
    * @return a `Try[String]` containing the rendered result or a failure if the operation fails.
    */
-  private[render] def renderOuter[R <: Product : ClassTag, P: Renderer](r: R, objectOuter: P, indexOuter: Int, format: Format): Try[String] =
+  private[render] def renderOuter[R <: Product, P: Renderer](r: R, objectOuter: P, indexOuter: Int, format: Format): Try[String] =
     TryUsing(StateR().setName(r, indexOuter)) {
       sr =>
         for {
@@ -168,20 +168,20 @@ object Renderer {
     // XXX: if maybeAttribute is defined, then isInternal will usually be true
     //      (the exception being for the last attribute of an all-attribute element).
     if (maybeAttribute.isDefined)
-      stateR.addAttribute(wOuter)
+      stateR.addAttribute(wOuter): Unit
     val sb = SmartBuffer()
     if (!stateR.isInternal) {
-      sb.appendPadded(format.formatName(open = Some(true), stateR))
-      sb.appendPadded(stateR.getAttributes)
-      if (maybeAttribute.isEmpty) sb.append(format.formatName(open = None, stateR))
+      sb.appendPadded(format.formatName(open = Some(true), stateR)): Unit
+      sb.appendPadded(stateR.getAttributes): Unit
+      if (maybeAttribute.isEmpty) sb.append(format.formatName(open = None, stateR)): Unit
     }
     if (maybeAttribute.isEmpty) {
-      sb.appendPadded(wInner)
-      sb.appendPadded(wOuter)
+      sb.appendPadded(wInner): Unit
+      sb.appendPadded(wOuter): Unit
     }
     if (!stateR.isInternal) {
-      if (maybeAttribute.isDefined) sb.append(format.formatName(open = None, stateR))
-      sb.append(format.formatName(open = Some(false), stateR))
+      if (maybeAttribute.isDefined) sb.append(format.formatName(open = None, stateR)): Unit
+      sb.append(format.formatName(open = Some(false), stateR)): Unit
     }
     Try(sb.result)
   }
@@ -271,7 +271,7 @@ case class StateR(maybeName: Option[String], private val attributes: SmartBuffer
    * @return a mutated version of this StateR.
    */
   def addAttribute(attrString: String): StateR = {
-    attributes.appendPadded(attrString)
+    attributes.appendPadded(attrString): Unit
     this
   }
 

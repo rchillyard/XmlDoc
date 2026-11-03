@@ -1,6 +1,6 @@
 package com.phasmidsoftware.xmldoc.kml
 
-import com.phasmidsoftware.xmldoc.merge.{ContentMatcher, Pcs, PcsMerger, PcsTreeBuilder}
+import com.phasmidsoftware.xmldoc.merge.{Pcs, PcsMerger, PcsTreeBuilder}
 import com.phasmidsoftware.xmldoc.xml.{GenericElement, GenericText}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
