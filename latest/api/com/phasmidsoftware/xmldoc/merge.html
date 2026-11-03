@@ -1,0 +1,1455 @@
+<!DOCTYPE html><html data-pathToRoot="../../../" data-rawLocation="com/phasmidsoftware/xmldoc/merge" data-dynamicSideMenu="false"><head><meta charset="utf-8"></meta><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta><title>com.phasmidsoftware.xmldoc.merge</title><link rel="shortcut icon" type="image/x-icon" href="../../../favicon.ico"></link><script type="text/javascript" src="../../../scripts/theme.js"></script><script type="text/javascript" src="../../../scripts/searchData.js" defer="true"></script><script type="text/javascript" src="../../../scripts/scastieConfiguration.js" defer="true"></script><link rel="stylesheet" href="../../../styles/theme/bundle.css"></link><link rel="stylesheet" href="../../../styles/theme/components/bundle.css"></link><link rel="stylesheet" href="../../../styles/theme/components/button/bundle.css"></link><link rel="stylesheet" href="../../../styles/theme/layout/bundle.css"></link><link rel="stylesheet" href="../../../styles/dotty-icons.css"></link><link rel="stylesheet" href="../../../styles/filter-bar.css"></link><link rel="stylesheet" href="../../../styles/searchbar.css"></link><link rel="stylesheet" href="../../../styles/social-links.css"></link><link rel="stylesheet" href="../../../styles/versions-dropdown.css"></link><link rel="stylesheet" href="../../../styles/content-contributors.css"></link><script type="text/javascript" src="../../../hljs/highlight.pack.js" defer="true"></script><script type="text/javascript" src="../../../scripts/hljs-scala3.js" defer="true"></script><script type="text/javascript" src="../../../scripts/ux.js" defer="true"></script><script type="text/javascript" src="../../../scripts/common/component.js" defer="true"></script><script type="text/javascript" src="../../../scripts/common/utils.js" defer="true"></script><script type="text/javascript" src="../../../scripts/components/FilterBar.js" defer="true"></script><script type="text/javascript" src="../../../scripts/components/DocumentableList.js" defer="true"></script><script type="text/javascript" src="../../../scripts/components/Input.js" defer="true"></script><script type="text/javascript" src="../../../scripts/components/FilterGroup.js" defer="true"></script><script type="text/javascript" src="../../../scripts/components/Filter.js" defer="true"></script><script type="text/javascript" src="../../../scripts/scaladoc-scalajs.js" defer="true"></script><script type="text/javascript" src="../../../scripts/contributors.js" defer="true"></script><script type="text/javascript" src="https://d3js.org/d3.v6.min.js" defer="true"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/graphlib-dot@0.6.2/dist/graphlib-dot.min.js" defer="true"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.1/dagre-d3.min.js" defer="true"></script><script type="text/javascript" src="https://scastie.scala-lang.org/embedded.js" defer="true"></script><script type="text/javascript" src="../../../scripts/data.js" defer="true"></script><script>var pathToRoot = "../../../";</script></head><body><div id=""><div id="header" class="body-small"><div class="header-container-left"><a href="../../../" class="logo-container"><span class="project-name h300">XmlDoc</span></a><span onclick="dropdownHandler(event)" class="text-button with-arrow" id="dropdown-trigger"><a></a></span><div id="version-dropdown" class="dropdown-menu"></div></div><div class="header-container-right"><button id="search-toggle" class="icon-button"></button><span id="theme-toggle" class="icon-button"></span><span id="mobile-menu-toggle" class="icon-button hamburger"></span></div></div><div id="mobile-menu"><div class="mobile-menu-header body-small"><span class="mobile-menu-logo"><span class="project-name h300">XmlDoc</span></span><button id="mobile-menu-close" class="icon-button close"></button></div><div class="mobile-menu-container body-medium"><input id="mobile-scaladoc-searchbar-input" class="scaladoc-searchbar-input" type="search" placeholder="Find anything"></input><span id="mobile-theme-toggle" class="mobile-menu-item mode"></span></div></div><span id="mobile-sidebar-toggle" class="floating-button"></span><div id="leftColumn" class="body-small"><div class="switcher-container"><a id="api-nav-button" class="switcher h100 selected" href="../../../index.html">API</a></div><nav id="api-nav" class="side-menu"><div class="ni n0 expanded"><span class="nh h100 expanded cs"><button class="ar icon-button expanded"></button><a href="../xmldoc.html"><span class="micon pa"></span><span>com.phasmidsoftware.xmldoc</span></a></span><div class="ni n1"><span class="nh "><button class="ar icon-button "></button><a href="core.html"><span class="micon pa"></span><span>core</span></a></span><div class="ni n2 "><span class="nh "><a href="core/CDATA.html"><span class="micon cl"></span><span>CDATA</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/CDATA$.html"><span class="micon ob"></span><span>CDATA</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/Cartesian.html"><span class="micon cl"></span><span>Cartesian</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/FP$.html"><span class="micon ob"></span><span>FP</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/FPException.html"><span class="micon cl"></span><span>FPException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/LowerCaseInitialRegex.html"><span class="micon cl"></span><span>LowerCaseInitialRegex</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/MappableRegex.html"><span class="micon cl"></span><span>MappableRegex</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/Mergeable$.html"><span class="micon ob"></span><span>Mergeable</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/Mergeable.html"><span class="micon tr"></span><span>Mergeable</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/MissingFieldException.html"><span class="micon cl"></span><span>MissingFieldException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/PCData.html"><span class="micon cl"></span><span>PCData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/PCData$.html"><span class="micon ob"></span><span>PCData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/Reflection$.html"><span class="micon ob"></span><span>Reflection</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/Reflection.html"><span class="micon cl"></span><span>Reflection</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/ReflectionException.html"><span class="micon cl"></span><span>ReflectionException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/SmartBuffer$.html"><span class="micon ob"></span><span>SmartBuffer</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/SmartBuffer.html"><span class="micon cl"></span><span>SmartBuffer</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/TagProperties$.html"><span class="micon ob"></span><span>TagProperties</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/Text$.html"><span class="micon ob"></span><span>Text</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/Text.html"><span class="micon cl"></span><span>Text</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/TryUsing$.html"><span class="micon ob"></span><span>TryUsing</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/Utilities$.html"><span class="micon ob"></span><span>Utilities</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/XML$.html"><span class="micon ob"></span><span>XML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/XmlBaseException.html"><span class="micon cl"></span><span>XmlBaseException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/XmlException$.html"><span class="micon ob"></span><span>XmlException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="core/XmlException.html"><span class="micon cl"></span><span>XmlException</span></a></span></div></div><div class="ni n1"><span class="nh "><button class="ar icon-button "></button><a href="idml.html"><span class="micon pa"></span><span>idml</span></a></span><div class="ni n2 "><span class="nh "><a href="idml/Conflict.html"><span class="micon cl"></span><span>Conflict</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/Deleted.html"><span class="micon cl"></span><span>Deleted</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/DimensionConstraint.html"><span class="micon en"></span><span>DimensionConstraint</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/Edit.html"><span class="micon tr"></span><span>Edit</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/EditDetector$.html"><span class="micon ob"></span><span>EditDetector</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/IdmlMergeDriver$.html"><span class="micon ob"></span><span>IdmlMergeDriver</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/IdmlPackage.html"><span class="micon cl"></span><span>IdmlPackage</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/IdmlPackage$.html"><span class="micon ob"></span><span>IdmlPackage</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/IdmlPackageMerger$.html"><span class="micon ob"></span><span>IdmlPackageMerger</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/Inserted.html"><span class="micon cl"></span><span>Inserted</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/LayoutConstraints.html"><span class="micon cl"></span><span>LayoutConstraints</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/LayoutConstraints$.html"><span class="micon ob"></span><span>LayoutConstraints</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/MergeOutcome.html"><span class="micon tr"></span><span>MergeOutcome</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/MergedAttributeChange.html"><span class="micon cl"></span><span>MergedAttributeChange</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/MergedDelete.html"><span class="micon cl"></span><span>MergedDelete</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/MergedInsert.html"><span class="micon cl"></span><span>MergedInsert</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/Merger$.html"><span class="micon ob"></span><span>Merger</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/PackageMergeResult.html"><span class="micon cl"></span><span>PackageMergeResult</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/PackagePart.html"><span class="micon cl"></span><span>PackagePart</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/PartConflict.html"><span class="micon cl"></span><span>PartConflict</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/PartContent.html"><span class="micon cl"></span><span>PartContent</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/PartOutcome.html"><span class="micon tr"></span><span>PartOutcome</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/PartRemoved.html"><span class="micon cl"></span><span>PartRemoved</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/Story.html"><span class="micon cl"></span><span>Story</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/Story$.html"><span class="micon ob"></span><span>Story</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/ThreeWayMerger$.html"><span class="micon ob"></span><span>ThreeWayMerger</span></a></span></div><div class="ni n2 "><span class="nh "><a href="idml/Updated.html"><span class="micon cl"></span><span>Updated</span></a></span></div></div><div class="ni n1"><span class="nh "><button class="ar icon-button "></button><a href="kml.html"><span class="micon pa"></span><span>kml</span></a></span><div class="ni n2 "><span class="nh "><a href="kml/AbstractView.html"><span class="micon tr"></span><span>AbstractView</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/AbstractView$.html"><span class="micon ob"></span><span>AbstractView</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/AbstractViewData$.html"><span class="micon ob"></span><span>AbstractViewData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/AbstractViewData.html"><span class="micon cl"></span><span>AbstractViewData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Alias.html"><span class="micon cl"></span><span>Alias</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Alias$.html"><span class="micon ob"></span><span>Alias</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Altitude.html"><span class="micon cl"></span><span>Altitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Altitude$.html"><span class="micon ob"></span><span>Altitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/AltitudeMode$.html"><span class="micon ob"></span><span>AltitudeMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/AltitudeMode.html"><span class="micon cl"></span><span>AltitudeMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/AltitudeModeEnum$.html"><span class="micon ob"></span><span>AltitudeModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/AxisScale.html"><span class="micon cl"></span><span>AxisScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/AxisScale$.html"><span class="micon ob"></span><span>AxisScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/BalloonStyle$.html"><span class="micon ob"></span><span>BalloonStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/BalloonStyle.html"><span class="micon cl"></span><span>BalloonStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/BaseOverlay.html"><span class="micon cl"></span><span>BaseOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/BgColor$.html"><span class="micon ob"></span><span>BgColor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/BgColor.html"><span class="micon cl"></span><span>BgColor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Camera.html"><span class="micon cl"></span><span>Camera</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Camera$.html"><span class="micon ob"></span><span>Camera</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Color$.html"><span class="micon ob"></span><span>Color</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Color.html"><span class="micon cl"></span><span>Color</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ColorMode.html"><span class="micon cl"></span><span>ColorMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ColorMode$.html"><span class="micon ob"></span><span>ColorMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ColorModeEnum$.html"><span class="micon ob"></span><span>ColorModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ColorStyle$.html"><span class="micon ob"></span><span>ColorStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ColorStyle.html"><span class="micon tr"></span><span>ColorStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ColorStyleData$.html"><span class="micon ob"></span><span>ColorStyleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ColorStyleData.html"><span class="micon cl"></span><span>ColorStyleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Container$.html"><span class="micon ob"></span><span>Container</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Container.html"><span class="micon tr"></span><span>Container</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ContainerData.html"><span class="micon cl"></span><span>ContainerData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ContainerData$.html"><span class="micon ob"></span><span>ContainerData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Coordinate$.html"><span class="micon ob"></span><span>Coordinate</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Coordinate.html"><span class="micon cl"></span><span>Coordinate</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Coordinates$.html"><span class="micon ob"></span><span>Coordinates</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Coordinates.html"><span class="micon cl"></span><span>Coordinates</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Data.html"><span class="micon cl"></span><span>Data</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Data$.html"><span class="micon ob"></span><span>Data</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/DisplayMode.html"><span class="micon cl"></span><span>DisplayMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/DisplayMode$.html"><span class="micon ob"></span><span>DisplayMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/DisplayModeEnum$.html"><span class="micon ob"></span><span>DisplayModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Document$.html"><span class="micon ob"></span><span>Document</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Document.html"><span class="micon cl"></span><span>Document</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/DrawOrder$.html"><span class="micon ob"></span><span>DrawOrder</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/DrawOrder.html"><span class="micon cl"></span><span>DrawOrder</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Element.html"><span class="micon cl"></span><span>Element</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ExtendedData$.html"><span class="micon ob"></span><span>ExtendedData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ExtendedData.html"><span class="micon cl"></span><span>ExtendedData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Extrude$.html"><span class="micon ob"></span><span>Extrude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Extrude.html"><span class="micon cl"></span><span>Extrude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Feature.html"><span class="micon tr"></span><span>Feature</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Feature$.html"><span class="micon ob"></span><span>Feature</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/FeatureData.html"><span class="micon cl"></span><span>FeatureData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/FeatureData$.html"><span class="micon ob"></span><span>FeatureData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Fill.html"><span class="micon cl"></span><span>Fill</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Fill$.html"><span class="micon ob"></span><span>Fill</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/FlyToView$.html"><span class="micon ob"></span><span>FlyToView</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/FlyToView.html"><span class="micon cl"></span><span>FlyToView</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Folder.html"><span class="micon cl"></span><span>Folder</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Folder$.html"><span class="micon ob"></span><span>Folder</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Geometry.html"><span class="micon tr"></span><span>Geometry</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Geometry$.html"><span class="micon ob"></span><span>Geometry</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/GeometryData.html"><span class="micon cl"></span><span>GeometryData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/GeometryData$.html"><span class="micon ob"></span><span>GeometryData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/GroundOverlay.html"><span class="micon cl"></span><span>GroundOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/GroundOverlay$.html"><span class="micon ob"></span><span>GroundOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/HasFeatures$.html"><span class="micon ob"></span><span>HasFeatures</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/HasFeatures.html"><span class="micon tr"></span><span>HasFeatures</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/HasName.html"><span class="micon tr"></span><span>HasName</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Heading$.html"><span class="micon ob"></span><span>Heading</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Heading.html"><span class="micon cl"></span><span>Heading</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Helper$.html"><span class="micon ob"></span><span>Helper</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Hex4$.html"><span class="micon ob"></span><span>Hex4</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Hex4.html"><span class="micon cl"></span><span>Hex4</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/HotSpot$.html"><span class="micon ob"></span><span>HotSpot</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/HotSpot.html"><span class="micon cl"></span><span>HotSpot</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Icon$.html"><span class="micon ob"></span><span>Icon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Icon.html"><span class="micon cl"></span><span>Icon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/IconStyle$.html"><span class="micon ob"></span><span>IconStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/IconStyle.html"><span class="micon cl"></span><span>IconStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ImagePyramid.html"><span class="micon cl"></span><span>ImagePyramid</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ImagePyramid$.html"><span class="micon ob"></span><span>ImagePyramid</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/InnerBoundaryIs.html"><span class="micon cl"></span><span>InnerBoundaryIs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/InnerBoundaryIs$.html"><span class="micon ob"></span><span>InnerBoundaryIs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Invertible.html"><span class="micon tr"></span><span>Invertible</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ItemIcon.html"><span class="micon cl"></span><span>ItemIcon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ItemIcon$.html"><span class="micon ob"></span><span>ItemIcon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ItemIconModeEnum$.html"><span class="micon ob"></span><span>ItemIconModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KML.html"><span class="micon cl"></span><span>KML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KML$.html"><span class="micon ob"></span><span>KML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KMLCompanion$.html"><span class="micon ob"></span><span>KMLCompanion</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KMLDoc.html"><span class="micon cl"></span><span>KMLDoc</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KMLEditParser$.html"><span class="micon ob"></span><span>KMLEditParser</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KMLEditParser.html"><span class="micon cl"></span><span>KMLEditParser</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KMLEditor.html"><span class="micon cl"></span><span>KMLEditor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KMLEditor$.html"><span class="micon ob"></span><span>KMLEditor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KML_Binding.html"><span class="micon cl"></span><span>KML_Binding</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KML_Binding$.html"><span class="micon ob"></span><span>KML_Binding</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Key.html"><span class="micon cl"></span><span>Key</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Key$.html"><span class="micon ob"></span><span>Key</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KmlData.html"><span class="micon cl"></span><span>KmlData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KmlData$.html"><span class="micon ob"></span><span>KmlData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KmlEdit$.html"><span class="micon ob"></span><span>KmlEdit</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KmlEdit.html"><span class="micon cl"></span><span>KmlEdit</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KmlException.html"><span class="micon cl"></span><span>KmlException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/KmlObject.html"><span class="micon tr"></span><span>KmlObject</span></a></span></div><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="kml/KmlRenderers$.html"><span class="micon ob"></span><span>KmlRenderers</span></a></span><div class="ni n3 "><span class="nh "><a href="kml/KmlRenderers$$FormatCoordinate.html"><span class="micon cl"></span><span>FormatCoordinate</span></a></span></div></div><div class="ni n2 "><span class="nh "><a href="kml/LabelStyle$.html"><span class="micon ob"></span><span>LabelStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LabelStyle.html"><span class="micon cl"></span><span>LabelStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LatLonBox.html"><span class="micon cl"></span><span>LatLonBox</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LatLonBox$.html"><span class="micon ob"></span><span>LatLonBox</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Latitude.html"><span class="micon cl"></span><span>Latitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Latitude$.html"><span class="micon ob"></span><span>Latitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LineString.html"><span class="micon cl"></span><span>LineString</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LineString$.html"><span class="micon ob"></span><span>LineString</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LineStyle$.html"><span class="micon ob"></span><span>LineStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LineStyle.html"><span class="micon cl"></span><span>LineStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LinearRing$.html"><span class="micon ob"></span><span>LinearRing</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LinearRing.html"><span class="micon cl"></span><span>LinearRing</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Link.html"><span class="micon cl"></span><span>Link</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Link$.html"><span class="micon ob"></span><span>Link</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ListItemType.html"><span class="micon cl"></span><span>ListItemType</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ListItemType$.html"><span class="micon ob"></span><span>ListItemType</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ListItemTypeEnum$.html"><span class="micon ob"></span><span>ListItemTypeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ListStyle.html"><span class="micon cl"></span><span>ListStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ListStyle$.html"><span class="micon ob"></span><span>ListStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Location$.html"><span class="micon ob"></span><span>Location</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Location.html"><span class="micon cl"></span><span>Location</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Longitude$.html"><span class="micon ob"></span><span>Longitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Longitude.html"><span class="micon cl"></span><span>Longitude</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LookAt$.html"><span class="micon ob"></span><span>LookAt</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/LookAt.html"><span class="micon cl"></span><span>LookAt</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Model.html"><span class="micon cl"></span><span>Model</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Model$.html"><span class="micon ob"></span><span>Model</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ModelScale.html"><span class="micon cl"></span><span>ModelScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ModelScale$.html"><span class="micon ob"></span><span>ModelScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/MultiGeometry$.html"><span class="micon ob"></span><span>MultiGeometry</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/MultiGeometry.html"><span class="micon cl"></span><span>MultiGeometry</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/MultiLineException.html"><span class="micon cl"></span><span>MultiLineException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/NetworkLink.html"><span class="micon cl"></span><span>NetworkLink</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/NetworkLink$.html"><span class="micon ob"></span><span>NetworkLink</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Open.html"><span class="micon cl"></span><span>Open</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Open$.html"><span class="micon ob"></span><span>Open</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Orientation$.html"><span class="micon ob"></span><span>Orientation</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Orientation.html"><span class="micon cl"></span><span>Orientation</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/OuterBoundaryIs$.html"><span class="micon ob"></span><span>OuterBoundaryIs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/OuterBoundaryIs.html"><span class="micon cl"></span><span>OuterBoundaryIs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Outline.html"><span class="micon cl"></span><span>Outline</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Outline$.html"><span class="micon ob"></span><span>Outline</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Overlay.html"><span class="micon tr"></span><span>Overlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Overlay$.html"><span class="micon ob"></span><span>Overlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/OverlayData$.html"><span class="micon ob"></span><span>OverlayData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/OverlayData.html"><span class="micon cl"></span><span>OverlayData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/OverlayXY$.html"><span class="micon ob"></span><span>OverlayXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/OverlayXY.html"><span class="micon cl"></span><span>OverlayXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Pair$.html"><span class="micon ob"></span><span>Pair</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Pair.html"><span class="micon cl"></span><span>Pair</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ParserException.html"><span class="micon cl"></span><span>ParserException</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/PhotoOverlay$.html"><span class="micon ob"></span><span>PhotoOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/PhotoOverlay.html"><span class="micon cl"></span><span>PhotoOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Placemark.html"><span class="micon cl"></span><span>Placemark</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Placemark$.html"><span class="micon ob"></span><span>Placemark</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Point.html"><span class="micon cl"></span><span>Point</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Point$.html"><span class="micon ob"></span><span>Point</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/PolyStyle$.html"><span class="micon ob"></span><span>PolyStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/PolyStyle.html"><span class="micon cl"></span><span>PolyStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Polygon.html"><span class="micon cl"></span><span>Polygon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Polygon$.html"><span class="micon ob"></span><span>Polygon</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Range.html"><span class="micon cl"></span><span>Range</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Range$.html"><span class="micon ob"></span><span>Range</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RefreshInterval$.html"><span class="micon ob"></span><span>RefreshInterval</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RefreshInterval.html"><span class="micon cl"></span><span>RefreshInterval</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RefreshMode.html"><span class="micon cl"></span><span>RefreshMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RefreshMode$.html"><span class="micon ob"></span><span>RefreshMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RefreshModeEnum$.html"><span class="micon ob"></span><span>RefreshModeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RefreshVisibility$.html"><span class="micon ob"></span><span>RefreshVisibility</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RefreshVisibility.html"><span class="micon cl"></span><span>RefreshVisibility</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ResourceMap$.html"><span class="micon ob"></span><span>ResourceMap</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ResourceMap.html"><span class="micon cl"></span><span>ResourceMap</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Roll$.html"><span class="micon ob"></span><span>Roll</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Roll.html"><span class="micon cl"></span><span>Roll</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Rotation.html"><span class="micon cl"></span><span>Rotation</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Rotation$.html"><span class="micon ob"></span><span>Rotation</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RotationXY.html"><span class="micon cl"></span><span>RotationXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/RotationXY$.html"><span class="micon ob"></span><span>RotationXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Scale.html"><span class="micon cl"></span><span>Scale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Scale$.html"><span class="micon ob"></span><span>Scale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/SchemaData.html"><span class="micon cl"></span><span>SchemaData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/SchemaData$.html"><span class="micon ob"></span><span>SchemaData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ScreenOverlay.html"><span class="micon cl"></span><span>ScreenOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ScreenOverlay$.html"><span class="micon ob"></span><span>ScreenOverlay</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ScreenXY.html"><span class="micon cl"></span><span>ScreenXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ScreenXY$.html"><span class="micon ob"></span><span>ScreenXY</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Shape$.html"><span class="micon ob"></span><span>Shape</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Shape.html"><span class="micon cl"></span><span>Shape</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ShapeEnum$.html"><span class="micon ob"></span><span>ShapeEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/SimpleData$.html"><span class="micon ob"></span><span>SimpleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/SimpleData.html"><span class="micon cl"></span><span>SimpleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Size.html"><span class="micon cl"></span><span>Size</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Size$.html"><span class="micon ob"></span><span>Size</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/State$.html"><span class="micon ob"></span><span>State</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/State.html"><span class="micon cl"></span><span>State</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Style$.html"><span class="micon ob"></span><span>Style</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Style.html"><span class="micon cl"></span><span>Style</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleMap$.html"><span class="micon ob"></span><span>StyleMap</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleMap.html"><span class="micon cl"></span><span>StyleMap</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleSelector.html"><span class="micon tr"></span><span>StyleSelector</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleSelector$.html"><span class="micon ob"></span><span>StyleSelector</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleSelectorData.html"><span class="micon cl"></span><span>StyleSelectorData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleSelectorData$.html"><span class="micon ob"></span><span>StyleSelectorData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleStateEnum$.html"><span class="micon ob"></span><span>StyleStateEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleURL$.html"><span class="micon ob"></span><span>StyleURL</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/StyleURL.html"><span class="micon cl"></span><span>StyleURL</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/SubStyle.html"><span class="micon tr"></span><span>SubStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/SubStyle$.html"><span class="micon ob"></span><span>SubStyle</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/SubStyleData.html"><span class="micon cl"></span><span>SubStyleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/SubStyleData$.html"><span class="micon ob"></span><span>SubStyleData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Tessellate$.html"><span class="micon ob"></span><span>Tessellate</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Tessellate.html"><span class="micon cl"></span><span>Tessellate</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/TestKML.html"><span class="micon cl"></span><span>TestKML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/TextColor$.html"><span class="micon ob"></span><span>TextColor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/TextColor.html"><span class="micon cl"></span><span>TextColor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Tilt.html"><span class="micon cl"></span><span>Tilt</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Tilt$.html"><span class="micon ob"></span><span>Tilt</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/UnitsEnum$.html"><span class="micon ob"></span><span>UnitsEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewBoundScale$.html"><span class="micon ob"></span><span>ViewBoundScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewBoundScale.html"><span class="micon cl"></span><span>ViewBoundScale</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewRefreshEnum$.html"><span class="micon ob"></span><span>ViewRefreshEnum</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewRefreshMode$.html"><span class="micon ob"></span><span>ViewRefreshMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewRefreshMode.html"><span class="micon cl"></span><span>ViewRefreshMode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewRefreshTime.html"><span class="micon cl"></span><span>ViewRefreshTime</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewRefreshTime$.html"><span class="micon ob"></span><span>ViewRefreshTime</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewVolume$.html"><span class="micon ob"></span><span>ViewVolume</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/ViewVolume.html"><span class="micon cl"></span><span>ViewVolume</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Visibility.html"><span class="micon cl"></span><span>Visibility</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Visibility$.html"><span class="micon ob"></span><span>Visibility</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Width$.html"><span class="micon ob"></span><span>Width</span></a></span></div><div class="ni n2 "><span class="nh "><a href="kml/Width.html"><span class="micon cl"></span><span>Width</span></a></span></div></div><div class="ni n1 expanded"><span class="nh h100 selected"><button class="ar icon-button expanded"></button><a href="#"><span class="micon pa"></span><span>merge</span></a></span><div class="ni n2 "><span class="nh "><a href="merge/CDataNode$.html"><span class="micon ob"></span><span>CDataNode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/Content$.html"><span class="micon ob"></span><span>Content</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/Content.html"><span class="micon cl"></span><span>Content</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/ContentKind.html"><span class="micon tr"></span><span>ContentKind</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/ContentMatcher$.html"><span class="micon ob"></span><span>ContentMatcher</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/ElementNode$.html"><span class="micon ob"></span><span>ElementNode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/ListEnd$.html"><span class="micon ob"></span><span>ListEnd</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/ListStart$.html"><span class="micon ob"></span><span>ListStart</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/Matching.html"><span class="micon cl"></span><span>Matching</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/NodePath$.html"><span class="micon ob"></span><span>NodePath</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/NodePath.html"><span class="micon cl"></span><span>NodePath</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/NodeRef.html"><span class="micon cl"></span><span>NodeRef</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/Pcs$.html"><span class="micon ob"></span><span>Pcs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/Pcs.html"><span class="micon cl"></span><span>Pcs</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/PcsEditDetector$.html"><span class="micon ob"></span><span>PcsEditDetector</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/PcsMerger$.html"><span class="micon ob"></span><span>PcsMerger</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/PcsTreeBuilder$.html"><span class="micon ob"></span><span>PcsTreeBuilder</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/RelationSet.html"><span class="micon cl"></span><span>RelationSet</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/Sibling.html"><span class="micon tr"></span><span>Sibling</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/SiblingNode.html"><span class="micon cl"></span><span>SiblingNode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/StructuralConflict.html"><span class="micon cl"></span><span>StructuralConflict</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/StructuralMergeResult.html"><span class="micon cl"></span><span>StructuralMergeResult</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/TextNode$.html"><span class="micon ob"></span><span>TextNode</span></a></span></div><div class="ni n2 "><span class="nh "><a href="merge/TreeMatcher$.html"><span class="micon ob"></span><span>TreeMatcher</span></a></span></div></div><div class="ni n1"><span class="nh "><button class="ar icon-button "></button><a href="render.html"><span class="micon pa"></span><span>render</span></a></span><div class="ni n2 "><span class="nh "><a href="render/BaseFormat.html"><span class="micon cl"></span><span>BaseFormat</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/Format.html"><span class="micon tr"></span><span>Format</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/FormatIndented.html"><span class="micon cl"></span><span>FormatIndented</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/FormatText.html"><span class="micon cl"></span><span>FormatText</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/FormatXML$.html"><span class="micon ob"></span><span>FormatXML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/FormatXML.html"><span class="micon cl"></span><span>FormatXML</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/Renderer.html"><span class="micon tr"></span><span>Renderer</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/Renderer$.html"><span class="micon ob"></span><span>Renderer</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/Renderers.html"><span class="micon tr"></span><span>Renderers</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/Renderers$.html"><span class="micon ob"></span><span>Renderers</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/StateR$.html"><span class="micon ob"></span><span>StateR</span></a></span></div><div class="ni n2 "><span class="nh "><a href="render/StateR.html"><span class="micon cl"></span><span>StateR</span></a></span></div></div><div class="ni n1"><span class="nh "><button class="ar icon-button "></button><a href="xml.html"><span class="micon pa"></span><span>xml</span></a></span><div class="ni n2 "><span class="nh "><a href="xml/ChildNames$.html"><span class="micon ob"></span><span>ChildNames</span></a></span></div><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="xml/Extractor$.html"><span class="micon ob"></span><span>Extractor</span></a></span><div class="ni n3 "><span class="nh "><a href="xml/Extractor$$charSequenceExtractor$.html"><span class="micon ob"></span><span>charSequenceExtractor</span></a></span></div></div><div class="ni n2 "><span class="nh "><a href="xml/Extractor.html"><span class="micon tr"></span><span>Extractor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/Extractors.html"><span class="micon tr"></span><span>Extractors</span></a></span></div><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="xml/Extractors$.html"><span class="micon ob"></span><span>Extractors</span></a></span><div class="ni n3 "><span class="nh "><a href="xml/Extractors$$BooleanMultiExtractor$.html"><span class="micon ob"></span><span>BooleanMultiExtractor</span></a></span></div><div class="ni n3 "><span class="nh "><a href="xml/Extractors$$DoubleMultiExtractor$.html"><span class="micon ob"></span><span>DoubleMultiExtractor</span></a></span></div><div class="ni n3 "><span class="nh "><a href="xml/Extractors$$IntMultiExtractor$.html"><span class="micon ob"></span><span>IntMultiExtractor</span></a></span></div><div class="ni n3 "><span class="nh "><a href="xml/Extractors$$LongMultiExtractor$.html"><span class="micon ob"></span><span>LongMultiExtractor</span></a></span></div></div><div class="ni n2 "><span class="nh "><a href="xml/GenericCData.html"><span class="micon cl"></span><span>GenericCData</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/GenericContent.html"><span class="micon tr"></span><span>GenericContent</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/GenericElement.html"><span class="micon cl"></span><span>GenericElement</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/GenericElement$.html"><span class="micon ob"></span><span>GenericElement</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/GenericText.html"><span class="micon cl"></span><span>GenericText</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/MultiExtractor$.html"><span class="micon ob"></span><span>MultiExtractor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/MultiExtractor.html"><span class="micon tr"></span><span>MultiExtractor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/MultiExtractorBase$.html"><span class="micon ob"></span><span>MultiExtractorBase</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/MultiExtractorBase.html"><span class="micon cl"></span><span>MultiExtractorBase</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/NamedFunction.html"><span class="micon tr"></span><span>NamedFunction</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/NamedFunction$.html"><span class="micon ob"></span><span>NamedFunction</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/NodeParser$.html"><span class="micon ob"></span><span>NodeParser</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/Plural$.html"><span class="micon ob"></span><span>Plural</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/RichXml.html"><span class="micon cl"></span><span>RichXml</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/SubclassExtractor.html"><span class="micon cl"></span><span>SubclassExtractor</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/TagToExtractorFunc.html"><span class="micon tr"></span><span>TagToExtractorFunc</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/TagToSequenceExtractorFunc.html"><span class="micon tr"></span><span>TagToSequenceExtractorFunc</span></a></span></div><div class="ni n2 "><span class="nh "><a href="xml/Zip$.html"><span class="micon ob"></span><span>Zip</span></a></span></div></div></div></nav></div><div id="footer" class="body-small"><div class="left-container">Generated with</div><div class="right-container"><div class="text"></div></div><div class="text-mobile"></div></div><div id="scaladoc-searchBar"></div><div id="main"><div class="breadcrumbs container"><a href="../../../index.html">XmlDoc</a>/<a href="../xmldoc.html">com.phasmidsoftware.xmldoc</a>/<a href="merge.html">com.phasmidsoftware.xmldoc.merge</a></div><div id="content" class="body-medium"><div><div class="cover-header">
+ <span class="icon"><span class="micon pa"></span></span>
+ <h1 class="h600 single">com.phasmidsoftware.xmldoc.merge</h1>
+</div>
+<div class="fqname body-large">
+ <span></span>
+</div>
+<div class="main-signature mono-small-block">
+ <div class="signature">
+  <span class="modifiers"></span><span class="kind"><span t="k">package </span></span><a href="merge.html" t="n" class="documentableName ">com.phasmidsoftware.xmldoc.merge</a>
+ </div>
+</div>
+<section id="members-list">
+ <h2 class="h500">Members list</h2>
+ <div class="documentableFilter">
+  <div class="filtersContainer"></div>
+  <input class="filterableInput" placeholder="Filter by any phrase" data-test-id="filterBarInput" type="search"><button class="clearButton label-only-button" data-test-id="filterBarClearButton">Clear all</button>
+ </div>
+ <div class="membersList expand">
+  <div class="tabs">
+   <div class="contents">
+    <section id="Type-members">
+     <div data-togglable="Type members" class="tab expand">
+      <div class="member-group-header">
+       <h3 data-togglable="Type members" class="h400">Type members</h3>
+      </div>
+      <section id="Classlikes">
+       <div class="documentableList expand">
+        <div class="documentableList-expander">
+         <button class="icon-button show-content expand"></button>
+         <h4 class="groupHeader h200">Classlikes</h4>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="signature-short"><span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">object </span></span><a href="merge/CDataNode$.html" t="n" class="documentableName ">CDataNode</a><span t="k"> extends </span><a href="merge/ContentKind.html" t="t">ContentKind</a></span><span class="signature-long"></span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="cover">
+             <div class="doc"></div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Singleton</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Mirror</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 trait <a href="merge/ContentKind.html" t="n">ContentKind</a>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+              <dt class="body-small">Self type</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="merge/CDataNode$.html" t="n">CDataNode</a>.<span t="k">type</span>
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="merge/Content$.html" t="n" class="documentableName ">Content</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="cover">
+             <div class="doc"></div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Companion</dt>
+              <dd class="body-medium">
+               <a href="merge/Content.html">class</a>
+              </dd>
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Mirror</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+              <dt class="body-small">Self type</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="merge/Content$.html" t="n">Content</a>.<span t="k">type</span>
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">class </span></span><a href="merge/Content.html" t="n" class="documentableName ">Content</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">label</span>: <span data-unresolved-link="" t="t">String</span>, <span t="k"></span><span data-unresolved-link="" t="n">tag</span>: <span data-unresolved-link="" t="t">String</span>, <span t="k"></span><span data-unresolved-link="" t="n">attributes</span>: <span data-unresolved-link="" t="t">Seq</span>[(<span data-unresolved-link="" t="t">String</span>, <span data-unresolved-link="" t="t">String</span>)], <span t="k"></span><span data-unresolved-link="" t="n">text</span>: <span data-unresolved-link="" t="t">Option</span>[<span data-unresolved-link="" t="t">String</span>] = ..., <span t="k"></span><span data-unresolved-link="" t="n">textIsCData</span>: <span data-unresolved-link="" t="t">Boolean</span> = ..., <span t="k"></span><span data-unresolved-link="" t="n">kind</span>: <a href="merge/ContentKind.html" t="t">ContentKind</a> = ...)
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>The content relation <code>c(label, content)</code>. Elements, plain-text nodes and CDATA nodes all get their own identity and their own relation, matching Lindholm's model instead of folding a leaf's character data into its parent element.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>The content relation <code>c(label, content)</code>. Elements, plain-text nodes and CDATA nodes all get their own identity and their own relation, matching Lindholm's model instead of folding a leaf's character data into its parent element.</p>
+              <p><code>tag</code> and <code>attributes</code> are meaningful for <a href="merge/ElementNode$.html">ElementNode</a>. <code>text</code> is meaningful for <a href="merge/TextNode$.html">TextNode</a>/<a href="merge/CDataNode$.html">CDataNode</a>. The old fields and defaults are retained so callers constructing an element <code>Content(label, tag, attributes)</code> remain source-compatible; new code should prefer the factories in <a href="merge/Content.html">Content</a>.</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Companion</dt>
+              <dd class="body-medium">
+               <a href="merge/Content$.html">object</a>
+              </dd>
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="sealed">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">sealed </span></span><span class="kind"><span t="k">trait </span></span><a href="merge/ContentKind.html" t="n" class="documentableName ">ContentKind</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>The kind of XML node described by a <a href="merge/Content.html">Content</a> relation.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>The kind of XML node described by a <a href="merge/Content.html">Content</a> relation.</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+              <dt class="body-small">Known subtypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block subtypes">
+                <div>
+                 object <a href="merge/CDataNode$.html" t="n">CDataNode</a>
+                </div>
+                <div>
+                 object <a href="merge/ElementNode$.html" t="n">ElementNode</a>
+                </div>
+                <div>
+                 object <a href="merge/TextNode$.html" t="n">TextNode</a>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="merge/ContentMatcher$.html" t="n" class="documentableName ">ContentMatcher</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Matches <code>base</code> against <code>modified</code> using pure content/structural similarity - no identifier needed, unlike <code>TreeMatcher.matchBySelf</code>. Loosely modeled on the real 3dm tool's own matcher (see <code>MERGE.md</code>, "the actual 3dm implementation's matcher"): exact whole-subtree content equality first (a node - and everything below it, byte for byte - is almost certainly the same node even if it moved or its siblings changed), then positional pairing for whatever's left among an already-matched parent's remaining children.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Matches <code>base</code> against <code>modified</code> using pure content/structural similarity - no identifier needed, unlike <code>TreeMatcher.matchBySelf</code>. Loosely modeled on the real 3dm tool's own matcher (see <code>MERGE.md</code>, "the actual 3dm implementation's matcher"): exact whole-subtree content equality first (a node - and everything below it, byte for byte - is almost certainly the same node even if it moved or its siblings changed), then positional pairing for whatever's left among an already-matched parent's remaining children.</p>
+              <p>Deliberately simpler than 3dm's own algorithm: no fuzzy content similarity (q-gram distance) for the positional fallback - it just pairs whatever's left, in order - and no real "copy resolution" for duplicate content (see <code>matchByExactContent</code>). It also never looks <em>across</em> an unmatched parent: a node moved to a genuinely different parent shows up as a plain delete-from-the-old- parent plus insert-into-the-new-one, not a recognized move - a real, known scope limit, not a bug.</p>
+              <p>This exists to fix a real, confirmed problem (<code>MERGE.md</code>, "no stable per-node identity" / "silently lose an edit..."): for a document type with nothing like IDML's <code>Self</code>, <code>Pcs.label</code>'s <code>NodePath</code> fallback ties identity to raw position, so a deletion that shifts later siblings can make an unrelated, independent edit to one of them silently vanish from a 3-way merge. Matching by content first, and only falling back to position for the <em>unmatched remainder</em>, fixes exactly that: an edited-but-not-moved sibling keeps its base identity across the edit, instead of inheriting whichever base identity now happens to sit at its shifted position.</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+              <dt class="body-small">Self type</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="merge/ContentMatcher$.html" t="n">ContentMatcher</a>.<span t="k">type</span>
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="signature-short"><span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">object </span></span><a href="merge/ElementNode$.html" t="n" class="documentableName ">ElementNode</a><span t="k"> extends </span><a href="merge/ContentKind.html" t="t">ContentKind</a></span><span class="signature-long"></span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="cover">
+             <div class="doc"></div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Singleton</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Mirror</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 trait <a href="merge/ContentKind.html" t="n">ContentKind</a>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+              <dt class="body-small">Self type</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="merge/ElementNode$.html" t="n">ElementNode</a>.<span t="k">type</span>
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="signature-short"><span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">object </span></span><a href="merge/ListEnd$.html" t="n" class="documentableName ">ListEnd</a><span t="k"> extends </span><a href="merge/Sibling.html" t="t">Sibling</a></span><span class="signature-long"></span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="cover">
+             <div class="doc"></div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Singleton</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Mirror</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 trait <a href="merge/Sibling.html" t="n">Sibling</a>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+              <dt class="body-small">Self type</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="merge/ListEnd$.html" t="n">ListEnd</a>.<span t="k">type</span>
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="signature-short"><span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">object </span></span><a href="merge/ListStart$.html" t="n" class="documentableName ">ListStart</a><span t="k"> extends </span><a href="merge/Sibling.html" t="t">Sibling</a></span><span class="signature-long"></span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="cover">
+             <div class="doc"></div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Singleton</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Mirror</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 trait <a href="merge/Sibling.html" t="n">Sibling</a>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+              <dt class="body-small">Self type</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="merge/ListStart$.html" t="n">ListStart</a>.<span t="k">type</span>
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">class </span></span><a href="merge/Matching.html" t="n" class="documentableName ">Matching</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">matched</span>: <span data-unresolved-link="" t="t">Seq</span>[(<a href="merge/NodeRef.html" t="t">NodeRef</a>, <a href="merge/NodeRef.html" t="t">NodeRef</a>)], <span t="k"></span><span data-unresolved-link="" t="n">onlyInLeft</span>: <span data-unresolved-link="" t="t">Seq</span>[<a href="merge/NodeRef.html" t="t">NodeRef</a>], <span t="k"></span><span data-unresolved-link="" t="n">onlyInRight</span>: <span data-unresolved-link="" t="t">Seq</span>[<a href="merge/NodeRef.html" t="t">NodeRef</a>])
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>The result of matching two trees: which nodes correspond (<code>matched</code>), and which appear in only one side (<code>onlyInLeft</code>/<code>onlyInRight</code> - candidate deletions/insertions, from the left tree's point of view).</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>The result of matching two trees: which nodes correspond (<code>matched</code>), and which appear in only one side (<code>onlyInLeft</code>/<code>onlyInRight</code> - candidate deletions/insertions, from the left tree's point of view).</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="merge/NodePath$.html" t="n" class="documentableName ">NodePath</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="cover">
+             <div class="doc"></div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Companion</dt>
+              <dd class="body-medium">
+               <a href="merge/NodePath.html">class</a>
+              </dd>
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Mirror</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+              <dt class="body-small">Self type</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="merge/NodePath$.html" t="n">NodePath</a>.<span t="k">type</span>
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">class </span></span><a href="merge/NodePath.html" t="n" class="documentableName ">NodePath</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">indices</span>: <span data-unresolved-link="" t="t">Vector</span>[<span data-unresolved-link="" t="t">Int</span>])
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>The location of a node within a <code>GenericElement</code> tree: the sequence of child-element indices from the root (empty means the root itself). Kept alongside a matched/unmatched node (see <code>NodeRef</code>) so a future diff/merge phase can navigate back to it without re-walking the tree.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>The location of a node within a <code>GenericElement</code> tree: the sequence of child-element indices from the root (empty means the root itself). Kept alongside a matched/unmatched node (see <code>NodeRef</code>) so a future diff/merge phase can navigate back to it without re-walking the tree.</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Companion</dt>
+              <dd class="body-medium">
+               <a href="merge/NodePath$.html">object</a>
+              </dd>
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">class </span></span><a href="merge/NodeRef.html" t="n" class="documentableName ">NodeRef</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">path</span>: <a href="merge/NodePath.html" t="t">NodePath</a>, <span t="k"></span><span data-unresolved-link="" t="n">element</span>: <a href="xml/GenericElement.html" t="t">GenericElement</a>)
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>A node found while walking a tree, together with its location.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>A node found while walking a tree, together with its location.</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">element</dt>
+              <dd class="body-medium">
+               <p>the node itself.</p>
+              </dd>
+              <dt class="body-small">path</dt>
+              <dd class="body-medium">
+               <p>the node's location within its own tree.</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="merge/Pcs$.html" t="n" class="documentableName ">Pcs</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="cover">
+             <div class="doc"></div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Companion</dt>
+              <dd class="body-medium">
+               <a href="merge/Pcs.html">class</a>
+              </dd>
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Mirror</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+              <dt class="body-small">Self type</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="merge/Pcs$.html" t="n">Pcs</a>.<span t="k">type</span>
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">class </span></span><a href="merge/Pcs.html" t="n" class="documentableName ">Pcs</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">parent</span>: <span data-unresolved-link="" t="t">String</span>, <span t="k"></span><span data-unresolved-link="" t="n">predecessor</span>: <a href="merge/Sibling.html" t="t">Sibling</a>, <span t="k"></span><span data-unresolved-link="" t="n">successor</span>: <a href="merge/Sibling.html" t="t">Sibling</a>)
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>The parent-child-successor relation <code>pcs(parent, predecessor, successor)</code>: <code>parent</code> is the parent of both <code>predecessor</code> and <code>successor</code>, and <code>successor</code> immediately follows <code>predecessor</code> in <code>parent</code>'s child list. A whole child list is a chain of these, linked end to end from <code>ListStart</code> to <code>ListEnd</code>; <code>parent</code> is identified by its own label, same as any other node.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>The parent-child-successor relation <code>pcs(parent, predecessor, successor)</code>: <code>parent</code> is the parent of both <code>predecessor</code> and <code>successor</code>, and <code>successor</code> immediately follows <code>predecessor</code> in <code>parent</code>'s child list. A whole child list is a chain of these, linked end to end from <code>ListStart</code> to <code>ListEnd</code>; <code>parent</code> is identified by its own label, same as any other node.</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Companion</dt>
+              <dd class="body-medium">
+               <a href="merge/Pcs$.html">object</a>
+              </dd>
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="merge/PcsEditDetector$.html" t="n" class="documentableName ">PcsEditDetector</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Detects structural/content edits between a base tree and one modified version, using <code>Pcs.relations</code> rather than <code>TreeMatcher</code>/<code>EditDetector</code>'s Self-based matching plus per-node attribute diff. Lindholm's own formula for this ("A Three-way Merge for XML Documents", section 6): the edit set <code>E = T* - T*0</code> - whatever relation appears in the modified tree's relation set but not the base's is, by definition, an edit; nothing else needs deciding, since <code>Pcs.relations</code> has already reduced both trees to the same uniform vocabulary of relations.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Detects structural/content edits between a base tree and one modified version, using <code>Pcs.relations</code> rather than <code>TreeMatcher</code>/<code>EditDetector</code>'s Self-based matching plus per-node attribute diff. Lindholm's own formula for this ("A Three-way Merge for XML Documents", section 6): the edit set <code>E = T* - T*0</code> - whatever relation appears in the modified tree's relation set but not the base's is, by definition, an edit; nothing else needs deciding, since <code>Pcs.relations</code> has already reduced both trees to the same uniform vocabulary of relations.</p>
+              <p>This is genuinely simpler than <code>EditDetector</code>, precisely because it doesn't try to <em>classify</em> what happened (insert/delete/update/move) - it just reports the raw relations <code>PcsMerger</code> needs to reconcile across left and right. In particular, unlike <code>EditDetector</code>, a plain reorder of already-matched siblings shows up here (as new <code>Pcs</code> relations), which <code>PcsSpec</code> already demonstrates <code>EditDetector</code> misses entirely.</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+              <dt class="body-small">Self type</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="merge/PcsEditDetector$.html" t="n">PcsEditDetector</a>.<span t="k">type</span>
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="merge/PcsMerger$.html" t="n" class="documentableName ">PcsMerger</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>A structural merger over <code>Pcs</code>/<code>Content</code> relations - the reconciliation half of Lindholm's <code>merge</code> procedure ("A Three-way Merge for XML Documents", section 6: raw-merge-then-resolve- contradictions), applied to whatever <code>PcsEditDetector</code> finds. <code>EditDetector</code>/<code>Merger</code> still only reconcile attributes on already-matched nodes; this is what actually detects and merges a plain reorder, which they cannot (see <code>PcsSpec</code>/<code>PcsEditDetectorSpec</code>).</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>A structural merger over <code>Pcs</code>/<code>Content</code> relations - the reconciliation half of Lindholm's <code>merge</code> procedure ("A Three-way Merge for XML Documents", section 6: raw-merge-then-resolve- contradictions), applied to whatever <code>PcsEditDetector</code> finds. <code>EditDetector</code>/<code>Merger</code> still only reconcile attributes on already-matched nodes; this is what actually detects and merges a plain reorder, which they cannot (see <code>PcsSpec</code>/<code>PcsEditDetectorSpec</code>).</p>
+              <p>Checks all three of Lindholm's structural consistency rules: "unique successor" and "unique predecessor" (a node's position <em>within</em> its current parent's child list), and "unique parent" - a node claimed as a child by two genuinely different parents (e.g. Kaining's <code>10-group-ungroup</code>), which the first two can't see: they only compare values sharing the same <code>(parent, ...)</code> key, but a node moved to a different parent changes which <em>key</em> it appears under at all, not the value at a shared one.</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+              <dt class="body-small">Self type</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="merge/PcsMerger$.html" t="n">PcsMerger</a>.<span t="k">type</span>
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="merge/PcsTreeBuilder$.html" t="n" class="documentableName ">PcsTreeBuilder</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Reconstructs a <code>GenericElement</code> tree from a <code>RelationSet</code>, by walking it from a given root label along <code>Pcs</code> links - the step Lindholm's paper describes only in passing ("Tm can be reconstructed by traversing from ⊥0 level by level along the PCS relations in Δ", section 6), but that <code>PcsMerger</code> deliberately stops short of, since it's only meaningful once the relation set is actually consistent.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Reconstructs a <code>GenericElement</code> tree from a <code>RelationSet</code>, by walking it from a given root label along <code>Pcs</code> links - the step Lindholm's paper describes only in passing ("Tm can be reconstructed by traversing from ⊥0 level by level along the PCS relations in Δ", section 6), but that <code>PcsMerger</code> deliberately stops short of, since it's only meaningful once the relation set is actually consistent.</p>
+              <p>Elements, text and CDATA are all independent PCS nodes, so reconstruction preserves their exact order even for mixed content such as `</p>
+              <p>Hello <b>world</b>!`.</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+              <dt class="body-small">Self type</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="merge/PcsTreeBuilder$.html" t="n">PcsTreeBuilder</a>.<span t="k">type</span>
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">class </span></span><a href="merge/RelationSet.html" t="n" class="documentableName ">RelationSet</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">pcs</span>: <span data-unresolved-link="" t="t">Set</span>[<a href="merge/Pcs.html" t="t">Pcs</a>], <span t="k"></span><span data-unresolved-link="" t="n">content</span>: <span data-unresolved-link="" t="t">Set</span>[<a href="merge/Content.html" t="t">Content</a>])
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>A tree, fully decomposed into <code>Pcs</code> and <code>Content</code> relations - Lindholm's representation of a tree as a set (section 2.3), which is what let his merge algorithm be defined as set operations (union, difference) rather than a tree-editing procedure. This is the foundation for an eventual <code>MERGE.md</code>-style merge that (unlike today's attribute-only <code>EditDetector</code>/<code>Merger</code>) can also detect and reconcile structural edits: moves and reordering (Kaining's <code>03-single-move</code>, <code>05-move-move-divergent</code>, <code>09-zorder</code> cases).</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>A tree, fully decomposed into <code>Pcs</code> and <code>Content</code> relations - Lindholm's representation of a tree as a set (section 2.3), which is what let his merge algorithm be defined as set operations (union, difference) rather than a tree-editing procedure. This is the foundation for an eventual <code>MERGE.md</code>-style merge that (unlike today's attribute-only <code>EditDetector</code>/<code>Merger</code>) can also detect and reconcile structural edits: moves and reordering (Kaining's <code>03-single-move</code>, <code>05-move-move-divergent</code>, <code>09-zorder</code> cases).</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="sealed">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">sealed </span></span><span class="kind"><span t="k">trait </span></span><a href="merge/Sibling.html" t="n" class="documentableName ">Sibling</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>One end of a <code>Pcs</code> chain: the two children-list boundary markers from Lindholm's paper ("A Three-way Merge for XML Documents", DocEng '04, section 2.3) - <code>⊣</code> (nothing precedes the first child) and <code>⊢</code> (nothing follows the last) - plus an ordinary node, identified by its label (see <code>Pcs.label</code>). The markers can't be edited, so every real child is guaranteed both a predecessor and a successor, even at either end of the list.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>One end of a <code>Pcs</code> chain: the two children-list boundary markers from Lindholm's paper ("A Three-way Merge for XML Documents", DocEng '04, section 2.3) - <code>⊣</code> (nothing precedes the first child) and <code>⊢</code> (nothing follows the last) - plus an ordinary node, identified by its label (see <code>Pcs.label</code>). The markers can't be edited, so every real child is guaranteed both a predecessor and a successor, even at either end of the list.</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+              <dt class="body-small">Known subtypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block subtypes">
+                <div>
+                 object <a href="merge/ListEnd$.html" t="n">ListEnd</a>
+                </div>
+                <div>
+                 object <a href="merge/ListStart$.html" t="n">ListStart</a>
+                </div>
+                <div>
+                 class <a href="merge/SiblingNode.html" t="n">SiblingNode</a>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="signature-short"><span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">class </span></span><a href="merge/SiblingNode.html" t="n" class="documentableName ">SiblingNode</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">label</span>: <span data-unresolved-link="" t="t">String</span>)<span t="k"> extends </span><a href="merge/Sibling.html" t="t">Sibling</a></span><span class="signature-long"></span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="cover">
+             <div class="doc"></div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 trait <a href="merge/Sibling.html" t="n">Sibling</a>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">class </span></span><a href="merge/StructuralConflict.html" t="n" class="documentableName ">StructuralConflict</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">slot</span>: <span data-unresolved-link="" t="t">String</span>, <span t="k"></span><span data-unresolved-link="" t="n">baseValue</span>: <span data-unresolved-link="" t="t">Option</span>[<span data-unresolved-link="" t="t">String</span>], <span t="k"></span><span data-unresolved-link="" t="n">leftValue</span>: <span data-unresolved-link="" t="t">Option</span>[<span data-unresolved-link="" t="t">String</span>], <span t="k"></span><span data-unresolved-link="" t="n">rightValue</span>: <span data-unresolved-link="" t="t">Option</span>[<span data-unresolved-link="" t="t">String</span>])
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>A genuine structural conflict: two sides impose incompatible requirements on the same relation slot (Lindholm's Update/Update and Position/Position conflicts, section 6.3), and it isn't this code's job to guess a winner. <code>slot</code> names what's in contention (e.g. <code>"content of u13d"</code>, or <code>"successor after u1 under us"</code>); <code>baseValue</code>/<code>leftValue</code>/<code>rightValue</code> are each side's value there, rendered as a string (<code>None</code> when a side has nothing there at all - e.g. a freshly inserted node has no base value).</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>A genuine structural conflict: two sides impose incompatible requirements on the same relation slot (Lindholm's Update/Update and Position/Position conflicts, section 6.3), and it isn't this code's job to guess a winner. <code>slot</code> names what's in contention (e.g. <code>"content of u13d"</code>, or <code>"successor after u1 under us"</code>); <code>baseValue</code>/<code>leftValue</code>/<code>rightValue</code> are each side's value there, rendered as a string (<code>None</code> when a side has nothing there at all - e.g. a freshly inserted node has no base value).</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">class </span></span><a href="merge/StructuralMergeResult.html" t="n" class="documentableName ">StructuralMergeResult</a>(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">relations</span>: <a href="merge/RelationSet.html" t="t">RelationSet</a>, <span t="k"></span><span data-unresolved-link="" t="n">rootLabel</span>: <span data-unresolved-link="" t="t">String</span>, <span t="k"></span><span data-unresolved-link="" t="n">conflicts</span>: <span data-unresolved-link="" t="t">Seq</span>[<a href="merge/StructuralConflict.html" t="t">StructuralConflict</a>])
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>The result of a structural (<code>Pcs</code>-level) 3-way merge. <code>relations</code> is <code>Δ</code> after resolving whatever could be resolved automatically - safe to reconstruct a merged tree from by walking it from <code>rootLabel</code> (see <code>PcsTreeBuilder</code>). <code>conflicts</code> is everywhere that couldn't be resolved. For a conflicting slot, <code>relations</code> keeps the base's own value if it had one (Lindholm's rule: an edit always wins over the base, so a real conflict - two <em>edits</em> disagreeing - is the one case with no automatic winner); a conflicting slot with no base value at all (e.g. both sides independently insert different content at the same anchor) is simply absent from <code>relations</code>. Either way, <code>relations</code> isn't guaranteed internally consistent when <code>conflicts</code> is non-empty - per Lindholm, that's expected: <code>Δ</code> only becomes <code>Tm</code> once every conflict is resolved one way or another (<code>PcsTreeBuilder.build</code> fails cleanly rather than silently reconstructing a bad tree when it isn't).</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>The result of a structural (<code>Pcs</code>-level) 3-way merge. <code>relations</code> is <code>Δ</code> after resolving whatever could be resolved automatically - safe to reconstruct a merged tree from by walking it from <code>rootLabel</code> (see <code>PcsTreeBuilder</code>). <code>conflicts</code> is everywhere that couldn't be resolved. For a conflicting slot, <code>relations</code> keeps the base's own value if it had one (Lindholm's rule: an edit always wins over the base, so a real conflict - two <em>edits</em> disagreeing - is the one case with no automatic winner); a conflicting slot with no base value at all (e.g. both sides independently insert different content at the same anchor) is simply absent from <code>relations</code>. Either way, <code>relations</code> isn't guaranteed internally consistent when <code>conflicts</code> is non-empty - per Lindholm, that's expected: <code>Δ</code> only becomes <code>Tm</code> once every conflict is resolved one way or another (<code>PcsTreeBuilder.build</code> fails cleanly rather than silently reconstructing a bad tree when it isn't).</p>
+             </div>
+             <h2 class="h200">Value parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">rootLabel</dt>
+              <dd class="body-medium">
+               <p>the label of <code>base</code>/<code>left</code>/<code>right</code>'s shared root node (they're assumed to already correspond, same as everywhere else in this package).</p>
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="case">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="signature-short"><span class="modifiers"><span t="k">case </span></span><span class="kind"><span t="k">object </span></span><a href="merge/TextNode$.html" t="n" class="documentableName ">TextNode</a><span t="k"> extends </span><a href="merge/ContentKind.html" t="t">ContentKind</a></span><span class="signature-long"></span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="cover">
+             <div class="doc"></div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Singleton</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Mirror</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Serializable</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Product</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Equals</span>
+                </div>
+                <div>
+                 trait <a href="merge/ContentKind.html" t="n">ContentKind</a>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+              <dt class="body-small">Self type</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="merge/TextNode$.html" t="n">TextNode</a>.<span t="k">type</span>
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="merge/TreeMatcher$.html" t="n" class="documentableName ">TreeMatcher</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>First matching prototype for <code>idml</code>'s eventual 3-way merge (see <code>MERGE.md</code>): matches two <code>GenericElement</code> trees purely by their literal <code>Self</code> attribute value.</p>
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>First matching prototype for <code>idml</code>'s eventual 3-way merge (see <code>MERGE.md</code>): matches two <code>GenericElement</code> trees purely by their literal <code>Self</code> attribute value.</p>
+              <p>This deliberately does not attempt any content/structural heuristic matching (the "3dm-style" fallback <code>MERGE.md</code> describes for un-identified content) - it only reports what <code>Self</code> alone can tell us. That's a real scope limit: nodes with no <code>Self</code> at all (most obviously, story text) never appear in the result, in either the matched or the unmatched sets. It also assumes <code>Self</code> is unique within each tree (a real IDML invariant); if that's ever violated, whichever node is visited last silently wins the slot in the index, since this is meant as a starting point, not a validator of well-formed IDML.</p>
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">Supertypes</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div>
+                <span></span>
+               </div>
+              </dd>
+              <dt class="body-small">Self type</dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="merge/TreeMatcher$.html" t="n">TreeMatcher</a>.<span t="k">type</span>
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </section>
+     </div>
+    </section>
+   </div>
+  </div>
+ </div>
+</section></div><div id="toc" class="body-small"><div id="toc-container"><span class="toc-title h200">In this article</span><nav class="toc-nav"><ul class="toc-list"><li><a href="#members-list">Members list</a><ul><li><a href="#Type-members">Type members</a><ul><li><a href="#Classlikes">Classlikes</a></li></ul></li></ul></li></ul></nav></div></div></div><div id="footer" class="body-small mobile-footer"><div class="left-container">Generated with</div><div class="right-container"><div class="text"></div></div><div class="text-mobile"></div></div></div></div></body></html>
