@@ -1,6 +1,6 @@
 # IDML XML Merge Test Specification
 
-状态：MR03 已按论文修订为 schema 3、16 组样本契约；实际 merger 全 corpus 与应用验收仍待后续 MR。记录日期：2026-11-06。
+状态：MR03 schema 3、16 组样本契约已修订；MR11 引用与领域依赖检查已实现；实际验收仍按各 MR 范围验证。记录日期：2026-11-06。
 
 本规格是后续 MR 的预期来源，不是当前实现通过证明。执行顺序以 [MR 拆分计划](xml-merge-test-mr-breakdown.md) 为基础；下文冻结决策替代计划中的相应待决策条目。MR01 只修改文档；本轮 MR03 修订样本契约、生成器、读取器和测试，不修改生产合并算法或 driver。
 
@@ -85,6 +85,19 @@ Locked scope
 6. 本规则只对“布局依赖变化 + 另一侧相关正文编辑”保守报冲突，不意味着任意两个 frame 操作都冲突。合法插入 tfX 且另一侧不变可成功；12 的同属性分歧独立报告。
 7. 候选包静态校验与并发意图冲突是两类检查。缺目标、非互反链接、非法环不能通过；即使引用合法也可能命中上述领域冲突。
 
+### MR11 引用范围与证据（2026-11-06）
+
+- 校验视图为 designmap 声明的所有 XML part，先加载并检查输入身份，再合并各 part；以 left 的逻辑视图应用全部 PartContent/PartRemoved，校验候选结果后才允许 driver 写入。已存在通用或领域冲突时不构造可写候选。缺失声明 part、XML 解析失败、重复 src、身份碰撞返回 Failure；候选引用错误和并发意图冲突通过 PartConflict/StructuralConflict 返回，定位 src、Self、属性、目标。
+- 身份范围：每个 part 的所有显式 Self 必须唯一；TextFrame 与 Story 各自另建包级唯一索引，覆盖嵌套在 Spread、MasterSpread、Story 等 part 内的节点。两类别之间允许同值，不将不同资源类别的 Self 建成全包通用索引。TextFrame/Story 必须有非空 Self。
+- 引用白名单仅为 TextFrame.ParentStory、NextTextFrame、PreviousTextFrame。ParentStory 必须指向已声明 part 中的 Story，不能是空值。Next/Previous 的缺省属性、空字符串和 `n` 表示端点，不是悬挂引用；真实 HelloWorld2 的 uf8/u122/u13a 及 corpus tf1/tf2 使用 `n`。空字符串与缺省是显式兼容约定，有单独测试；没有额外猜测 None/null 等哨兵。
+- 所有非空线程边必须存在、双向互反、两端 ParentStory 相同；Next 链不能成环，因而有限合法链具有起终点。允许同 Story 有多个独立链（corpus story2 的 tfA、tfB），不推测实际排版流。TextPath 等其他对象的线程模型不在本次冻结范围。
+- Link 的 URI、AppliedObjectStyle、ItemLayer、资源路径等不在本引用白名单；外部资源字符串不作为 frame/Story Self 查找，不承诺本次校验这些资源的可达性。designmap 其他内容仍依现有 driver 保留策略处理。
+- 正文比较范围冻结为 `part/Story[Self]/*` 的完整有序子节点树，包含文本/CDATA 类型、精确空白、ParagraphStyleRange、CharacterStyleRange、Content、嵌套表格/内联结构及其属性。属性顺序无关，递归忽略默认两字段；Story 根属性视为元数据，不单独触发正文编辑。共享构造样本在 IdmlReferenceValidatorSpec 中覆盖此范围，无排版后字符落点推断。
+- IdmlReferenceValidatorSpec 覆盖合法插链、缺目标、单向链、跨 Story 边、互反环、身份碰撞、空哨兵、布局/正文正反向及单侧/无关 Story/忽略字段对照、旧/新 Story 与边端点依赖。
+- IdmlPackageMergerSpec 使用原始只读 corpus 验证 06b、13 的合法布局与双向领域冲突及单侧对照；11 的完整候选与双向链；12 的 NextTextFrame 属性分歧与独立静态校验（left、right 均合法，属性分歧仍冲突）。另构造三个均合法的输入，使合并候选成为悬挂引用，证明 driver 返回冲突且 ours 字节不变；重复身份、缺 part 和领域冲突同样不写包。
+- 旧 IdmlMergeDriverSpec 的成功删除 Story 测试同时删除引用 frame，避免将悬挂 ParentStory 当作成功；不修改受版本控制的 IDML 样本。此处仅保证验证失败不进入写包，写入中 I/O 失败原子性仍归 MR12。
+- 验证：`core/test` 212 项通过，既有 `ExtractorsSpec.extractor3B` 1 项 ignored 未改动；`idml/test` 77 项全部通过，零 ignored/pending。补强完整冲突对象断言后，`idml/testOnly *IdmlReferenceValidatorSpec` 7 项再次通过。`git diff --check` 通过，corpus 字节未修改。本 MR 不替代 MR12/MR14 的完整 corpus 与 InDesign 验收。
+
 ### 忽略字段与 XML 比较
 
 - 默认忽略字段精确为 `LinkImportTime`、`StyleUniqueId`。`Self`、`ParentStory`、`NextTextFrame`、`PreviousTextFrame` 及正文不得忽略。
@@ -156,7 +169,7 @@ Locked scope
 ## 当前缺口与验收规则
 
 - MR03 已将原有 15 组 expected.json 从 schema 2 显式迁移到 schema 3，并新增 10b，共 16 组、8 accept/8 conflict。case 10 成功，10b 冲突；08b 保持 strict-text-node-v1 冲突。schema 1/2 均被显式拒绝。此状态只证明样本契约，不证明实际 merger 全 corpus 通过。
-- 06b、13 的冲突目标保持不变，但跨 part 意图检查尚待 MR11/12 验证和实现。
+- 06b、13 的跨 part 意图检查已由 MR11 在包入口验证；MR12 仍负责完整包完整性、失败原子性和 corpus 契约贯通。
 - 无 Self 匹配进入 ThreeWayMerger 的正确性、元数据处理、严格深层 Delete/Edit 均是待验证假设。
 - driver 当前直接逐项写 ours，失败原子性是 MR12 目标，尚未得到保证。
 - 后续每 MR 合并后须可构建、相关测试通过；修复与回归同 MR 交付，不允许为了主干绿灯静默跳过要求支持的用例。

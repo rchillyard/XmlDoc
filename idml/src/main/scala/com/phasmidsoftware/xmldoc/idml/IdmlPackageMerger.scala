@@ -4,7 +4,7 @@ import com.phasmidsoftware.xmldoc.core.FP
 import com.phasmidsoftware.xmldoc.merge.StructuralConflict
 import com.phasmidsoftware.xmldoc.xml.GenericElement
 
-import scala.util.{Success, Try}
+import scala.util.Try
 
 /**
  * One part's outcome from a whole-package 3-way merge - only ever reported for a part that needs
@@ -69,26 +69,36 @@ object IdmlPackageMerger {
     ignoredAttributes: Set[String] = EditDetector.defaultIgnoredAttributes
   ): Try[PackageMergeResult] = {
     val allParts = (base.parts ++ left.parts ++ right.parts).groupBy(_.src).map(_._2.head).toSeq.sortBy(_.src)
-    FP.sequence(allParts.map(p => mergeOnePart(base, left, right, p, ignoredAttributes))).map { results =>
-      PackageMergeResult(results.collect { case Right(o) => o }, results.collect { case Left(c) => c })
-    }
-  }
-
-  private def mergeOnePart(
-    base: IdmlPackage,
-    left: IdmlPackage,
-    right: IdmlPackage,
-    part: PackagePart,
-    ignoredAttributes: Set[String]
-  ): Try[Either[PartConflict, PartOutcome]] =
+    def load(pkg: IdmlPackage): Try[IdmlReferenceValidator.View] =
+      FP.sequence(pkg.parts.map(p => pkg.loadPart(p.src).map(p.src -> _))).flatMap { entries =>
+        Try {
+          require(entries.map(_._1).distinct.size == entries.size, "designmap.xml: duplicate src")
+          val view = entries.toMap
+          IdmlReferenceValidator.requireIdentities(view)
+          view
+        }
+      }
     for {
-      b <- loadOptional(base, part.src)
-      l <- loadOptional(left, part.src)
-      r <- loadOptional(right, part.src)
-    } yield reconcile(part, b, l, r, ignoredAttributes)
-
-  private def loadOptional(pkg: IdmlPackage, src: String): Try[Option[GenericElement]] =
-    if (pkg.parts.exists(_.src == src)) pkg.loadPart(src).map(Some.apply) else Success(None)
+      b <- load(base)
+      l <- load(left)
+      r <- load(right)
+      results <- Try(allParts.map(p => reconcile(p, b.get(p.src), l.get(p.src), r.get(p.src), ignoredAttributes)))
+      result <- Try {
+        val outcomes = results.collect { case Right(o) => o }
+        val conflicts = results.collect { case Left(c) => c } ++
+          IdmlReferenceValidator.intentConflicts(b, l, r, ignoredAttributes)
+        if (conflicts.nonEmpty) PackageMergeResult(outcomes, conflicts)
+        else {
+          val candidate = outcomes.foldLeft(l) {
+            case (view, PartContent(src, _, content)) => view.updated(src, content)
+            case (view, PartRemoved(src)) => view - src
+          }
+          IdmlReferenceValidator.requireIdentities(candidate)
+          PackageMergeResult(outcomes, IdmlReferenceValidator.validate(candidate))
+        }
+      }
+    } yield result
+  }
 
   private def reconcile(
     part: PackagePart,
