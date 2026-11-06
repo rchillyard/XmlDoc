@@ -7,7 +7,7 @@ import com.phasmidsoftware.xmldoc.xml.Extractor.{extract, extractChildren, extra
 import com.phasmidsoftware.xmldoc.xml.Extractors.fieldNamesMaybeDropLast
 
 import scala.Function.uncurried
-import scala.annotation.{nowarn, unused}
+import scala.annotation.unused
 import scala.reflect.ClassTag
 import scala.util.{Failure, Success, Try}
 import scala.xml.{Node, NodeSeq}
@@ -123,7 +123,7 @@ trait Extractors {
    * @tparam P0 the first subtype of `T`, for which there must be implicit evidence of `Extractor[P]` and `ClassTag[P]`.
    * @return `MultiExtractor of Seq[T]`.
    */
-  @nowarn("msg=unused implicit parameter") // the P types keep their ClassTag bounds, which this method doesn't use, so that its signature stays the same
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def multiExtractor1[T, U <: Product, P0 <: T : {Extractor, ClassTag}](@unused construct: P0 => U, labels: Seq[String]): MultiExtractor[Seq[T]] =
     if (labels.size == 1)
       orderedMultiExtractor(labels.zip(Seq(widen[P0, T](implicitly[Extractor[P0]]))))
@@ -141,6 +141,7 @@ trait Extractors {
    * @tparam P0 the first subtype of `T`, for which there must be implicit evidence of `Extractor[P]` and `ClassTag[P]`.
    * @return MultiExtractor of `Seq[T]`.
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def subclassExtractor1[T, U <: Product, P0 <: T : {Extractor, ClassTag}](construct: P0 => U, labels: Seq[String]): SubclassExtractor[T] =
     new SubclassExtractor[T](labels)(using multiExtractor1(construct, labels))
 
@@ -155,7 +156,7 @@ trait Extractors {
    * @tparam P1 the second (Extractor-enabled) subtype of T.
    * @return MultiExtractor of `Seq[T]`.
    */
-  @nowarn("msg=unused implicit parameter") // the P types keep their ClassTag bounds, which this method doesn't use, so that its signature stays the same
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def multiExtractor2[T, U <: Product, P0 <: T : {Extractor, ClassTag}, P1 <: T : {Extractor, ClassTag}](@unused construct: (P0, P1) => U, labels: Seq[String]): MultiExtractor[Seq[T]] =
     if (labels.size == 2)
       orderedMultiExtractor(labels.zip(Seq(widen[P0, T](implicitly[Extractor[P0]]), widen[P1, T](implicitly[Extractor[P1]]))))
@@ -176,7 +177,7 @@ trait Extractors {
    * @tparam P2 the third (Extractor-enabled) subtype of T.
    * @return MultiExtractor of `Seq[T]`.
    */
-  @nowarn("msg=unused implicit parameter") // the P types keep their ClassTag bounds, which this method doesn't use, so that its signature stays the same
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def multiExtractor3[T, U <: Product, P0 <: T : {Extractor, ClassTag}, P1 <: T : {Extractor, ClassTag}, P2 <: T : {Extractor, ClassTag}](@unused construct: (P0, P1, P2) => U, labels: Seq[String]): MultiExtractor[Seq[T]] =
     if (labels.size == 3)
       orderedMultiExtractor(labels.zip(Seq(widen[P0, T](implicitly[Extractor[P0]]), widen[P1, T](implicitly[Extractor[P1]]), widen[P2, T](implicitly[Extractor[P2]]))))
@@ -196,7 +197,7 @@ trait Extractors {
    * @tparam P3 the fourth (Extractor-enabled) subtype of T.
    * @return MultiExtractor of `Seq[T]`.
    */
-  @nowarn("msg=unused implicit parameter") // the P types keep their ClassTag bounds, which this method doesn't use, so that its signature stays the same
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def multiExtractor4[T, U <: Product, P0 <: T : {Extractor, ClassTag}, P1 <: T : {Extractor, ClassTag}, P2 <: T : {Extractor, ClassTag}, P3 <: T : {Extractor, ClassTag}](@unused construct: (P0, P1, P2, P3) => U, labels: Seq[String]): MultiExtractor[Seq[T]] =
     if (labels.size == 4)
       orderedMultiExtractor(labels.zip(Seq(widen[P0, T](implicitly[Extractor[P0]]), widen[P1, T](implicitly[Extractor[P1]]), widen[P2, T](implicitly[Extractor[P2]]), widen[P3, T](implicitly[Extractor[P3]]))))
@@ -216,7 +217,7 @@ trait Extractors {
    * @tparam P4 the fifth (Extractor-enabled) subtype of T.
    * @return MultiExtractor of `Seq[T]`.
    */
-  @nowarn("msg=unused implicit parameter") // the P types keep their ClassTag bounds, which this method doesn't use, so that its signature stays the same
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def multiExtractor5[T, U <: Product, P0 <: T : {Extractor, ClassTag}, P1 <: T : {Extractor, ClassTag}, P2 <: T : {Extractor, ClassTag}, P3 <: T : {Extractor, ClassTag}, P4 <: T : {Extractor, ClassTag}](@unused construct: (P0, P1, P2, P3, P4) => U, labels: Seq[String]): MultiExtractor[Seq[T]] =
     if (labels.size == 5)
       orderedMultiExtractor(labels.zip(Seq(widen[P0, T](implicitly[Extractor[P0]]), widen[P1, T](implicitly[Extractor[P1]]), widen[P2, T](implicitly[Extractor[P2]]), widen[P3, T](implicitly[Extractor[P3]]), widen[P4, T](implicitly[Extractor[P4]]))))
@@ -237,7 +238,7 @@ trait Extractors {
    * @tparam P5 the sixth (Extractor-enabled) subtype of T.
    * @return MultiExtractor of `Seq[T]`.
    */
-  @nowarn("msg=unused implicit parameter") // the P types keep their ClassTag bounds, which this method doesn't use, so that its signature stays the same
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def multiExtractor6[T, U <: Product, P0 <: T : {Extractor, ClassTag}, P1 <: T : {Extractor, ClassTag}, P2 <: T : {Extractor, ClassTag}, P3 <: T : {Extractor, ClassTag}, P4 <: T : {Extractor, ClassTag}, P5 <: T : {Extractor, ClassTag}](@unused construct: (P0, P1, P2, P3, P4, P5) => U, labels: Seq[String]): MultiExtractor[Seq[T]] =
     if (labels.size == 6)
       orderedMultiExtractor(labels.zip(Seq(widen[P0, T](implicitly[Extractor[P0]]), widen[P1, T](implicitly[Extractor[P1]]), widen[P2, T](implicitly[Extractor[P2]]), widen[P3, T](implicitly[Extractor[P3]]), widen[P4, T](implicitly[Extractor[P4]]), widen[P5, T](implicitly[Extractor[P5]]))))
@@ -259,7 +260,7 @@ trait Extractors {
    * @tparam P6 the seventh (Extractor-enabled) subtype of T.
    * @return MultiExtractor of `Seq[T]`.
    */
-  @nowarn("msg=unused implicit parameter") // the P types keep their ClassTag bounds, which this method doesn't use, so that its signature stays the same
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def multiExtractor7[T, U <: Product, P0 <: T : {Extractor, ClassTag}, P1 <: T : {Extractor, ClassTag}, P2 <: T : {Extractor, ClassTag}, P3 <: T : {Extractor, ClassTag}, P4 <: T : {Extractor, ClassTag}, P5 <: T : {Extractor, ClassTag}, P6 <: T : {Extractor, ClassTag}](@unused construct: (P0, P1, P2, P3, P4, P5, P6) => U, labels: Seq[String]): MultiExtractor[Seq[T]] =
     if (labels.size == 7)
       orderedMultiExtractor(labels.zip(Seq(widen[P0, T](implicitly[Extractor[P0]]), widen[P1, T](implicitly[Extractor[P1]]), widen[P2, T](implicitly[Extractor[P2]]), widen[P3, T](implicitly[Extractor[P3]]), widen[P4, T](implicitly[Extractor[P4]]), widen[P5, T](implicitly[Extractor[P5]]), widen[P6, T](implicitly[Extractor[P6]]))))
@@ -280,6 +281,7 @@ trait Extractors {
    * @tparam T the underlying type of the resulting extractor.
    * @return an Extractor[T] whose method extract will convert a Node into a T.
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractorPartial[B <: Product : Extractor, T: ClassTag](extractorBtoT: Extractor[B => T]): Extractor[T] =
     (node: Node) =>
       for {
@@ -297,7 +299,7 @@ trait Extractors {
    * @tparam T the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will construct a T while ignoring the input Node.
    */
-  @nowarn("msg=unused implicit parameter") // T keeps its ClassTag bound, which this method doesn't use, so that its signature stays the same
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor0[T: ClassTag](construct: Unit => T): Extractor[T] = Extractor(Success(construct(())))
 
   /**
@@ -311,7 +313,7 @@ trait Extractors {
    * @tparam T the underlying type of the result, a Product.
    * @return an Extractor[B => T] whose method extract will convert a Node into a Try[B => T].
    */
-  @nowarn("msg=unused implicit parameter") // T keeps its ClassTag bound, which this method doesn't use, so that its signature stays the same
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractorPartial0[B, T <: Product : ClassTag](construct: B => T): Extractor[B => T] = Extractor(Success(construct))
 
   /**
@@ -331,6 +333,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor10[P0: Extractor, T <: Product : ClassTag](construct: P0 => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(extractorPartial1[P0, Unit, T](fTagToFieldExtractor, e0 => _ => construct(e0), dropLast = false, fields).extract(node))
@@ -343,6 +346,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor01[P0: MultiExtractor, T <: Product : ClassTag](construct: P0 => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(extractorPartial1[P0, Unit, T](childrenExtractor[P0], m0 => _ => construct(m0), dropLast = false, fields).extract(node))
@@ -356,6 +360,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[B => T] whose method extract will convert a Node into a Try[B => T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractorPartial10[P0: Extractor, B, T <: Product : ClassTag](construct: P0 => B => T, fields: Seq[String] = Nil): Extractor[B => T] =
     (node: Node) =>
       extractorPartial1(fTagToFieldExtractor, construct, dropLast = true, fields).extract(node)
@@ -372,6 +377,7 @@ trait Extractors {
    * @tparam T  the resulting type produced by the extractor
    * @return an extractor function that takes a Node and returns a function of type B => T
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractorPartial01[P0: MultiExtractor, B, T <: Product : ClassTag](construct: P0 => B => T, fields: Seq[String] = Nil): Extractor[B => T] =
     (node: Node) =>
       extractorPartial1[P0, B, T](
@@ -392,6 +398,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with two members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor20[P0: Extractor, P1: Extractor, T <: Product : ClassTag](construct: (P0, P1) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -414,6 +421,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor11[P0: Extractor, P1: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -438,6 +446,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor02[P0: MultiExtractor, P1: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -461,6 +470,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[B => T] whose method extract will convert a Node into a Try[B => T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractorPartial20[P0: Extractor, P1: Extractor, B, T <: Product : ClassTag](construct: (P0, P1) => B => T, fields: Seq[String] = Nil): Extractor[B => T] =
     (node: Node) =>
       extractorPartial2[P0, P1, B, T](
@@ -483,6 +493,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[B => T] whose method extract will convert a Node into a Try[B => T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractorPartial11[P0: Extractor, P1: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1) => B => T, fields: Seq[String] = Nil): Extractor[B => T] =
     (node: Node) =>
       extractorPartial2[P0, P1, B, T](
@@ -505,6 +516,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[B => T] whose method extract will convert a Node into a Try[B => T].
    */
+  @deprecated("part of the deprecated ladder", "1.2.0")
   private def extractorPartial02[P0: MultiExtractor, P1: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1) => B => T, fields: Seq[String]): Extractor[B => T] =
     (node: Node) =>
       extractorPartial2[P0, P1, B, T](
@@ -531,6 +543,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with three members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor30[P0: Extractor, P1: Extractor, P2: Extractor, T <: Product : ClassTag](construct: (P0, P1, P2) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -555,6 +568,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with three members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor21[P0: Extractor, P1: Extractor, P2: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -581,6 +595,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with three members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor12[P0: Extractor, P1: MultiExtractor, P2: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -607,6 +622,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with three members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor03[P0: MultiExtractor, P1: MultiExtractor, P2: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -632,6 +648,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[B => T] whose method extract will convert a Node into a Try[B => T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractorPartial30[P0: Extractor, P1: Extractor, P2: Extractor, B, T <: Product : ClassTag](construct: (P0, P1, P2) => B => T, fields: Seq[String] = Nil): Extractor[B => T] =
     (node: Node) =>
       extractorPartial3[P0, P1, P2, B, T](
@@ -655,6 +672,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[B => T] whose method extract will convert a Node into a Try[B => T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractorPartial21[P0: Extractor, P1: Extractor, P2: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2) => B => T, fields: Seq[String] = Nil): Extractor[B => T] =
     (node: Node) =>
       extractorPartial3[P0, P1, P2, B, T](
@@ -678,6 +696,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[B => T] whose method extract will convert a Node into a Try[B => T].
    */
+  @deprecated("part of the deprecated ladder", "1.2.0")
   private def extractorPartial12[P0: Extractor, P1: MultiExtractor, P2: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2) => B => T, fields: Seq[String]): Extractor[B => T] =
     (node: Node) =>
       extractorPartial3[P0, P1, P2, B, T](
@@ -702,6 +721,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[B => T] whose method extract will convert a Node into a Try[B => T].
    */
+  @deprecated("part of the deprecated ladder", "1.2.0")
   private def extractorPartial03[P0: MultiExtractor, P1: MultiExtractor, P2: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2) => B => T, fields: Seq[String]): Extractor[B => T] =
     (node: Node) =>
       extractorPartial3[P0, P1, P2, B, T](
@@ -725,6 +745,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with four members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor40[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -752,6 +773,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with four members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor31[P0: Extractor, P1: Extractor, P2: Extractor, P3: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -779,6 +801,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with four members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor22[P0: Extractor, P1: Extractor, P2: MultiExtractor, P3: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -806,6 +829,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with four members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor13[P0: Extractor, P1: MultiExtractor, P2: MultiExtractor, P3: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -833,6 +857,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with four members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor04[P0: MultiExtractor, P1: MultiExtractor, P2: MultiExtractor, P3: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -859,6 +884,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[B => T] whose method extract will convert a Node into a Try[B => T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractorPartial40[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3) => B => T, fields: Seq[String] = Nil): Extractor[B => T] =
     (node: Node) =>
       extractorPartial4[P0, P1, P2, P3, B, T](
@@ -885,6 +911,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[B => T] whose method extract will convert a Node into a Try[B => T].
    */
+  @deprecated("part of the deprecated ladder", "1.2.0")
   private def extractorPartial31[P0: Extractor, P1: Extractor, P2: Extractor, P3: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3) => B => T, fields: Seq[String]): Extractor[B => T] =
     (node: Node) =>
       extractorPartial4[P0, P1, P2, P3, B, T](
@@ -909,6 +936,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[B => T] whose method extract will convert a Node into a Try[B => T].
    */
+  @deprecated("part of the deprecated ladder", "1.2.0")
   private def extractorPartial22[P0: Extractor, P1: Extractor, P2: MultiExtractor, P3: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3) => B => T, fields: Seq[String]): Extractor[B => T] =
     (node: Node) =>
       extractorPartial4[P0, P1, P2, P3, B, T](
@@ -935,6 +963,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[B => T] whose method extract will convert a Node into a Try[B => T].
    */
+  @deprecated("part of the deprecated ladder", "1.2.0")
   private def extractorPartial13[P0: Extractor, P1: MultiExtractor, P2: MultiExtractor, P3: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3) => B => T, fields: Seq[String]): Extractor[B => T] =
     (node: Node) =>
       extractorPartial4[P0, P1, P2, P3, B, T](
@@ -961,6 +990,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("part of the deprecated ladder", "1.2.0")
   private def extractorPartial04[P0: MultiExtractor, P1: MultiExtractor, P2: MultiExtractor, P3: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3) => B => T, fields: Seq[String]): Extractor[B => T] =
     (node: Node) =>
       extractorPartial4[P0, P1, P2, P3, B, T](
@@ -985,6 +1015,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with five members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor50[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: Extractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -1013,6 +1044,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with five members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor41[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -1039,6 +1071,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with five members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor32[P0: Extractor, P1: Extractor, P2: Extractor, P3: MultiExtractor, P4: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -1066,6 +1099,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with five members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor23[P0: Extractor, P1: Extractor, P2: MultiExtractor, P3: MultiExtractor, P4: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -1094,6 +1128,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with five members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor14[P0: Extractor, P1: MultiExtractor, P2: MultiExtractor, P3: MultiExtractor, P4: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -1122,6 +1157,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with five members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor05[P0: MultiExtractor, P1: MultiExtractor, P2: MultiExtractor, P3: MultiExtractor, P4: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -1149,6 +1185,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractorPartial50[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: Extractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4) => B => T, fields: Seq[String] = Nil): Extractor[B => T] =
     (node: Node) =>
       extractorPartial5[P0, P1, P2, P3, P4, B, T](
@@ -1176,6 +1213,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("part of the deprecated ladder", "1.2.0")
   private def extractorPartial41[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4) => B => T, fields: Seq[String]): Extractor[B => T] =
     (node: Node) =>
       extractorPartial5[P0, P1, P2, P3, P4, B, T](
@@ -1201,6 +1239,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("part of the deprecated ladder", "1.2.0")
   private def extractorPartial32[P0: Extractor, P1: Extractor, P2: Extractor, P3: MultiExtractor, P4: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4) => B => T, fields: Seq[String]): Extractor[B => T] =
     (node: Node) =>
       extractorPartial5[P0, P1, P2, P3, P4, B, T](
@@ -1228,6 +1267,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("part of the deprecated ladder", "1.2.0")
   private def extractorPartial23[P0: Extractor, P1: Extractor, P2: MultiExtractor, P3: MultiExtractor, P4: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4) => B => T, fields: Seq[String]): Extractor[B => T] =
     (node: Node) =>
       extractorPartial5[P0, P1, P2, P3, P4, B, T](
@@ -1255,6 +1295,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("part of the deprecated ladder", "1.2.0")
   private def extractorPartial14[P0: Extractor, P1: MultiExtractor, P2: MultiExtractor, P3: MultiExtractor, P4: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4) => B => T, fields: Seq[String]): Extractor[B => T] =
     (node: Node) =>
       extractorPartial5[P0, P1, P2, P3, P4, B, T](
@@ -1282,6 +1323,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("part of the deprecated ladder", "1.2.0")
   private def extractorPartial05[P0: MultiExtractor, P1: MultiExtractor, P2: MultiExtractor, P3: MultiExtractor, P4: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4) => B => T, fields: Seq[String]): Extractor[B => T] =
     (node: Node) =>
       extractorPartial5[P0, P1, P2, P3, P4, B, T](
@@ -1309,6 +1351,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with six members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor60[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: Extractor, P5: Extractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -1338,6 +1381,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with six members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor51[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: Extractor, P5: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -1367,6 +1411,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with six members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor42[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: MultiExtractor, P5: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -1394,6 +1439,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with six members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor33[P0: Extractor, P1: Extractor, P2: Extractor, P3: MultiExtractor, P4: MultiExtractor, P5: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -1423,6 +1469,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with six members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor24[P0: Extractor, P1: Extractor, P2: MultiExtractor, P3: MultiExtractor, P4: MultiExtractor, P5: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -1452,6 +1499,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with six members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor15[P0: Extractor, P1: MultiExtractor, P2: MultiExtractor, P3: MultiExtractor, P4: MultiExtractor, P5: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -1481,6 +1529,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product with five members.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor06[P0: MultiExtractor, P1: MultiExtractor, P2: MultiExtractor, P3: MultiExtractor, P4: MultiExtractor, P5: MultiExtractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(extractorPartial6[P0, P1, P2, P3, P4, P5, Unit, T](
@@ -1507,6 +1556,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractorPartial60[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: Extractor, P5: Extractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5) => B => T, fields: Seq[String] = Nil): Extractor[B => T] =
     (node: Node) =>
       extractorPartial6[P0, P1, P2, P3, P4, P5, B, T](
@@ -1535,6 +1585,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("part of the deprecated ladder", "1.2.0")
   private def extractorPartial51[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: Extractor, P5: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5) => B => T, fields: Seq[String]): Extractor[B => T] =
     (node: Node) =>
       extractorPartial6[P0, P1, P2, P3, P4, P5, B, T](
@@ -1561,6 +1612,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("part of the deprecated ladder", "1.2.0")
   private def extractorPartial42[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: MultiExtractor, P5: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5) => B => T, fields: Seq[String]): Extractor[B => T] =
     (node: Node) =>
       extractorPartial6[P0, P1, P2, P3, P4, P5, B, T](
@@ -1580,6 +1632,7 @@ trait Extractors {
     * @tparam T  the underlying type of the result, a Product with seven members.
     * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
     */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor70[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: Extractor, P5: Extractor, P6: Extractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -1609,6 +1662,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractorPartial70[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: Extractor, P5: Extractor, P6: Extractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6) => B => T, fields: Seq[String] = Nil): Extractor[B => T] =
     (node: Node) =>
       extractorPartial7[P0, P1, P2, P3, P4, P5, P6, B, T](
@@ -1638,6 +1692,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractorPartial61[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: Extractor, P5: Extractor, P6: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6) => B => T, fields: Seq[String] = Nil): Extractor[B => T] =
     (node: Node) =>
       extractorPartial7[P0, P1, P2, P3, P4, P5, P6, B, T](
@@ -1665,6 +1720,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractorPartial52[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: Extractor, P5: MultiExtractor, P6: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6) => B => T, fields: Seq[String] = Nil): Extractor[B => T] =
     (node: Node) =>
       extractorPartial7[P0, P1, P2, P3, P4, P5, P6, B, T](
@@ -1684,6 +1740,7 @@ trait Extractors {
     * @tparam T  the underlying type of the result, a Product with eight members.
     * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
     */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractor80[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: Extractor, P5: Extractor, P6: Extractor, P7: Extractor, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6, P7) => T, fields: Seq[String] = Nil): Extractor[T] =
     (node: Node) =>
       applyWrappedToUnit(
@@ -1714,6 +1771,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractorPartial62[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: Extractor, P5: Extractor, P6: MultiExtractor, P7: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6, P7) => B => T, fields: Seq[String] = Nil): Extractor[B => T] =
     (node: Node) =>
       extractorPartial8[P0, P1, P2, P3, P4, P5, P6, P7, B, T](
@@ -1743,6 +1801,7 @@ trait Extractors {
    * @tparam T  the underlying type of the result, a Product.
    * @return an Extractor[T] whose method extract will convert a Node into a Try[T].
    */
+  @deprecated("use Extractor.derived (or derives Extractor), or MultiExtractor.derived for a sealed trait", "1.2.0")
   def extractorPartial72[P0: Extractor, P1: Extractor, P2: Extractor, P3: Extractor, P4: Extractor, P5: Extractor, P6: Extractor, P7: MultiExtractor, P8: MultiExtractor, B, T <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6, P7, P8) => B => T, fields: Seq[String] = Nil): Extractor[B => T] =
     (node: Node) =>
       extractorPartial9[P0, P1, P2, P3, P4, P5, P6, P7, P8, B, T](

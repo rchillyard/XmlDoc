@@ -45,7 +45,7 @@ trait Renderer[T]   { def render(t: T, format: Format, state: StateR): Try[Strin
 ```
 
 Both are ordinary type classes with an implicit instance per type, resolved by the compiler the
-usual way. `MultiExtractor[T]` is the analogous type class for extracting a `Seq[T]` out of a
+usual way, and normally derived (see "Derivation" below). `MultiExtractor[T]` is the analogous type class for extracting a `Seq[T]` out of a
 `NodeSeq]` (used for polymorphic dispatch — see below).
 
 ### Field-naming conventions
@@ -67,42 +67,70 @@ If a field's real tag doesn't derive from its name at all (its tag is always som
 entirely, or one of *several* possible tags depending on which concrete subtype shows up), don't
 fight the naming convention — see `TagProperties` below.
 
-### The arity ladder
+### Derivation
 
-Each case class's `Extractor`/`Renderer` is built by combining one combinator per field, using a
-family of methods named by the count and kind of their fields:
+Each case class's `Extractor`/`Renderer` is derived at compile time:
 
-- `extractorN0` / `rendererN` — `N` single-valued (`Extractor`/`Renderer`) fields, no `MultiExtractor` fields, no auxiliary parameter.
-- `extractorNM` / `rendererN` — `N` single-valued fields plus `M` `MultiExtractor`(`Seq[_]`)-valued fields (e.g. `extractorPartial62` = 6 single + 2 `Seq`).
-- `extractorPartialNM` / `rendererNSuper` — as above, plus one *auxiliary* parameter in the case class's second parameter list (see "The auxiliary-parameter pattern" below).
+```scala
+case class Altitude($: Double) derives Extractor, Renderer
+case class Placemark(Geometry: Seq[Geometry])(val featureData: FeatureData) extends Feature derives Extractor, Renderer
+```
 
-These are generated per-arity rather than via a single generic (e.g. shapeless-style) mechanism —
-deliberately: it's more boilerplate, but every step is visible, debuggable, and doesn't require a
-macro or a dependency to understand. The ladder currently goes up to arity 9 (`FeatureData`, the
-widest case class in `kml`, needed it) — extending it further is mechanical: add one more
-`extractorPartialN`/`renderer N`/`FP.uncurried` overload, each modeled exactly on the one below it
-in the file. Don't reach for a novel approach when one more rung of the existing ladder is needed;
-every arity increase so far has been "copy the previous one, bump the number."
+(or `given Extractor[T] = Extractor.derived` where `derives` doesn't fit). `Extractor.derived` reads each field according
+to its name, as above: a field whose type is a `Seq` with `extractChildren` (using a `MultiExtractor`), any other field
+with `fieldExtractor` (using an `Extractor`). `Renderer.derived` renders exactly as the old `rendererN`/`rendererNSuper`
+methods did. For each field, a given instance is used if there is one (e.g. `Coordinates`' own `MultiExtractor`, which
+requires at least one element, or `InnerBoundaryIs`' named sequence renderer); otherwise an `Option[X]` or `Seq[X]` field
+lifts `X`'s instance, and a case class with no instance of its own is derived in turn.
+
+The companions of `Extractor`, `MultiExtractor` and `Renderer` also provide the `Option[T]`/`Seq[T]` instances for any `T`
+that has an instance (`optionExtractor`, `seqMultiExtractor`, `optionRenderer`, `seqRenderer`), and `Renderer`'s companion
+forwards the standard renderers of `Renderers` (`Double`, `Text`, ...), so derived instances need no imports. A more
+specific instance (e.g. one in the element type's own companion) always wins over these.
+
+**Why a macro, not a `Mirror`.** Scala 3 synthesizes no `Mirror` for a case class with a second parameter list, and so
+none for a sealed trait with such a subtype. The auxiliary-parameter pattern (below) is everywhere in `kml`, so the
+derivation (`core`'s `Derivation`, `DerivedExtractors`, `DerivedRenderers`) is a small macro over the primary
+constructor instead: the names and types of the first parameter list, and the one parameter of the second, if any.
+The resulting instances are ordinary classes (`ProductExtractor`, `ProductRenderer`, `SumMultiExtractor`, `SumRenderer`).
+NOTE: don't call these macros from `core`'s own main sources: a file that expands a macro defined in the same project
+is compiled in a second ("suspended") run, which can drop some warnings (so `-Werror` would behave inconsistently).
+`Text`'s instances, in `core`, are therefore built from `ProductExtractor`/`ProductRenderer` directly.
+
+One difference from the ladder: when a type with an auxiliary parameter has an attribute as its first field
+(e.g. `Square(_side: Double)(val meta: Meta)`), `rendererNSuper` silently dropped the auxiliary content; the derived
+renderer doesn't. No `kml` type has that shape, so `kml`'s output is unchanged.
+
+**The old arity ladder** (`extractor10` ... `extractorPartial72`, `multiExtractorN`, `rendererN`, `rendererNSuper`,
+`rendererSuperN`, `renderer1Special`) is deprecated since 1.2.0 and will be removed in a later release. It built each
+instance from one combinator per field, chosen by the count and kind of fields, with the field names found by
+reflection (`Reflection.extractFieldNames`). Derivation has no limit on the number of fields.
 
 ### Polymorphic dispatch: `MultiExtractor`
 
-Many KML elements are really *sealed-trait-like* abstractions — `Feature`, `Geometry`,
-`StyleSelector`, `AbstractView` — where a `Seq[Feature]` in the XML is actually a mix of concrete
-subtypes (`Placemark`, `Folder`, `Document`, ...), each identified by its own tag. `multiExtractorN`
-builds a `MultiExtractor[Seq[T]]` for exactly this case: given `N` subtypes and their tags, it
-builds a `{tag -> Extractor}` lookup table and applies it once over the `NodeSeq`, preserving
-document order (`Extractors.orderedMultiExtractor` is the shared implementation underneath every
-`multiExtractorN`). `rendererSuperN` is the render-side counterpart, dispatching on the runtime
-type via `instanceOf` checks.
+Many KML elements are really abstractions — `Feature`, `Geometry`, `StyleSelector`, `AbstractView` — where a
+`Seq[Feature]` in the XML is actually a mix of concrete subtypes (`Placemark`, `Folder`, `Document`, ...), each
+identified by its own tag. These traits are `sealed`, and their companions derive both sides:
 
-**Circular dependencies are common and expected** here — e.g. `Geometry`'s own `MultiExtractor`
-needs `MultiGeometry` (one of `Geometry`'s subtypes), and `MultiGeometry` itself contains
-`Seq[Geometry]`. An eager `val` for either side NPEs (whichever initializes second sees the other
-as `null`); a naive `lazy val` deadlocks (Scala's reentrant lazy-val locking blocks a thread on
-itself if the two both happen to be forced on the same thread during their own initialization). The
-fix used everywhere in this codebase is `MultiExtractor.createLazy` / `Renderer.createLazy` — a
-by-name, deferred wrapper that breaks the initialization cycle. If you add a new mutually-recursive
-pair of types, use the same pattern; don't reinvent it.
+```scala
+object Feature {
+  implicit val extractorSeq: MultiExtractor[Seq[Feature]] = MultiExtractor.derived
+  implicit val renderer: Renderer[Feature] = Renderer.derived
+}
+```
+
+`MultiExtractor.derived` finds the case classes which extend the trait (flattening sealed sub-traits such as
+`Container` and `Overlay`, and the sealed abstract class `BaseOverlay`), uses each one's class name as its tag, and
+extracts each node of the `NodeSeq` whose label is one of those tags with that subtype's `Extractor`, in a single pass,
+preserving document order (nodes with other labels are ignored). `Renderer.derived` for a sealed trait renders each value
+with the `Renderer` of its own subtype. To add a subtype, just declare it in `KML.scala` (a sealed trait's subtypes must
+be in the same file): nothing needs to be listed.
+
+**Circular dependencies are common and expected** here — e.g. `Geometry`'s own `MultiExtractor` needs `MultiGeometry`
+(one of `Geometry`'s subtypes), and `MultiGeometry` itself contains `Seq[Geometry]`. Derived instances look up the
+instances they depend on lazily, the first time they're used, by which point every object is constructed; so no
+special care is needed. (Hand-written instances still need `MultiExtractor.createLazy` / `Renderer.createLazy`, a
+by-name wrapper: an eager `val` NPEs, and a naive `lazy val` can deadlock.)
 
 ### The auxiliary-parameter pattern
 
@@ -112,15 +140,17 @@ Most KML elements share a chunk of common data with their siblings — every `Fe
 declares the shared data as an **auxiliary parameter in its own (second) parameter list**:
 
 ```scala
-case class Placemark(Geometry: Seq[Geometry])(val featureData: FeatureData) extends Feature
+case class Placemark(Geometry: Seq[Geometry])(val featureData: FeatureData) extends Feature derives Extractor, Renderer
 ```
 
-`extractorPartial[B, T](extractorPartialNM(apply))` extracts the aux `B` (here `FeatureData`)
-first via its own `Extractor[B]`, then applies the resulting `B => T` function; `rendererNSuper`
-is the render-side counterpart. **A subtype must never redeclare one of its aux's own fields as
-its own field** — e.g. don't give `Model` its own `maybeAltitudeMode`, since `GeometryData`
-already provides it to every `Geometry` subtype; doing so renders the same value twice. This
-mistake is easy to make when copying an existing type as a template — double-check the aux's own
+The derived `Extractor` extracts the aux (here `FeatureData`) from the same node, with its own `Extractor`; the derived
+`Renderer` renders it first, inside the same element. (Note that a case class's equality ignores its second parameter
+list.) A few types (`ContainerData`, `AbstractViewData`, `StyleSelectorData`, `SubStyleData`) are nothing but a wrapper
+for another aux; they use `Extractor.embedded` / `Renderer.embedded`.
+
+**A subtype must never redeclare one of its aux's own fields as its own field** — e.g. don't give `Model` its own
+`maybeAltitudeMode`, since `GeometryData` already provides it to every `Geometry` subtype; doing so renders the same
+value twice. This mistake is easy to make when copying an existing type as a template — double-check the aux's own
 field list before adding a same-named field.
 
 ### Escape hatches for irregular real-world XML
@@ -185,17 +215,17 @@ Distilled from adding `Model`/`Link`/`NetworkLink`/`ExtendedData`/etc. in `kml`:
 1. Define the `case class`, with fields following the naming conventions above. Check whether it
    needs an auxiliary parameter (is it a subtype of an existing abstraction like `Feature` or
    `Geometry`?) and, if so, that it doesn't redeclare any of that aux's own fields.
-2. In its companion object, wire up `extractor`/`renderer` using the smallest combinator that
-   matches its field shape (count of single-valued fields, count of `Seq`-valued fields, aux or
-   not) — if the exact arity/shape doesn't exist yet, extend the ladder by one rung rather than
-   inventing something new.
-3. If it's a new concrete subtype of an existing polymorphic abstraction (`Feature`, `Geometry`,
-   ...), add it to that abstraction's `multiExtractorN`/`rendererSuperN` call — bump `N` by one and
-   add its tag to the label list, in document order.
+2. Add `derives Extractor, Renderer`. Write a companion object only for what derivation can't infer: a
+   `TagProperties` registration, or an instance that differs from the default (e.g. a `MultiExtractor`
+   requiring at least one element, or a sequence rendered under a fixed name).
+3. If it's a new concrete subtype of an existing (sealed) abstraction (`Feature`, `Geometry`, ...), declare it
+   in `KML.scala`: the abstraction's derived `MultiExtractor`/`Renderer` pick it up, with its class name as its tag.
 4. Watch for the two most common per-field surprises: a bare `Double` field used as a plain child
    element (the shared `doubleRenderer` always renders attribute-shaped text — wrap it in its own
    dedicated single-field class, matching `Rotation`/`Range`/`Heading`/etc.), and a field name that
    happens to look plural but is actually singular (`Plural.unapply`'s `singularEndsInS` exception
-   list; add your case there rather than renaming the field away from its real tag).
+   list; add your case there rather than renaming the field away from its real tag). Note also that a
+   plural field (`Pairs: Seq[Pair]`) requires at least one child unless its tag is registered with
+   `TagProperties.addMustMatch`.
 5. Test it against a real file if one exists (or is easy to construct) before trusting a synthetic
    one — see "Testing philosophy" above.

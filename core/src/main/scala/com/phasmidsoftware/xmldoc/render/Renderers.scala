@@ -20,6 +20,7 @@ trait Renderers {
    * @tparam R the type of `Renderer` to be returned (must be a `Product`).
    * @return a `Renderer[R]`.
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer0[R <: Product : ClassTag]: Renderer[R] = Renderer {
     (_: R, format, stateR) =>
       doNestedRender(format, stateR, "", "", "")
@@ -34,6 +35,7 @@ trait Renderers {
    * @tparam R  the type of Renderer to be returned (must be a Product).
    * @return a `Renderer[R]`.
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer1[P0: Renderer, R <: Product : ClassTag](@unused ignored: P0 => R): Renderer[R] = Renderer {
     (r: R, format, stateR) =>
       r.productElement(0) match {
@@ -54,6 +56,7 @@ trait Renderers {
    * @tparam R  the type of `Renderer` to be returned (must be a `Product`).
    * @return a `Renderer[R]`.
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer1Special[P0: Renderer, R <: Product : ClassTag](@unused ignored: P0 => R, prefix: String): Renderer[R] = Renderer {
     (r: R, format, stateR) =>
       r.productElement(0) match {
@@ -75,6 +78,7 @@ trait Renderers {
    * @tparam R  the underlying type of the `Renderer` to be returned (must be a `Product`).
    * @return a `Renderer[R]`.
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer2[P0: Renderer, P1: Renderer, R <: Product : ClassTag](construct: (P0, P1) => R): Renderer[R] = Renderer {
     (r: R, format, stateR) =>
       ((r.productElement(0), r.productElement(1)): @unchecked) match {
@@ -97,6 +101,7 @@ trait Renderers {
    * @tparam R  the underlying type of `Renderer` to be returned (must be a `Product`).
    * @return a `Renderer[R]`.
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer3[P0: Renderer, P1: Renderer, P2: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2) => R): Renderer[R] = Renderer {
     (r: R, format, stateR) => {
       ((r.productElement(0), r.productElement(1), r.productElement(2)): @unchecked) match {
@@ -122,6 +127,7 @@ trait Renderers {
    * @tparam R  the underlying type of the `Renderer` to be returned (must be a `Product`).
    * @return `Renderer[R]`.
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer4[P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3) => R): Renderer[R] = Renderer {
     (r: R, format, stateR) => {
       ((r.productElement(0), r.productElement(1), r.productElement(2), r.productElement(3)): @unchecked) match {
@@ -149,6 +155,7 @@ trait Renderers {
    * @tparam R  The product type being rendered. It must extend `Product` and have an implicit `ClassTag`.
    * @return A `Renderer` instance for the product type `R`.
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer5[P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4) => R): Renderer[R] = Renderer {
     (r: R, format, stateR) =>
       ((r.productElement(0), r.productElement(1), r.productElement(2), r.productElement(3), r.productElement(4)): @unchecked) match {
@@ -175,6 +182,7 @@ trait Renderers {
    * @tparam R  The resulting product type that can be constructed by the `construct` function.
    * @return A `Renderer` for the product type `R` that renders objects of this type based on its six components and their respective renderers.
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer6[P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, P5: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5) => R): Renderer[R] = Renderer {
     (r: R, format, stateR) => {
       ((r.productElement(0), r.productElement(1), r.productElement(2), r.productElement(3), r.productElement(4), r.productElement(5)): @unchecked) match {
@@ -204,6 +212,7 @@ trait Renderers {
    * @return A Renderer instance that can render objects of type R, utilizing the provided construct function
    *         and the Renderers for each corresponding parameter type.
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer7[P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, P5: Renderer, P6: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6) => R): Renderer[R] = Renderer {
     (r: R, format, stateR) => {
       ((r.productElement(0), r.productElement(1), r.productElement(2), r.productElement(3), r.productElement(4), r.productElement(5), r.productElement(6)): @unchecked) match {
@@ -234,6 +243,7 @@ trait Renderers {
    * @return A Renderer instance that can render objects of type R, utilizing the provided construct function
    *         and the Renderers for each corresponding parameter type.
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer8[P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, P5: Renderer, P6: Renderer, P7: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6, P7) => R): Renderer[R] = Renderer {
     (r: R, format, stateR) => {
       ((r.productElement(0), r.productElement(1), r.productElement(2), r.productElement(3), r.productElement(4), r.productElement(5), r.productElement(6), r.productElement(7)): @unchecked) match {
@@ -255,6 +265,7 @@ trait Renderers {
    * @return A Renderer instance that can render objects of type R, utilizing the provided construct function
    *         and the Renderers for each corresponding parameter type.
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer9[P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, P5: Renderer, P6: Renderer, P7: Renderer, P8: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6, P7, P8) => R): Renderer[R] = Renderer {
     (r: R, format, stateR) => {
       ((r.productElement(0), r.productElement(1), r.productElement(2), r.productElement(3), r.productElement(4), r.productElement(5), r.productElement(6), r.productElement(7), r.productElement(8)): @unchecked) match {
@@ -279,6 +290,7 @@ trait Renderers {
    * @tparam R the type of Renderer to be returned (must be a Product).
    * @return a Renderer[R].
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer0Super[B: Renderer, R <: Product : ClassTag](@unused construct: B => R)(lens: R => B): Renderer[R] = Renderer {
     (r: R, format, stateR) =>
       for {
@@ -297,6 +309,7 @@ trait Renderers {
    * @tparam R  the type of Renderer to be returned (must be a Product).
    * @return a Renderer[R].
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer1Super[B: Renderer, P0: Renderer, R <: Product : ClassTag](construct: P0 => B => R)(lens: R => B): Renderer[R] = Renderer {
     (r: R, format, stateR) =>
       val b = lens(r)
@@ -319,6 +332,7 @@ trait Renderers {
    * @tparam R  the type of Renderer to be returned (must be a Product).
    * @return a Renderer[R].
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer2Super[B: Renderer, P0: Renderer, P1: Renderer, R <: Product : ClassTag](construct: (P0, P1) => B => R)(lens: R => B): Renderer[R] = Renderer {
     (r: R, format, stateR) => {
       val b = lens(r)
@@ -341,6 +355,7 @@ trait Renderers {
    * @tparam R  the type of Renderer to be returned (must be a Product).
    * @return a Renderer[R].
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer3Super[B: Renderer, P0: Renderer, P1: Renderer, P2: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2) => B => R)(lens: R => B): Renderer[R] = Renderer {
     (r: R, format, stateR) => {
       val b = lens(r)
@@ -364,6 +379,7 @@ trait Renderers {
    * @tparam R  the type of Renderer to be returned (must be a Product).
    * @return a Renderer[R].
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer4Super[B: Renderer, P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3) => B => R)(lens: R => B): Renderer[R] = Renderer {
     (r: R, format, stateR) => {
       val b = lens(r)
@@ -389,6 +405,7 @@ trait Renderers {
    * @tparam R  the type of Renderer to be returned (must be a Product).
    * @return a Renderer[R].
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer5Super[B: Renderer, P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4) => B => R)(lens: R => B): Renderer[R] = Renderer {
     (r: R, format, stateR) => {
       val b = lens(r)
@@ -415,6 +432,7 @@ trait Renderers {
    * @tparam R  the type of Renderer to be returned (must be a Product).
    * @return a Renderer[R].
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer6Super[B: Renderer, P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, P5: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5) => B => R)(lens: R => B): Renderer[R] = Renderer[R] {
     (r: R, format, stateR) => {
       val b = lens(r)
@@ -442,6 +460,7 @@ trait Renderers {
    * @tparam R  the type of Renderer to be returned (must be a Product).
    * @return a Renderer[R].
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer7Super[B: Renderer, P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, P5: Renderer, P6: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6) => B => R)(lens: R => B): Renderer[R] = Renderer {
     (r: R, format, stateR) => {
       val b = lens(r)
@@ -470,6 +489,7 @@ trait Renderers {
    * @tparam R  the type of Renderer to be returned (must be a Product).
    * @return a Renderer[R].
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer8Super[B: Renderer, P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, P5: Renderer, P6: Renderer, P7: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6, P7) => B => R)(lens: R => B): Renderer[R] = Renderer {
     (r: R, format, stateR) => {
       val b = lens(r)
@@ -490,6 +510,7 @@ trait Renderers {
    * @tparam R  the type of Renderer to be returned (must be a Product).
    * @return a Renderer[R].
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def renderer9Super[B: Renderer, P0: Renderer, P1: Renderer, P2: Renderer, P3: Renderer, P4: Renderer, P5: Renderer, P6: Renderer, P7: Renderer, P8: Renderer, R <: Product : ClassTag](construct: (P0, P1, P2, P3, P4, P5, P6, P7, P8) => B => R)(lens: R => B): Renderer[R] = Renderer {
     (r: R, format, stateR) => {
       val b = lens(r)
@@ -522,6 +543,7 @@ trait Renderers {
    * @tparam R0 one subtype of T.
    * @return a Renderer[T].
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def rendererSuper1[T: ClassTag, R0 <: T : Renderer : ClassTag]: Renderer[T] = Renderer {
     (t: T, format, stateR) =>
       t match {
@@ -545,6 +567,7 @@ trait Renderers {
    * @tparam R1 another subtype of T.
    * @return a Renderer[T].
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def rendererSuper2[T: ClassTag, R0 <: T : Renderer : ClassTag, R1 <: T : Renderer : ClassTag]: Renderer[T] = Renderer {
     (t: T, format, stateR) =>
       t match {
@@ -566,6 +589,7 @@ trait Renderers {
    * @tparam R2 another subtype of T.
    * @return a Renderer[T].
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def rendererSuper3[T: ClassTag, R0 <: T : Renderer : ClassTag, R1 <: T : Renderer : ClassTag, R2 <: T : Renderer : ClassTag]: Renderer[T] = Renderer {
     (t: T, format, stateR) =>
       t match {
@@ -588,6 +612,7 @@ trait Renderers {
    * @tparam R3 another subtype of T.
    * @return a Renderer[T].
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def rendererSuper4[T: ClassTag, R0 <: T : Renderer : ClassTag, R1 <: T : Renderer : ClassTag, R2 <: T : Renderer : ClassTag, R3 <: T : Renderer : ClassTag]: Renderer[T] = Renderer {
     (t: T, format, stateR) =>
       t match {
@@ -611,6 +636,7 @@ trait Renderers {
    * @tparam R4 another subtype of T.
    * @return a Renderer[T].
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def rendererSuper5[T: ClassTag, R0 <: T : Renderer : ClassTag, R1 <: T : Renderer : ClassTag, R2 <: T : Renderer : ClassTag, R3 <: T : Renderer : ClassTag, R4 <: T : Renderer : ClassTag]: Renderer[T] = Renderer {
     (t: T, format, stateR) =>
       t match {
@@ -635,6 +661,7 @@ trait Renderers {
    * @tparam R5 another subtype of T.
    * @return a Renderer[T].
    */
+  @deprecated("use Renderer.derived (or derives Renderer)", "1.2.0")
   def rendererSuper6[T: ClassTag, R0 <: T : Renderer : ClassTag, R1 <: T : Renderer : ClassTag, R2 <: T : Renderer : ClassTag, R3 <: T : Renderer : ClassTag, R4 <: T : Renderer : ClassTag, R5 <: T : Renderer : ClassTag]: Renderer[T] = Renderer { (t: T, format, stateR) =>
     t match {
       case r: R0 =>
@@ -819,6 +846,6 @@ object Renderers {
     x.toString.replaceAll("<", "&lt;").replaceAll("&", "&amp;")
 
   private val renderers = new Renderers {}
-  implicit val rendererText: Renderer[Text] = renderers.renderer1(Text.apply)
+  implicit val rendererText: Renderer[Text] = new ProductRenderer[Text]("Text", List(charSequenceRenderer), None) ^^ "rendererText"
   implicit val rendererOptionText: Renderer[Option[Text]] = renderers.optionRenderer[Text]
 }

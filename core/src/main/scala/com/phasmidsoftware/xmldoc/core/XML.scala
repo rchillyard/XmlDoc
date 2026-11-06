@@ -1,6 +1,6 @@
 package com.phasmidsoftware.xmldoc.core
 
-import com.phasmidsoftware.xmldoc.xml.{Extractor, Extractors}
+import com.phasmidsoftware.xmldoc.xml.{Extractor, Extractors, FieldExtractor, ProductExtractor}
 
 import scala.collection.mutable
 import scala.util.{Success, Try}
@@ -56,7 +56,7 @@ object Text extends Extractors {
   /**
    * Text extractor.
    */
-  implicit val extractor: Extractor[Text] = extractor10(apply) ^^ "text extractor"
+  implicit val extractor: Extractor[Text] = new ProductExtractor[Text]("Text", List("$"), List(FieldExtractor.single(Extractor.charSequenceExtractor)), None, (xs, _) => Text(xs.head.asInstanceOf[CharSequence])) ^^ "text extractor"
 
   /**
    * Optional text extractor.

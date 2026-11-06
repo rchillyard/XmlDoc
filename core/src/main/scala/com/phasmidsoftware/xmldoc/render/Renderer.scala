@@ -1,7 +1,7 @@
 package com.phasmidsoftware.xmldoc.render
 
 import com.phasmidsoftware.xmldoc.core.FP.sequence
-import com.phasmidsoftware.xmldoc.core.{SmartBuffer, TryUsing}
+import com.phasmidsoftware.xmldoc.core.{SmartBuffer, Text, TryUsing}
 import com.phasmidsoftware.xmldoc.render.Renderer.maybeAttributeName
 import com.phasmidsoftware.xmldoc.render.Renderers.logger
 import com.phasmidsoftware.xmldoc.xml.{Extractor, NamedFunction}
@@ -90,6 +90,77 @@ object Renderer {
    * @return a Renderer[T].
    */
   def createLazy[T](tr: => Renderer[T]): Renderer[T] = (t: T, format: Format, stateR: StateR) => tr.render(t, format, stateR)
+
+  /**
+   * Method to derive a `Renderer[T]`, so that `case class T(...) derives Renderer` works.
+   * This replaces the `rendererN`, `rendererNSuper` and `rendererSuperN` methods, and has no limit on the number of fields.
+   *
+   * For a case class, each field is rendered according to its name (see the field-naming conventions in DESIGN.md),
+   * exactly as `rendererN` rendered it; an auxiliary parameter (in a second parameter list) is rendered first, as `rendererNSuper` did.
+   * For each field, a given instance is preferred; otherwise, an `Option[X]` or `Seq[X]` field lifts `X`'s `Renderer`,
+   * and a case class is derived in turn.
+   *
+   * For a sealed trait (or sealed abstract class), a value is rendered by the `Renderer` of its own subtype, as `rendererSuperN` did.
+   *
+   * NOTE: the field renderers are found lazily (on the first rendering), so mutually recursive types need no `createLazy`.
+   *
+   * @tparam T a case class, or a sealed trait or sealed abstract class.
+   * @return a `Renderer[T]`.
+   */
+  inline def derived[T]: Renderer[T] = ${ DerivedRenderers.impl[T] }
+
+  // The standard renderers (defined in Renderers), here so that they're in the implicit scope of Renderer:
+  // e.g. a derived Renderer finds Renderer[Double] without an import.
+  given Renderer[CharSequence] = Renderers.charSequenceRenderer
+  given Renderer[String] = Renderers.stringRenderer
+  given Renderer[Int] = Renderers.intRenderer
+  given Renderer[Long] = Renderers.longRenderer
+  given Renderer[Byte] = Renderers.byteRenderer
+  given Renderer[Boolean] = Renderers.booleanRenderer
+  given Renderer[Double] = Renderers.doubleRenderer
+  given Renderer[java.net.URI] = Renderers.uriRenderer
+  given Renderer[Text] = Renderers.rendererText
+
+  /**
+   * A `Renderer` of `Option[T]` for any `T` which has a `Renderer` (see `lift`).
+   * It's found only where there is no more specific instance (e.g. one defined in `T`'s companion object).
+   *
+   * @tparam T the underlying type, which requires a `Renderer[T]`.
+   * @return a `Renderer[Option[T]]`.
+   */
+  implicit def optionRenderer[T: Renderer]: Renderer[Option[T]] = implicitly[Renderer[T]].lift
+
+  /**
+   * A `Renderer` of `Seq[T]` for any `T` which has a `Renderer` (see `sequenceOf`).
+   * It's found only where there is no more specific instance (e.g. one defined in `T`'s companion object).
+   *
+   * @tparam T the underlying type, which requires a `Renderer[T]`.
+   * @return a `Renderer[Seq[T]]`.
+   */
+  implicit def seqRenderer[T: Renderer]: Renderer[Seq[T]] = sequenceOf[T]
+
+  /**
+   * Method to create a `Renderer[T]` for a type `T` which simply wraps a `B` that is rendered inside the same element,
+   * as an auxiliary parameter is (e.g. `kml`'s `ContainerData(featureData: FeatureData)`).
+   * It renders as the (deprecated) `renderer0Super` did. See also `Extractor.embedded`.
+   *
+   * @param f a function to get the `B` from a `T`.
+   * @tparam T the type to be rendered.
+   * @tparam B the type of the wrapped value, which requires a `Renderer[B]`.
+   * @return a `Renderer[T]`.
+   */
+  def embedded[T: ClassTag, B: Renderer](f: T => B): Renderer[T] =
+    new ProductRenderer[T](implicitly[ClassTag[T]].runtimeClass.getSimpleName, Nil, Some(("", f, implicitly[Renderer[B]])))
+
+  /**
+   * Method to get a `Renderer` of `Seq[R]` in which each element is rendered by `R`'s `Renderer`.
+   *
+   * @tparam R the element type.
+   * @return a `Renderer[Seq[R]]`.
+   */
+  def sequenceOf[R: Renderer]: Renderer[Seq[R]] = Renderer[Seq[R]] {
+    (rs, format, _) => doRenderSequence(rs, format, None)
+  } ^^ "sequence renderer"
 
   /**
    * Determines an attribute name based on the given index and product element name, with an

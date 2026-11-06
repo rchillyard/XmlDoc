@@ -4,8 +4,10 @@ import com.phasmidsoftware.xmldoc.core.TryUsing
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
+import scala.annotation.nowarn
 import scala.util.Success
 
+@nowarn("cat=deprecation") // these tests exercise the (deprecated) arity ladder: see DerivationSpec for derivation
 class RenderersSpec extends AnyFlatSpec with should.Matchers {
 
   case class Greeting($: String)
