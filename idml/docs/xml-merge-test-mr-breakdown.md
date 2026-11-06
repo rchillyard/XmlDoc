@@ -491,7 +491,7 @@ Done when:
 - 16 组 corpus 在适用的包、领域、driver 层满足唯一预期；case 10 成功包保留结构与属性值，10b 冲突不写 ours；退出码断言通过。
 
 ### MR 13 — Measure merge scalability by pipeline stage
-branch: feature/IDML-XML-Merge-Tests-MR13
+branch: V1_1_3-Kaining-2（按用户要求直接执行，不新建分支）
 
 Files:
 - idml/src/test/scala/com/phasmidsoftware/xmldoc/idml/MergeBenchmark.scala（新增）
@@ -521,7 +521,7 @@ Done when:
 MR count: 1
 
 ### MR 14 — Verify complete merge acceptance evidence
-branch: feature/IDML-XML-Merge-Tests-MR14
+branch: V1_1_3-Kaining-2（MR13 验证后顺序执行，不新建分支）
 
 Files:
 - idml/src/test/scala/com/phasmidsoftware/xmldoc/idml/IdmlMergeAcceptanceSpec.scala（新增）
@@ -595,3 +595,14 @@ Done when:
 - 无关 KML 功能、通用测试框架、生产 benchmark 平台及性能优化专项。
 - 同一 ours 路径的并发写入支持、崩溃与断电后的跨平台持久化保证；本轮覆盖函数失败返回与原子替换语义。
 - 无关权限系统、数据库迁移、历史回填、网站部署或 GitLab/GitHub 远端 MR 创建。
+
+
+## MR13/MR14 本轮执行约定（2026-11-06，实施前修订）
+
+- 直接在 `V1_1_3-Kaining-2` 顺序实施；先修订本计划、规格、性能计划和证据文档，
+  再执行 MR13，完成其测量记录后才开始 MR14 实现。
+- MR13 新增独立 `MergeBenchmark.scala`，生成器也放在该文件，避免跨模块 Test 依赖。
+  首先校准固定候选矩阵，记录校准结果后冻结正式门禁；正式失败不抬高阈值。
+- MR14 的真实样本授权、来源、InDesign 版本和打开/保存/重开必须由实际资料支持。
+  仓库 XML 派生 corpus 不能改名为真实应用验收。资料缺失时自动化继续执行，
+  缺口明确记录为发布阻塞，绝不将缺证据写成成功。

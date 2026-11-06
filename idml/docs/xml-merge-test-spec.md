@@ -288,3 +288,11 @@ Locked scope
 - 整合后的干净构建验证：`sbt 'core/clean' 'idml/clean' 'kml/clean' 'core/test' 'idml/test' 'kml/test'`
   通过 core 432、IDML 398、KML 110 项，共 940 项；core 原有 1 项忽略，无新增忽略或 pending。
   corpus 只读校验 16 组通过；Python 校验测试 17 项通过。
+
+
+## MR13/MR14 当前执行计划（2026-11-06）
+
+直接在 `V1_1_3-Kaining-2` 执行，先 MR13、后 MR14。性能候选矩阵与校准方法见
+[性能计划](xml-merge-performance.md)；正式门禁须在校准后、正式测量前冻结。
+真实验收候选清单在核对本地资料后冻结；缺少授权、独立 expected 或 InDesign 记录
+必须在 [证据表](xml-merge-test-evidence.md) 明确阻塞，自动测试通过不替代应用验收。
