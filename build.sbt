@@ -79,11 +79,12 @@ lazy val json = (project in file("json"))
   )
 
 // The sending is TableParser's (tableparser-kafka-cats and tableparser-kafka-zio); the message value is a record's JSON.
+// They also stream extraction (core's XmlStream) as fs2/ZIO streams.
 // The tests use the Kafka client's MockProducer, so they need no broker; they use json's test records (from a KML file).
 lazy val tableParserVersion = "2.3.0"
 
 lazy val kafkaCats = (project in file("kafka-cats"))
-  .dependsOn(json % "compile->compile;test->test")
+  .dependsOn(core, json % "compile->compile;test->test")
   .settings(commonSettings)
   .settings(
     name := "xmldoc-kafka-cats",
@@ -91,7 +92,7 @@ lazy val kafkaCats = (project in file("kafka-cats"))
   )
 
 lazy val kafkaZio = (project in file("kafka-zio"))
-  .dependsOn(json % "compile->compile;test->test")
+  .dependsOn(core, json % "compile->compile;test->test")
   .settings(commonSettings)
   .settings(
     name := "xmldoc-kafka-zio",

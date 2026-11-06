@@ -73,6 +73,27 @@ bring in `tableparser-core`; the rest of XmlDoc doesn't. The unit tests use the 
 sends the same records to a real broker (embedded-kafka, a Scala 2.13 build, with its `scala-logging_2.13` excluded)
 and reads them back. The records in both are built from a real `.kml` file (`KmlRecords`, in `json`'s tests).
 
+## Streaming extraction (`XmlStream`)
+
+Extraction normally starts from a whole `scala.xml.Node` (`XML.loadFile`). For a large file, `core`'s `XmlStream` walks
+the document with the JDK's StAX `XMLStreamReader`, tracking the path of open elements, and when an element matching the
+selector starts, builds just that subtree as an `Elem` and applies the existing `Extractor[T]` to it. Decisions (#66):
+
+- **Where:** the walker is in `core` (JDK only) and yields a plain `Iterator`; the fs2 `Stream` and ZIO `ZStream`
+  wrappers (`IOXmlStream`, `ZIOXmlStream`), which open and close the input, are in `kafka-cats`/`kafka-zio`, which
+  already have fs2 and ZIO.
+- **Errors:** one `Try[T]` per selected element, so a bad element doesn't stop the rest. A malformed document (a parse
+  error) does end the stream, with that error.
+- **Namespaces:** selectors match local names; each subtree keeps its prefixes and all the namespace bindings in scope.
+- **Same nodes as `XML.load`:** adjacent character data become one `Text`, CDATA sections `PCData`, comments `Comment`.
+  This matters because `CDATA.unapply` (and so text extraction) looks at the shape of an element's children. The JDK's
+  parser reports CDATA as plain characters unless its `report-cdata-event` property is set, so `XmlStream.reader` sets it.
+  (Note that `Elem` equality doesn't distinguish `Text` from `PCData`: `XmlStreamSpec` compares the node classes too.)
+- **Safety:** the reader doesn't support DTDs or external entities.
+- **Tested** against whole-document extraction: the Placemarks streamed from real `.kml` files render exactly as those
+  extracted from the whole document, in the same order. Context from outside a selected element (e.g. a document-level
+  `Style`) isn't available to its extraction.
+
 ## The `Extractor[T]` / `Renderer[T]` framework
 
 ### The type classes

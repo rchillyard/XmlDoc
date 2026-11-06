@@ -59,9 +59,9 @@ object ZIOKafkaSpec {
     ZLayer.scoped(Producer.fromJavaProducer(mock, ProducerSettings()))
 
   def send[X](mock: MockProducer[Array[Byte], Array[Byte]])(xs: ZStream[Any, Throwable, X], pipeline: ZPipeline[Producer, Throwable, X, RecordMetadata]): Either[Throwable, Chunk[RecordMetadata]] =
-    run(xs.via(pipeline).runCollect.provideLayer(producer(mock)))
+    runZIO(xs.via(pipeline).runCollect.provideLayer(producer(mock)))
 
-  def run[A](z: ZIO[Any, Throwable, A]): Either[Throwable, A] = Unsafe.unsafe { implicit u =>
+  def runZIO[A](z: ZIO[Any, Throwable, A]): Either[Throwable, A] = Unsafe.unsafe { implicit u =>
     Runtime.default.unsafe.run(z) match {
       case Exit.Success(a) => Right(a)
       case Exit.Failure(cause) => Left(cause.squash)
