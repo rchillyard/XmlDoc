@@ -611,3 +611,6 @@ Done when:
 - 用户确认当前没有获授权的真实三方样本与 InDesign 记录：MR14 冻结 4 组待制作用例
   （文字/移动、解组/样式、线程删除/正文冲突、线程插入/无关 Story/资产保留）。
   新增真实样本制作指南、manifest 与填写模板；实际授权样本和应用验收仍是发布阻塞。
+- MR14 实施文件补充：`idml/tools/verify_real_world_manifest.py`（严格发布门禁）与
+  `idml/tools/test_real_world_manifest.py`（损坏/越界/假 ready 回归）。CI 自动测试与真实
+  证据门禁分为独立 job；真实资料缺失使 release-evidence 明确失败，不把它标为通过。
