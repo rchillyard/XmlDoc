@@ -1,23 +1,110 @@
 {
-  "schemaVersion": 1,
-  "case": "08b-same-para-disjoint",
-  "requirement": "Disjoint edits in one paragraph",
-  "expectedStatus": "accept",
-  "acceptedEdits": [
+  "schemaVersion": 2,
+  "policyProfile": "strict-text-node-v1",
+  "provenance": {
+    "layers": [
+      "project"
+    ],
+    "reference": "MR01 strict-text-node-v1; no token merge guarantee in §7, p9",
+    "construction": "xml-derived",
+    "oracle": "reviewed-target-recipe-no-merger"
+  },
+  "targets": [
     {
-      "side": "left",
-      "type": "text-update",
-      "target": "story1/P2@quick",
-      "description": "Change quick to swift."
-    },
-    {
-      "side": "right",
-      "type": "text-update",
-      "target": "story1/P2@lazy",
-      "description": "Change lazy to sleepy."
+      "part": "Stories/Story_story1.xml",
+      "self": "story1"
     }
   ],
-  "conflicts": [],
+  "identity": {
+    "strategy": "stable-Self-plus-explicit-paragraph-ordinal",
+    "baseSelfByPart": {
+      "Spreads/Spread_ud1.xml": [
+        "g1",
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "tf1",
+        "tf2",
+        "tfA",
+        "tfB",
+        "ud1",
+        "ud6"
+      ],
+      "Stories/Story_story1.xml": [
+        "story1"
+      ],
+      "Stories/Story_story2.xml": [
+        "story2"
+      ]
+    },
+    "selflessMatches": [
+      {
+        "part": "Stories/Story_story1.xml",
+        "selector": "Story[@Self='story1']/ParagraphStyleRange[1]",
+        "baseOrdinal": 1,
+        "leftOrdinal": 1,
+        "rightOrdinal": 1
+      },
+      {
+        "part": "Stories/Story_story1.xml",
+        "selector": "Story[@Self='story1']/ParagraphStyleRange[2]",
+        "baseOrdinal": 2,
+        "leftOrdinal": 2,
+        "rightOrdinal": 2
+      },
+      {
+        "part": "Stories/Story_story1.xml",
+        "selector": "Story[@Self='story1']/ParagraphStyleRange[3]",
+        "baseOrdinal": 3,
+        "leftOrdinal": 3,
+        "rightOrdinal": 3
+      },
+      {
+        "part": "Stories/Story_story1.xml",
+        "selector": "Story[@Self='story1']/ParagraphStyleRange[4]",
+        "baseOrdinal": 4,
+        "leftOrdinal": 4,
+        "rightOrdinal": 4
+      }
+    ],
+    "note": "Paragraph order is unchanged in these 15 inputs; this is not a general position matching rule."
+  },
+  "oracle": {
+    "kind": "conflicts",
+    "assertions": [
+      {
+        "level": "generic",
+        "part": "Stories/Story_story1.xml",
+        "target": "story1/P2/Content",
+        "field": "text",
+        "base": "The quick brown fox jumps over the lazy dog.",
+        "left": "The swift brown fox jumps over the lazy dog.",
+        "right": "The quick brown fox jumps over the sleepy dog.",
+        "type": "text-node-update-update",
+        "relatedParts": []
+      }
+    ],
+    "entries": {}
+  },
+  "migration": {
+    "fromSchemaVersion": 1,
+    "date": "2026-11-06",
+    "reason": "Freeze MR01 strict-text-node-v1; 08b changes accept to conflict; correct case10 policy attribution."
+  },
+  "case": "08b-same-para-disjoint",
+  "requirement": "Disjoint edits in one paragraph",
+  "expectedStatus": "conflict",
+  "acceptedEdits": [],
+  "conflicts": [
+    {
+      "type": "text-node-update-update",
+      "target": "story1/P2",
+      "left": "quick -> swift",
+      "right": "lazy -> sleepy",
+      "resolution": "manual"
+    }
+  ],
   "invariants": {
     "commonBase": true,
     "unchangedSelfValuesStable": true,
@@ -37,5 +124,5 @@
       "bytes": 39554
     }
   },
-  "note": "The expected policy is token-aware. A paragraph-atomic implementation may instead report text-overlap."
+  "note": "Migrated from schemaVersion 1 token-aware accept to strict-text-node-v1 conflict by MR01; token merge is deferred."
 }

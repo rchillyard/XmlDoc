@@ -12,6 +12,7 @@ import copy
 import hashlib
 import json
 import shutil
+import io
 import sys
 import zipfile
 from dataclasses import dataclass
@@ -62,9 +63,9 @@ class Package:
     def put_root(self, path: str, root: ET.Element) -> None:
         self.entries[path] = xml_bytes(root)
 
-    def write(self, path: Path) -> bytes:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        with zipfile.ZipFile(path, "w") as archive:
+    def to_bytes(self) -> bytes:
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(buffer, "w") as archive:
             def write_member(name: str, compress_type: int) -> None:
                 info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
                 info.compress_type = compress_type
@@ -77,7 +78,13 @@ class Package:
             for name in sorted(self.entries):
                 if name != "mimetype":
                     write_member(name, zipfile.ZIP_DEFLATED)
-        return path.read_bytes()
+        return buffer.getvalue()
+
+    def write(self, path: Path) -> bytes:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        data = self.to_bytes()
+        path.write_bytes(data)
+        return data
 
 
 def load_source() -> Package:
@@ -420,13 +427,10 @@ CASES = [
         conflicts=(conflict("text-overlap", "story1/P2@The quick brown", "quick -> swift", "quick brown -> slow red"),),
     ),
     Case(
-        "08b-same-para-disjoint", "Disjoint edits in one paragraph", "Replace quick with swift.", "Replace lazy with sleepy.", "Accept at token granularity; conflict at paragraph-atom granularity.",
+        "08b-same-para-disjoint", "Disjoint edits in one paragraph", "Replace quick with swift.", "Replace lazy with sleepy.", "Report text-node update/update under strict-text-node-v1.",
         lambda p: edit_paragraph(p, 2, "quick", "swift"), lambda p: edit_paragraph(p, 2, "lazy", "sleepy"),
-        (
-            edit("left", "text-update", "story1/P2@quick", "Change quick to swift."),
-            edit("right", "text-update", "story1/P2@lazy", "Change lazy to sleepy."),
-        ),
-        note="The expected policy is token-aware. A paragraph-atomic implementation may instead report text-overlap.",
+        conflicts=(conflict("text-node-update-update", "story1/P2", "quick -> swift", "lazy -> sleepy"),),
+        note="Migrated from schemaVersion 1 token-aware accept to strict-text-node-v1 conflict by MR01; token merge is deferred.",
     ),
     Case(
         "09-zorder", "Z-order changes", "Move r1 one step forward (after r2).", "Move r2 one step backward (before r1).", "Accept both; report a conflict only if constraints contradict.",
@@ -438,9 +442,9 @@ CASES = [
         note="Both branches encode the compatible order r2, r1.",
     ),
     Case(
-        "10-group-ungroup", "Group/ungroup and child movement", "Ungroup g1.", "Move child r3 inside g1.", "Report structural-parent-change.",
+        "10-group-ungroup", "Group/ungroup and child movement", "Ungroup g1.", "Change r3 local ItemTransform while it remains inside g1.", "Report parent-context/local-transform conflict (project policy, not a unique-parent contradiction).",
         ungroup, lambda p: modify_item(p, "r3", ItemTransform="1 0 0 1 380 140"),
-        conflicts=(conflict("structural-parent-change", "g1/r3", "g1 removed; r3 reparented to Spread", "r3 moved while parent remains g1"),),
+        conflicts=(conflict("parent-context-local-transform", "g1/r3", "g1 removed; r3 reparented to Spread", "r3 moved while parent remains g1"),),
     ),
     Case(
         "11-thread-insert", "Cross-node reference insertion", "Insert tfX between tf1 and tf2.", "No edit.", "Accept and update reciprocal references.",
@@ -461,18 +465,183 @@ CASES = [
 ]
 
 
+PROFILE = "strict-text-node-v1"
+SCHEMA_VERSION = 2
+# Reviewed target recipes. These do not call a merger or derive the oracle from its output.
+# Single-sided targets are expressed independently from the Case.left/right callbacks.
+REFERENCES = {
+    "01": (["paper"], "§3.1 rule 5, p4"),
+    "02": (["paper", "idml"], "§3.1 rule 6, p4; reference integrity is IDML policy"),
+    "03": (["paper"], "§3.1 rule 7, pp4-5"),
+    "04": (["paper"], "§3.1 rule 5; §5, p6"),
+    "05": (["paper"], "§6.3 Position/Position, p8"),
+    "06": (["paper", "project"], "§6.3 optional Delete/Edit, p8; project strict mode"),
+    "06b": (["idml"], "MR01 Story-level dependency rule; §9 is motivation, not proof"),
+    "07": (["paper"], "§3.1 rule 4, p4; §4 matching, p5"),
+    "08": (["paper", "project"], "§2.3 text nodes, p3; §6.3 Update/Update, p8"),
+    "08b": (["project"], "MR01 strict-text-node-v1; no token merge guarantee in §7, p9"),
+    "09": (["paper"], "§3.1 rule 7; §5 relation consistency, p6"),
+    "10": (["project", "idml"], "Parent context/local coordinate guard; not a §5 unique-parent contradiction"),
+    "11": (["paper", "idml"], "§3.1 rule 5, p4; reciprocal thread references are IDML policy"),
+    "12": (["paper", "idml"], "§6.3 Update/Update, p8; thread integrity is separate"),
+    "13": (["idml"], "MR01 Story-level dependency rule; no character-to-frame layout inference"),
+}
+
+
+def provenance(case: Case) -> dict:
+    layers, reference = REFERENCES[case.name.split("-", 1)[0]]
+    return {"layers": layers, "reference": reference,
+            "construction": "xml-derived", "oracle": "reviewed-target-recipe-no-merger"}
+
+
+def targets(case: Case) -> list[dict]:
+    # Structured targets remain resolvable independently of human-readable descriptions.
+    key = case.name.split("-", 1)[0]
+    target = {
+        "01": ["r5"], "02": ["r2"], "03": ["r1"], "04": ["rL", "rR"],
+        "05": ["r1"], "06": ["r2"], "06b": ["tf2", "story1"],
+        "07": ["story1"], "08": ["story1"], "08b": ["story1"], "09": ["r1", "r2"],
+        "10": ["g1", "r3"], "11": ["tf1", "tfX", "tf2"], "12": ["tf1"],
+        "13": ["tf2", "story1", "story2"],
+    }[key]
+    return [{"part": STORY1_PATH if t == "story1" else STORY2_PATH if t == "story2" else SPREAD_PATH,
+             "self": t} for t in target]
+
+
+def identity_contract() -> dict:
+    return {"strategy": "stable-Self-plus-explicit-paragraph-ordinal",
+            "baseSelfByPart": {SPREAD_PATH: ["g1", "r1", "r2", "r3", "r4", "tf1", "tf2", "tfA", "tfB", "ud1", "ud6"],
+                               STORY1_PATH: ["story1"], STORY2_PATH: ["story2"]},
+            "selflessMatches": [{"part": STORY1_PATH, "selector": f"Story[@Self='story1']/ParagraphStyleRange[{i}]",
+                                  "baseOrdinal": i, "leftOrdinal": i, "rightOrdinal": i} for i in range(1, 5)],
+            "note": "Paragraph order is unchanged in these 15 inputs; this is not a general position matching rule."}
+
+
+def expected_package(case: Case, base: Package) -> Package:
+    result = base.clone()
+    key = case.name.split("-", 1)[0]
+    if case.conflicts:
+        raise ValueError("conflict cases have no successful output oracle")
+    if key == "01":
+        add_rectangle(result, "r5", "r2")
+    elif key == "02":
+        remove_item(result, "r2")
+    elif key in {"03", "04", "09", "11"}:
+        if key == "04":
+            add_rectangle(result, "rL", "r1")
+            add_rectangle(result, "rR", "r2")
+        if key == "11":
+            insert_thread_frame(result)
+        order = {"03": ["r2", "g1", "tf1", "tf2", "tfA", "tfB", "r1"],
+                 "04": ["r1", "rL", "r2", "rR", "g1", "tf1", "tf2", "tfA", "tfB"],
+                 "09": ["r2", "r1", "g1", "tf1", "tf2", "tfA", "tfB"],
+                 "11": ["r1", "r2", "g1", "tf1", "tfX", "tf2", "tfA", "tfB"]}[key]
+        root, spread = spread_container(result)
+        items = {n.get("Self"): n for n in page_item_children(spread)}
+        for node in list(items.values()):
+            spread.remove(node)
+        spread.extend(items[n] for n in order)
+        result.put_root(SPREAD_PATH, root)
+    elif key == "07":
+        root = result.root(STORY1_PATH)
+        contents = [n for n in root.iter() if local_name(n.tag) == "Content"]
+        contents[1].text = "The quick auburn fox jumps over the lazy dog."
+        contents[3].text = "Paragraph four concludes the story."
+        result.put_root(STORY1_PATH, root)
+    else:
+        raise ValueError(f"missing reviewed oracle recipe: {case.name}")
+    return result
+
+
+def conflict_assertions(case: Case) -> list[dict]:
+    key = case.name.split("-", 1)[0]
+    if not case.conflicts:
+        return []
+    # Explicit business objects. MR09 maps generic slots; MR11 maps domain reports.
+    rows = {
+        "05": (SPREAD_PATH, "r1", "page-item-sibling-context", ["r2", "g1"], ["tfB", None], [None, "r2"]),
+        "06": (SPREAD_PATH, "r2", "existence/FillColor", {"exists": True, "FillColor": None},
+               {"exists": False}, {"exists": True, "FillColor": "Color/Red"}),
+        "06b": (SPREAD_PATH, "tf2/story1", "layout/content-dependency",
+                {"frame": {"Self": "tf2", "ParentStory": "story1", "PreviousTextFrame": "tf1", "NextTextFrame": "n"}, "storyParagraphs": BASE_PARAGRAPHS},
+                {"frame": None, "tf1.NextTextFrame": "n", "storyParagraphs": BASE_PARAGRAPHS},
+                {"frame": {"Self": "tf2", "ParentStory": "story1", "PreviousTextFrame": "tf1", "NextTextFrame": "n"},
+                 "storyParagraphs": [BASE_PARAGRAPHS[0], "The quick crimson fox jumps over the lazy dog.", *BASE_PARAGRAPHS[2:]]}),
+        "08": (STORY1_PATH, "story1/P2/Content", "text", BASE_PARAGRAPHS[1],
+               "The swift brown fox jumps over the lazy dog.", "The slow red fox jumps over the lazy dog."),
+        "08b": (STORY1_PATH, "story1/P2/Content", "text", BASE_PARAGRAPHS[1],
+                "The swift brown fox jumps over the lazy dog.", "The quick brown fox jumps over the sleepy dog."),
+        "10": (SPREAD_PATH, "r3", "parent-context/local-transform", {"parent": "g1", "ItemTransform": "1 0 0 1 340 100"},
+               {"parent": "ud1", "ItemTransform": "1 0 0 1 340 100"},
+               {"parent": "g1", "ItemTransform": "1 0 0 1 380 140"}),
+        "12": (SPREAD_PATH, "tf1", "NextTextFrame", "tf2", "tfA", "tfB"),
+        "13": (SPREAD_PATH, "tf2/story1", "ParentStory/content-dependency",
+               {"ParentStory": "story1", "PreviousTextFrame": "tf1", "tf1.NextTextFrame": "tf2", "storyParagraphs": BASE_PARAGRAPHS},
+               {"ParentStory": "story2", "PreviousTextFrame": "n", "tf1.NextTextFrame": "n", "storyParagraphs": BASE_PARAGRAPHS},
+               {"ParentStory": "story1", "PreviousTextFrame": "tf1", "tf1.NextTextFrame": "tf2",
+                "storyParagraphs": [BASE_PARAGRAPHS[0], "The quick brown fox leaps over the lazy dog.", *BASE_PARAGRAPHS[2:]]}),
+    }
+    part, target, field, base, left, right = rows[key]
+    return [{"level": "domain" if key in {"06b", "13"} else "project" if key == "10" else "generic",
+             "part": part, "target": target, "field": field,
+             "base": base, "left": left, "right": right,
+             "type": case.conflicts[0]["type"], "relatedParts": [STORY1_PATH] if key in {"06b", "13"} else []}]
+
+
+# Filled from the independently constructed target during generation, never from a merger.
+ORACLES: dict[str, dict] = {}
+
+
+def oracle_contract(case: Case) -> dict:
+    return ORACLES[case.name]
+
+
+def build_oracle(case: Case, base: Package, case_dir: Path | None = None) -> dict:
+    if case.conflicts:
+        return {"kind": "conflicts", "assertions": conflict_assertions(case), "entries": {}}
+    expected = expected_package(case, base)
+    entries = {}
+    for name, data in sorted(expected.entries.items()):
+        changed = data != base.entries.get(name)
+        if changed and not name.endswith(".xml"):
+            raise AssertionError(f"unexpected binary edit in target recipe: {name}")
+        record = {"sha256": sha256(data), "bytes": len(data),
+                  "source": "snapshot" if changed else "base"}
+        if changed:
+            record["path"] = "expected/" + name
+            if case_dir is not None:
+                target = case_dir / record["path"]
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(data)
+        entries[name] = record
+    return {"kind": "package", "assertions": [], "entries": entries}
+
+
 def operation_readme(case: Case) -> str:
     expectation = "accept" if not case.conflicts else "conflict"
     note = f"\n\nCase note: {case.note}" if case.note else ""
+    snapshots = "\n".join("- `" + record["path"] + "`" for record in ORACLES[case.name]["entries"].values()
+                          if record["source"] == "snapshot") or "None: conflict cases have no successful XML output."
     return f"""# {case.name}
 
 ## Purpose
 
 {case.requirement}. This fixture is expected to **{expectation}**: {case.expected_summary}
 
+## Contract and evidence
+
+Profile: `{PROFILE}`. Schema: `2`. Sources: {", ".join(provenance(case)["layers"])}.
+Basis: {provenance(case)["reference"]}.
+Structured targets, identity matching and exact business conflict objects (including base/left/right) are in `expected.json`.
+Successful cases compare the complete package entry inventory: changed XML uses the listed `expected/` snapshots; unchanged entries use the exact base bytes. No expected output is obtained from a merger. Domain reports are not claimed to exist in the current implementation.
+
 ## Baseline document
 
 The case uses the normalized corpus page: `r1`, `r2`, and group `g1` (children `r3` and `r4`), plus text frames `tf1`, `tf2`, `tfA`, and `tfB`. `tf1` and `tf2` initially form a thread over the four-paragraph `story1`.
+
+## Expected XML snapshots
+
+{snapshots}
 
 ## InDesign-equivalent operations
 
@@ -497,11 +666,15 @@ def global_readme() -> str:
 
 This directory maps all 15 requested merge scenarios (13 main numbers plus the `06b` and `08b` variants) to concrete `base / left / right / expected` fixtures. The wording below is the English version of the source table.
 
+## Authoritative specification
+
+The target contract is [IDML XML Merge Test Specification](../../../../../../../../docs/xml-merge-test-spec.md). This corpus validates test data, not current merger conformance. Run Scala contract checks with `sbt "idml/testOnly *CorpusContractSpec"`; run verifier corruption tests with `python3 -m unittest discover -s idml/tools -p 'test_three_way_corpus.py'`.
+
 ## Reliability invariant
 
 For every case, both branches are created from an exact copy of the same closed-state `base.idml`. Existing `Self` values are never regenerated. A branch may remove a node or add a new unique node, but all unchanged nodes retain their base identity. This avoids the live-session `Self` drift observed in the old `HelloWorld2A/B/C` samples.
 
-The fixtures are generated from the XML in `../HelloWorld2.idml`; they model the listed InDesign operations directly in IDML and are not represented as hand-exported GUI artifacts. From the repository root, run `python3 idml/tools/generate_three_way_corpus.py --verify` to rebuild and verify the corpus.
+The fixtures are generated from the XML in `../HelloWorld2.idml`; they model the listed InDesign operations directly in IDML and are not represented as hand-exported GUI artifacts. From the repository root, run `python3 idml/tools/generate_three_way_corpus.py --verify` for **read-only** verification. Use `--generate` explicitly to rebuild, or `--generate --output /tmp/idml-corpus` for isolated regeneration. `--verify-only` remains a read-only alias; no arguments also verifies. Generation and verification flags cannot be combined.
 
 ## Case mapping
 
@@ -520,7 +693,10 @@ case-name/
   right.idml
   expected.json
   README.md
+  expected/  # changed XML snapshots, success cases only
 ```
+
+`expected.json` uses schemaVersion 2 and the only enabled profile `strict-text-node-v1`. Schema 1 is rejected with an explicit migration error. `08b` was migrated from historical token-aware accept to text-node conflict as frozen in MR01. Each document records provenance, structured targets, base identities, explicit selfless matches, hashes, migration and the executable oracle. `oracle.entries` is the complete successful ZIP entry inventory; snapshot paths resolve relative to the case directory. `oracle.assertions` contains exact business conflict objects; generic slot mapping is MR09, the local-coordinate guard is MR07, and cross-part domain implementation is MR11/MR12. Unknown profiles, incomplete fields and inconsistent status are rejected.
 
 `expected.json` declares accepted edits and conflicts independently. A case with no conflicts has status `accept`; a case with at least one conflict has status `conflict`. The per-case README records reproducible InDesign-equivalent steps and the actual XML-derived construction method.
 
@@ -528,15 +704,23 @@ case-name/
 
 - Independent inserts and edits to different paragraphs are accepted.
 - Compatible z-order constraints are accepted and must produce deterministic order.
-- Divergent moves, delete/modify pairs, overlapping text edits, structural reparenting, and incompatible references are reported as conflicts.
-- Disjoint edits in one paragraph are accepted by a token-aware merger; a paragraph-atomic merger may report a conflict instead.
+- Divergent moves, delete/modify pairs, overlapping text edits, incompatible structural reparenting, and incompatible references are reported as conflicts.
+- Different edits to the same text node conflict, even at disjoint word ranges. Token-aware merging is deferred; a runner must not accept either result interchangeably.
+- `10` preserves its conflict goal under an explicit project guard: deleting a Group while another branch edits a descendant local transform is ambiguous in parent-relative coordinates. This is not a pure unique-parent PCS contradiction.
+- `06b` and `13` use MR01 Story-level dependency rules, not inferred character-to-frame layout.
 - Thread changes must update both ends of `PreviousTextFrame` / `NextTextFrame` references.
 """
 
 
 def expected_document(case: Case, blobs: dict[str, bytes]) -> dict[str, object]:
     return {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
+        "policyProfile": PROFILE,
+        "provenance": provenance(case),
+        "targets": targets(case),
+        "identity": identity_contract(),
+        "oracle": oracle_contract(case),
+        "migration": {"fromSchemaVersion": 1, "date": "2026-11-06", "reason": "Freeze MR01 strict-text-node-v1; 08b changes accept to conflict; correct case10 policy attribution."},
         "case": case.name,
         "requirement": case.requirement,
         "expectedStatus": "conflict" if case.conflicts else "accept",
@@ -582,64 +766,35 @@ def generate() -> None:
             "left.idml": left.write(case_dir / "left.idml"),
             "right.idml": right.write(case_dir / "right.idml"),
         }
+        ORACLES[case.name] = build_oracle(case, base, case_dir)
         write_text(case_dir / "expected.json", json.dumps(expected_document(case, blobs), indent=2, ensure_ascii=False))
         write_text(case_dir / "README.md", operation_readme(case))
 
     write_text(OUTPUT / "README.md", global_readme())
 
 
-def self_ids(package: Package) -> set[str]:
-    ids: set[str] = set()
-    for name, data in package.entries.items():
-        if not name.endswith(".xml"):
-            continue
-        root = ET.fromstring(data)
-        ids.update(node.get("Self") for node in root.iter() if node.get("Self"))
-    return ids
-
-
-EXPECTED_ID_DELTAS: dict[str, dict[str, tuple[set[str], set[str]]]] = {
-    "01-single-add": {"left.idml": ({"r5"}, set())},
-    "02-single-delete": {"left.idml": (set(), {"r2"})},
-    "04-both-add-diff-pos": {
-        "left.idml": ({"rL"}, set()),
-        "right.idml": ({"rR"}, set()),
-    },
-    "06-delete-vs-modify": {"left.idml": (set(), {"r2"})},
-    "06b-delete-thread-vs-content": {"left.idml": (set(), {"tf2"})},
-    "10-group-ungroup": {"left.idml": (set(), {"g1"})},
-    "11-thread-insert": {"left.idml": ({"tfX"}, set())},
-}
-
-
-EXPECTED_CHANGED_PARTS: dict[str, dict[str, set[str]]] = {
-    "01-single-add": {"left.idml": {SPREAD_PATH}},
-    "02-single-delete": {"left.idml": {SPREAD_PATH}},
-    "03-single-move": {"left.idml": {SPREAD_PATH}},
-    "04-both-add-diff-pos": {"left.idml": {SPREAD_PATH}, "right.idml": {SPREAD_PATH}},
-    "05-move-move-divergent": {"left.idml": {SPREAD_PATH}, "right.idml": {SPREAD_PATH}},
-    "06-delete-vs-modify": {"left.idml": {SPREAD_PATH}, "right.idml": {SPREAD_PATH}},
-    "06b-delete-thread-vs-content": {"left.idml": {SPREAD_PATH}, "right.idml": {STORY1_PATH}},
-    "07-same-story-diff-para": {"left.idml": {STORY1_PATH}, "right.idml": {STORY1_PATH}},
-    "08-same-para-overlap": {"left.idml": {STORY1_PATH}, "right.idml": {STORY1_PATH}},
-    "08b-same-para-disjoint": {"left.idml": {STORY1_PATH}, "right.idml": {STORY1_PATH}},
-    "09-zorder": {"left.idml": {SPREAD_PATH}, "right.idml": {SPREAD_PATH}},
-    "10-group-ungroup": {"left.idml": {SPREAD_PATH}, "right.idml": {SPREAD_PATH}},
-    "11-thread-insert": {"left.idml": {SPREAD_PATH}},
-    "12-next-divergent": {"left.idml": {SPREAD_PATH}, "right.idml": {SPREAD_PATH}},
-    "13-parentstory-vs-content": {"left.idml": {SPREAD_PATH}, "right.idml": {STORY1_PATH}},
-}
-
-
 def validate_thread(package: Package) -> None:
     root = package.root(SPREAD_PATH)
     frames = {node.get("Self"): node for node in root.iter() if local_name(node.tag) == "TextFrame"}
+    story_ids = {node.get("Self") for name in (STORY1_PATH, STORY2_PATH)
+                 for node in package.root(name).iter() if local_name(node.tag) == "Story"}
     for frame_id, frame in frames.items():
+        if frame.get("ParentStory") not in story_ids:
+            raise AssertionError(f"{frame_id}: missing ParentStory")
+        visited = set()
+        current = frame_id
+        while current != "n":
+            if current in visited:
+                raise AssertionError(f"{frame_id}: cyclic thread")
+            visited.add(current)
+            if current not in frames:
+                raise AssertionError(f"{frame_id}: missing thread target {current}")
+            current = frames[current].get("NextTextFrame", "n")
         previous = frame.get("PreviousTextFrame", "n")
         following = frame.get("NextTextFrame", "n")
-        if previous != "n" and previous in frames and frames[previous].get("NextTextFrame") != frame_id:
+        if previous != "n" and (previous not in frames or frames[previous].get("NextTextFrame") != frame_id):
             raise AssertionError(f"{frame_id}: non-reciprocal PreviousTextFrame={previous}")
-        if following != "n" and following in frames and frames[following].get("PreviousTextFrame") != frame_id:
+        if following != "n" and (following not in frames or frames[following].get("PreviousTextFrame") != frame_id):
             raise AssertionError(f"{frame_id}: non-reciprocal NextTextFrame={following}")
 
 
@@ -672,76 +827,102 @@ def read_package(path: Path) -> Package:
         return Package({name: archive.read(name) for name in names})
 
 
+def unique_json(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON key: {key}")
+        result[key] = value
+    return result
+
+
+def validate_document(document: dict, case: Case, blobs: dict[str, bytes], base: Package) -> None:
+    if type(document.get("schemaVersion")) is not int or document["schemaVersion"] != SCHEMA_VERSION:
+        raise AssertionError(f"{case.name}: unsupported schemaVersion; migrate schema 1 explicitly to 2")
+    if document.get("policyProfile") != PROFILE:
+        raise AssertionError(f"{case.name}: unknown or missing policyProfile; required {PROFILE}")
+    ORACLES[case.name] = build_oracle(case, base)
+    wanted = expected_document(case, blobs)
+    # Exact shape/content checking rejects missing fields, extra fields and wrong types as
+    # well as status changes. JSON serialization distinguishes booleans from numeric 0/1.
+    if json.dumps(document, sort_keys=True) != json.dumps(wanted, sort_keys=True):
+        keys = sorted(k for k in document.keys() | wanted.keys() if
+                      json.dumps(document.get(k), sort_keys=True) != json.dumps(wanted.get(k), sort_keys=True))
+        raise AssertionError(f"{case.name}: contract mismatch in {keys}")
+
+
 def verify() -> None:
     if not OUTPUT.exists():
         raise AssertionError(f"corpus does not exist: {OUTPUT}")
     actual_case_names = {path.name for path in OUTPUT.iterdir() if path.is_dir()}
-    expected_case_names = {case.name for case in CASES}
-    if actual_case_names != expected_case_names:
-        raise AssertionError(
-            f"case directories={sorted(actual_case_names)}; expected={sorted(expected_case_names)}"
-        )
-    if not (OUTPUT / "README.md").is_file():
-        raise AssertionError("corpus README.md is missing")
+    if actual_case_names != {case.name for case in CASES}:
+        raise AssertionError(f"case directories mismatch: {sorted(actual_case_names)}")
+    if (OUTPUT / "README.md").read_text(encoding="utf-8") != global_readme().rstrip() + "\n":
+        raise AssertionError("corpus README missing or stale")
+    source = load_source()
     for case in CASES:
         case_dir = OUTPUT / case.name
-        actual_files = {path.name for path in case_dir.iterdir() if path.is_file()}
-        expected_files = {"base.idml", "left.idml", "right.idml", "expected.json", "README.md"}
-        if actual_files != expected_files:
-            raise AssertionError(f"{case.name}: files={sorted(actual_files)}; expected={sorted(expected_files)}")
-        expected = json.loads((case_dir / "expected.json").read_text(encoding="utf-8"))
-        if expected["case"] != case.name:
-            raise AssertionError(f"{case.name}: expected.json case mismatch")
-        if expected["expectedStatus"] != ("conflict" if case.conflicts else "accept"):
-            raise AssertionError(f"{case.name}: status mismatch")
-
-        packages = {name: read_package(case_dir / name) for name in ("base.idml", "left.idml", "right.idml")}
-        base_ids = self_ids(packages["base.idml"])
-        validate_manifest(packages["base.idml"])
-        for branch_name in ("left.idml", "right.idml"):
-            branch = packages[branch_name]
-            branch_ids = self_ids(branch)
-            added = branch_ids - base_ids
-            removed = base_ids - branch_ids
-            expected_added, expected_removed = EXPECTED_ID_DELTAS.get(case.name, {}).get(branch_name, (set(), set()))
-            if added != expected_added or removed != expected_removed:
-                raise AssertionError(
-                    f"{case.name}/{branch_name}: Self delta added={sorted(added)}, removed={sorted(removed)}; "
-                    f"expected added={sorted(expected_added)}, removed={sorted(expected_removed)}"
-                )
-            changed_parts = {
-                name
-                for name in set(packages["base.idml"].entries) | set(branch.entries)
-                if packages["base.idml"].entries.get(name) != branch.entries.get(name)
-            }
-            expected_parts = EXPECTED_CHANGED_PARTS.get(case.name, {}).get(branch_name, set())
-            if changed_parts != expected_parts:
-                raise AssertionError(
-                    f"{case.name}/{branch_name}: changed parts={sorted(changed_parts)}; "
-                    f"expected={sorted(expected_parts)}"
-                )
-            validate_manifest(branch)
-            validate_thread(branch)
-        validate_thread(packages["base.idml"])
-
-        for artifact, details in expected["artifacts"].items():
-            data = (case_dir / artifact).read_bytes()
-            if sha256(data) != details["sha256"] or len(data) != details["bytes"]:
-                raise AssertionError(f"{case.name}/{artifact}: recorded digest mismatch")
-
-    print(f"verified {len(CASES)} cases in {OUTPUT}")
+        if any(p.is_symlink() for p in case_dir.rglob("*")):
+            raise AssertionError(f"{case.name}: symlinks are not permitted")
+        document = json.loads((case_dir / "expected.json").read_text(encoding="utf-8"), object_pairs_hook=unique_json)
+        base = build_base(source, case.name)
+        left, right = base.clone(), base.clone()
+        case.left(left)
+        case.right(right)
+        canonical = {"base.idml": base, "left.idml": left, "right.idml": right}
+        blobs = {name: (case_dir / name).read_bytes() for name in canonical}
+        validate_document(document, case, blobs, base)
+        # The independently reproducible construction checks common base and all unchanged
+        # identities/content, not merely the set of identity strings or self-declared hashes.
+        for name, package in canonical.items():
+            if blobs[name] != package.to_bytes():
+                raise AssertionError(f"{case.name}/{name}: input differs from common-base recipe")
+            actual = read_package(case_dir / name)
+            validate_manifest(actual)
+            validate_thread(actual)
+            for part, data in actual.entries.items():
+                if part.endswith(".xml"):
+                    ids = [n.get("Self") for n in ET.fromstring(data).iter() if n.get("Self")]
+                    if len(ids) != len(set(ids)):
+                        raise AssertionError(f"{case.name}/{name}/{part}: duplicate Self")
+        oracle = document["oracle"]
+        required = {"base.idml", "left.idml", "right.idml", "expected.json", "README.md"}
+        if not case.conflicts:
+            wanted_package = expected_package(case, base)
+            validate_manifest(wanted_package)
+            validate_thread(wanted_package)
+            for entry, record in oracle["entries"].items():
+                if record["source"] == "snapshot":
+                    required.add(record["path"])
+                    data = (case_dir / record["path"]).read_bytes()
+                    if data != wanted_package.entries[entry]:
+                        raise AssertionError(f"{case.name}/{entry}: snapshot differs from reviewed target recipe")
+                    ET.fromstring(data)
+                elif wanted_package.entries[entry] != base.entries[entry]:
+                    raise AssertionError(f"{case.name}/{entry}: incorrect base source")
+        actual_files = {str(p.relative_to(case_dir)) for p in case_dir.rglob("*") if p.is_file()}
+        if actual_files != required:
+            raise AssertionError(f"{case.name}: required files differ: {sorted(actual_files ^ required)}")
+        if (case_dir / "README.md").read_text(encoding="utf-8") != operation_readme(case).rstrip() + "\n":
+            raise AssertionError(f"{case.name}: README missing or stale")
+    print(f"verified {len(CASES)} cases, schema {SCHEMA_VERSION}, profile {PROFILE} in {OUTPUT} (read-only)")
 
 
 def main() -> int:
+    global OUTPUT
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--verify", action="store_true", help="verify after generating")
+    parser.add_argument("--verify", action="store_true", help="verify existing files without rewriting them (default)")
+    parser.add_argument("--generate", action="store_true", help="explicitly rebuild fixtures and expected snapshots")
+    parser.add_argument("--output", type=Path, default=OUTPUT, help="corpus root (also supports isolated regeneration)")
     parser.add_argument("--verify-only", action="store_true", help="verify existing files without rewriting them")
     args = parser.parse_args()
+    if args.generate and (args.verify or args.verify_only):
+        parser.error("--generate cannot be combined with read-only verification")
+    OUTPUT = args.output.resolve()
     try:
-        if not args.verify_only:
+        if args.generate:
             generate()
-        if args.verify or args.verify_only:
-            verify()
+        verify()
     except Exception as error:  # pragma: no cover - command-line diagnostics
         print(f"error: {error}", file=sys.stderr)
         return 1

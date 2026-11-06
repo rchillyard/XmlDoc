@@ -130,7 +130,7 @@ Locked scope
 | 08-same-para-overlap | conflict | 文本节点原子策略、§6.3 | 03、08、09 |
 | 08b-same-para-disjoint | conflict | strict-text-node-v1 | 03、08、09 |
 | 09-zorder | accept；关系兼容 | 规则 7、§5 | 03、06、09 |
-| 10-group-ungroup | conflict；根据实际关系证明 | §5 唯一 parent/前驱/后继 | 03、07、09 |
+| 10-group-ungroup | conflict；父上下文与局部变换保护（见 MR03 证据修正） | 项目/IDML 策略，不是唯一 parent 矛盾 | 03、07、09 |
 | 11-thread-insert | accept；双向引用一致 | 规则 5 + IDML | 03、11、12 |
 | 12-next-divergent | conflict | 同属性分歧 + IDML | 03、11、12 |
 | 13-parentstory-vs-content | conflict | story 级领域依赖规则 | 03、11、12 |
@@ -150,7 +150,7 @@ Locked scope
 
 ## 当前缺口与验收规则
 
-- 08b 的现有 schemaVersion 1 expected.json 是历史 token-aware 预期；MR03 必须迁移为 strict-text-node-v1 的 conflict 并记录版本及原因。MR01 不改 JSON，也不把它当当前 profile 可执行结果。
+- MR03 已将 15 组 expected.json 迁移到 schemaVersion 2，08b 为 strict-text-node-v1 的唯一 conflict 预期；旧 schemaVersion 1 不能静默读取。此状态只证明样本契约，不证明合并器通过。
 - 06b、13 的冲突目标保持不变，但跨 part 意图检查尚待 MR11/12 验证和实现。
 - 无 Self 匹配进入 ThreeWayMerger 的正确性、元数据处理、严格深层 Delete/Edit 均是待验证假设。
 - driver 当前直接逐项写 ours，失败原子性是 MR12 目标，尚未得到保证。
@@ -172,3 +172,21 @@ Locked scope
 - 完整 infoset 与命名空间标准化重写、完整 designmap 合并、排版引擎。
 - 同一目标并发写入、断电持久性与无关 KML/基础框架重构。
 - 部署、数据库迁移、历史回填；本轮没有这些步骤。
+
+
+## MR03 契约与证据修正（2026-11-06）
+
+- 实施文件除原计划清单外，增加 `idml/tools/test_three_way_corpus.py`；Scala 版本化读取器随 `CorpusContractSpec.scala` 交付，可由 MR09 复用 `CorpusContract`，不引入生产 JSON API。唯一新增依赖为 IDML Test 范围的 `com.lihaoyi:ujson_2.13:4.4.3`，使用已缓存的 Scala 2.13 二进制兼容库。
+- `--verify`、`--verify-only` 与无参数均只读；`--generate` 显式重建，并可用 `--output` 指向隔离目录。禁止同时指定生成与只读标志。校验和重建均不调用待测 merger。
+- 成功预期的 `oracle.entries` 包含完整 ZIP entry 清单。变化 XML 的 `source=snapshot` 与 `path=expected/<entry>` 定位完整快照；其余 `source=base` 必须匹配 base 字节。哈希用于完整性；后续 XML 合并结果使用 MR02 语义比较，不要求输出序列化字节一致。二进制资产用字节校验。
+- 冲突预期的 `oracle.assertions` 保留 `level/part/target/field/base/left/right/type/relatedParts`。`generic` 由 MR09 映射实现 slot，`project` 的父坐标保护由 MR07 实现，`domain` 的跨 part 规则由 MR11/12 实现。业务冲突对象不是底层关系报告条数或其字符串格式的保证。
+- 证据修正：10 的右侧只把 `r3.ItemTransform` 从 `1 0 0 1 340 100` 改为 `1 0 0 1 380 140`，仍在 g1 下。它没有产生新的 parent 编辑，不能用论文 §5 的唯一 parent 矛盾证明冲突。为保留既定 conflict 业务目标，明确使用局部坐标保护：一侧删除 Group 并把后代提升到新父，另一侧修改该后代的 ItemTransform，报告 `parent-context-local-transform`；仅单侧重父或仅单侧变换、无关后代修改不命中此规则。左右对称，范围仅限实际移出已删除 Group 且双边修改的同一后代。该规则是目标契约，当前实现未被本 MR 验证。
+- 06-delete-vs-modify 的 base `FillColor` 实际缺失，用 JSON null 表示，不能假定 Color/Black。
+- 15 组输入共 45 个 IDML 文件均保持原字节。全部来源仍为 XML 构造，不是 InDesign 实际导出；生成确定性和契约读取通过不代替 MR09/12 的合并结果测试。
+
+### MR03 验证记录
+
+- `sbt "core/test" "idml/test"`：core 212、IDML 69 项通过；其中新增 CorpusContractSpec 4 项，无跳过。
+- `python3 -m unittest discover -s idml/tools -p 'test_three_way_corpus.py'`：12 项通过；包含只读校验、损坏输入、重新封装哈希后的篡改检测和全量重建字节确定性。
+- `python3 idml/tools/generate_three_way_corpus.py --verify`：15 组通过；校验前后内容哈希与 mtime 不变。45 个 IDML 输入已逐个对照 MR02 提交字节，全部一致。
+- 以上为本地验证，不代表远程 CI、实际 merger 全 corpus 执行或 InDesign 验收完成。
