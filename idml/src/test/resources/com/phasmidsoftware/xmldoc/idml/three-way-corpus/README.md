@@ -2,21 +2,15 @@
 
 This directory maps all 15 requested merge scenarios (13 main numbers plus the `06b` and `08b` variants) to concrete `base / left / right / expected` fixtures. The wording below is the English version of the source table.
 
-## MR01 acceptance policy (2026-11-06)
+## Authoritative specification
 
-The authoritative target contract is [IDML XML Merge Test Specification](../../../../../../../../docs/xml-merge-test-spec.md). The selected profile is `strict-text-node-v1`: different edits to the same text node conflict, including disjoint word changes. Token-aware merging is deferred.
-
-The case table and schemaVersion 1 JSON below describe the original fixture expectations. In particular, `08b` currently records the historical token-aware `accept` expectation; it is **not** an executable expectation for the selected profile. MR03 must explicitly migrate it to `conflict` with version/profile metadata. A runner must not accept either result interchangeably. No fixture JSON or IDML bytes are changed by MR01.
-
-Cases `06b` and `13` remain required domain conflicts under the specification's conservative Story-level layout/content dependency rule. They are not guaranteed by generic PCS reconciliation. MR11/MR12 must implement and verify this rule before these cases count as passed. References, empty sentinels and thread validation are checked separately from concurrent intent conflicts.
-
-The specification traces all 15 cases, five test layers and nine plan sections to implementation MRs. It records strict deleted-subtree checking, ignored attributes, failure contracts, later measurement deadlines, launch blockers and deferred work. Documentation does not assert current implementation conformance.
+The target contract is [IDML XML Merge Test Specification](../../../../../../../../docs/xml-merge-test-spec.md). This corpus validates test data, not current merger conformance. Run Scala contract checks with `sbt "idml/testOnly *CorpusContractSpec"`; run verifier corruption tests with `python3 -m unittest discover -s idml/tools -p 'test_three_way_corpus.py'`.
 
 ## Reliability invariant
 
 For every case, both branches are created from an exact copy of the same closed-state `base.idml`. Existing `Self` values are never regenerated. A branch may remove a node or add a new unique node, but all unchanged nodes retain their base identity. This avoids the live-session `Self` drift observed in the old `HelloWorld2A/B/C` samples.
 
-The fixtures are generated from the XML in `../HelloWorld2.idml`; they model the listed InDesign operations directly in IDML and are not represented as hand-exported GUI artifacts. From the repository root, run `python3 idml/tools/generate_three_way_corpus.py --verify` to rebuild and verify the corpus.
+The fixtures are generated from the XML in `../HelloWorld2.idml`; they model the listed InDesign operations directly in IDML and are not represented as hand-exported GUI artifacts. From the repository root, run `python3 idml/tools/generate_three_way_corpus.py --verify` for **read-only** verification. Use `--generate` explicitly to rebuild, or `--generate --output /tmp/idml-corpus` for isolated regeneration. `--verify-only` remains a read-only alias; no arguments also verifies. Generation and verification flags cannot be combined.
 
 ## Case mapping
 
@@ -31,9 +25,9 @@ The fixtures are generated from the XML in `../HelloWorld2.idml`; they model the
 | `06b-delete-thread-vs-content` | Thread deletion versus story content | Delete tf2 and repair tf1.NextTextFrame. | Edit story1 paragraph 2. | Report a structural/content conflict. |
 | `07-same-story-diff-para` | Different paragraphs in the same Story | Edit paragraph 2. | Edit paragraph 4. | Accept both edits. |
 | `08-same-para-overlap` | Overlapping edits in one paragraph | Replace quick with swift. | Replace quick brown with slow red. | Report text-overlap. |
-| `08b-same-para-disjoint` | Disjoint edits in one paragraph | Replace quick with swift. | Replace lazy with sleepy. | Accept at token granularity; conflict at paragraph-atom granularity. |
+| `08b-same-para-disjoint` | Disjoint edits in one paragraph | Replace quick with swift. | Replace lazy with sleepy. | Report text-node update/update under strict-text-node-v1. |
 | `09-zorder` | Z-order changes | Move r1 one step forward (after r2). | Move r2 one step backward (before r1). | Accept both; report a conflict only if constraints contradict. |
-| `10-group-ungroup` | Group/ungroup and child movement | Ungroup g1. | Move child r3 inside g1. | Report structural-parent-change. |
+| `10-group-ungroup` | Group/ungroup and child movement | Ungroup g1. | Change r3 local ItemTransform while it remains inside g1. | Report parent-context/local-transform conflict (project policy, not a unique-parent contradiction). |
 | `11-thread-insert` | Cross-node reference insertion | Insert tfX between tf1 and tf2. | No edit. | Accept and update reciprocal references. |
 | `12-next-divergent` | Divergent NextTextFrame references | Set tf1.NextTextFrame=tfA. | Set tf1.NextTextFrame=tfB. | Report reference-divergence. |
 | `13-parentstory-vs-content` | ParentStory reference versus story content | Set tf2.ParentStory=story2 and detach it from tf1. | Edit story1 content that previously flowed into tf2. | Report reference-divergence. |
@@ -49,7 +43,10 @@ case-name/
   right.idml
   expected.json
   README.md
+  expected/  # changed XML snapshots, success cases only
 ```
+
+`expected.json` uses schemaVersion 2 and the only enabled profile `strict-text-node-v1`. Schema 1 is rejected with an explicit migration error. `08b` was migrated from historical token-aware accept to text-node conflict as frozen in MR01. Each document records provenance, structured targets, base identities, explicit selfless matches, hashes, migration and the executable oracle. `oracle.entries` is the complete successful ZIP entry inventory; snapshot paths resolve relative to the case directory. `oracle.assertions` contains exact business conflict objects; generic slot mapping is MR09, the local-coordinate guard is MR07, and cross-part domain implementation is MR11/MR12. Unknown profiles, incomplete fields and inconsistent status are rejected.
 
 `expected.json` declares accepted edits and conflicts independently. A case with no conflicts has status `accept`; a case with at least one conflict has status `conflict`. The per-case README records reproducible InDesign-equivalent steps and the actual XML-derived construction method.
 
@@ -57,6 +54,8 @@ case-name/
 
 - Independent inserts and edits to different paragraphs are accepted.
 - Compatible z-order constraints are accepted and must produce deterministic order.
-- Divergent moves, delete/modify pairs, overlapping text edits, structural reparenting, and incompatible references are reported as conflicts.
-- Disjoint edits in one paragraph are accepted by a token-aware merger; a paragraph-atomic merger may report a conflict instead.
+- Divergent moves, delete/modify pairs, overlapping text edits, incompatible structural reparenting, and incompatible references are reported as conflicts.
+- Different edits to the same text node conflict, even at disjoint word ranges. Token-aware merging is deferred; a runner must not accept either result interchangeably.
+- `10` preserves its conflict goal under an explicit project guard: deleting a Group while another branch edits a descendant local transform is ambiguous in parent-relative coordinates. This is not a pure unique-parent PCS contradiction.
+- `06b` and `13` use MR01 Story-level dependency rules, not inferred character-to-frame layout.
 - Thread changes must update both ends of `PreviousTextFrame` / `NextTextFrame` references.
