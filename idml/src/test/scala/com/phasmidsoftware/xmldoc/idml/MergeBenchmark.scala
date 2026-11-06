@@ -70,10 +70,10 @@ object MergeBenchmark {
     val source = Seq(input.base, input.left, input.right).map(GenericElement.toXmlString)
     val memoryPools = ManagementFactory.getMemoryPoolMXBeans.asScala.filter(_.isValid)
     memoryPools.foreach(_.resetPeakUsage())
-    @volatile var running = true
     val peak = new java.util.concurrent.atomic.AtomicLong(heap)
-    val sampler = new Thread(() => { while (running) { peak.accumulateAndGet(heap, (a, b) => math.max(a, b)); Thread.sleep(1) } })
-    sampler.setDaemon(true); sampler.start()
+    val sampler = java.util.concurrent.Executors.newSingleThreadScheduledExecutor()
+    sampler.scheduleAtFixedRate(() => peak.accumulateAndGet(heap, (a, b) => math.max(a, b)): Unit,
+      0, 1, java.util.concurrent.TimeUnit.MILLISECONDS): Unit
     val start = System.nanoTime()
     try {
       val (parsed, parseMs) = milliseconds(source.map(s => GenericElement.fromElem(scala.xml.XML.loadString(s))))
@@ -103,7 +103,7 @@ object MergeBenchmark {
         "sampledHeapPeakMiB" -> (peak.get.toDouble / 1048576),
         "poolHeapPeakMiB" -> (memoryPools.filter(_.getType == java.lang.management.MemoryType.HEAP).map(_.getPeakUsage.getUsed).sum.toDouble / 1048576),
         "correct" -> true)
-    } finally { running = false; sampler.join() }
+    } finally { sampler.shutdownNow(): Unit; sampler.awaitTermination(1, java.util.concurrent.TimeUnit.SECONDS): Unit }
   }
   def main(args: Array[String]): Unit = {
     require(args.length == 2 && Set("calibration", "formal")(args(1)), "output.json calibration|formal")

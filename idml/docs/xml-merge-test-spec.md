@@ -54,8 +54,6 @@ Locked scope
 - 现有 IDML 入口：`idml/src/main/scala/com/phasmidsoftware/xmldoc/idml/{ThreeWayMerger,IdmlPackageMerger,IdmlMergeDriver}.scala`。
 - 现有样本：`idml/src/test/resources/com/phasmidsoftware/xmldoc/idml/three-way-corpus/README.md`。
 
-
-
 ## 冻结决策
 
 以下选择自 2026-11-06 生效，后续修改须同步规格、样本 profile 和对应测试，不能只改 expected 使当前实现通过。
@@ -193,7 +191,6 @@ Locked scope
 - 同一目标并发写入、断电持久性与无关 KML/基础框架重构。
 - 部署、数据库迁移、历史回填；本轮没有这些步骤。
 
-
 ## MR03 schema 3 契约与证据修正（2026-11-06）
 
 - 实施文件除原计划清单外，增加 `idml/tools/test_three_way_corpus.py`；Scala 版本化读取器随 `CorpusContractSpec.scala` 交付，可由 MR09 复用 `CorpusContract`，不引入生产 JSON API。唯一新增依赖为 IDML Test 范围的 `com.lihaoyi:ujson_2.13:4.4.3`，使用已缓存的 Scala 2.13 二进制兼容库。
@@ -235,7 +232,6 @@ Locked scope
 - `python3 idml/tools/generate_three_way_corpus.py --verify`: 16 cases/schema 3 passed read-only validation. `python3 -m unittest discover -s idml/tools -p test_three_way_corpus.py`: 17 passed. All corpus file SHA-256 hashes and mtimes were unchanged, and all 48 IDML inputs remain byte-identical to MR0311. Oracles were not changed to accommodate the implementation.
 - `git diff --check` passed. These are local automated results, not remote CI or completion of other MRs or InDesign open/save/reopen acceptance.
 
-
 ## MR10 生成性质测试冻结记录（2026-11-06）
 
 - 默认固定种子 `0..7`，节点数 `8,32,96`；种子和节点数共同初始化 PRNG。
@@ -272,7 +268,6 @@ Locked scope
 - oracle 自检注入丢编辑、偏向左输入、凭空关系/属性的反例，必须被断言拒绝。
   06b/13 的领域门禁、真实 InDesign 和大规模性能证据仍属于 MR11—MR14。
 
-
 ## V1_1_3-Kaining-2 整合记录（2026-11-06）
 
 - 上述 MR12、MR10 证据保留各自原分支历史；本轮从 `V1_1_3-Robin-Kaining-Merged`
@@ -289,14 +284,12 @@ Locked scope
   通过 core 432、IDML 398、KML 110 项，共 940 项；core 原有 1 项忽略，无新增忽略或 pending。
   corpus 只读校验 16 组通过；Python 校验测试 17 项通过。
 
-
 ## MR13/MR14 当前执行计划（2026-11-06）
 
 直接在 `V1_1_3-Kaining-2` 执行，先 MR13、后 MR14。性能候选矩阵与校准方法见
 [性能计划](xml-merge-performance.md)；正式门禁须在校准后、正式测量前冻结。
 真实验收候选清单在核对本地资料后冻结；缺少授权、独立 expected 或 InDesign 记录
 必须在 [证据表](xml-merge-test-evidence.md) 明确阻塞，自动测试通过不替代应用验收。
-
 
 ## MR13/MR14 执行状态（2026-11-06）
 

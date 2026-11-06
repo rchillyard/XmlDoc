@@ -4,7 +4,6 @@
 
 本文件是实施计划，不代表测试已执行或能力已实现。文件路径以仓库根目录为基准；新增文件均标注“新增”。现有代码已核对，新增名称为本计划指定的目标文件。分支命名遵循用户提供的 mr-breakdown skill 模板。每个 MR 随变更交付测试；发现违反已冻结契约的行为，在负责该职责的 MR 中交付最小修复，禁止通过削弱 expected、忽略失败或把当前错误行为固化为正确预期来获得绿灯。
 
-
 修订依据（2026-11-06）：以论文 §2.1、§3.1 规则 4/7、§5、§6、§6.3 为准，纠正 case 10 的测试设计。`10-group-ungroup` 保留现有三方输入，目标为合并成功；新增 `10b-divergent-parent` 验证双方真实改变同一节点父节点的冲突。撤销 MR03 曾补入的 `parent-context-local-transform` 强制冲突要求，禁止在后续 MR 中实现该要求来迎合旧 expected。
 
 实施状态（本轮 MR03 修订）：旧提交的 schema 2 契约为 15 组、case 10 冲突；本轮已同步规格、生成器、JSON、Scala 读取器和样本，迁移为 schema 3、16 组、8 accept/8 conflict。此状态只证明样本契约和迁移校验完成，不代表实际 merger 全 corpus 或 InDesign 验收完成。修订由 MR03 的后续提交交付，不增加 MR 编号，保留 7 个 Batch、14 个 MR；历史计数仅保留在迁移记录中。
@@ -14,6 +13,7 @@
 MR count: 1
 
 ### MR 01 — Record merge testing decisions
+
 branch: feature/IDML-XML-Merge-Tests-MR01
 
 Files:
@@ -119,6 +119,7 @@ Done when:
 MR count: 2
 
 ### MR 02 — Add semantic XML assertions
+
 branch: feature/IDML-XML-Merge-Tests-MR02
 
 Files:
@@ -145,6 +146,7 @@ Done when:
 - core/test、idml/test 可独立编译，不依赖另一模块的 Test classpath。
 
 ### MR 03 — Define executable corpus expectations
+
 branch: feature/IDML-XML-Merge-Tests-MR03
 
 Files:
@@ -225,6 +227,7 @@ Done when:
 MR count: 2
 
 ### MR 04 — Verify stable node correspondence
+
 branch: feature/IDML-XML-Merge-Tests-MR04
 
 Files:
@@ -250,6 +253,7 @@ Done when:
 - 现有合法 Self 匹配结果保持兼容；相关 core 与 IDML 测试通过。
 
 ### MR 05 — Verify PCS encoding and edit detection
+
 branch: feature/IDML-XML-Merge-Tests-MR05
 
 Files:
@@ -263,7 +267,7 @@ Files:
 What to change:
 - 依赖 MR01、MR04。对空子列表、单子节点、首尾插入、中间删除、同父重排、跨父移动逐条写出完整 PCS 与 content 集合。
 - 比较完整集合，覆盖 ListStart/ListEnd、每个叶子空子列表以及项目实际采用的 root 表示；与论文人工父节点表示不同处写明等价边界。
-- 按同一匹配计算 E = T* − T*0；检查 unchanged 不产生编辑，移动的源上下文与目标上下文均出现，忽略字段不产生错误编辑。
+- 按同一匹配计算 `E = T* − T*0`；检查 unchanged 不产生编辑，移动的源上下文与目标上下文均出现，忽略字段不产生错误编辑。
 - 增加有文本节点的最小关系样本，确保文本在有序子列表中有正确位置。
 - 依据：论文 §2.3、§5、§6.1；计划第三部分。
 
@@ -280,6 +284,7 @@ Done when:
 MR count: 3
 
 ### MR 06 — Preserve compatible structural edits
+
 branch: feature/IDML-XML-Merge-Tests-MR06
 
 Files:
@@ -307,6 +312,7 @@ Done when:
 - 对 case 10 只声明通用 XML 合并结果，不据此声明 InDesign 视觉位置已正确。
 
 ### MR 07 — Detect contextual and deleted-subtree conflicts
+
 branch: feature/IDML-XML-Merge-Tests-MR07
 
 Files:
@@ -337,6 +343,7 @@ Done when:
 - 各冲突的 base/left/right 正确，无关节点不被报告；左右交换后的对应断言通过。
 
 ### MR 08 — Preserve mixed content during tree reconstruction
+
 branch: feature/IDML-XML-Merge-Tests-MR08
 
 Files:
@@ -368,6 +375,7 @@ Done when:
 MR count: 2
 
 ### MR 09 — Run every corpus case in both branch orders
+
 branch: feature/IDML-XML-Merge-Tests-MR09
 
 Files:
@@ -396,6 +404,7 @@ Done when:
 - 并行运行不同场景不共享可写文件，重复运行结果一致。
 
 ### MR 10 — Verify merge invariants with generated trees
+
 branch: feature/IDML-XML-Merge-Tests-MR10
 
 Files:
@@ -425,6 +434,7 @@ Done when:
 MR count: 3
 
 ### MR 11 — Validate cross-part IDML references
+
 branch: feature/IDML-XML-Merge-Tests-MR11
 
 Files:
@@ -452,6 +462,7 @@ Done when:
 - 验证失败不进入写包阶段；所有错误有可定位上下文。
 
 ### MR 12 — Preserve package integrity across merge outcomes
+
 branch: feature/IDML-XML-Merge-Tests-MR12
 
 Files:
@@ -491,6 +502,7 @@ Done when:
 - 16 组 corpus 在适用的包、领域、driver 层满足唯一预期；case 10 成功包保留结构与属性值，10b 冲突不写 ours；退出码断言通过。
 
 ### MR 13 — Measure merge scalability by pipeline stage
+
 branch: V1_1_3-Kaining-2（按用户要求直接执行，不新建分支）
 
 Files:
@@ -521,6 +533,7 @@ Done when:
 MR count: 1
 
 ### MR 14 — Verify complete merge acceptance evidence
+
 branch: V1_1_3-Kaining-2（MR13 验证后顺序执行，不新建分支）
 
 Files:
@@ -596,7 +609,6 @@ Done when:
 - 同一 ours 路径的并发写入支持、崩溃与断电后的跨平台持久化保证；本轮覆盖函数失败返回与原子替换语义。
 - 无关权限系统、数据库迁移、历史回填、网站部署或 GitLab/GitHub 远端 MR 创建。
 
-
 ## MR13/MR14 本轮执行约定（2026-11-06，实施前修订）
 
 - 直接在 `V1_1_3-Kaining-2` 顺序实施；先修订本计划、规格、性能计划和证据文档，
@@ -614,7 +626,6 @@ Done when:
 - MR14 实施文件补充：`idml/tools/verify_real_world_manifest.py`（严格发布门禁）与
   `idml/tools/test_real_world_manifest.py`（损坏/越界/假 ready 回归）。CI 自动测试与真实
   证据门禁分为独立 job；真实资料缺失使 release-evidence 明确失败，不把它标为通过。
-
 
 ## MR13/MR14 执行状态（2026-11-06）
 

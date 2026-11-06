@@ -136,9 +136,11 @@ class IdmlMergeDriverAtomicSpec extends AnyFlatSpec with should.Matchers {
           super.part(f, p).flatMap { _ => if (stage == "part") Failure(new IOException("injected part failure")) else scala.util.Success(()) }
         override def manifest(f: File, a: Seq[PartContent], d: Seq[PartRemoved]): Try[Unit] =
           super.manifest(f, a, d).flatMap { _ =>
-            if (stage == "manifest") Failure(new IOException("injected manifest failure"))
-            else if (stage == "staged-validation") Zip.writeEntry(f, "Stories/u.xml", "<broken")
-            else scala.util.Success(())
+            stage match {
+              case "manifest" => Failure(new IOException("injected manifest failure"))
+              case "staged-validation" => Zip.writeEntry(f, "Stories/u.xml", "<broken")
+              case _ => scala.util.Success(())
+            }
           }
         override def replace(staged: Path, target: Path): Try[Unit] = {
           replacements += 1
