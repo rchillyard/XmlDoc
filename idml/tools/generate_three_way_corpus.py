@@ -254,6 +254,11 @@ def build_base(source: Package, case_name: str) -> Package:
         # Put r1 between two siblings so both "top" and "bottom" branches
         # encode a genuine move rather than one branch being a no-op.
         move_after(spread_root, "r1", "r2")
+    if case_name == "10b-divergent-parent":
+        # A real alternate parent exists in the common base, with an unchanged child.
+        # It is inserted immediately after g1, before tf1, on all three versions.
+        g2 = make_group("g2", [make_rectangle(rectangle_template, "r6", 580, 140)])
+        spread.insert(list(spread).index(g1) + 1, g2)
     package.put_root(SPREAD_PATH, spread_root)
 
     source_story = source.root("Stories/Story_ue6.xml")
@@ -325,6 +330,14 @@ def ungroup(package: Package) -> None:
     parent.remove(group)
     for offset, child in enumerate(children):
         parent.insert(index + offset, child)
+    package.put_root(SPREAD_PATH, root)
+
+
+def move_r3_to_g2(package: Package) -> None:
+    root, _ = spread_container(package)
+    parent, r3 = item_parent(root, "r3")
+    parent.remove(r3)
+    find_by_self(root, "g2").append(r3)  # after r6; r4 remains inside g1
     package.put_root(SPREAD_PATH, root)
 
 
@@ -442,9 +455,17 @@ CASES = [
         note="Both branches encode the compatible order r2, r1.",
     ),
     Case(
-        "10-group-ungroup", "Group/ungroup and child movement", "Ungroup g1.", "Change r3 local ItemTransform while it remains inside g1.", "Report parent-context/local-transform conflict (project policy, not a unique-parent contradiction).",
+        "10-group-ungroup", "Reparenting with an independent content update", "Ungroup g1.", "Change r3 ItemTransform while it remains inside g1.", "Accept both reparenting and the r3 attribute update (generic XML only).",
         ungroup, lambda p: modify_item(p, "r3", ItemTransform="1 0 0 1 380 140"),
-        conflicts=(conflict("parent-context-local-transform", "g1/r3", "g1 removed; r3 reparented to Spread", "r3 moved while parent remains g1"),),
+        accepted=(edit("left", "ungroup", "g1/r3/r4", "Remove g1; promote r3 and r4 to Spread in their original order."),
+                  edit("right", "attribute-update", "r3@ItemTransform", "Keep ItemTransform=1 0 0 1 380 140 on r3.")),
+        note="Schema 3 corrects the former conflict expectation using paper §2.1, §3.1 rules 4/7 and §6. No local-coordinate conflict policy is enabled; visual placement is not proven by XML merge success.",
+    ),
+    Case(
+        "10b-divergent-parent", "Two genuine edits assign different new parents", "Ungroup g1; promote r3 and r4 to Spread.", "Move r3 from g1 into g2, after r6.", "Report Position/Position: r3 has two incompatible new parents.",
+        ungroup, move_r3_to_g2,
+        conflicts=(conflict("position-position", "r3@parent", "ud1", "g2"),),
+        note="g2 and r6 exist in the common base. Required parent conflict is base=g1, left=ud1, right=g2; any additional PCS contradictions must be derived, not suppressed to force one low-level report.",
     ),
     Case(
         "11-thread-insert", "Cross-node reference insertion", "Insert tfX between tf1 and tf2.", "No edit.", "Accept and update reciprocal references.",
@@ -466,7 +487,7 @@ CASES = [
 
 
 PROFILE = "strict-text-node-v1"
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 # Reviewed target recipes. These do not call a merger or derive the oracle from its output.
 # Single-sided targets are expressed independently from the Case.left/right callbacks.
 REFERENCES = {
@@ -481,7 +502,8 @@ REFERENCES = {
     "08": (["paper", "project"], "§2.3 text nodes, p3; §6.3 Update/Update, p8"),
     "08b": (["project"], "MR01 strict-text-node-v1; no token merge guarantee in §7, p9"),
     "09": (["paper"], "§3.1 rule 7; §5 relation consistency, p6"),
-    "10": (["project", "idml"], "Parent context/local coordinate guard; not a §5 unique-parent contradiction"),
+    "10": (["paper"], "§2.1, p2; §3.1 rules 4/7, pp4-5; §6, p6: preserve reparenting and content edits"),
+    "10b": (["paper"], "§5 unique parent, p6; §6.3 Position/Position, p8: two incompatible parent edits"),
     "11": (["paper", "idml"], "§3.1 rule 5, p4; reciprocal thread references are IDML policy"),
     "12": (["paper", "idml"], "§6.3 Update/Update, p8; thread integrity is separate"),
     "13": (["idml"], "MR01 Story-level dependency rule; no character-to-frame layout inference"),
@@ -501,20 +523,23 @@ def targets(case: Case) -> list[dict]:
         "01": ["r5"], "02": ["r2"], "03": ["r1"], "04": ["rL", "rR"],
         "05": ["r1"], "06": ["r2"], "06b": ["tf2", "story1"],
         "07": ["story1"], "08": ["story1"], "08b": ["story1"], "09": ["r1", "r2"],
-        "10": ["g1", "r3"], "11": ["tf1", "tfX", "tf2"], "12": ["tf1"],
+        "10": ["g1", "r3", "r4"], "10b": ["g1", "g2", "r3", "r4", "r6"], "11": ["tf1", "tfX", "tf2"], "12": ["tf1"],
         "13": ["tf2", "story1", "story2"],
     }[key]
     return [{"part": STORY1_PATH if t == "story1" else STORY2_PATH if t == "story2" else SPREAD_PATH,
              "self": t} for t in target]
 
 
-def identity_contract() -> dict:
+def identity_contract(case: Case) -> dict:
+    spread_ids = ["g1", "r1", "r2", "r3", "r4", "tf1", "tf2", "tfA", "tfB", "ud1", "ud6"]
+    if case.name == "10b-divergent-parent":
+        spread_ids = sorted(spread_ids + ["g2", "r6"])
     return {"strategy": "stable-Self-plus-explicit-paragraph-ordinal",
-            "baseSelfByPart": {SPREAD_PATH: ["g1", "r1", "r2", "r3", "r4", "tf1", "tf2", "tfA", "tfB", "ud1", "ud6"],
+            "baseSelfByPart": {SPREAD_PATH: spread_ids,
                                STORY1_PATH: ["story1"], STORY2_PATH: ["story2"]},
             "selflessMatches": [{"part": STORY1_PATH, "selector": f"Story[@Self='story1']/ParagraphStyleRange[{i}]",
                                   "baseOrdinal": i, "leftOrdinal": i, "rightOrdinal": i} for i in range(1, 5)],
-            "note": "Paragraph order is unchanged in these 15 inputs; this is not a general position matching rule."}
+            "note": "Paragraph order is unchanged in these 16 cases; this is not a general position matching rule."}
 
 
 def expected_package(case: Case, base: Package) -> Package:
@@ -541,6 +566,17 @@ def expected_package(case: Case, base: Package) -> Package:
         for node in list(items.values()):
             spread.remove(node)
         spread.extend(items[n] for n in order)
+        result.put_root(SPREAD_PATH, root)
+    elif key == "10":
+        root, spread = spread_container(result)
+        group = find_by_self(root, "g1")
+        children = {node.get("Self"): copy.deepcopy(node) for node in group}
+        children["r3"].set("ItemTransform", "1 0 0 1 380 140")
+        items = {node.get("Self"): node for node in page_item_children(spread) if node is not group}
+        items.update(children)
+        for node in list(page_item_children(spread)):
+            spread.remove(node)
+        spread.extend(items[name] for name in ["r1", "r2", "r3", "r4", "tf1", "tf2", "tfA", "tfB"])
         result.put_root(SPREAD_PATH, root)
     elif key == "07":
         root = result.root(STORY1_PATH)
@@ -571,9 +607,7 @@ def conflict_assertions(case: Case) -> list[dict]:
                "The swift brown fox jumps over the lazy dog.", "The slow red fox jumps over the lazy dog."),
         "08b": (STORY1_PATH, "story1/P2/Content", "text", BASE_PARAGRAPHS[1],
                 "The swift brown fox jumps over the lazy dog.", "The quick brown fox jumps over the sleepy dog."),
-        "10": (SPREAD_PATH, "r3", "parent-context/local-transform", {"parent": "g1", "ItemTransform": "1 0 0 1 340 100"},
-               {"parent": "ud1", "ItemTransform": "1 0 0 1 340 100"},
-               {"parent": "g1", "ItemTransform": "1 0 0 1 380 140"}),
+        "10b": (SPREAD_PATH, "r3", "parent", "g1", "ud1", "g2"),
         "12": (SPREAD_PATH, "tf1", "NextTextFrame", "tf2", "tfA", "tfB"),
         "13": (SPREAD_PATH, "tf2/story1", "ParentStory/content-dependency",
                {"ParentStory": "story1", "PreviousTextFrame": "tf1", "tf1.NextTextFrame": "tf2", "storyParagraphs": BASE_PARAGRAPHS},
@@ -582,7 +616,7 @@ def conflict_assertions(case: Case) -> list[dict]:
                 "storyParagraphs": [BASE_PARAGRAPHS[0], "The quick brown fox leaps over the lazy dog.", *BASE_PARAGRAPHS[2:]]}),
     }
     part, target, field, base, left, right = rows[key]
-    return [{"level": "domain" if key in {"06b", "13"} else "project" if key == "10" else "generic",
+    return [{"level": "domain" if key in {"06b", "13"} else "generic",
              "part": part, "target": target, "field": field,
              "base": base, "left": left, "right": right,
              "type": case.conflicts[0]["type"], "relatedParts": [STORY1_PATH] if key in {"06b", "13"} else []}]
@@ -620,6 +654,8 @@ def build_oracle(case: Case, base: Package, case_dir: Path | None = None) -> dic
 def operation_readme(case: Case) -> str:
     expectation = "accept" if not case.conflicts else "conflict"
     note = f"\n\nCase note: {case.note}" if case.note else ""
+    baseline_extra = (" For 10b only, g2 (containing r6) is inserted immediately after g1 and before tf1 in the common base. "
+                      "Left removes g1 and promotes r3/r4 at its position; right leaves r4 in g1 and appends r3 after r6 in g2.") if case.name == "10b-divergent-parent" else ""
     snapshots = "\n".join("- `" + record["path"] + "`" for record in ORACLES[case.name]["entries"].values()
                           if record["source"] == "snapshot") or "None: conflict cases have no successful XML output."
     return f"""# {case.name}
@@ -630,14 +666,14 @@ def operation_readme(case: Case) -> str:
 
 ## Contract and evidence
 
-Profile: `{PROFILE}`. Schema: `2`. Sources: {", ".join(provenance(case)["layers"])}.
+Profile: `{PROFILE}`. Schema: `{SCHEMA_VERSION}`. Sources: {", ".join(provenance(case)["layers"])}.
 Basis: {provenance(case)["reference"]}.
 Structured targets, identity matching and exact business conflict objects (including base/left/right) are in `expected.json`.
 Successful cases compare the complete package entry inventory: changed XML uses the listed `expected/` snapshots; unchanged entries use the exact base bytes. No expected output is obtained from a merger. Domain reports are not claimed to exist in the current implementation.
 
 ## Baseline document
 
-The case uses the normalized corpus page: `r1`, `r2`, and group `g1` (children `r3` and `r4`), plus text frames `tf1`, `tf2`, `tfA`, and `tfB`. `tf1` and `tf2` initially form a thread over the four-paragraph `story1`.
+The case uses the normalized corpus page: `r1`, `r2`, and group `g1` (children `r3` and `r4`), plus text frames `tf1`, `tf2`, `tfA`, and `tfB`. `tf1` and `tf2` initially form a thread over the four-paragraph `story1`.{baseline_extra}
 
 ## Expected XML snapshots
 
@@ -664,7 +700,7 @@ def global_readme() -> str:
     )
     return f"""# Reliable Three-Way IDML Merge Corpus
 
-This directory maps all 15 requested merge scenarios (13 main numbers plus the `06b` and `08b` variants) to concrete `base / left / right / expected` fixtures. The wording below is the English version of the source table.
+This directory maps all 16 merge scenarios (the original 15 cases plus `10b-divergent-parent`) to concrete `base / left / right / expected` fixtures. The wording below is the English version of the source table.
 
 ## Authoritative specification
 
@@ -696,7 +732,7 @@ case-name/
   expected/  # changed XML snapshots, success cases only
 ```
 
-`expected.json` uses schemaVersion 2 and the only enabled profile `strict-text-node-v1`. Schema 1 is rejected with an explicit migration error. `08b` was migrated from historical token-aware accept to text-node conflict as frozen in MR01. Each document records provenance, structured targets, base identities, explicit selfless matches, hashes, migration and the executable oracle. `oracle.entries` is the complete successful ZIP entry inventory; snapshot paths resolve relative to the case directory. `oracle.assertions` contains exact business conflict objects; generic slot mapping is MR09, the local-coordinate guard is MR07, and cross-part domain implementation is MR11/MR12. Unknown profiles, incomplete fields and inconsistent status are rejected.
+`expected.json` uses schemaVersion 3 and the only enabled profile `strict-text-node-v1`. Schemas 1 and 2 are rejected with an explicit migration error. Schema 3 corrects case 10 to accept (no input bytes changed) and adds the genuine parent-conflict case 10b. The fixed status inventory is 8 accept and 8 conflict. `08b` was migrated from historical token-aware accept to text-node conflict as frozen in MR01. Each document records provenance, structured targets, base identities, explicit selfless matches, hashes, migration and the executable oracle. `oracle.entries` is the complete successful ZIP entry inventory; snapshot paths resolve relative to the case directory. `oracle.assertions` contains exact business conflict objects; generic slot mapping is MR09, compatible edits and divergent-parent checks are MR06/MR07, and cross-part domain implementation is MR11/MR12. Unknown profiles, incomplete fields and inconsistent status are rejected.
 
 `expected.json` declares accepted edits and conflicts independently. A case with no conflicts has status `accept`; a case with at least one conflict has status `conflict`. The per-case README records reproducible InDesign-equivalent steps and the actual XML-derived construction method.
 
@@ -706,7 +742,8 @@ case-name/
 - Compatible z-order constraints are accepted and must produce deterministic order.
 - Divergent moves, delete/modify pairs, overlapping text edits, incompatible structural reparenting, and incompatible references are reported as conflicts.
 - Different edits to the same text node conflict, even at disjoint word ranges. Token-aware merging is deferred; a runner must not accept either result interchangeably.
-- `10` preserves its conflict goal under an explicit project guard: deleting a Group while another branch edits a descendant local transform is ambiguous in parent-relative coordinates. This is not a pure unique-parent PCS contradiction.
+- `10` accepts reparenting plus the independent ItemTransform update, per paper §2.1 and §3.1 rules 4/7. Its old forced conflict rule has been withdrawn. XML success does not prove the intended visual position in InDesign.
+- `10b` requires the genuine parent conflict for r3: base=g1, left=ud1 (Spread), right=g2. Other low-level relation contradictions are not ruled out or silently discarded.
 - `06b` and `13` use MR01 Story-level dependency rules, not inferred character-to-frame layout.
 - Thread changes must update both ends of `PreviousTextFrame` / `NextTextFrame` references.
 """
@@ -714,13 +751,15 @@ case-name/
 
 def expected_document(case: Case, blobs: dict[str, bytes]) -> dict[str, object]:
     return {
-        "schemaVersion": 2,
+        "schemaVersion": SCHEMA_VERSION,
         "policyProfile": PROFILE,
         "provenance": provenance(case),
         "targets": targets(case),
-        "identity": identity_contract(),
+        "identity": identity_contract(case),
         "oracle": oracle_contract(case),
-        "migration": {"fromSchemaVersion": 1, "date": "2026-11-06", "reason": "Freeze MR01 strict-text-node-v1; 08b changes accept to conflict; correct case10 policy attribution."},
+        "migration": {"fromSchemaVersion": None if case.name == "10b-divergent-parent" else 2,
+                      "date": "2026-11-06",
+                      "reason": "Schema 3 paper-based correction: case10 accepts reparenting plus content update; add case10b genuine divergent-parent conflict; withdraw forced local-coordinate policy. New case10b has no prior schema; preserve strict-text-node-v1 (including 08b conflict)."},
         "case": case.name,
         "requirement": case.requirement,
         "expectedStatus": "conflict" if case.conflicts else "accept",
@@ -838,7 +877,7 @@ def unique_json(pairs):
 
 def validate_document(document: dict, case: Case, blobs: dict[str, bytes], base: Package) -> None:
     if type(document.get("schemaVersion")) is not int or document["schemaVersion"] != SCHEMA_VERSION:
-        raise AssertionError(f"{case.name}: unsupported schemaVersion; migrate schema 1 explicitly to 2")
+        raise AssertionError(f"{case.name}: unsupported schemaVersion; migrate schemas 1/2 explicitly to 3")
     if document.get("policyProfile") != PROFILE:
         raise AssertionError(f"{case.name}: unknown or missing policyProfile; required {PROFILE}")
     ORACLES[case.name] = build_oracle(case, base)

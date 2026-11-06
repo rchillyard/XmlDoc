@@ -1,8 +1,8 @@
 # IDML XML Merge Test Specification
 
-状态：MR01 规格已记录；后续实现与验收尚未完成。记录日期：2026-11-06。
+状态：MR03 已按论文修订为 schema 3、16 组样本契约；实际 merger 全 corpus 与应用验收仍待后续 MR。记录日期：2026-11-06。
 
-本规格是后续 MR 的预期来源，不是当前实现通过证明。执行顺序以 [MR 拆分计划](xml-merge-test-mr-breakdown.md) 为基础；下文冻结决策替代计划中的相应待决策条目。MR01 只修改文档，不改算法、样本 XML、expected.json 或 driver。
+本规格是后续 MR 的预期来源，不是当前实现通过证明。执行顺序以 [MR 拆分计划](xml-merge-test-mr-breakdown.md) 为基础；下文冻结决策替代计划中的相应待决策条目。MR01 只修改文档；本轮 MR03 修订样本契约、生成器、读取器和测试，不修改生产合并算法或 driver。
 
 - 把测试计划九个部分映射到下列 MR，冻结预期来源、适用入口、成功与失败契约。论文页码使用 PDF 页内页码。
 
@@ -38,7 +38,8 @@ MR01—MR14 全部完成
 Locked scope
 - 覆盖匹配、PCS、编辑检测与协调、重建、IDML 包五层，以及对称性、恒等关系、编辑保留、无凭空关系、真实文档与规模验证。
 - 复用 `ThreeWayMerger.merge`、`IdmlPackageMerger.merge`、`IdmlMergeDriver.merge` 现有外部签名；新增能力只服务本测试计划。
-- 默认以严格 Delete/Edit 验收；删除祖先与任意深度后代编辑不得静默丢失。
+- 项目显式启用论文 §6.3 的可选严格 Delete/Edit 检查；最终不可达的被删区域中不得含编辑。移动后仍在最终可达树中的后代，不能仅因旧 Group 消失被视为丢失。
+- 按论文 §6 保留编辑并移除与编辑矛盾的旧 base 关系；两个编辑互相矛盾才构成核心冲突。不启用局部坐标强制冲突或自动坐标转换。
 - 不实现推测性结构合并；同一间隙不同插入在严格模式下按关系矛盾判定。
 - XML 比较保留子节点顺序与正文空白；属性作为集合比较。命名空间按解析模型实际保留的信息比较，不伪称具备模型未保留的能力。
 - 有 Self 的节点保持身份，无 Self 节点单独验证匹配。仅用路径相等不能证明节点相同。
@@ -64,7 +65,9 @@ Locked scope
 | 预期来源 | 分为论文规则、项目细化、IDML 领域、工程契约；每条用例分别标注 | 2026-11-06 | 通用树模型不能证明领域语义 | 03、09、14 |
 | 文本模式 | 本轮唯一验收 profile 为 `strict-text-node-v1`；文本节点内容原子比较，不开发 token merge | 2026-11-06 | 论文 §2.3、§6.3；当前入口没有 token 协调能力 | 03、08、09 |
 | 08b | 同一文本节点的不同双边修改必须冲突，即便单词范围互不重叠 | 2026-11-06 | 以文本节点为原子单位，不能同时接受冲突或成功 | 03、08、09 |
-| Delete/Edit | IDML 公共入口严格检查完整被删子树；后代内容或结构编辑不可静默丢失 | 2026-11-06 | §6.3 optional 检查由项目明确启用；底层关系森林不等于最终可达树 | 07、10 |
+| Delete/Edit | IDML 公共入口严格检查最终被删区域；移动后仍可达节点的编辑不得误报为丢失 | 2026-11-06 | §6.3 optional 检查由项目明确启用；底层关系森林不等于最终可达树 | 07、10 |
+| case 10 | accept；保留原有输入，合并解组与 r3.ItemTransform 更新；只声明通用 XML 成功 | 2026-11-06 | §2.1、§3.1 规则 4/7、§6；旧 conflict 预期是测试设计错误 | 03、06、09 |
+| case 10b | conflict；r3 的父节点 base=g1、left=ud1、right=g2，两个新编辑要求矛盾 | 2026-11-06 | §5 唯一 parent、§6.3 Position/Position | 03、07、09 |
 | 结构与属性 | 不启用推测合并；同一节点不同属性的独立修改仍可合并 | 2026-11-06 | PCS 按关系一致性判断；属性细化沿用 ThreeWayMerger 契约 | 06、07 |
 | 领域冲突 | 使用下文 story 级保守依赖规则；06b、13 为要求支持的冲突 | 2026-11-06 | 不依赖不可得的字符排版流映射 | 11、12 |
 | 身份与输入 | 各 part 内重复 Self、包级 frame/Story 索引重复身份显式失败；不同身份类别不盲目建立全包通用唯一性约束 | 2026-11-06 | TreeMatcher.matchBySelf 当前假定唯一，不应静默覆盖 | 04、11 |
@@ -111,13 +114,13 @@ Locked scope
 | 四：场景矩阵 | 05—08 | 操作组合、guards、深层删除、无 Self |
 | 五：断言 | 02、06—09 | 完整结果与完整冲突对象 |
 | 六：性质 | 09—10 | 两种顺序、恒等关系、编辑保留、来源约束 |
-| 七：已有用例 | 03、09、11—12 | 全部 15 组发现与适用层级执行 |
+| 七：已有用例 | 03、09、11—12 | 全部 16 组（原有 15 + 10b）发现与适用层级执行 |
 | 八：端到端 | 11—12、14 | 引用、原子写入、InDesign 验收 |
 | 九：规模与顺序 | 13—14 | 分段性能、输入规模与最终证据 |
 
 五层分别归属：匹配 MR04；PCS/检测 MR05；协调 MR06—07；重建 MR08；整包 MR11—12；MR09/14 贯通入口。
 
-| 原有案例 | 唯一目标预期 | 来源 | 交付 MR |
+| 目标案例 | 唯一目标预期 | 来源 | 交付 MR |
 |---|---|---|---|
 | 01-single-add | accept | §3.1 规则 5 | 03、09 |
 | 02-single-delete | accept；引用仍合法 | 规则 6 + IDML | 03、09、12 |
@@ -130,7 +133,8 @@ Locked scope
 | 08-same-para-overlap | conflict | 文本节点原子策略、§6.3 | 03、08、09 |
 | 08b-same-para-disjoint | conflict | strict-text-node-v1 | 03、08、09 |
 | 09-zorder | accept；关系兼容 | 规则 7、§5 | 03、06、09 |
-| 10-group-ungroup | conflict；父上下文与局部变换保护（见 MR03 证据修正） | 项目/IDML 策略，不是唯一 parent 矛盾 | 03、07、09 |
+| 10-group-ungroup | accept；解组与属性更新均保留 | §2.1、§3.1 规则 4/7、§6 | 03、06、09 |
+| 10b-divergent-parent | conflict；两个不同的新父节点 | §5 唯一 parent、§6.3 Position/Position | 03、07、09 |
 | 11-thread-insert | accept；双向引用一致 | 规则 5 + IDML | 03、11、12 |
 | 12-next-divergent | conflict | 同属性分歧 + IDML | 03、11、12 |
 | 13-parentstory-vs-content | conflict | story 级领域依赖规则 | 03、11、12 |
@@ -139,7 +143,8 @@ Locked scope
 
 | 项目 | 数值或待决策项 | 单位与计算 | 依据 | 冻结时间点 |
 |---|---|---|---|---|
-| 原有 corpus | 15 | 独立场景目录 | 当前清单 | 2026-11-06 |
+| corpus | 16 | 原有 15 组 + 10b | 固定清单，8 accept/8 conflict | 2026-11-06 |
+| 输入 IDML | 48 | 每组 base/left/right | 原有 45 个字节不变，10b 新增 3 个 | 2026-11-06 |
 | 分支排列 | 2 | 正常与交换各一次/组 | §6.4 | 2026-11-06 |
 | 生成规模和种子数量 | 待决策，不填猜测值 | 实际节点、检测编辑、独立种子；与生成操作数分列 | MR10 前测量 CI 时间和样本分布 | MR10 实施前，由 MR10 写入本表 |
 | 基准规模、预热和重复数 | 待决策 | 节点、编辑、次数 | 固定环境试运行与资源预算 | MR13 正式测量前，由 MR13 写入 |
@@ -150,7 +155,7 @@ Locked scope
 
 ## 当前缺口与验收规则
 
-- MR03 已将 15 组 expected.json 迁移到 schemaVersion 2，08b 为 strict-text-node-v1 的唯一 conflict 预期；旧 schemaVersion 1 不能静默读取。此状态只证明样本契约，不证明合并器通过。
+- MR03 已将原有 15 组 expected.json 从 schema 2 显式迁移到 schema 3，并新增 10b，共 16 组、8 accept/8 conflict。case 10 成功，10b 冲突；08b 保持 strict-text-node-v1 冲突。schema 1/2 均被显式拒绝。此状态只证明样本契约，不证明实际 merger 全 corpus 通过。
 - 06b、13 的冲突目标保持不变，但跨 part 意图检查尚待 MR11/12 验证和实现。
 - 无 Self 匹配进入 ThreeWayMerger 的正确性、元数据处理、严格深层 Delete/Edit 均是待验证假设。
 - driver 当前直接逐项写 ours，失败原子性是 MR12 目标，尚未得到保证。
@@ -160,6 +165,7 @@ Locked scope
 
 - 到期策略、性能或样本决策未冻结。
 - 任一要求支持的场景缺证据、只执行一侧顺序、误把生成器校验当合并验收。
+- case 10 仍强制冲突，或 10b 未表达两个真实新父节点；16 组清单与状态、版本不一致。
 - 无 Self、guards、深层 Delete/Edit、正文空白或完整结果比较失败。
 - 06b/13 未按领域规则执行，引用、part/designmap 或资产保留失败。
 - 冲突或 I/O 失败改变 ours，或修改 base/theirs/原样本。
@@ -169,24 +175,35 @@ Locked scope
 ## Explicitly deferred
 
 - token-aware 文本合并、推测结构合并、n-way、copy/glue 特殊语义。
+- ItemTransform 坐标转换、局部坐标强制冲突或视觉位置意图判定。真实 InDesign 打开/保存验收仍需执行，但 XML 成功不证明视觉位置符合意图。
 - 完整 infoset 与命名空间标准化重写、完整 designmap 合并、排版引擎。
 - 同一目标并发写入、断电持久性与无关 KML/基础框架重构。
 - 部署、数据库迁移、历史回填；本轮没有这些步骤。
 
 
-## MR03 契约与证据修正（2026-11-06）
+## MR03 schema 3 契约与证据修正（2026-11-06）
 
 - 实施文件除原计划清单外，增加 `idml/tools/test_three_way_corpus.py`；Scala 版本化读取器随 `CorpusContractSpec.scala` 交付，可由 MR09 复用 `CorpusContract`，不引入生产 JSON API。唯一新增依赖为 IDML Test 范围的 `com.lihaoyi:ujson_2.13:4.4.3`，使用已缓存的 Scala 2.13 二进制兼容库。
 - `--verify`、`--verify-only` 与无参数均只读；`--generate` 显式重建，并可用 `--output` 指向隔离目录。禁止同时指定生成与只读标志。校验和重建均不调用待测 merger。
 - 成功预期的 `oracle.entries` 包含完整 ZIP entry 清单。变化 XML 的 `source=snapshot` 与 `path=expected/<entry>` 定位完整快照；其余 `source=base` 必须匹配 base 字节。哈希用于完整性；后续 XML 合并结果使用 MR02 语义比较，不要求输出序列化字节一致。二进制资产用字节校验。
-- 冲突预期的 `oracle.assertions` 保留 `level/part/target/field/base/left/right/type/relatedParts`。`generic` 由 MR09 映射实现 slot，`project` 的父坐标保护由 MR07 实现，`domain` 的跨 part 规则由 MR11/12 实现。业务冲突对象不是底层关系报告条数或其字符串格式的保证。
-- 证据修正：10 的右侧只把 `r3.ItemTransform` 从 `1 0 0 1 340 100` 改为 `1 0 0 1 380 140`，仍在 g1 下。它没有产生新的 parent 编辑，不能用论文 §5 的唯一 parent 矛盾证明冲突。为保留既定 conflict 业务目标，明确使用局部坐标保护：一侧删除 Group 并把后代提升到新父，另一侧修改该后代的 ItemTransform，报告 `parent-context-local-transform`；仅单侧重父或仅单侧变换、无关后代修改不命中此规则。左右对称，范围仅限实际移出已删除 Group 且双边修改的同一后代。该规则是目标契约，当前实现未被本 MR 验证。
+- 冲突预期的 `oracle.assertions` 保留 `level/part/target/field/base/left/right/type/relatedParts`。`generic` 由 MR09 映射实现 slot，`domain` 的跨 part 规则由 MR11/12 实现。case 10 无冲突对象，10b 使用 generic 的 r3/parent 三方值；不强制整个案例只有一条底层关系报告。业务冲突对象不是底层关系报告条数或其字符串格式的保证。
+- 证据修正：10 的右侧只把 `r3.ItemTransform` 从 `1 0 0 1 340 100` 改为 `1 0 0 1 380 140`，没有新的 parent 编辑。旧 schema 2 为维持 conflict 目标补入的 `parent-context-local-transform` 规则已撤销，不得在生产算法中实现。现按论文 §2.1、§3.1 规则 4/7、§6 要求 accept：g1 消失，r3/r4 提升到 ud1，r3 使用右侧属性值且只出现一次，其余内容保留；新增完整成功快照。
+- 10b 的共同 base 在 g1 后、tf1 前插入 g2，g2 含不变子节点 r6。左解组后 r3/r4 位于 Spread，右侧 r4 留在 g1，r3 移到 g2 的 r6 后。g2/r6 在三份输入中身份稳定；r3 的 g1/ud1/g2 三方父节点构成真正的双边编辑矛盾，来源为论文 §5、§6.3。结构关系的完整冲突报告与左右交换行为仍由 MR07/MR09 验证，本轮未调用 merger 生成预期。
+- schema 3 的 migration 对原有场景记录 fromSchemaVersion=2；新 10b 没有旧文档，记录 null。schema 1/2 均提示显式迁移，不接受旧 case 10 冲突与新成功两种结果。
 - 06-delete-vs-modify 的 base `FillColor` 实际缺失，用 JSON null 表示，不能假定 Color/Black。
-- 15 组输入共 45 个 IDML 文件均保持原字节。全部来源仍为 XML 构造，不是 InDesign 实际导出；生成确定性和契约读取通过不代替 MR09/12 的合并结果测试。
+- 原有 15 组输入共 45 个 IDML 文件均保持原字节；10b 仅新增 3 个，共 48 个。全部来源仍为 XML 构造，不是 InDesign 实际导出；生成确定性和契约读取通过不代替 MR09/12 的合并结果测试。
 
-### MR03 验证记录
+### 原 MR03 schema 2 验证记录（历史，不能作为本轮 schema 3 证据）
 
 - `sbt "core/test" "idml/test"`：core 212、IDML 69 项通过；其中新增 CorpusContractSpec 4 项，无跳过。
 - `python3 -m unittest discover -s idml/tools -p 'test_three_way_corpus.py'`：12 项通过；包含只读校验、损坏输入、重新封装哈希后的篡改检测和全量重建字节确定性。
 - `python3 idml/tools/generate_three_way_corpus.py --verify`：15 组通过；校验前后内容哈希与 mtime 不变。45 个 IDML 输入已逐个对照 MR02 提交字节，全部一致。
 - 以上为本地验证，不代表远程 CI、实际 merger 全 corpus 执行或 InDesign 验收完成。
+
+### 新版 MR03 schema 3 验证记录
+
+- `sbt "core/test" "idml/test"`：core 212、IDML 71 项全部通过，无失败、跳过或 pending。CorpusContractSpec 包含 6 项，新增 case 10 成功目标与 10b 双边新父节点契约检查。
+- `python3 -m unittest discover -s idml/tools -p 'test_three_way_corpus.py'`：17 项全部通过，包含 schema 1/2 拒绝、旧 case 10 冲突拒绝、16 组固定状态、10b 缺失拒绝及篡改检测。
+- `python3 idml/tools/generate_three_way_corpus.py --verify`：16 组、schema 3、strict-text-node-v1 校验通过；前后全部文件内容哈希与 mtime 一致。
+- 临时目录独立重建与仓库完整文件清单及字节一致；原有 45 个输入逐个对照旧 MR03 提交未变，仅新增 10b 的 3 个输入包。case 10 快照独立构造，生产合并算法未修改。
+- 本记录是本地样本契约与既有回归验证，不代表 MR06/MR07/MR09 的实际 merger 场景验证、远程 CI 或 InDesign 应用验收已完成。

@@ -17,9 +17,9 @@ private[idml] object CorpusContract {
   val names: Seq[String] = Seq("01-single-add", "02-single-delete", "03-single-move",
     "04-both-add-diff-pos", "05-move-move-divergent", "06-delete-vs-modify",
     "06b-delete-thread-vs-content", "07-same-story-diff-para", "08-same-para-overlap",
-    "08b-same-para-disjoint", "09-zorder", "10-group-ungroup", "11-thread-insert",
+    "08b-same-para-disjoint", "09-zorder", "10-group-ungroup", "10b-divergent-parent", "11-thread-insert",
     "12-next-divergent", "13-parentstory-vs-content")
-  private val conflictNames = names.filter(n => Seq("05-", "06-", "06b-", "08-", "08b-", "10-", "12-", "13-").exists(n.startsWith)).toSet
+  private val conflictNames = names.filter(n => Seq("05-", "06-", "06b-", "08-", "08b-", "10b-", "12-", "13-").exists(n.startsWith)).toSet
   private val packageNames = Set("base.idml", "left.idml", "right.idml")
   private val fields = Set("schemaVersion", "policyProfile", "provenance", "targets", "identity", "oracle",
     "migration", "case", "requirement", "expectedStatus", "acceptedEdits", "conflicts", "invariants", "artifacts", "note")
@@ -68,7 +68,7 @@ private[idml] object CorpusContract {
 
   def read(caseDir: Path, json: String): Document = {
     val d = ujson.read(json)
-    require(d("schemaVersion") == ujson.Num(2), "unsupported schemaVersion; explicit migration to 2 required")
+    require(d("schemaVersion") == ujson.Num(3), "unsupported schemaVersion; explicit migration from 1/2 to 3 required")
     require(d("policyProfile").str == profile, s"unknown or missing policyProfile; expected $profile")
     keys(d, fields, "document")
     val name = d("case").str
@@ -89,7 +89,8 @@ private[idml] object CorpusContract {
       nonEmpty(t("self"))
     }
     keys(d("migration"), Set("fromSchemaVersion", "date", "reason"), "migration")
-    require(d("migration")("fromSchemaVersion") == ujson.Num(1), "invalid migration source")
+    require(d("migration")("fromSchemaVersion") == (if (name == "10b-divergent-parent") ujson.Null else ujson.Num(2)),
+      "invalid migration source; 10b is new and existing cases migrate from schema 2")
     nonEmpty(d("migration")("date")); nonEmpty(d("migration")("reason"))
     keys(d("identity"), Set("strategy", "baseSelfByPart", "selflessMatches", "note"), "identity")
     require(d("identity")("strategy").str == "stable-Self-plus-explicit-paragraph-ordinal", "identity strategy")
@@ -158,12 +159,18 @@ private[idml] object CorpusContract {
       oracle("assertions").arr.foreach { c =>
         keys(c, Set("level", "part", "target", "field", "base", "left", "right", "type", "relatedParts"), "conflict assertion")
         val domain = name.startsWith("06b-") || name.startsWith("13-")
-        require(c("level").str == (if (domain) "domain" else if (name.startsWith("10-")) "project" else "generic"), "wrong assertion level")
+        require(c("level").str == (if (domain) "domain" else "generic"), "wrong assertion level")
         Seq("target", "field", "type").foreach(k => nonEmpty(c(k)))
         require(base.contains(c("part").str), "unknown conflict part")
         c("relatedParts").arr.foreach(p => require(base.contains(p.str), "unknown related part"))
         require(c("left") != c("right"), "non-divergent conflict")
       }
+    }
+    if (name == "10b-divergent-parent") {
+      require(oracle("assertions").arr.exists { c =>
+        c("target") == ujson.Str("r3") && c("field") == ujson.Str("parent") &&
+          c("base") == ujson.Str("g1") && c("left") == ujson.Str("ud1") && c("right") == ujson.Str("g2")
+      }, "10b requires the genuine r3 parent conflict: g1/ud1/g2")
     }
     val paths = Files.walk(caseDir)
     try {
@@ -194,11 +201,13 @@ class CorpusContractSpec extends AnyFlatSpec with Matchers {
   private val dir = root.resolve(name)
   private def document = ujson.read(Files.readString(dir.resolve("expected.json")))
 
-  "Corpus contract" should "load all 15 cases and snapshots without modifying fixture bytes" in {
+  "Corpus contract" should "load all 16 cases and snapshots without modifying fixture bytes" in {
     val before = CorpusContract.snapshot(root)
     val documents = CorpusContract.load(root)
     documents.map(_.name).toSet.shouldBe(CorpusContract.names.toSet)
-    documents.count(_.status == "accept").shouldBe(7)
+    documents.size.shouldBe(16)
+    documents.count(_.status == "accept").shouldBe(8)
+    documents.count(_.status == "conflict").shouldBe(8)
     documents.filter(_.status == "accept").foreach(d => assert(d.expectedXmlParts.nonEmpty))
     CorpusContract.snapshot(root).shouldBe(before)
   }
@@ -213,7 +222,7 @@ class CorpusContractSpec extends AnyFlatSpec with Matchers {
   }
 
   it should "reject historical or unknown schemas and missing or unknown profiles" in {
-    for (version <- Seq(ujson.Num(1), ujson.Num(99), ujson.Str("2"))) {
+    for (version <- Seq(ujson.Num(1), ujson.Num(2), ujson.Num(99), ujson.Str("3"))) {
       val d = document; d("schemaVersion") = version
       intercept[IllegalArgumentException](CorpusContract.read(dir, d.toString))
     }
@@ -236,4 +245,55 @@ class CorpusContractSpec extends AnyFlatSpec with Matchers {
     val shape = document; shape("invariants")("commonBase") = false
     intercept[IllegalArgumentException](CorpusContract.read(dir, shape.toString))
   }
+  private val spreadPart = "Spreads/Spread_ud1.xml"
+  private def identified(tree: GenericElement): Map[String, (Option[String], GenericElement)] = {
+    def walk(node: GenericElement, parent: Option[String]): Seq[(String, (Option[String], GenericElement))] = {
+      val self = node.attributes.toMap.get("Self")
+      self.toSeq.map(id => id -> (parent, node)) ++ node.childElements.flatMap(child => walk(child, self.orElse(parent)))
+    }
+    walk(tree, None).toMap
+  }
+
+  it should "declare case 10 successful with the complete independent structural and attribute target" in {
+    val caseDir = root.resolve("10-group-ungroup")
+    val json = Files.readString(caseDir.resolve("expected.json"))
+    val d = CorpusContract.read(caseDir, json)
+    val expected = d.expectedXmlParts(spreadPart)
+    val nodes = identified(expected)
+    d.status.shouldBe("accept")
+    assert(!nodes.contains("g1"))
+    nodes("r3")._1.shouldBe(Some("ud1"))
+    nodes("r4")._1.shouldBe(Some("ud1"))
+    nodes("r3")._2.attributes.toMap.apply("ItemTransform").shouldBe("1 0 0 1 380 140")
+    val order = nodes("ud1")._2.childElements.flatMap(_.attributes.toMap.get("Self"))
+    order.shouldBe(Seq("ud6", "r1", "r2", "r3", "r4", "tf1", "tf2", "tfA", "tfB"))
+    val doc = ujson.read(json)
+    doc("acceptedEdits").arr.map(_("side").str).toSet.shouldBe(Set("left", "right"))
+    assert(doc("conflicts").arr.isEmpty && d.oracle("assertions").arr.isEmpty)
+    val old = ujson.read(json); old("expectedStatus") = "conflict"
+    intercept[IllegalArgumentException](CorpusContract.read(caseDir, old.toString))
+  }
+
+  it should "require the actual two new parent edits in 10b without limiting other relation conflicts" in {
+    val caseDir = root.resolve("10b-divergent-parent")
+    val json = Files.readString(caseDir.resolve("expected.json"))
+    val d = CorpusContract.read(caseDir, json)
+    d.status.shouldBe("conflict")
+    val actualParents = Seq("base", "left", "right").map { branch =>
+      val tree = IdmlPackage.open(caseDir.resolve(s"$branch.idml").toFile).get.loadPart(spreadPart).get
+      val nodes = identified(tree)
+      assert(nodes.contains("g2") && nodes.contains("r6"))
+      nodes("r3")._1
+    }
+    actualParents.shouldBe(Seq(Some("g1"), Some("ud1"), Some("g2")))
+    val assertion = d.oracle("assertions").arr.find(c => c("target").str == "r3" && c("field").str == "parent").get
+    Seq("base", "left", "right").map(assertion(_).str).shouldBe(Seq("g1", "ud1", "g2"))
+    for (field <- Seq("base", "left", "right")) {
+      val wrong = ujson.read(json); wrong("oracle")("assertions")(0)(field) = "wrong-parent"
+      intercept[IllegalArgumentException](CorpusContract.read(caseDir, wrong.toString))
+    }
+    val missing = ujson.read(json); missing("oracle")("assertions") = ujson.Arr()
+    intercept[IllegalArgumentException](CorpusContract.read(caseDir, missing.toString))
+  }
+
 }

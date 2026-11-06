@@ -6,7 +6,7 @@ Both sides move the same node. This fixture is expected to **conflict**: Report 
 
 ## Contract and evidence
 
-Profile: `strict-text-node-v1`. Schema: `2`. Sources: paper.
+Profile: `strict-text-node-v1`. Schema: `3`. Sources: paper.
 Basis: §6.3 Position/Position, p8.
 Structured targets, identity matching and exact business conflict objects (including base/left/right) are in `expected.json`.
 Successful cases compare the complete package entry inventory: changed XML uses the listed `expected/` snapshots; unchanged entries use the exact base bytes. No expected output is obtained from a merger. Domain reports are not claimed to exist in the current implementation.

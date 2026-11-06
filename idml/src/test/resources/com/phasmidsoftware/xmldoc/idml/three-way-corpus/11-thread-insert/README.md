@@ -6,7 +6,7 @@ Cross-node reference insertion. This fixture is expected to **accept**: Accept a
 
 ## Contract and evidence
 
-Profile: `strict-text-node-v1`. Schema: `2`. Sources: paper, idml.
+Profile: `strict-text-node-v1`. Schema: `3`. Sources: paper, idml.
 Basis: §3.1 rule 5, p4; reciprocal thread references are IDML policy.
 Structured targets, identity matching and exact business conflict objects (including base/left/right) are in `expected.json`.
 Successful cases compare the complete package entry inventory: changed XML uses the listed `expected/` snapshots; unchanged entries use the exact base bytes. No expected output is obtained from a merger. Domain reports are not claimed to exist in the current implementation.

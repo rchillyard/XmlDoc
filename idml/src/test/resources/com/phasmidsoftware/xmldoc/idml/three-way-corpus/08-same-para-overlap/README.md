@@ -6,7 +6,7 @@ Overlapping edits in one paragraph. This fixture is expected to **conflict**: Re
 
 ## Contract and evidence
 
-Profile: `strict-text-node-v1`. Schema: `2`. Sources: paper, project.
+Profile: `strict-text-node-v1`. Schema: `3`. Sources: paper, project.
 Basis: §2.3 text nodes, p3; §6.3 Update/Update, p8.
 Structured targets, identity matching and exact business conflict objects (including base/left/right) are in `expected.json`.
 Successful cases compare the complete package entry inventory: changed XML uses the listed `expected/` snapshots; unchanged entries use the exact base bytes. No expected output is obtained from a merger. Domain reports are not claimed to exist in the current implementation.
