@@ -118,4 +118,36 @@ class PcsTreeBuilderSpec extends AnyFlatSpec with should.Matchers {
     result.conflicts.map(_.slot) should (contain("parent of x") and contain("parent of y"))
     PcsTreeBuilder.build(result) shouldBe a[Failure[?]]
   }
+
+  it should "preserve adjacent text nodes, empty elements, CDATA and surrounding whitespace" in {
+    val tree = GenericElement("p", Nil, Seq(GenericText("  "), GenericText("one"),
+      GenericElement("empty", Nil, Nil), GenericCData("<two>"), GenericText("\n")))
+    PcsTreeBuilder.build(Pcs.relations(tree), "/") shouldBe Success(tree)
+  }
+
+  it should "reject malformed reachable relations instead of choosing a map entry or omitting nodes" in {
+    val r = Content.element("r", "Root", Nil)
+    val a = Content.element("a", "A", Nil)
+    val b = Content.element("b", "B", Nil)
+    val valid = RelationSet(Set(Pcs("r", ListStart, SiblingNode("a")),
+      Pcs("r", SiblingNode("a"), ListEnd), Pcs("a", ListStart, ListEnd)), Set(r, a))
+    val malformed = Seq(
+      valid.copy(content = Set(r)),
+      valid.copy(content = valid.content + Content.element("a", "Other", Nil)),
+      valid.copy(pcs = valid.pcs + Pcs("r", ListStart, ListEnd)),
+      valid.copy(pcs = valid.pcs - Pcs("r", SiblingNode("a"), ListEnd)),
+      valid.copy(pcs = valid.pcs - Pcs("r", SiblingNode("a"), ListEnd) + Pcs("r", SiblingNode("a"), SiblingNode("a"))),
+      valid.copy(pcs = valid.pcs + Pcs("r", SiblingNode("b"), SiblingNode("b")), content = Set(r, a, b)),
+      RelationSet(Set(Pcs("r", ListStart, SiblingNode("a")), Pcs("r", SiblingNode("a"), SiblingNode("b")),
+        Pcs("r", SiblingNode("b"), ListEnd), Pcs("a", ListStart, SiblingNode("b")),
+        Pcs("a", SiblingNode("b"), ListEnd), Pcs("b", ListStart, ListEnd)), Set(r, a, b)),
+      RelationSet(Set(Pcs("r", ListStart, SiblingNode("a")), Pcs("r", SiblingNode("a"), ListEnd),
+        Pcs("a", ListStart, SiblingNode("r")), Pcs("a", SiblingNode("r"), ListEnd)), Set(r, a)))
+    malformed.zipWithIndex.foreach { case (relations, i) =>
+      withClue(s"malformed case $i: ") { PcsTreeBuilder.build(relations, "r").isFailure shouldBe true }
+    }
+    val unresolved = StructuralMergeResult(valid, "r", Seq(StructuralConflict("parent of a", None, Some("r"), Some("b"))))
+    PcsTreeBuilder.build(unresolved).isFailure shouldBe true
+  }
+
 }

@@ -108,7 +108,7 @@ object PcsMerger {
     val parentReports = parentConflicts.map { case (label, b, l, r) => StructuralConflict(s"parent of $label", b, l, r) }
 
     val rootLabel = Pcs.label(NodeRef(NodePath.root, base))
-    StructuralMergeResult(RelationSet(mergedPcs, mergedContent), rootLabel, contentReports ++ predReports ++ succReports ++ parentReports)
+    StructuralMergeResult(RelationSet(withoutObsoleteBaseLinks(mergedPcs, baseRelations.pcs, rootLabel), mergedContent), rootLabel, contentReports ++ predReports ++ succReports ++ parentReports)
   }
 
   /**
@@ -130,6 +130,33 @@ object PcsMerger {
    */
   def mergeByContent(base: GenericElement, left: GenericElement, right: GenericElement, ignoredAttributes: Set[String] = Set.empty): StructuralMergeResult =
     merge(base, left, right, ignoredAttributes, ContentMatcher.matchedLabel(base, left, ignoredAttributes), ContentMatcher.matchedLabel(base, right, ignoredAttributes))
+
+  // The reconciler retains old base slots even after a new link bypasses them. Remove
+  // only those untraversed BASE links, never an untraversed edit, before strict rebuilding.
+  private def withoutObsoleteBaseLinks(pcs: Set[Pcs], base: Set[Pcs], root: String): Set[Pcs] = {
+    val bySlot = pcs.groupBy(p => (p.parent, p.predecessor))
+    val used = scala.collection.mutable.Set.empty[Pcs]
+    val visited = scala.collection.mutable.Set.empty[String]
+    def visit(parent: String): Unit = if (visited.add(parent)) {
+      var current: Sibling = ListStart
+      val seen = scala.collection.mutable.Set.empty[Sibling]
+      var running = true
+      while (running && seen.add(current)) {
+        bySlot.get(parent -> current) match {
+          case Some(links) if links.size == 1 =>
+            val link = links.head
+            used += link
+            link.successor match {
+              case child @ SiblingNode(label) => visit(label); current = child
+              case _ => running = false
+            }
+          case _ => running = false // strict builder reports missing/ambiguous slots
+        }
+      }
+    }
+    visit(root)
+    pcs -- (base -- used)
+  }
 
   private def byPredecessor(pcs: Set[Pcs]): Map[(String, Sibling), Sibling] = pcs.map(p => (p.parent, p.predecessor) -> p.successor).toMap
 

@@ -305,6 +305,7 @@ Files:
 - core/src/test/scala/com/phasmidsoftware/xmldoc/merge/PcsTreeBuilderSpec.scala
 - idml/src/test/scala/com/phasmidsoftware/xmldoc/idml/PcsTreeBuilderIdmlSpec.scala
 - idml/src/test/scala/com/phasmidsoftware/xmldoc/idml/ThreeWayMergerSpec.scala
+- core/src/main/scala/com/phasmidsoftware/xmldoc/merge/PcsMerger.scala（仅清理被最终链绕过的旧 base 关系；保留新编辑关系及冲突报告）
 - core/src/main/scala/com/phasmidsoftware/xmldoc/merge/PcsTreeBuilder.scala（仅必要修复）
 - idml/src/main/scala/com/phasmidsoftware/xmldoc/idml/ThreeWayMerger.scala（必要的匹配接线修复）
 

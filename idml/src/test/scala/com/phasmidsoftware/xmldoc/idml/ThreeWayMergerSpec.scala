@@ -134,4 +134,78 @@ class ThreeWayMergerSpec extends AnyFlatSpec with should.Matchers {
     val conflicts = expectConflicts(ThreeWayMerger.merge(base, left, right))
     conflicts.count(_.slot.contains("u11c")) shouldBe 1
   }
+
+  private def mr08Story(values: String*): GenericElement = {
+    import com.phasmidsoftware.xmldoc.xml.GenericText
+    GenericElement("Story", Seq("Self" -> "s"), values.map(value =>
+      GenericElement("ParagraphStyleRange", Nil, Seq(GenericElement("Content", Nil, Seq(GenericText(value)))))))
+  }
+
+  it should "preserve B and edited C through the public entry point after anonymous A is deleted" in {
+    val base = mr08Story("A", "B", "C")
+    val left = mr08Story("B", "C")
+    val right = mr08Story("A", "B", "C′")
+    ThreeWayMerger.merge(base, left, right) shouldBe Right(mr08Story("B", "C′"))
+    ThreeWayMerger.merge(base, right, left) shouldBe Right(mr08Story("B", "C′"))
+  }
+
+  it should "reject ambiguous anonymous copy deletion through the public entry point" in {
+    val base = mr08Story("same", "anchor", "same")
+    intercept[IllegalArgumentException](ThreeWayMerger.merge(base, mr08Story("anchor", "same"), base))
+      .getMessage should include ("Ambiguous content matching")
+  }
+
+  it should "enforce strict-text-node-v1 for identical, overlapping and disjoint text edits" in {
+    val base = mr08Story("one two three")
+    val left = mr08Story("ONE two three")
+    ThreeWayMerger.merge(base, left, left) shouldBe Right(left)
+    ThreeWayMerger.merge(base, base, left) shouldBe Right(left)
+    for (right <- Seq(mr08Story("One two three"), mr08Story("one two THREE"));
+      (l, r) <- Seq(left -> right, right -> left)) {
+      val result = ThreeWayMerger.merge(base, l, r)
+      val conflicts = result.swap.toOption.get
+      conflicts.size shouldBe 1
+      conflicts.head.slot shouldBe "content of /0/0::text[0]"
+      conflicts.head.baseValue shouldBe Some("one two three")
+      conflicts.head.leftValue shouldBe Some(l.childElements.head.childElements.head.children.collect {
+        case com.phasmidsoftware.xmldoc.xml.GenericText(t) => t }.mkString)
+      conflicts.head.rightValue shouldBe Some(r.childElements.head.childElements.head.children.collect {
+        case com.phasmidsoftware.xmldoc.xml.GenericText(t) => t }.mkString)
+    }
+  }
+
+  it should "insert a Self-bearing text element without duplicating its character data" in {
+    import com.phasmidsoftware.xmldoc.xml.{GenericText, GenericCData}
+    val base = GenericElement("Story", Seq("Self" -> "s"), Nil)
+    val inserted = GenericElement("Story", Seq("Self" -> "s"), Seq(
+      GenericElement("Content", Seq("Self" -> "new"), Seq(GenericText(" a "), GenericCData("b")))))
+    ThreeWayMerger.merge(base, inserted, base) shouldBe Right(inserted)
+    ThreeWayMerger.merge(base, base, inserted) shouldBe Right(inserted)
+  }
+
+  it should "preserve a style wrapper change and exact mixed content" in {
+    import com.phasmidsoftware.xmldoc.xml.{GenericText, GenericCData}
+    val base = GenericElement("Story", Seq("Self" -> "s"), Seq(GenericText(" "),
+      GenericElement("CharacterStyleRange", Seq("AppliedCharacterStyle" -> "Old"), Seq(
+        GenericText("a"), GenericElement("Br", Nil, Nil), GenericCData("b"))), GenericText("\n")))
+    val updated = base.copy(children = base.children.map {
+      case e: GenericElement => e.copy(attributes = Seq("AppliedCharacterStyle" -> "New"))
+      case other => other
+    })
+    ThreeWayMerger.merge(base, updated, base) shouldBe Right(updated)
+  }
+
+
+  it should "support anonymous roots and structural style wrapping without losing mixed content" in {
+    import com.phasmidsoftware.xmldoc.xml.GenericText
+    val base = mr08Story("A", "B", "C").copy(attributes = Nil)
+    val left = mr08Story("B", "C").copy(attributes = Nil)
+    val right = mr08Story("A", "B", "C′").copy(attributes = Nil)
+    ThreeWayMerger.merge(base, left, right) shouldBe Right(mr08Story("B", "C′").copy(attributes = Nil))
+    val plain = GenericElement("Story", Seq("Self" -> "s"), Seq(GenericElement("Content", Nil, Seq(GenericText(" text ")))))
+    val wrapped = GenericElement("Story", Seq("Self" -> "s"), Seq(
+      GenericElement("CharacterStyleRange", Seq("AppliedCharacterStyle" -> "Bold"), plain.children)))
+    ThreeWayMerger.merge(plain, wrapped, plain) shouldBe Right(wrapped)
+    ThreeWayMerger.merge(plain, plain, wrapped) shouldBe Right(wrapped)
+  }
 }
