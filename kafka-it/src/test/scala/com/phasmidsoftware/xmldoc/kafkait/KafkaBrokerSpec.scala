@@ -37,6 +37,16 @@ class KafkaBrokerSpec extends AnyFlatSpec with Matchers {
     }
   }
 
+  behavior of "StationsToKafka (the pipeline of KAFKA.md, with a broker)"
+
+  it should "stream a KML file's Stations to a topic, which a consumer can read back as JSON" in {
+    EmbeddedKafka.withRunningKafkaOnFoundPort(EmbeddedKafkaConfig(kafkaPort = 0, controllerPort = 0)) { config =>
+      val servers = s"localhost:${config.kafkaPort}"
+      StationsToKafka.send(samples, servers, "stations-streamed").unsafeRunSync() shouldBe records.size
+      consume(servers, "stations-streamed", records.size).map(r => (r.key(), r.value())) shouldBe records.map(s => (s.name, JsonLines.line(s)))
+    }
+  }
+
   behavior of "ZIOKafka.toKafka (with a broker)"
 
   it should "send records which a consumer can read back as JSON" in {
