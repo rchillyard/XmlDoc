@@ -40,7 +40,7 @@ case class StructuralMergeResult(relations: RelationSet, rootLabel: String, conf
  * Checks all three of Lindholm's structural consistency rules: "unique successor" and "unique
  * predecessor" (a node's position *within* its current parent's child list), and "unique parent" -
  * a node claimed as a child by two genuinely different parents (e.g. Kaining's
- * `10-group-ungroup`), which the first two can't see: they only compare values sharing the same
+ * `10b-divergent-parent`), which the first two can't see: they only compare values sharing the same
  * `(parent, ...)` key, but a node moved to a different parent changes which *key* it appears
  * under at all, not the value at a shared one.
  */
@@ -104,15 +104,18 @@ object PcsMerger {
     // goes - the predecessor/successor maps above already own that), only that two sides disagree
     // about which parent a node belongs to at all.
     val baseParent = parentOf(baseRelations.pcs)
-    val (_, parentConflicts) = reconcile(baseParent, parentOf(leftEdits.pcs), parentOf(rightEdits.pcs))
+    // New adjacency under an unchanged parent is not a new parent requirement.
+    val leftParents = parentOf(Pcs.relations(left, leftLabel).pcs)
+    val rightParents = parentOf(Pcs.relations(right, rightLabel).pcs)
+    def parentEdits(parents: Map[String, String]): Map[String, String] =
+      parents.filter { case (label, parent) => !baseParent.get(label).contains(parent) }
+    val (_, parentConflicts) = reconcile(baseParent, parentEdits(leftParents), parentEdits(rightParents))
     val parentReports = parentConflicts.map { case (label, b, l, r) => StructuralConflict(s"parent of $label", b, l, r) }
 
     // A moved child no longer contributes its old parent's chain links. Resolving only
     // (parent, predecessor) slots can leave an unreachable old tail such as p:g -> End
     // after p becomes empty and g moves to q. Remove only unchanged base links invalidated
     // by an unambiguous, actual parent change; conflicting edits remain for reporting.
-    val leftParents = parentOf(Pcs.relations(left, leftLabel).pcs)
-    val rightParents = parentOf(Pcs.relations(right, rightLabel).pcs)
     val movedParents = baseParent.flatMap { case (label, oldParent) =>
       val newParents = Seq(leftParents.get(label), rightParents.get(label)).flatten.filterNot(_ == oldParent).distinct
       if (newParents.size == 1) Some(label -> newParents.head) else None
