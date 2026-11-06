@@ -205,7 +205,7 @@ object PcsMerger {
    */
   private def reconcile[K, V](base: Map[K, V], left: Map[K, V], right: Map[K, V],
                               equivalent: (V, V) => Boolean = (a: V, b: V) => a == b,
-                              choose: (V, V) => V = (a: V, b: V) => a): (Map[K, V], Seq[(K, Option[V], Option[V], Option[V])]) = {
+                              choose: (V, V) => V = (a: V, _: V) => a): (Map[K, V], Seq[(K, Option[V], Option[V], Option[V])]) = {
     val touched = left.keySet ++ right.keySet
     val resolved = touched.flatMap { k =>
       (left.get(k), right.get(k)) match {
