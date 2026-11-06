@@ -78,8 +78,9 @@ object Pcs {
 
   /**
    * Synthetic identity for character-data children. XML text nodes have no `Self`, so their
-   * identity is scoped to their already-identified parent and their ordinal among that parent's
-   * character-data children. Keeping the ordinal independent of element children means inserting
+   * default identity is scoped to their already-identified parent and their ordinal among that
+   * parent's character-data children. Strictly alternating indentation/element lists instead
+   * anchor whitespace to the following matched element (or the trailing boundary). Keeping the ordinal independent of element children means inserting
    * or moving an element does not unnecessarily rename otherwise untouched text nodes.
    */
   private[merge] def characterDataLabel(parentLabel: String, ordinal: Int): String =
@@ -131,13 +132,28 @@ object Pcs {
       val here = Content.element(parentLabel, ref.element.tag, ref.element.attributes)
       var elementOrdinal = 0
       var characterDataOrdinal = 0
-      val kids: Seq[(String, Either[NodeRef, GenericContent])] = ref.element.children.map {
+      // In a strictly alternating indentation/element list, keep each indentation
+      // node with its following matched element. Absolute text ordinals otherwise
+      // turn independent inserts into edits of the same formatting-node identity.
+      // This changes identity only: every whitespace byte remains ordinary content.
+      val children = ref.element.children
+      val indentation = children.size > 1 && children.size % 2 == 1 && children.zipWithIndex.forall {
+        case (GenericText(value), i) if i % 2 == 0 => value.nonEmpty && value.forall(_.isWhitespace)
+        case (_: GenericElement, i) if i % 2 == 1 => true
+        case _ => false
+      }
+      val kids: Seq[(String, Either[NodeRef, GenericContent])] = children.map {
         case e: GenericElement =>
           val child = NodeRef(ref.path.child(elementOrdinal), e)
           elementOrdinal += 1
           labelOf(child) -> Left(child)
         case text: GenericText =>
-          val childLabel = characterDataLabel(parentLabel, characterDataOrdinal)
+          val childLabel = if (indentation) {
+            ref.element.childElements.lift(elementOrdinal) match {
+              case Some(next) => s"$parentLabel::before[${labelOf(NodeRef(ref.path.child(elementOrdinal), next))}]"
+              case None => s"$parentLabel::trailing"
+            }
+          } else characterDataLabel(parentLabel, characterDataOrdinal)
           characterDataOrdinal += 1
           childLabel -> Right(text)
         case cdata: GenericCData =>

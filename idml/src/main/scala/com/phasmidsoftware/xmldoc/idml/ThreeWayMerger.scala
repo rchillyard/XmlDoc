@@ -15,7 +15,7 @@ import scala.util.{Failure, Success}
  *     example, `MergerSpec`) combine cleanly. It has no notion of position at all, so it is blind
  *     to reordering and reparenting.
  *   - `PcsMerger` decides a node's position and parent - so a plain reorder or a Kaining
- *     `10-group-ungroup` reparenting conflict, both invisible to `Merger`, are handled correctly
+ *     `10b-divergent-parent` reparenting conflict, both invisible to `Merger`, are handled correctly
  *     (`PcsMergerSpec`). Its own `Content` relation, though, only ever sees a node's whole
  *     tag+attributes as one indivisible blob - by itself, it would (wrongly) report the
  *     `HelloWorld2A`/`HelloWorld2B` case above as a conflict, since it can't tell "different
@@ -55,10 +55,10 @@ object ThreeWayMerger {
     val attrSelves = attrOutcomes.flatMap(selfOf).toSet
     val attrConflictReports = attrOutcomes.collect { case c: Conflict => renderAttrConflict(c) }
 
-    val structResult = PcsMerger.mergeRelations(
-      matchedRelations(base, Pcs.label),
-      matchedRelations(left, matchedLabels(base, left, ignoredAttributes)),
-      matchedRelations(right, matchedLabels(base, right, ignoredAttributes)),
+    val baseRelations = matchedRelations(base, Pcs.label)
+    val leftRelations = matchedRelations(left, matchedLabels(base, left, ignoredAttributes))
+    val rightRelations = matchedRelations(right, matchedLabels(base, right, ignoredAttributes))
+    val structResult = PcsMerger.mergeRelations(baseRelations, leftRelations, rightRelations,
       Pcs.label(NodeRef(NodePath.root, base)), ignoredAttributes)
     // Merger already handles content-level conflicts for anything with a real Self, finer-grained
     // than PcsMerger's own whole-blob comparison (see the class doc) - keep PcsMerger's content
@@ -72,7 +72,9 @@ object ThreeWayMerger {
     if (allConflicts.nonEmpty) Left(allConflicts)
     else {
       val mergedContent = (structResult.relations.content.map(c => c.label -> c).toMap ++ resolveAttrContent(base, attrOutcomes)).values.toSet
-      PcsTreeBuilder.build(RelationSet(structResult.relations.pcs, mergedContent), structResult.rootLabel) match {
+      val deletedEdits = deletedSubtreeConflicts(baseRelations, leftRelations, rightRelations, structResult.relations, structResult.rootLabel, ignoredAttributes)
+      if (deletedEdits.nonEmpty) Left(deletedEdits)
+      else PcsTreeBuilder.build(RelationSet(structResult.relations.pcs, mergedContent), structResult.rootLabel) match {
         case Success(tree) => Right(tree)
         case Failure(t) => Left(Seq(StructuralConflict("internal error reconstructing the merged tree", None, None, Some(t.getMessage))))
       }
@@ -164,6 +166,40 @@ object ThreeWayMerger {
     val relations = Pcs.relations(tree, labelOf)
     RelationSet(relations.pcs.map(p => Pcs(rename(p.parent), sibling(p.predecessor), sibling(p.successor))),
       relations.content.map(c => c.copy(label = rename(c.label))))
+  }
+
+  // Optional paper §6.3 check is strict at this public entry point. Walk the candidate
+  // relation graph, not the original ancestry: an edited child moved out of a deleted
+  // group remains reachable and must keep its edit.
+  private def deletedSubtreeConflicts(b: RelationSet, l: RelationSet, r: RelationSet,
+                                     candidate: RelationSet, root: String, ignored: Set[String]): Seq[StructuralConflict] = {
+    import com.phasmidsoftware.xmldoc.merge.{SiblingNode, ListStart, ListEnd}
+    val successors = candidate.pcs.map(p => (p.parent, p.predecessor) -> p.successor).toMap
+    val reachable = scala.collection.mutable.Set.empty[String]
+    def visit(label: String): Unit = if (reachable.add(label)) {
+      var next = successors.get(label -> ListStart)
+      val seen = scala.collection.mutable.Set.empty[String]
+      while (next.exists(_ != ListEnd)) next match {
+        case Some(SiblingNode(child)) if seen.add(child) =>
+          visit(child)
+          next = successors.get(label -> SiblingNode(child))
+        case _ => next = None
+      }
+    }
+    visit(root)
+    def state(rs: RelationSet, label: String): Option[String] = rs.content.find(_.label == label).map { content =>
+      val normalized = content.copy(attributes = content.attributes.filterNot(x => ignored(x._1)).sortBy(_._1))
+      val links = rs.pcs.filter(_.parent == label).toSeq.map(_.toString).sorted.mkString("; ")
+      s"$normalized | $links"
+    }
+    b.content.toSeq.sortBy(_.label).filterNot(c => reachable(c.label)).flatMap { c =>
+      val bv = state(b, c.label)
+      val lv = state(l, c.label)
+      val rv = state(r, c.label)
+      if ((lv.isEmpty && rv.nonEmpty && rv != bv) || (rv.isEmpty && lv.nonEmpty && lv != bv))
+        Some(StructuralConflict(s"deleted subtree edit of ${c.label}", bv, lv, rv))
+      else None
+    }
   }
 
   private def selfOf(o: MergeOutcome): Option[String] = o match {

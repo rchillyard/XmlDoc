@@ -66,17 +66,15 @@ class ThreeWayMergerSpec extends AnyFlatSpec with should.Matchers {
     conflicts.map(_.slot).toSet shouldBe Set("successor after u1 under us", "predecessor before u1 under us")
   }
 
-  it should "report a unique-parent conflict (Kaining's 10-group-ungroup)" in {
-    val g1 = GenericElement("Group", Seq("Self" -> "g1"), Seq(rect("x")))
-    val y = rect("y")
-    val base = spreadOf("us", g1, y)
-    val left = spreadOf("us", rect("x"), y) // left ungroups g1
-    val right = spreadOf("us", GenericElement("Group", Seq("Self" -> "g1"), Seq(rect("x"), y))) // right moves y into g1
-    val conflicts = expectConflicts(ThreeWayMerger.merge(base, left, right))
-    conflicts.map(_.slot).toSet shouldBe Set("parent of x", "parent of y")
+  it should "report two genuinely different new parents for the same node (10b)" in {
+    val base = spreadOf("us", group("g1", rect("x")), group("g2"))
+    val left = spreadOf("us", rect("x"), group("g2"))
+    val right = spreadOf("us", group("g1"), group("g2", rect("x")))
+    val expected = Seq(StructuralConflict("parent of x", Some("g1"), Some("us"), Some("g2")))
+    for ((l, r, swap) <- Seq((left, right, false), (right, left, true))) {
+      IdmlMergeAssertions.assertConflictsEqual(expectConflicts(ThreeWayMerger.merge(base, l, r)), expected, swapActualSides = swap)
+    }
   }
-
-  behavior of "ThreeWayMerger.merge, deduplicating an Insert/Insert collision Merger and PcsMerger both detect"
 
   it should "report exactly one conflict, not two, for the same node" in {
     val base = spreadOf("us")
@@ -249,6 +247,179 @@ class ThreeWayMergerSpec extends AnyFlatSpec with should.Matchers {
     val right = base.copy(children = Seq(GenericText(" changed "), GenericCData("<raw>"), a, GenericText(" middle "), b))
     val expected = left.copy(children = GenericText(" changed ") +: left.children.tail)
     IdmlMergeAssertions.assertXmlEquals(expectMerged(ThreeWayMerger.merge(base, left, right)), expected)
+  }
+
+  behavior of "MR06 compatible edits with complete results"
+
+  private def group(id: String, children: GenericElement*): GenericElement =
+    GenericElement("Group", Seq("Self" -> id), children)
+
+  private def assertCompatible(base: GenericElement, left: GenericElement, right: GenericElement,
+                               expected: GenericElement): Unit = {
+    for ((l, r) <- Seq(left -> right, right -> left)) {
+      val tree = expectMerged(ThreeWayMerger.merge(base, l, r))
+      IdmlMergeAssertions.assertXmlEquals(tree, expected)
+    }
+  }
+
+  it should "combine a move of b past c with b's FillColor update exactly once" in {
+    val a = rect("a", "Keep" -> "A")
+    val b = rect("b", "FillColor" -> "None")
+    val c = rect("c", "Keep" -> "C")
+    val red = rect("b", "FillColor" -> "Red")
+    assertCompatible(spreadOf("us", a, b, c), spreadOf("us", a, c, b),
+      spreadOf("us", a, red, c), spreadOf("us", a, c, red))
+  }
+
+  it should "combine a parent's cross-parent move with its children's reorder" in {
+    val a = rect("a")
+    val b = rect("b")
+    val g = group("g", a, b)
+    val reordered = group("g", b, a)
+    assertCompatible(spreadOf("us", group("p", g), group("q")),
+      spreadOf("us", group("p"), group("q", g)),
+      spreadOf("us", group("p", reordered), group("q")),
+      spreadOf("us", group("p"), group("q", reordered)))
+  }
+
+  it should "close a nonempty source gap and preserve the exact target anchor during a parent move" in {
+    val x = rect("x")
+    val y = rect("y")
+    val z = rect("z")
+    val g = group("g", rect("a"), rect("b"))
+    val reordered = group("g", rect("b"), rect("a"))
+    val base = spreadOf("us", group("p", x, g, y), group("q", z))
+    val moved = spreadOf("us", group("p", x, y), group("q", z, g))
+    val edited = spreadOf("us", group("p", x, reordered, y), group("q", z))
+    assertCompatible(base, moved, edited,
+      spreadOf("us", group("p", x, y), group("q", z, reordered)))
+    assertCompatible(base, moved, moved, moved)
+  }
+
+  it should "combine inserts in distinct compatible gaps without losing surrounding nodes" in {
+    val a = rect("a")
+    val b = rect("b")
+    val x = rect("x", "FillColor" -> "Blue")
+    val y = rect("y", "FillColor" -> "Green")
+    assertCompatible(spreadOf("us", a, b), spreadOf("us", x, a, b),
+      spreadOf("us", a, b, y), spreadOf("us", x, a, b, y))
+  }
+
+  it should "coalesce identical updates and identical structural changes" in {
+    val a = rect("a")
+    val b = rect("b", "FillColor" -> "None")
+    val base = spreadOf("us", a, b)
+    val changed = spreadOf("us", a, rect("b", "FillColor" -> "Red"))
+    assertCompatible(base, changed, changed, changed)
+    val reordered = spreadOf("us", b, a)
+    assertCompatible(base, reordered, reordered, reordered)
+    val inserted = spreadOf("us", a, b, rect("x"))
+    assertCompatible(base, inserted, inserted, inserted)
+  }
+
+
+  it should "combine independent attribute updates using the IDML project policy" in {
+    val base = spreadOf("us", rect("a"), rect("b", "FillColor" -> "None", "StrokeColor" -> "None"))
+    val left = spreadOf("us", rect("a"), rect("b", "FillColor" -> "Red", "StrokeColor" -> "None"))
+    val right = spreadOf("us", rect("a"), rect("b", "FillColor" -> "None", "StrokeColor" -> "Black"))
+    val expected = spreadOf("us", rect("a"), rect("b", "FillColor" -> "Red", "StrokeColor" -> "Black"))
+    assertCompatible(base, left, right, expected)
+  }
+
+
+  private def ordered(ids: String): GenericElement = spreadOf("us", ids.map(c => rect(c.toString))*)
+
+  it should "report exactly b's successor and c's predecessor guard conflicts" in {
+    val base = ordered("abcd")
+    val left = ordered("bacd")
+    val right = ordered("abdc")
+    val expected = Seq(
+      StructuralConflict("successor after b under us", Some("c"), Some("a"), Some("d")),
+      StructuralConflict("predecessor before c under us", Some("b"), Some("a"), Some("d")))
+    for ((l, r, swap) <- Seq((left, right, false), (right, left, true))) {
+      IdmlMergeAssertions.assertConflictsEqual(expectConflicts(ThreeWayMerger.merge(base, l, r)), expected, swapActualSides = swap)
+    }
+  }
+
+  it should "merge isolated reorder contexts into the complete baced tree" in {
+    assertCompatible(ordered("abcde"), ordered("bacde"), ordered("abced"), ordered("baced"))
+  }
+
+  it should "report both slot conflicts for distinct inserts in the same gap" in {
+    val base = ordered("ab")
+    val left = ordered("axb")
+    val right = ordered("ayb")
+    val expected = Seq(
+      StructuralConflict("successor after a under us", Some("b"), Some("x"), Some("y")),
+      StructuralConflict("predecessor before b under us", Some("a"), Some("x"), Some("y")))
+    for ((l, r, swap) <- Seq((left, right, false), (right, left, true))) {
+      IdmlMergeAssertions.assertConflictsEqual(expectConflicts(ThreeWayMerger.merge(base, l, r)), expected, swapActualSides = swap)
+    }
+  }
+
+  it should "preserve an ungrouped child's independent content update (case 10)" in {
+    val base = spreadOf("us", group("g", rect("x", "ItemTransform" -> "old")))
+    val left = spreadOf("us", rect("x", "ItemTransform" -> "old"))
+    val right = spreadOf("us", group("g", rect("x", "ItemTransform" -> "new")))
+    for ((l, r) <- Seq(left -> right, right -> left)) {
+      IdmlMergeAssertions.assertXmlEquals(expectMerged(ThreeWayMerger.merge(base, l, r)),
+        spreadOf("us", rect("x", "ItemTransform" -> "new")))
+    }
+  }
+
+
+  it should "reject a text update at any depth inside a truly deleted subtree" in {
+    import com.phasmidsoftware.xmldoc.xml.GenericText
+    import com.phasmidsoftware.xmldoc.merge.{Content, Pcs, ListStart, ListEnd}
+    for (depth <- Seq(1, 4, 12)) {
+      def subtree(text: String): GenericElement = (1 to depth).foldRight(
+        GenericElement("Content", Seq("Self" -> "leaf"), Seq(GenericText(text)))) {
+        case (i, child) => group(s"g$i", child)
+      }
+      val base = spreadOf("us", subtree("old"), rect("unrelated"))
+      val deleted = spreadOf("us", rect("unrelated"))
+      val edited = spreadOf("us", subtree("new"), rect("unrelated"))
+      def value(text: String) = Some(s"${Content.text("leaf::text[0]", text)} | ${Pcs("leaf::text[0]", ListStart, ListEnd)}")
+      val expected = Seq(StructuralConflict("deleted subtree edit of leaf::text[0]", value("old"), None, value("new")))
+      for ((l, r, swap) <- Seq((deleted, edited, false), (edited, deleted, true))) {
+        IdmlMergeAssertions.assertConflictsEqual(expectConflicts(ThreeWayMerger.merge(base, l, r)), expected, swapActualSides = swap)
+      }
+      // The optional check stays out of the default core relation merger.
+      PcsMerger.merge(base, deleted, edited).conflicts shouldBe empty
+      IdmlMergeAssertions.assertXmlEquals(expectMerged(ThreeWayMerger.merge(base, deleted, base)), deleted)
+      IdmlMergeAssertions.assertXmlEquals(expectMerged(ThreeWayMerger.merge(base, deleted, deleted)), deleted)
+    }
+  }
+
+  it should "reject an insertion deep within a deleted ancestor with complete three-way context" in {
+    val base = spreadOf("us", group("g", group("h", group("k"))))
+    val deleted = spreadOf("us")
+    val edited = spreadOf("us", group("g", group("h", group("k", rect("x")))))
+    val before = Some("Content(k,Group,List((Self,k)),None,false,ElementNode) | Pcs(k,ListStart,ListEnd)")
+    val after = Some("Content(k,Group,List((Self,k)),None,false,ElementNode) | Pcs(k,ListStart,SiblingNode(x)); Pcs(k,SiblingNode(x),ListEnd)")
+    val expected = Seq(StructuralConflict("deleted subtree edit of k", before, None, after))
+    for ((l, r, swap) <- Seq((deleted, edited, false), (edited, deleted, true))) {
+      IdmlMergeAssertions.assertConflictsEqual(expectConflicts(ThreeWayMerger.merge(base, l, r)), expected, swapActualSides = swap)
+    }
+  }
+
+  it should "ignore volatile descendant attributes when checking deleted regions" in {
+    def tree(stamp: String) = spreadOf("us", group("g",
+      rect("x", "LinkImportTime" -> stamp, "StyleUniqueId" -> stamp)))
+    IdmlMergeAssertions.assertXmlEquals(expectMerged(ThreeWayMerger.merge(tree("1"), spreadOf("us"), tree("2"))), spreadOf("us"))
+  }
+
+
+  it should "reject a deleted group whose child list the other branch genuinely edits" in {
+    val base = spreadOf("us", group("g", rect("x")), rect("y"))
+    val left = spreadOf("us", rect("x"), rect("y"))
+    val right = spreadOf("us", group("g", rect("x"), rect("y")))
+    val before = Some("Content(g,Group,List((Self,g)),None,false,ElementNode) | Pcs(g,ListStart,SiblingNode(x)); Pcs(g,SiblingNode(x),ListEnd)")
+    val after = Some("Content(g,Group,List((Self,g)),None,false,ElementNode) | Pcs(g,ListStart,SiblingNode(x)); Pcs(g,SiblingNode(x),SiblingNode(y)); Pcs(g,SiblingNode(y),ListEnd)")
+    val expected = Seq(StructuralConflict("deleted subtree edit of g", before, None, after))
+    for ((l, r, swap) <- Seq((left, right, false), (right, left, true))) {
+      IdmlMergeAssertions.assertConflictsEqual(expectConflicts(ThreeWayMerger.merge(base, l, r)), expected, swapActualSides = swap)
+    }
   }
 
 }
