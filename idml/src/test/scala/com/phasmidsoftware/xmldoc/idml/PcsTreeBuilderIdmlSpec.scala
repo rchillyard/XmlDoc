@@ -28,4 +28,17 @@ class PcsTreeBuilderIdmlSpec extends AnyFlatSpec with should.Matchers {
     rebuilt.childElements.flatMap(_.attributes.collectFirst { case ("Self", v) => v }) should contain("u141")
     rebuilt shouldBe d
   }
+
+  it should "round-trip a complete IDML style wrapper with mixed and adjacent character data" in {
+    import com.phasmidsoftware.xmldoc.merge.Pcs
+    import com.phasmidsoftware.xmldoc.xml.{GenericText, GenericCData}
+    import scala.util.Success
+    val story = GenericElement("Story", Seq("Self" -> "s"), Seq(
+      GenericElement("ParagraphStyleRange", Seq("AppliedParagraphStyle" -> "Body"), Seq(
+        GenericText(" "), GenericElement("CharacterStyleRange", Nil, Seq(
+          GenericElement("Content", Nil, Seq(GenericText("a"), GenericText("b"), GenericCData("<c>"))))),
+        GenericElement("Br", Nil, Nil), GenericText("\n")))))
+    PcsTreeBuilder.build(Pcs.relations(story), "s") shouldBe Success(story)
+  }
+
 }

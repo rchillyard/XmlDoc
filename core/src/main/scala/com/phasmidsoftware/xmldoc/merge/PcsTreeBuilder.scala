@@ -46,7 +46,12 @@ object PcsTreeBuilder {
    *         unresolved conflict having been reconstructed from anyway).
    */
   def build(relations: RelationSet, rootLabel: String): Try[GenericElement] = {
+    val duplicates = relations.content.groupBy(_.label).collect { case (label, values) if values.size > 1 => label }
+    if (duplicates.nonEmpty)
+      return Failure(XmlException(s"PcsTreeBuilder: duplicate content for ${duplicates.toSeq.sorted.mkString(", ")}"))
+    val visited = scala.collection.mutable.Set.empty[String]
     val contentByLabel = relations.content.map(c => c.label -> c).toMap
+    val linksByParent = relations.pcs.groupBy(_.parent)
     val successorOf = relations.pcs.map(p => (p.parent, p.predecessor) -> p.successor).toMap
 
     def childLabels(parent: String): Try[Seq[String]] = {
@@ -64,45 +69,58 @@ object PcsTreeBuilder {
               loop(next, seen + next).map(label +: _)
         }
 
-      loop(ListStart, Set(ListStart))
+      val links = linksByParent.getOrElse(parent, Set.empty)
+      if (links.groupBy(_.predecessor).exists(_._2.size > 1) ||
+        links.groupBy(_.successor).exists(_._2.size > 1))
+        Failure(XmlException(s"PcsTreeBuilder: conflicting child chain under $parent"))
+      else loop(ListStart, Set(ListStart)).flatMap { labels =>
+        if (links.size != labels.size + 1)
+          Failure(XmlException(s"PcsTreeBuilder: disconnected child chain under $parent"))
+        else Success(labels)
+      }
     }
 
     def buildNode(label: String, ancestors: Set[String]): Try[GenericContent] =
       if (ancestors(label))
         Failure(XmlException(s"PcsTreeBuilder: cyclic parent chain - $label is its own ancestor"))
-      else contentByLabel.get(label) match {
-        case None => Failure(XmlException(s"PcsTreeBuilder: no content recorded for $label"))
-        case Some(content) if content.kind == TextNode =>
-          content.text match {
-            case Some(value) => childLabels(label).flatMap {
-              case Nil => Success(GenericText(value))
-              case _ => Failure(XmlException(s"PcsTreeBuilder: text node $label cannot have children"))
+      else if (visited(label))
+        Failure(XmlException(s"PcsTreeBuilder: duplicate parent for $label"))
+      else {
+        visited += label
+        contentByLabel.get(label) match {
+          case None => Failure(XmlException(s"PcsTreeBuilder: no content recorded for $label"))
+          case Some(content) if content.kind == TextNode =>
+            content.text match {
+              case Some(value) => childLabels(label).flatMap {
+                case Nil => Success(GenericText(value))
+                case _ => Failure(XmlException(s"PcsTreeBuilder: text node $label cannot have children"))
+              }
+              case None => Failure(XmlException(s"PcsTreeBuilder: text node $label has no text payload"))
             }
-            case None => Failure(XmlException(s"PcsTreeBuilder: text node $label has no text payload"))
-          }
-        case Some(content) if content.kind == CDataNode =>
-          content.text match {
-            case Some(value) => childLabels(label).flatMap {
-              case Nil => Success(GenericCData(value))
-              case _ => Failure(XmlException(s"PcsTreeBuilder: CDATA node $label cannot have children"))
+          case Some(content) if content.kind == CDataNode =>
+            content.text match {
+              case Some(value) => childLabels(label).flatMap {
+                case Nil => Success(GenericCData(value))
+                case _ => Failure(XmlException(s"PcsTreeBuilder: CDATA node $label cannot have children"))
+              }
+              case None => Failure(XmlException(s"PcsTreeBuilder: CDATA node $label has no text payload"))
             }
-            case None => Failure(XmlException(s"PcsTreeBuilder: CDATA node $label has no text payload"))
-          }
-        case Some(content) =>
-          for {
-            labels <- childLabels(label)
-            children <- labels.foldLeft[Try[Vector[GenericContent]]](Success(Vector.empty)) { (acc, childLabel) =>
-              for {
-                built <- acc
-                child <- buildNode(childLabel, ancestors + label)
-              } yield built :+ child
+          case Some(content) =>
+            for {
+              labels <- childLabels(label)
+              children <- labels.foldLeft[Try[Vector[GenericContent]]](Success(Vector.empty)) { (acc, childLabel) =>
+                for {
+                  built <- acc
+                  child <- buildNode(childLabel, ancestors + label)
+                } yield built :+ child
+              }
+            } yield {
+              // `text`/`textIsCData` are kept as a compatibility path for relation sets created by
+              // the earlier leaf-folding representation. New `Pcs.relations` never puts text here.
+              val legacyText = content.text.map(t => if (content.textIsCData) GenericCData(t) else GenericText(t)).toSeq
+              GenericElement(content.tag, content.attributes, children ++ legacyText)
             }
-          } yield {
-            // `text`/`textIsCData` are kept as a compatibility path for relation sets created by
-            // the earlier leaf-folding representation. New `Pcs.relations` never puts text here.
-            val legacyText = content.text.map(t => if (content.textIsCData) GenericCData(t) else GenericText(t)).toSeq
-            GenericElement(content.tag, content.attributes, children ++ legacyText)
-          }
+        }
       }
 
     buildNode(rootLabel, Set.empty).flatMap {

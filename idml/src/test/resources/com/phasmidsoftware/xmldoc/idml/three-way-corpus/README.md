@@ -2,6 +2,16 @@
 
 This directory maps all 15 requested merge scenarios (13 main numbers plus the `06b` and `08b` variants) to concrete `base / left / right / expected` fixtures. The wording below is the English version of the source table.
 
+## MR01 acceptance policy (2026-11-06)
+
+The authoritative target contract is [IDML XML Merge Test Specification](../../../../../../../../docs/xml-merge-test-spec.md). The selected profile is `strict-text-node-v1`: different edits to the same text node conflict, including disjoint word changes. Token-aware merging is deferred.
+
+The case table and schemaVersion 1 JSON below describe the original fixture expectations. In particular, `08b` currently records the historical token-aware `accept` expectation; it is **not** an executable expectation for the selected profile. MR03 must explicitly migrate it to `conflict` with version/profile metadata. A runner must not accept either result interchangeably. No fixture JSON or IDML bytes are changed by MR01.
+
+Cases `06b` and `13` remain required domain conflicts under the specification's conservative Story-level layout/content dependency rule. They are not guaranteed by generic PCS reconciliation. MR11/MR12 must implement and verify this rule before these cases count as passed. References, empty sentinels and thread validation are checked separately from concurrent intent conflicts.
+
+The specification traces all 15 cases, five test layers and nine plan sections to implementation MRs. It records strict deleted-subtree checking, ignored attributes, failure contracts, later measurement deadlines, launch blockers and deferred work. Documentation does not assert current implementation conformance.
+
 ## Reliability invariant
 
 For every case, both branches are created from an exact copy of the same closed-state `base.idml`. Existing `Self` values are never regenerated. A branch may remove a node or add a new unique node, but all unchanged nodes retain their base identity. This avoids the live-session `Self` drift observed in the old `HelloWorld2A/B/C` samples.
