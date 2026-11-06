@@ -53,4 +53,13 @@ MR13 只测已定义规模下的通用核心及最小包分段性能，不代表
 工作流 [.github/workflows/idml-merge-tests.yml](../../.github/workflows/idml-merge-tests.yml)
 将 `automated-regressions` 和 `release-evidence` 分为独立 job。
 前者验证自动化回归；后者在真实记录缺失时必须失败并上传 readiness JSON。
-因此在当前 0/4 状态下，整个工作流不能宣称绿色或发布完成。远程运行结果将在推送后核查。
+因此在当前 0/4 状态下，整个工作流不能宣称绿色或发布完成。远程运行结果已核查：
+
+- [GitHub run 42245687017](https://github.com/rchillyard/XmlDoc/actions/runs/42245687017)，
+  受测提交 `84343cb8833a58dbb76ac783c9ed15d43d6b25f9`。
+- `automated-regressions`：success（Scala、只读 corpus 与 Python 步骤均成功）。
+- `release-evidence`：failure，严格门禁退出 1；contractValid=true、suppliedCases=0、
+  plannedCases=4、releaseReady=false；readiness artifact 上传成功。
+- 整体 conclusion=failure，仅因为上述真实证据阻塞；不是全部 CI 通过。
+  [机器可读 job/step 结果](evidence/mr14-github-ci.json)。
+- 本段及执行状态的后续提交仅补文档与证据，不改变受测源码。

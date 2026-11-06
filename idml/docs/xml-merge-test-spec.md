@@ -296,3 +296,13 @@ Locked scope
 [性能计划](xml-merge-performance.md)；正式门禁须在校准后、正式测量前冻结。
 真实验收候选清单在核对本地资料后冻结；缺少授权、独立 expected 或 InDesign 记录
 必须在 [证据表](xml-merge-test-evidence.md) 明确阻塞，自动测试通过不替代应用验收。
+
+
+## MR13/MR14 执行状态（2026-11-06）
+
+MR13 冻结门禁与 125 次正式测量通过；MR14 自动化实现完成，本地 946 项 Scala、
+22 项 Python 通过，16 组语料只读验证通过。GitHub run 42245687017 的自动化 job
+通过；真实证据 job 因 0/4 组资料而失败。**MR14 发布验收仍被真实样本与 InDesign
+打开/保存/重开记录阻塞**，没有将待制作用例记为通过。
+完整命令、日志、提交和 CI 结果见 [证据表](xml-merge-test-evidence.md)；
+样本制作见 [指南](idml-real-sample-guide.md)，算法归因见 [理论报告](xml-merge-theory-idml-report.md)。

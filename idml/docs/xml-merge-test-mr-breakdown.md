@@ -614,3 +614,13 @@ Done when:
 - MR14 实施文件补充：`idml/tools/verify_real_world_manifest.py`（严格发布门禁）与
   `idml/tools/test_real_world_manifest.py`（损坏/越界/假 ready 回归）。CI 自动测试与真实
   证据门禁分为独立 job；真实资料缺失使 release-evidence 明确失败，不把它标为通过。
+
+
+## MR13/MR14 执行状态（2026-11-06）
+
+MR13 冻结门禁与 125 次正式测量通过；MR14 自动化实现完成，本地 946 项 Scala、
+22 项 Python 通过，16 组语料只读验证通过。GitHub run 42245687017 的自动化 job
+通过；真实证据 job 因 0/4 组资料而失败。**MR14 发布验收仍被真实样本与 InDesign
+打开/保存/重开记录阻塞**，没有将待制作用例记为通过。
+完整命令、日志、提交和 CI 结果见 [证据表](xml-merge-test-evidence.md)；
+样本制作见 [指南](idml-real-sample-guide.md)，算法归因见 [理论报告](xml-merge-theory-idml-report.md)。
