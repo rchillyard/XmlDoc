@@ -64,17 +64,23 @@ flowchart BT
 
 ## 1. Start the broker
 
-You need Docker (for example, Docker Desktop). From the root of the repository:
+You need Docker with its Compose plugin: Docker Desktop, or (on a Mac) `brew install colima docker docker-compose` and then `colima start`.
+From the root of the repository:
 
 ```bash
 docker compose up -d
 ```
 
-`docker compose ps` shows the `kafka` service as `healthy` once the broker is ready (after ten seconds or so).
+If Docker Desktop was once installed and has since been replaced (by Colima, say), two leftovers can get in the way:
+`docker compose` is "unknown" (the plugin in `~/.docker/cli-plugins` is a link into the old app: link it to Homebrew's
+`docker-compose` instead), or the image can't be pulled because `docker-credential-desktop` isn't found
+(delete the line `"credsStore": "desktop",` from `~/.docker/config.json`).
+
+`docker ps` shows the `xmldoc-kafka` container as `healthy` once the broker is ready (after ten seconds or so).
 The broker listens on `localhost:9092`. Topics are created when they're first written to, but you can create one explicitly:
 
 ```bash
-docker compose exec kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic stations
+docker exec xmldoc-kafka /opt/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic stations
 ```
 
 The heart of `docker-compose.yml` is a single node which is both broker and controller (KRaft mode, so no ZooKeeper):
@@ -169,7 +175,7 @@ sbt "kafkaIt/Test/runMain com.phasmidsoftware.xmldoc.kafkait.sendStations path/t
 ## 4. Watch the topic
 
 ```bash
-docker compose exec kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic stations --from-beginning --property print.key=true
+docker exec xmldoc-kafka /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic stations --from-beginning --formatter-property print.key=true
 ```
 
 Each message is a key (the station's name) and one line of JSON:

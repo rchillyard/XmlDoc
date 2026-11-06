@@ -6,6 +6,11 @@
         </encoder>
     </appender>
 
+    <!-- Extractor warns of each optional KML element which is absent (normal, and many of them). -->
+    <logger name="com.phasmidsoftware.xmldoc.xml.Extractor" level="ERROR"/>
+    <!-- The first message to a new topic draws a (harmless) UNKNOWN_TOPIC_OR_PARTITION warning while the broker creates it. -->
+    <logger name="org.apache.kafka.clients.NetworkClient" level="ERROR"/>
+
     <root level="WARN">
         <appender-ref ref="STDOUT"/>
     </root>
