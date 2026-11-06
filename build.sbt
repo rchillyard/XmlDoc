@@ -107,6 +107,9 @@ lazy val kafkaIt = (project in file("kafka-it"))
   .settings(
     name := "xmldoc-kafka-it",
     publish / skip := true,
+    // `sendStations` (the example of KAFKA.md) runs in its own JVM, in the root of the build (where its default KML file is).
+    Test / run / fork := true,
+    Test / run / baseDirectory := (ThisBuild / baseDirectory).value,
     // The broker is built with Scala 2.13: it runs with core's Scala 3 build of scala-logging instead of its own.
     libraryDependencies += "io.github.embeddedkafka" %% "embedded-kafka" % "4.4.0" % Test exclude("com.typesafe.scala-logging", "scala-logging_2.13")
   )

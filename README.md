@@ -157,6 +157,8 @@ ZStream.fromIterable(stations).via(ZIOKafka.toKafka("stations", Serde.string)(_.
 
 For messages without a key, use a `Unit` key: `ProducerSettings[IO, Unit, String]` with `(_ => ())`, or `ZIOKafka.unitSerializer`.
 The Spark job then reads the topic with `from_json` and `SparkSchema.ddl` (above).
+[KAFKA.md](KAFKA.md) walks through the whole pipeline (with diagrams), from a KML file to a Kafka broker running in Docker
+(`docker compose up -d`, with this repository's `docker-compose.yml`) and on to Spark.
 
 ### Streaming a large file
 

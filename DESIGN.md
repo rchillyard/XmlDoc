@@ -38,6 +38,8 @@ kafka-cats, kafka-zio
          TableParser's Kafka modules.
 kafka-it - integration tests of the Kafka modules against a broker started in the JVM
          (embedded-kafka). Not aggregated by the root project; run `sbt kafkaIt/test`.
+         Also the runnable example of KAFKA.md (`sendStations`), for the broker of
+         docker-compose.yml.
 ```
 
 `core` has no knowledge of KML or IDML; everything format-specific lives in `kml`/`idml`.
