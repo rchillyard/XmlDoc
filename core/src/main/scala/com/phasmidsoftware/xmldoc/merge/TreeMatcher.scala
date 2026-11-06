@@ -44,10 +44,9 @@ case class Matching(matched: Seq[(NodeRef, NodeRef)], onlyInLeft: Seq[NodeRef], 
  * This deliberately does not attempt any content/structural heuristic matching (the "3dm-style"
  * fallback `MERGE.md` describes for un-identified content) - it only reports what `Self` alone
  * can tell us. That's a real scope limit: nodes with no `Self` at all (most obviously, story text)
- * never appear in the result, in either the matched or the unmatched sets. It also assumes `Self`
- * is unique within each tree (a real IDML invariant); if that's ever violated, whichever node is
- * visited last silently wins the slot in the index, since this is meant as a starting point, not a
- * validator of well-formed IDML.
+ * never appear in the result, in either the matched or unmatched sets. Duplicate Self values
+ * within either input tree fail at this matcher boundary with both paths; the same identity
+ * appearing once in each version is valid.
  */
 object TreeMatcher {
 
@@ -58,6 +57,15 @@ object TreeMatcher {
     here ++ children
   }
 
+  private def index(tree: GenericElement, side: String): Map[String, NodeRef] = {
+    val entries = collectBySelf(tree)
+    entries.groupBy(_._1).toSeq.sortBy(_._1).foreach { case (self, refs) =>
+      require(refs.size == 1,
+        s"Duplicate Self '$self' in $side tree at ${refs.map(_._2.path).mkString(", ")}")
+    }
+    entries.toMap
+  }
+
   /**
    * Matches two trees by their nodes' `Self` attribute values.
    *
@@ -66,8 +74,8 @@ object TreeMatcher {
    * @return a `Matching` of the two trees.
    */
   def matchBySelf(left: GenericElement, right: GenericElement): Matching = {
-    val leftBySelf = collectBySelf(left).toMap
-    val rightBySelf = collectBySelf(right).toMap
+    val leftBySelf = index(left, "left")
+    val rightBySelf = index(right, "right")
     val matched = (leftBySelf.keySet intersect rightBySelf.keySet).toSeq.sorted.map(s => leftBySelf(s) -> rightBySelf(s))
     val onlyInLeft = (leftBySelf.keySet diff rightBySelf.keySet).toSeq.sorted.map(leftBySelf)
     val onlyInRight = (rightBySelf.keySet diff leftBySelf.keySet).toSeq.sorted.map(rightBySelf)
