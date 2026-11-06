@@ -106,16 +106,17 @@ class PcsTreeBuilderSpec extends AnyFlatSpec with should.Matchers {
     t.getMessage should include("no content recorded for u1")
   }
 
-  behavior of "PcsTreeBuilder.build, the unique-parent rule (Kaining's 10-group-ungroup)"
+  behavior of "PcsTreeBuilder.build, genuinely divergent parents (10b)"
 
-  it should "refuse to build when left ungroups a node right takes as its new home" in {
-    val g1 = GenericElement("Group", Seq("Self" -> "g1"), Seq(rect("x")))
-    val y = rect("y")
-    val base = spreadOf("us", g1, y)
-    val left = spreadOf("us", rect("x"), y) // left ungroups g1: x is promoted, g1 vanishes
-    val right = spreadOf("us", GenericElement("Group", Seq("Self" -> "g1"), Seq(rect("x"), y))) // right moves y inside g1
+  it should "refuse to build when both branches impose different new parents" in {
+    val base = spreadOf("us", GenericElement("Group", Seq("Self" -> "g1"), Seq(rect("x"))),
+      GenericElement("Group", Seq("Self" -> "g2"), Nil))
+    val left = spreadOf("us", rect("x"), GenericElement("Group", Seq("Self" -> "g2"), Nil))
+    val right = spreadOf("us", GenericElement("Group", Seq("Self" -> "g1"), Nil),
+      GenericElement("Group", Seq("Self" -> "g2"), Seq(rect("x"))))
     val result = PcsMerger.merge(base, left, right)
-    result.conflicts.map(_.slot) should (contain("parent of x") and contain("parent of y"))
+    MergeAssertions.assertConflictsEqual(result.conflicts,
+      Seq(StructuralConflict("parent of x", Some("g1"), Some("us"), Some("g2"))))
     PcsTreeBuilder.build(result) shouldBe a[Failure[?]]
   }
 }
