@@ -1,0 +1,1484 @@
+{
+  "sourceCommit": "eb491e250416f9a63bf77f772dc803cfb8baad74",
+  "sourceSha256": "2947ca751fc0c3b01ca24fefb827cef2454d762182b33a22201ec2a3332876eb",
+  "environment": {
+    "java": "21.0.12.1",
+    "vm": "OpenJDK 64-Bit Server VM",
+    "os": "Mac OS X",
+    "arch": "aarch64",
+    "processors": 10,
+    "maxHeapMiB": 1024,
+    "jvmArguments": [
+      "-Dfile.encoding=UTF-8",
+      "-Xms1024m",
+      "-Xmx1024m",
+      "-Xss4M",
+      "-XX:ReservedCodeCacheSize=128m",
+      "-Dsbt.script=/opt/homebrew/Cellar/sbt/2.0.8/libexec/bin/sbt",
+      "-Dscala.ext.dirs=/Users/lady_penguin/.sbt/1.0/java9-rt-ext-homebrew_21_0_12_1"
+    ]
+  },
+  "model": {
+    "status": "fit",
+    "c0": 5.5258974691481955,
+    "c1": 0.0003994747899165853,
+    "c2": -0.011832736068637035,
+    "residualRMSE": 9.199525303652655,
+    "rSquared": 0.0003535127286257156,
+    "scaledPivotRatio": 85.67610385686562,
+    "samples": 48,
+    "note": "merge/rebuild only; long text excluded; observational fit, not complexity proof"
+  },
+  "scenarios": [
+    {
+      "nodes": 32,
+      "budget": 0,
+      "seed": 13,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 2.729791,
+        "median": 2.9905415,
+        "p95": 3.251292,
+        "max": 3.251292
+      },
+      "matchMs": {
+        "min": 3.74525,
+        "median": 4.1308545,
+        "p95": 4.516459,
+        "max": 4.516459
+      },
+      "mergeMs": {
+        "min": 4.139917,
+        "median": 8.246188,
+        "p95": 12.352459,
+        "max": 12.352459
+      },
+      "writeMs": {
+        "min": 1.367,
+        "median": 1.478875,
+        "p95": 1.59075,
+        "max": 1.59075
+      },
+      "totalMs": {
+        "min": 16.578167,
+        "median": 20.014875,
+        "p95": 23.451583,
+        "max": 23.451583
+      },
+      "sampledHeapPeakMiB": {
+        "min": 263.5,
+        "median": 264.0,
+        "p95": 264.5,
+        "max": 264.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 263.5,
+        "median": 270.0,
+        "p95": 276.5,
+        "max": 276.5
+      },
+      "E": [
+        0
+      ]
+    },
+    {
+      "nodes": 32,
+      "budget": 4,
+      "seed": 13,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 3,
+        "delete": 1,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 1.08125,
+        "median": 1.4778125,
+        "p95": 1.874375,
+        "max": 1.874375
+      },
+      "matchMs": {
+        "min": 2.710875,
+        "median": 2.9126455,
+        "p95": 3.114416,
+        "max": 3.114416
+      },
+      "mergeMs": {
+        "min": 2.244667,
+        "median": 33.822771,
+        "p95": 65.400875,
+        "max": 65.400875
+      },
+      "writeMs": {
+        "min": 1.186625,
+        "median": 1.23975,
+        "p95": 1.292875,
+        "max": 1.292875
+      },
+      "totalMs": {
+        "min": 9.897875,
+        "median": 60.332271,
+        "p95": 110.766667,
+        "max": 110.766667
+      },
+      "sampledHeapPeakMiB": {
+        "min": 134.5,
+        "median": 135.5,
+        "p95": 136.5,
+        "max": 136.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 134.5,
+        "median": 135.5,
+        "p95": 136.5,
+        "max": 136.5
+      },
+      "E": [
+        13
+      ]
+    },
+    {
+      "nodes": 32,
+      "budget": 0,
+      "seed": 37,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 0.843542,
+        "median": 1.4262085,
+        "p95": 2.008875,
+        "max": 2.008875
+      },
+      "matchMs": {
+        "min": 1.924875,
+        "median": 2.168146,
+        "p95": 2.411417,
+        "max": 2.411417
+      },
+      "mergeMs": {
+        "min": 3.523,
+        "median": 9.485479,
+        "p95": 15.447958,
+        "max": 15.447958
+      },
+      "writeMs": {
+        "min": 1.025042,
+        "median": 1.35025,
+        "p95": 1.675458,
+        "max": 1.675458
+      },
+      "totalMs": {
+        "min": 12.431041,
+        "median": 19.469687,
+        "p95": 26.508333,
+        "max": 26.508333
+      },
+      "sampledHeapPeakMiB": {
+        "min": 139.5,
+        "median": 140.0,
+        "p95": 140.5,
+        "max": 140.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 139.5,
+        "median": 140.0,
+        "p95": 140.5,
+        "max": 140.5
+      },
+      "E": [
+        0
+      ]
+    },
+    {
+      "nodes": 32,
+      "budget": 4,
+      "seed": 37,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 2,
+        "delete": 0,
+        "move": 1,
+        "update": 1
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 0.740583,
+        "median": 1.206375,
+        "p95": 1.672167,
+        "max": 1.672167
+      },
+      "matchMs": {
+        "min": 0.902,
+        "median": 0.9490419999999999,
+        "p95": 0.996084,
+        "max": 0.996084
+      },
+      "mergeMs": {
+        "min": 1.561083,
+        "median": 1.8705,
+        "p95": 2.179917,
+        "max": 2.179917
+      },
+      "writeMs": {
+        "min": 1.040584,
+        "median": 1.041917,
+        "p95": 1.04325,
+        "max": 1.04325
+      },
+      "totalMs": {
+        "min": 9.149375,
+        "median": 9.163625,
+        "p95": 9.177875,
+        "max": 9.177875
+      },
+      "sampledHeapPeakMiB": {
+        "min": 144.5,
+        "median": 145.5,
+        "p95": 146.5,
+        "max": 146.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 144.5,
+        "median": 145.5,
+        "p95": 146.5,
+        "max": 146.5
+      },
+      "E": [
+        12
+      ]
+    },
+    {
+      "nodes": 32,
+      "budget": 0,
+      "seed": 73,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 0.594375,
+        "median": 0.7145414999999999,
+        "p95": 0.834708,
+        "max": 0.834708
+      },
+      "matchMs": {
+        "min": 0.928583,
+        "median": 1.1434790000000001,
+        "p95": 1.358375,
+        "max": 1.358375
+      },
+      "mergeMs": {
+        "min": 1.131083,
+        "median": 1.1358329999999999,
+        "p95": 1.140583,
+        "max": 1.140583
+      },
+      "writeMs": {
+        "min": 0.970417,
+        "median": 1.5095625,
+        "p95": 2.048708,
+        "max": 2.048708
+      },
+      "totalMs": {
+        "min": 4.647667,
+        "median": 5.6039585,
+        "p95": 6.56025,
+        "max": 6.56025
+      },
+      "sampledHeapPeakMiB": {
+        "min": 149.5,
+        "median": 150.0,
+        "p95": 150.5,
+        "max": 150.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 149.5,
+        "median": 150.0,
+        "p95": 150.5,
+        "max": 150.5
+      },
+      "E": [
+        0
+      ]
+    },
+    {
+      "nodes": 32,
+      "budget": 4,
+      "seed": 73,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 2,
+        "move": 2,
+        "update": 0
+      },
+      "rejections": 1,
+      "parseMs": {
+        "min": 0.540084,
+        "median": 0.559646,
+        "p95": 0.579208,
+        "max": 0.579208
+      },
+      "matchMs": {
+        "min": 0.68725,
+        "median": 0.75275,
+        "p95": 0.81825,
+        "max": 0.81825
+      },
+      "mergeMs": {
+        "min": 0.993875,
+        "median": 1.087667,
+        "p95": 1.181459,
+        "max": 1.181459
+      },
+      "writeMs": {
+        "min": 0.952292,
+        "median": 0.9697709999999999,
+        "p95": 0.98725,
+        "max": 0.98725
+      },
+      "totalMs": {
+        "min": 3.938875,
+        "median": 4.135104,
+        "p95": 4.331333,
+        "max": 4.331333
+      },
+      "sampledHeapPeakMiB": {
+        "min": 153.5,
+        "median": 154.5,
+        "p95": 155.5,
+        "max": 155.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 154.5,
+        "median": 155.0,
+        "p95": 155.5,
+        "max": 155.5
+      },
+      "E": [
+        8
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 0,
+      "seed": 13,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 1.474708,
+        "median": 1.5427705,
+        "p95": 1.610833,
+        "max": 1.610833
+      },
+      "matchMs": {
+        "min": 2.193667,
+        "median": 2.2319585,
+        "p95": 2.27025,
+        "max": 2.27025
+      },
+      "mergeMs": {
+        "min": 2.464833,
+        "median": 2.833771,
+        "p95": 3.202709,
+        "max": 3.202709
+      },
+      "writeMs": {
+        "min": 1.102375,
+        "median": 1.1526875,
+        "p95": 1.203,
+        "max": 1.203
+      },
+      "totalMs": {
+        "min": 8.789417,
+        "median": 9.43,
+        "p95": 10.070583,
+        "max": 10.070583
+      },
+      "sampledHeapPeakMiB": {
+        "min": 166.5,
+        "median": 169.0,
+        "p95": 171.5,
+        "max": 171.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 166.5,
+        "median": 169.0,
+        "p95": 171.5,
+        "max": 171.5
+      },
+      "E": [
+        0
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 4,
+      "seed": 13,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 3,
+        "delete": 1,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 1.070625,
+        "median": 1.129333,
+        "p95": 1.188041,
+        "max": 1.188041
+      },
+      "matchMs": {
+        "min": 2.13925,
+        "median": 2.3362290000000003,
+        "p95": 2.533208,
+        "max": 2.533208
+      },
+      "mergeMs": {
+        "min": 2.562042,
+        "median": 2.7122919999999997,
+        "p95": 2.862542,
+        "max": 2.862542
+      },
+      "writeMs": {
+        "min": 1.072667,
+        "median": 1.0814585,
+        "p95": 1.09025,
+        "max": 1.09025
+      },
+      "totalMs": {
+        "min": 8.496125,
+        "median": 8.85325,
+        "p95": 9.210375,
+        "max": 9.210375
+      },
+      "sampledHeapPeakMiB": {
+        "min": 180.5,
+        "median": 183.5,
+        "p95": 186.5,
+        "max": 186.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 181.5,
+        "median": 184.0,
+        "p95": 186.5,
+        "max": 186.5
+      },
+      "E": [
+        13
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 16,
+      "seed": 13,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 5,
+        "delete": 3,
+        "move": 4,
+        "update": 4
+      },
+      "rejections": 2,
+      "parseMs": {
+        "min": 1.185875,
+        "median": 1.2610625,
+        "p95": 1.33625,
+        "max": 1.33625
+      },
+      "matchMs": {
+        "min": 1.976541,
+        "median": 2.1777705000000003,
+        "p95": 2.379,
+        "max": 2.379
+      },
+      "mergeMs": {
+        "min": 2.358792,
+        "median": 2.4946875000000004,
+        "p95": 2.630583,
+        "max": 2.630583
+      },
+      "writeMs": {
+        "min": 1.038792,
+        "median": 1.0519585,
+        "p95": 1.065125,
+        "max": 1.065125
+      },
+      "totalMs": {
+        "min": 8.441875,
+        "median": 8.513562499999999,
+        "p95": 8.58525,
+        "max": 8.58525
+      },
+      "sampledHeapPeakMiB": {
+        "min": 197.5,
+        "median": 199.5,
+        "p95": 201.5,
+        "max": 201.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 197.5,
+        "median": 200.0,
+        "p95": 202.5,
+        "max": 202.5
+      },
+      "E": [
+        39
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 0,
+      "seed": 37,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 1.050084,
+        "median": 1.111792,
+        "p95": 1.1735,
+        "max": 1.1735
+      },
+      "matchMs": {
+        "min": 1.80675,
+        "median": 1.8965,
+        "p95": 1.98625,
+        "max": 1.98625
+      },
+      "mergeMs": {
+        "min": 1.956625,
+        "median": 1.9699585000000002,
+        "p95": 1.983292,
+        "max": 1.983292
+      },
+      "writeMs": {
+        "min": 0.973916,
+        "median": 1.0249160000000002,
+        "p95": 1.075916,
+        "max": 1.075916
+      },
+      "totalMs": {
+        "min": 7.509417,
+        "median": 7.534542,
+        "p95": 7.559667,
+        "max": 7.559667
+      },
+      "sampledHeapPeakMiB": {
+        "min": 212.5,
+        "median": 215.0,
+        "p95": 217.5,
+        "max": 217.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 212.5,
+        "median": 215.0,
+        "p95": 217.5,
+        "max": 217.5
+      },
+      "E": [
+        0
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 4,
+      "seed": 37,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 2,
+        "delete": 0,
+        "move": 1,
+        "update": 1
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 1.142333,
+        "median": 1.1699375,
+        "p95": 1.197542,
+        "max": 1.197542
+      },
+      "matchMs": {
+        "min": 1.901708,
+        "median": 1.9288745,
+        "p95": 1.956041,
+        "max": 1.956041
+      },
+      "mergeMs": {
+        "min": 2.310167,
+        "median": 2.4042295,
+        "p95": 2.498292,
+        "max": 2.498292
+      },
+      "writeMs": {
+        "min": 0.971292,
+        "median": 0.9717295,
+        "p95": 0.972167,
+        "max": 0.972167
+      },
+      "totalMs": {
+        "min": 7.72875,
+        "median": 7.850125,
+        "p95": 7.9715,
+        "max": 7.9715
+      },
+      "sampledHeapPeakMiB": {
+        "min": 226.5,
+        "median": 229.5,
+        "p95": 232.5,
+        "max": 232.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 226.5,
+        "median": 229.5,
+        "p95": 232.5,
+        "max": 232.5
+      },
+      "E": [
+        12
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 16,
+      "seed": 37,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 4,
+        "delete": 2,
+        "move": 3,
+        "update": 7
+      },
+      "rejections": 4,
+      "parseMs": {
+        "min": 1.081833,
+        "median": 1.0978539999999999,
+        "p95": 1.113875,
+        "max": 1.113875
+      },
+      "matchMs": {
+        "min": 1.811333,
+        "median": 1.9152705,
+        "p95": 2.019208,
+        "max": 2.019208
+      },
+      "mergeMs": {
+        "min": 2.047917,
+        "median": 2.1128335,
+        "p95": 2.17775,
+        "max": 2.17775
+      },
+      "writeMs": {
+        "min": 0.968709,
+        "median": 0.968771,
+        "p95": 0.968833,
+        "max": 0.968833
+      },
+      "totalMs": {
+        "min": 7.231541,
+        "median": 7.419729,
+        "p95": 7.607917,
+        "max": 7.607917
+      },
+      "sampledHeapPeakMiB": {
+        "min": 242.5,
+        "median": 245.0,
+        "p95": 247.5,
+        "max": 247.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 242.5,
+        "median": 245.0,
+        "p95": 247.5,
+        "max": 247.5
+      },
+      "E": [
+        34
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 0,
+      "seed": 73,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 0.843791,
+        "median": 0.9423125,
+        "p95": 1.040834,
+        "max": 1.040834
+      },
+      "matchMs": {
+        "min": 1.711833,
+        "median": 1.736521,
+        "p95": 1.761209,
+        "max": 1.761209
+      },
+      "mergeMs": {
+        "min": 1.764083,
+        "median": 1.8076875000000001,
+        "p95": 1.851292,
+        "max": 1.851292
+      },
+      "writeMs": {
+        "min": 0.931334,
+        "median": 0.9664794999999999,
+        "p95": 1.001625,
+        "max": 1.001625
+      },
+      "totalMs": {
+        "min": 6.580292,
+        "median": 6.768292000000001,
+        "p95": 6.956292,
+        "max": 6.956292
+      },
+      "sampledHeapPeakMiB": {
+        "min": 256.5,
+        "median": 259.0,
+        "p95": 261.5,
+        "max": 261.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 257.5,
+        "median": 260.0,
+        "p95": 262.5,
+        "max": 262.5
+      },
+      "E": [
+        0
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 4,
+      "seed": 73,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 3,
+        "move": 1,
+        "update": 0
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 0.865792,
+        "median": 0.9019585,
+        "p95": 0.938125,
+        "max": 0.938125
+      },
+      "matchMs": {
+        "min": 1.669625,
+        "median": 1.8423335,
+        "p95": 2.015042,
+        "max": 2.015042
+      },
+      "mergeMs": {
+        "min": 1.795792,
+        "median": 1.8544585,
+        "p95": 1.913125,
+        "max": 1.913125
+      },
+      "writeMs": {
+        "min": 0.971,
+        "median": 0.977521,
+        "p95": 0.984042,
+        "max": 0.984042
+      },
+      "totalMs": {
+        "min": 6.507542,
+        "median": 6.796666500000001,
+        "p95": 7.085791,
+        "max": 7.085791
+      },
+      "sampledHeapPeakMiB": {
+        "min": 271.5,
+        "median": 274.0,
+        "p95": 276.5,
+        "max": 276.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 271.5,
+        "median": 274.0,
+        "p95": 276.5,
+        "max": 276.5
+      },
+      "E": [
+        6
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 16,
+      "seed": 73,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 3,
+        "delete": 6,
+        "move": 6,
+        "update": 1
+      },
+      "rejections": 3,
+      "parseMs": {
+        "min": 0.846833,
+        "median": 0.9105414999999999,
+        "p95": 0.97425,
+        "max": 0.97425
+      },
+      "matchMs": {
+        "min": 1.635208,
+        "median": 1.721937,
+        "p95": 1.808666,
+        "max": 1.808666
+      },
+      "mergeMs": {
+        "min": 1.735416,
+        "median": 1.8263955,
+        "p95": 1.917375,
+        "max": 1.917375
+      },
+      "writeMs": {
+        "min": 0.928708,
+        "median": 0.9555415,
+        "p95": 0.982375,
+        "max": 0.982375
+      },
+      "totalMs": {
+        "min": 6.16475,
+        "median": 6.5146875,
+        "p95": 6.864625,
+        "max": 6.864625
+      },
+      "sampledHeapPeakMiB": {
+        "min": 286.5,
+        "median": 289.5,
+        "p95": 292.5,
+        "max": 292.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 286.5,
+        "median": 289.5,
+        "p95": 292.5,
+        "max": 292.5
+      },
+      "E": [
+        37
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 0,
+      "seed": 13,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 2.7065,
+        "median": 2.9029585,
+        "p95": 3.099417,
+        "max": 3.099417
+      },
+      "matchMs": {
+        "min": 5.629375,
+        "median": 5.635958499999999,
+        "p95": 5.642542,
+        "max": 5.642542
+      },
+      "mergeMs": {
+        "min": 5.896375,
+        "median": 5.992125,
+        "p95": 6.087875,
+        "max": 6.087875
+      },
+      "writeMs": {
+        "min": 1.212125,
+        "median": 1.2188539999999999,
+        "p95": 1.225583,
+        "max": 1.225583
+      },
+      "totalMs": {
+        "min": 18.636375,
+        "median": 18.864062500000003,
+        "p95": 19.09175,
+        "max": 19.09175
+      },
+      "sampledHeapPeakMiB": {
+        "min": 329.5,
+        "median": 339.5,
+        "p95": 349.5,
+        "max": 349.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 329.5,
+        "median": 339.5,
+        "p95": 349.5,
+        "max": 349.5
+      },
+      "E": [
+        0
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 4,
+      "seed": 13,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 3,
+        "delete": 1,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 2.291834,
+        "median": 2.5774375000000003,
+        "p95": 2.863041,
+        "max": 2.863041
+      },
+      "matchMs": {
+        "min": 5.571167,
+        "median": 5.672896,
+        "p95": 5.774625,
+        "max": 5.774625
+      },
+      "mergeMs": {
+        "min": 6.245542,
+        "median": 6.7020835000000005,
+        "p95": 7.158625,
+        "max": 7.158625
+      },
+      "writeMs": {
+        "min": 1.190291,
+        "median": 1.2581455,
+        "p95": 1.326,
+        "max": 1.326
+      },
+      "totalMs": {
+        "min": 18.400209,
+        "median": 19.182084,
+        "p95": 19.963959,
+        "max": 19.963959
+      },
+      "sampledHeapPeakMiB": {
+        "min": 387.5,
+        "median": 397.0,
+        "p95": 406.5,
+        "max": 406.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 387.5,
+        "median": 397.0,
+        "p95": 406.5,
+        "max": 406.5
+      },
+      "E": [
+        13
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 16,
+      "seed": 13,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 5,
+        "delete": 3,
+        "move": 2,
+        "update": 6
+      },
+      "rejections": 1,
+      "parseMs": {
+        "min": 1.90875,
+        "median": 2.0612500000000002,
+        "p95": 2.21375,
+        "max": 2.21375
+      },
+      "matchMs": {
+        "min": 5.013833,
+        "median": 5.072375,
+        "p95": 5.130917,
+        "max": 5.130917
+      },
+      "mergeMs": {
+        "min": 6.612542,
+        "median": 6.759354,
+        "p95": 6.906166,
+        "max": 6.906166
+      },
+      "writeMs": {
+        "min": 1.191959,
+        "median": 1.201,
+        "p95": 1.210041,
+        "max": 1.210041
+      },
+      "totalMs": {
+        "min": 17.785833,
+        "median": 17.955061999999998,
+        "p95": 18.124291,
+        "max": 18.124291
+      },
+      "sampledHeapPeakMiB": {
+        "min": 444.5,
+        "median": 453.5,
+        "p95": 462.5,
+        "max": 462.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 444.5,
+        "median": 453.5,
+        "p95": 462.5,
+        "max": 462.5
+      },
+      "E": [
+        35
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 0,
+      "seed": 37,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 1.807458,
+        "median": 1.8381455,
+        "p95": 1.868833,
+        "max": 1.868833
+      },
+      "matchMs": {
+        "min": 4.634792,
+        "median": 4.714625,
+        "p95": 4.794458,
+        "max": 4.794458
+      },
+      "mergeMs": {
+        "min": 6.141792,
+        "median": 6.19325,
+        "p95": 6.244708,
+        "max": 6.244708
+      },
+      "writeMs": {
+        "min": 1.184875,
+        "median": 1.1914375,
+        "p95": 1.198,
+        "max": 1.198
+      },
+      "totalMs": {
+        "min": 16.573792,
+        "median": 16.575416500000003,
+        "p95": 16.577041,
+        "max": 16.577041
+      },
+      "sampledHeapPeakMiB": {
+        "min": 498.5,
+        "median": 508.0,
+        "p95": 517.5,
+        "max": 517.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 499.5,
+        "median": 508.5,
+        "p95": 517.5,
+        "max": 517.5
+      },
+      "E": [
+        0
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 4,
+      "seed": 37,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 2,
+        "delete": 0,
+        "move": 1,
+        "update": 1
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 1.182,
+        "median": 1.1988750000000001,
+        "p95": 1.21575,
+        "max": 1.21575
+      },
+      "matchMs": {
+        "min": 4.047792,
+        "median": 4.368437500000001,
+        "p95": 4.689083,
+        "max": 4.689083
+      },
+      "mergeMs": {
+        "min": 6.386625,
+        "median": 6.546146,
+        "p95": 6.705667,
+        "max": 6.705667
+      },
+      "writeMs": {
+        "min": 1.18075,
+        "median": 1.2497289999999999,
+        "p95": 1.318708,
+        "max": 1.318708
+      },
+      "totalMs": {
+        "min": 15.557375,
+        "median": 15.8794375,
+        "p95": 16.2015,
+        "max": 16.2015
+      },
+      "sampledHeapPeakMiB": {
+        "min": 554.5,
+        "median": 563.0,
+        "p95": 571.5,
+        "max": 571.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 554.5,
+        "median": 563.5,
+        "p95": 572.5,
+        "max": 572.5
+      },
+      "E": [
+        12
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 16,
+      "seed": 37,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 4,
+        "delete": 4,
+        "move": 4,
+        "update": 4
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 1.401125,
+        "median": 1.4444374999999998,
+        "p95": 1.48775,
+        "max": 1.48775
+      },
+      "matchMs": {
+        "min": 3.664084,
+        "median": 3.748063,
+        "p95": 3.832042,
+        "max": 3.832042
+      },
+      "mergeMs": {
+        "min": 6.444125,
+        "median": 6.6362085,
+        "p95": 6.828292,
+        "max": 6.828292
+      },
+      "writeMs": {
+        "min": 1.153833,
+        "median": 1.1870415,
+        "p95": 1.22025,
+        "max": 1.22025
+      },
+      "totalMs": {
+        "min": 15.264625,
+        "median": 15.418021,
+        "p95": 15.571417,
+        "max": 15.571417
+      },
+      "sampledHeapPeakMiB": {
+        "min": 608.5,
+        "median": 617.5,
+        "p95": 626.5,
+        "max": 626.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 608.5,
+        "median": 617.5,
+        "p95": 626.5,
+        "max": 626.5
+      },
+      "E": [
+        36
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 0,
+      "seed": 73,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 1.210958,
+        "median": 1.260562,
+        "p95": 1.310166,
+        "max": 1.310166
+      },
+      "matchMs": {
+        "min": 3.268292,
+        "median": 3.4586875,
+        "p95": 3.649083,
+        "max": 3.649083
+      },
+      "mergeMs": {
+        "min": 5.488167,
+        "median": 5.8954375,
+        "p95": 6.302708,
+        "max": 6.302708
+      },
+      "writeMs": {
+        "min": 1.165541,
+        "median": 1.282104,
+        "p95": 1.398667,
+        "max": 1.398667
+      },
+      "totalMs": {
+        "min": 13.181209,
+        "median": 13.8783125,
+        "p95": 14.575416,
+        "max": 14.575416
+      },
+      "sampledHeapPeakMiB": {
+        "min": 662.5,
+        "median": 671.5,
+        "p95": 680.5,
+        "max": 680.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 662.5,
+        "median": 671.5,
+        "p95": 680.5,
+        "max": 680.5
+      },
+      "E": [
+        0
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 4,
+      "seed": 73,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 3,
+        "move": 1,
+        "update": 0
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 1.418958,
+        "median": 1.4235835,
+        "p95": 1.428209,
+        "max": 1.428209
+      },
+      "matchMs": {
+        "min": 3.663125,
+        "median": 7.143271,
+        "p95": 10.623417,
+        "max": 10.623417
+      },
+      "mergeMs": {
+        "min": 5.141792,
+        "median": 5.39875,
+        "p95": 5.655708,
+        "max": 5.655708
+      },
+      "writeMs": {
+        "min": 1.087417,
+        "median": 1.120625,
+        "p95": 1.153833,
+        "max": 1.153833
+      },
+      "totalMs": {
+        "min": 13.445667,
+        "median": 16.448646,
+        "p95": 19.451625,
+        "max": 19.451625
+      },
+      "sampledHeapPeakMiB": {
+        "min": 715.5,
+        "median": 717.5,
+        "p95": 719.5,
+        "max": 719.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 715.5,
+        "median": 718.5,
+        "p95": 721.5,
+        "max": 721.5
+      },
+      "E": [
+        6
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 16,
+      "seed": 73,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 4,
+        "delete": 7,
+        "move": 2,
+        "update": 3
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 0.91675,
+        "median": 0.9839169999999999,
+        "p95": 1.051084,
+        "max": 1.051084
+      },
+      "matchMs": {
+        "min": 3.151791,
+        "median": 3.174729,
+        "p95": 3.197667,
+        "max": 3.197667
+      },
+      "mergeMs": {
+        "min": 5.540708,
+        "median": 5.5666245,
+        "p95": 5.592541,
+        "max": 5.592541
+      },
+      "writeMs": {
+        "min": 1.161791,
+        "median": 1.2041665,
+        "p95": 1.246542,
+        "max": 1.246542
+      },
+      "totalMs": {
+        "min": 12.19675,
+        "median": 12.256896000000001,
+        "p95": 12.317042,
+        "max": 12.317042
+      },
+      "sampledHeapPeakMiB": {
+        "min": 179.5,
+        "median": 188.5,
+        "p95": 197.5,
+        "max": 197.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 179.5,
+        "median": 188.5,
+        "p95": 197.5,
+        "max": 197.5
+      },
+      "E": [
+        32
+      ]
+    },
+    {
+      "nodes": 32,
+      "budget": 4,
+      "seed": 13,
+      "textBytesPerLeaf": 65536,
+      "operations": {
+        "insert": 3,
+        "delete": 1,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "parseMs": {
+        "min": 3.802958,
+        "median": 3.8976249999999997,
+        "p95": 3.992292,
+        "max": 3.992292
+      },
+      "matchMs": {
+        "min": 1.238,
+        "median": 1.2736874999999999,
+        "p95": 1.309375,
+        "max": 1.309375
+      },
+      "mergeMs": {
+        "min": 0.918708,
+        "median": 1.2296875,
+        "p95": 1.540667,
+        "max": 1.540667
+      },
+      "writeMs": {
+        "min": 16.8535,
+        "median": 17.0485,
+        "p95": 17.2435,
+        "max": 17.2435
+      },
+      "totalMs": {
+        "min": 27.313458,
+        "median": 27.4326875,
+        "p95": 27.551917,
+        "max": 27.551917
+      },
+      "sampledHeapPeakMiB": {
+        "min": 433.5,
+        "median": 492.5,
+        "p95": 551.5,
+        "max": 551.5
+      },
+      "poolHeapPeakMiB": {
+        "min": 433.5,
+        "median": 492.5,
+        "p95": 551.5,
+        "max": 551.5
+      },
+      "E": [
+        22
+      ]
+    }
+  ]
+}
