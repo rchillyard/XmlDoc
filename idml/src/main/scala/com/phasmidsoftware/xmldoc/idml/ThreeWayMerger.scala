@@ -1,6 +1,6 @@
 package com.phasmidsoftware.xmldoc.idml
 
-import com.phasmidsoftware.xmldoc.merge.{Content, NodePath, NodeRef, Pcs, PcsMerger, PcsTreeBuilder, RelationSet, StructuralConflict}
+import com.phasmidsoftware.xmldoc.merge.{Content, ContentMatcher, NodePath, NodeRef, Pcs, PcsMerger, PcsTreeBuilder, RelationSet, StructuralConflict}
 import com.phasmidsoftware.xmldoc.xml.GenericElement
 
 import scala.util.{Failure, Success}
@@ -55,7 +55,8 @@ object ThreeWayMerger {
     val attrSelves = attrOutcomes.flatMap(selfOf).toSet
     val attrConflictReports = attrOutcomes.collect { case c: Conflict => renderAttrConflict(c) }
 
-    val structResult = PcsMerger.merge(base, left, right, ignoredAttributes)
+    val structResult = PcsMerger.merge(base, left, right, ignoredAttributes,
+      matchedLabels(base, left, ignoredAttributes), matchedLabels(base, right, ignoredAttributes))
     // Merger already handles content-level conflicts for anything with a real Self, finer-grained
     // than PcsMerger's own whole-blob comparison (see the class doc) - keep PcsMerger's content
     // conflicts only for path-labelled (Self-less) nodes, which Merger never sees at all. A path
@@ -97,8 +98,8 @@ object ThreeWayMerger {
     }
     visit(root)
     val b = Pcs.relations(base)
-    val l = Pcs.relations(left)
-    val r = Pcs.relations(right)
+    val l = Pcs.relations(left, matchedLabels(base, left, ignored))
+    val r = Pcs.relations(right, matchedLabels(base, right, ignored))
     def state(rs: RelationSet, label: String): Option[String] = rs.content.find(_.label == label).map { content =>
       val normalized = content.copy(attributes = content.attributes.filterNot(x => ignored(x._1)).sortBy(_._1))
       val links = rs.pcs.filter(_.parent == label).toSeq.map(_.toString).sorted.mkString("; ")
@@ -112,6 +113,42 @@ object ThreeWayMerger {
         Some(StructuralConflict(s"deleted subtree edit of ${c.label}", bv, lv, rv))
       else None
     }
+  }
+
+  /** Match anonymous children within corresponding identified parents. Self anchors are
+    * indexed globally, so moving one never changes the identities of its anonymous descendants.
+    * Unidentified cross-parent moves remain outside ContentMatcher's supported model.
+    */
+  private def matchedLabels(base: GenericElement, modified: GenericElement, ignored: Set[String]): NodeRef => String = {
+    def refs(e: GenericElement, path: NodePath = NodePath.root): Seq[NodeRef] =
+      NodeRef(path, e) +: e.childElements.zipWithIndex.flatMap { case (child, i) => refs(child, path.child(i)) }
+    val bs = refs(base)
+    val ms = refs(modified)
+    val baseBySelf = bs.flatMap(r => r.self.map(_ -> r)).toMap
+    val labels = scala.collection.mutable.Map.empty[NodePath, String]
+    def matchAnonymous(b: NodeRef, m: NodeRef): Unit = {
+      val bk = b.element.childElements.zipWithIndex.filterNot(_._1.attributes.exists(_._1 == "Self"))
+      val mk = m.element.childElements.zipWithIndex.filterNot(_._1.attributes.exists(_._1 == "Self"))
+      // Whole subtrees provide exact anchors before the positional fallback.
+      val matched = ContentMatcher.matchTrees(
+        GenericElement("MatchingRoot", Nil, bk.map(_._1)), GenericElement("MatchingRoot", Nil, mk.map(_._1)), ignored)
+      matched.matched.filter(_._1.path.indices.size == 1).foreach { case (br, mr) =>
+        val (be, bi) = bk(br.path.indices.head)
+        val (me, mi) = mk(mr.path.indices.head)
+        val actualB = NodeRef(b.path.child(bi), be)
+        val actualM = NodeRef(m.path.child(mi), me)
+        labels(actualM.path) = Pcs.label(actualB)
+        matchAnonymous(actualB, actualM)
+      }
+    }
+    ms.foreach { m =>
+      m.self.flatMap(baseBySelf.get).foreach(b => matchAnonymous(b, m))
+    }
+    if (base.attributes.forall(_._1 != "Self") && modified.attributes.forall(_._1 != "Self")) {
+      labels(NodePath.root) = Pcs.label(NodeRef(NodePath.root, base))
+      matchAnonymous(NodeRef(NodePath.root, base), NodeRef(NodePath.root, modified))
+    }
+    ref => ref.self.getOrElse(labels.getOrElse(ref.path, s"+${ref.path}"))
   }
 
   private def selfOf(o: MergeOutcome): Option[String] = o match {
@@ -134,7 +171,7 @@ object ThreeWayMerger {
       outcome match {
         case MergedInsert(node) =>
           val self = node.self.get // Inserted always has a Self - EditDetector only ever diffs Self-bearing nodes
-          acc.updated(self, Content(self, node.element.tag, node.element.attributes, Pcs.leafText(node.element), Pcs.leafIsCData(node.element)))
+          acc.updated(self, Content.element(self, node.element.tag, node.element.attributes))
         case MergedDelete(node) =>
           acc.removed(node.self.get)
         case MergedAttributeChange(self, key, _, newValue) =>
