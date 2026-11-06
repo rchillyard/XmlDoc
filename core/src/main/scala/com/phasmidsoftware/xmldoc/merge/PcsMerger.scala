@@ -40,7 +40,7 @@ case class StructuralMergeResult(relations: RelationSet, rootLabel: String, conf
  * Checks all three of Lindholm's structural consistency rules: "unique successor" and "unique
  * predecessor" (a node's position *within* its current parent's child list), and "unique parent" -
  * a node claimed as a child by two genuinely different parents (e.g. Kaining's
- * `10-group-ungroup`), which the first two can't see: they only compare values sharing the same
+ * `10b-divergent-parent`), which the first two can't see: they only compare values sharing the same
  * `(parent, ...)` key, but a node moved to a different parent changes which *key* it appears
  * under at all, not the value at a shared one.
  */
@@ -110,7 +110,12 @@ object PcsMerger {
     // goes - the predecessor/successor maps above already own that), only that two sides disagree
     // about which parent a node belongs to at all.
     val baseParent = parentOf(baseRelations.pcs)
-    val (_, parentConflicts) = reconcile(baseParent, parentOf(leftEdits.pcs), parentOf(rightEdits.pcs))
+    // New adjacency under an unchanged parent is not a new parent requirement.
+    val leftParents = parentOf(leftRelations.pcs)
+    val rightParents = parentOf(rightRelations.pcs)
+    def parentEdits(parents: Map[String, String]): Map[String, String] =
+      parents.filter { case (label, parent) => !baseParent.get(label).contains(parent) }
+    val (_, parentConflicts) = reconcile(baseParent, parentEdits(leftParents), parentEdits(rightParents))
     val parentReports = parentConflicts.map { case (label, b, l, r) => StructuralConflict(s"parent of $label", b, l, r) }
 
     StructuralMergeResult(RelationSet(withoutObsoleteBaseLinks(mergedPcs, baseRelations.pcs, rootLabel), mergedContent), rootLabel, contentReports ++ predReports ++ succReports ++ parentReports)

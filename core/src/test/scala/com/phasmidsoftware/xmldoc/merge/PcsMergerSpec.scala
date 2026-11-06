@@ -101,16 +101,16 @@ class PcsMergerSpec extends AnyFlatSpec with should.Matchers {
 
   behavior of "PcsMerger.merge, the unique-parent rule (Kaining's 10-group-ungroup)"
 
-  it should "report a parent conflict for every node whose new parent the two sides disagree about" in {
-    val g1 = GenericElement("Group", Seq("Self" -> "g1"), Seq(rect("x")))
-    val y = rect("y")
-    val base = spreadOf("us", g1, y)
-    val left = spreadOf("us", rect("x"), y) // left ungroups g1: x is promoted to a direct child of us, g1 vanishes
-    val right = spreadOf("us", GenericElement("Group", Seq("Self" -> "g1"), Seq(rect("x"), y))) // right moves y inside g1
-    val result = PcsMerger.merge(base, left, right)
-    val bySlot = result.conflicts.map(c => c.slot -> c).toMap
-    bySlot("parent of x") shouldBe StructuralConflict("parent of x", Some("g1"), Some("us"), Some("g1"))
-    bySlot("parent of y") shouldBe StructuralConflict("parent of y", Some("us"), Some("us"), Some("g1"))
+  it should "report two genuinely different new parents for the same node (10b)" in {
+    val base = spreadOf("us", group("g1", rect("x")), group("g2"))
+    val left = spreadOf("us", rect("x"), group("g2"))
+    val right = spreadOf("us", group("g1"), group("g2", rect("x")))
+    val expected = Seq(StructuralConflict("parent of x", Some("g1"), Some("us"), Some("g2")))
+    for ((l, r, swap) <- Seq((left, right, false), (right, left, true))) {
+      val result = PcsMerger.merge(base, l, r)
+      MergeAssertions.assertConflictsEqual(result.conflicts, expected, swapActualSides = swap)
+      PcsTreeBuilder.build(result).isFailure shouldBe true
+    }
   }
 
   it should "not confuse a single-sided move to a new parent (no disagreement) with a conflict" in {
@@ -259,6 +259,53 @@ class PcsMergerSpec extends AnyFlatSpec with should.Matchers {
       val result = PcsMerger.merge(base, l, r)
       MergeAssertions.assertConflictsEqual(result.conflicts, expected, swapActualSides = swap)
       result.relations shouldBe Pcs.relations(base)
+    }
+  }
+
+
+  private def ordered(ids: String): GenericElement = spreadOf("us", ids.map(c => rect(c.toString))*)
+
+  it should "report exactly b's successor and c's predecessor guard conflicts" in {
+    val base = ordered("abcd")
+    val left = ordered("bacd")
+    val right = ordered("abdc")
+    val expected = Seq(
+      StructuralConflict("successor after b under us", Some("c"), Some("a"), Some("d")),
+      StructuralConflict("predecessor before c under us", Some("b"), Some("a"), Some("d")))
+    for ((l, r, swap) <- Seq((left, right, false), (right, left, true))) {
+      val result = PcsMerger.merge(base, l, r)
+      MergeAssertions.assertConflictsEqual(result.conflicts, expected, swapActualSides = swap)
+      PcsTreeBuilder.build(result).isFailure shouldBe true
+    }
+  }
+
+  it should "merge isolated reorder contexts into the complete baced tree" in {
+    assertCompatible(ordered("abcde"), ordered("bacde"), ordered("abced"), ordered("baced"))
+  }
+
+  it should "report both slot conflicts for distinct inserts in the same gap" in {
+    val base = ordered("ab")
+    val left = ordered("axb")
+    val right = ordered("ayb")
+    val expected = Seq(
+      StructuralConflict("successor after a under us", Some("b"), Some("x"), Some("y")),
+      StructuralConflict("predecessor before b under us", Some("a"), Some("x"), Some("y")))
+    for ((l, r, swap) <- Seq((left, right, false), (right, left, true))) {
+      val result = PcsMerger.merge(base, l, r)
+      MergeAssertions.assertConflictsEqual(result.conflicts, expected, swapActualSides = swap)
+      PcsTreeBuilder.build(result).isFailure shouldBe true
+    }
+  }
+
+  it should "preserve an ungrouped child's independent content update (case 10)" in {
+    val base = spreadOf("us", group("g", rect("x", "ItemTransform" -> "old")))
+    val left = spreadOf("us", rect("x", "ItemTransform" -> "old"))
+    val right = spreadOf("us", group("g", rect("x", "ItemTransform" -> "new")))
+    for ((l, r) <- Seq(left -> right, right -> left)) {
+      val result = PcsMerger.merge(base, l, r)
+      MergeAssertions.assertConflictsEqual(result.conflicts, Nil)
+      MergeAssertions.assertXmlEquals(PcsTreeBuilder.build(result).get,
+        spreadOf("us", rect("x", "ItemTransform" -> "new")))
     }
   }
 
