@@ -3,7 +3,7 @@ package com.phasmidsoftware.xmldoc.kml
 import com.phasmidsoftware.xmldoc.core.{CDATA, Text, TryUsing, XmlException}
 import com.phasmidsoftware.xmldoc.render.{FormatXML, Renderer, StateR}
 import com.phasmidsoftware.xmldoc.xml.Extractor.{extract, extractAll, extractMulti}
-import com.phasmidsoftware.xmldoc.xml.{Extractor, Extractors, RichXml}
+import com.phasmidsoftware.xmldoc.xml.{Extractor, RichXml}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
@@ -134,6 +134,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                     |</text>
                     |</BalloonStyle>""".stripMargin
                   wy.get shouldBe expectedBalloonStyle
+              case x => fail(s"unexpected: $x")
             }
           case _ => fail(s"wrong sort of StyleSelector: $style")
         }
@@ -265,6 +266,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
             tessellate shouldBe Some(Tessellate(true))
             cs.size shouldBe 1
             cs.head.coordinates.size shouldBe 18
+          case x => fail(s"unexpected: $x")
         }
         val wy = TryUsing(StateR())(sr => Renderer.render(gs, FormatXML(), sr))
         wy.isSuccess shouldBe true
@@ -288,6 +290,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
           case Point(cs) =>
             cs.size shouldBe 1
             cs.head.coordinates.size shouldBe 1
+          case x => fail(s"unexpected: $x")
         }
         val wy = TryUsing(StateR())(sr => Renderer.render(gs, FormatXML(), sr))
         wy.isSuccess shouldBe true
@@ -476,7 +479,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     val xml: Elem = <element>
       <description>Hello</description>
     </element>
-    implicit val extractorMyElement: Extractor[Element] = new Extractors {}.extractor10(Element.apply)
+    implicit val extractorMyElement: Extractor[Element] = Extractor.derived
     val ey: Try[Element] = Extractor.extract[Element](xml)
     ey.isSuccess shouldBe true
     ey.get.maybeDescription shouldBe Some(Text("Hello"))
@@ -484,7 +487,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
   it should "extract using maybe None" in {
     val xml: Elem = <element>
     </element>
-    implicit val extractorMyElement: Extractor[Element] = new Extractors {}.extractor10(Element.apply)
+    implicit val extractorMyElement: Extractor[Element] = Extractor.derived
     val ey: Try[Element] = Extractor.extract[Element](xml)
     ey.isSuccess shouldBe true
     ey.get.maybeDescription shouldBe None
@@ -680,6 +683,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
             val wy = TryUsing(StateR())(sr => Renderer.render[Placemark](placemark, FormatXML(), sr))
             wy.isSuccess shouldBe true
             wy.get shouldBe s"<Placemark>\n  <name>Wakefield Branch of Eastern RR</name>\n  <description>RDK55. Also known as the South Reading Branch. Wakefield (S. Reading) Jct. to Peabody.</description>\n  <styleUrl>#line-006600-5000</styleUrl>\n  <LineString>\n    <tessellate>1</tessellate>\n    <coordinates>\n      -71.06992,42.49424,0\n      -71.07018,42.49512,0\n      -71.07021,42.49549,0\n      -71.07008,42.49648,0\n      -71.069849,42.497415,0\n      -71.06954,42.49833,0\n      -70.9257614,42.5264001,0\n      -70.9254345,42.5262817,0\n    </coordinates>\n  </LineString>\n</Placemark>"
+          case x => fail(s"unexpected: $x")
         }
       case Failure(x) => fail(x)
     }
@@ -756,6 +760,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                  |    </coordinates>
                  |  </LineString>
                  |</Placemark>""".stripMargin
+          case x => fail(s"unexpected: $x")
         }
       case Failure(x) => fail(x)
     }
@@ -895,7 +900,9 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                 val wy = TryUsing(StateR())(sr => Renderer.render[Folder](f, FormatXML(), sr))
                 wy.isSuccess shouldBe true
                 wy.get shouldBe s"<Folder>\n  <name>Untitled layer</name>\n  <Placemark>\n    <name>Wakefield Branch of Eastern RR</name>\n    <description>RDK55. Also known as the South Reading Branch. Wakefield (S. Reading) Jct. to Peabody.</description>\n    <styleUrl>#line-006600-5000</styleUrl>\n    <LineString>\n      <tessellate>1</tessellate>\n      <coordinates>\n        -71.06992,42.49424,0\n        -71.07018,42.49512,0\n        -71.07021,42.49549,0\n        -71.07008,42.49648,0\n        -71.069849,42.497415,0\n        -71.06954,42.49833,0\n        -70.9257614,42.5264001,0\n        -70.9254345,42.5262817,0\n      </coordinates>\n    </LineString>\n  </Placemark>\n</Folder>"
+              case x => fail(s"unexpected: $x")
             }
+          case x => fail(s"unexpected: $x")
         }
       case Failure(x) => fail(x)
     }
@@ -1084,7 +1091,9 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                 wy.isSuccess shouldBe true
                 wy.get.startsWith("<Document><name>MA - Boston NE: Historic New England Railroads</name><description>See description of Historic New England Railroads (MA - Boston NW). Full index: https://www.rubecula.com/RRMaps/</description>\n    <Style id=\"icon-22-nodesc-normal\"><IconStyle><scale>1.1</scale><Icon>".stripMargin) shouldBe true
               case _: Folder =>
+              case x => fail(s"unexpected: $x")
             }
+          case x => fail(s"unexpected: $x")
         }
       case Failure(x) => fail(x)
     }
@@ -1136,6 +1145,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
             g.Icon shouldBe Icon(Text("https://developers.google.com/kml/documentation/images/etna.jpg"))
 //            val overlayData: OverlayData = g.overlayData
 //            val featureData: FeatureData = overlayData.featureData
+          case x => fail(s"unexpected: $x")
         }
       case Failure(x) => fail(x)
     }
@@ -1650,6 +1660,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                   case c@ColorStyleData(_, _) =>
                     println(c)
                 }
+              case x => fail(s"unexpected: $x")
             }
             styles(1) match {
               case x@LabelStyle(scale) =>
@@ -1658,6 +1669,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                   case c@ColorStyleData(_, _) =>
                     println(c)
                 }
+              case x => fail(s"unexpected: $x")
             }
             styles(2) match {
               case x@BalloonStyle(text, maybeBgColor, maybeTextColor, maybeDisplayMode) =>
@@ -1671,6 +1683,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                   case c@ColorStyleData(_, _) =>
                     println(c)
                 }
+              case x => fail(s"unexpected: $x")
             }
             val cdata = "\n<![CDATA[<h3>$[name]</h3>]]>\n"
             val wy = TryUsing(StateR())(sr => Renderer.render[Style](s, FormatXML(), sr))
@@ -1797,10 +1810,12 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                 val wy = TryUsing(StateR())(sr => Renderer.render[SubStyle](styles.head, FormatXML(), sr))
                 wy.isSuccess shouldBe true
                 wy.get shouldBe iconStyleText1
+              case x => fail(s"unexpected: $x")
             }
             styles(1) match {
               case LabelStyle(ls) =>
                 ls.$ shouldBe 1.5
+              case x => fail(s"unexpected: $x")
             }
           case StyleMap(pairs) =>
             pairs.size shouldBe 2
@@ -4510,7 +4525,9 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                 wy.isSuccess shouldBe true
                 wy.get.startsWith("<Document><name>MA - Boston NE: Historic New England Railroads</name><description>See description of Historic New England Railroads (MA - Boston NW). Full index: https://www.rubecula.com/RRMaps/</description>\n    <Style id=\"icon-22-nodesc-normal\"><IconStyle><scale>1.1</scale><Icon>".stripMargin) shouldBe true
               case _: Folder =>
+              case x => fail(s"unexpected: $x")
             }
+          case x => fail(s"unexpected: $x")
         }
       case Failure(x) => fail(x)
     }
@@ -4938,6 +4955,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                         tessellate shouldBe Some(Tessellate(true))
                         coordinates.size shouldBe 1
                         coordinates.head.coordinates.size shouldBe 94
+                      case x => fail(s"unexpected: $x")
                     }
                   case _ => fail("should be placemark")
                 }
@@ -4954,10 +4972,13 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                         tessellate shouldBe Some(Tessellate(true))
                         coordinates.size shouldBe 1
                         coordinates.head.coordinates.size shouldBe 17
+                      case x => fail(s"unexpected: $x")
                     }
                   case _ => fail("should be placemark")
                 }
+              case x => fail(s"unexpected: $x")
             }
+          case x => fail(s"unexpected: $x")
         }
       case Failure(x) => fail(x)
     }
@@ -4997,6 +5018,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                         tessellate shouldBe Some(Tessellate(true))
                         coordinates.size shouldBe 1
                         coordinates.head.coordinates.size shouldBe 94
+                      case x => fail(s"unexpected: $x")
                     }
                   case _ => fail("should be placemark")
                 }
@@ -5012,10 +5034,13 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                         tessellate shouldBe Some(Tessellate(true))
                         coordinates.size shouldBe 1
                         coordinates.head.coordinates.size shouldBe 169
+                      case x => fail(s"unexpected: $x")
                     }
                   case _ => fail("should be placemark")
                 }
+              case x => fail(s"unexpected: $x")
             }
+          case x => fail(s"unexpected: $x")
         }
       case Failure(x) => fail(x)
     }

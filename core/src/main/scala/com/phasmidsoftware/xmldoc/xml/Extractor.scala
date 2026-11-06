@@ -119,6 +119,48 @@ object Extractor {
   def createLazy[T](te: => Extractor[T]): Extractor[T] = (node: Node) => te.extract(node)
 
   /**
+   * Method to derive an `Extractor[T]` for a case class `T`, so that `case class T(...) derives Extractor` works.
+   * This replaces the `extractorN`/`extractorPartialN` ladder, and has no limit on the number of fields.
+   *
+   * Each field is extracted according to its name (see the field-naming conventions in DESIGN.md):
+   * a field whose type is a `Seq` from child elements (using a `MultiExtractor`, as `extractChildren` does);
+   * any other field from an attribute, the text, or a child element (using an `Extractor`, as `fieldExtractor` does).
+   * For each field, a given instance is preferred; otherwise, an `Option[X]` field lifts `X`'s `Extractor`,
+   * a `Seq[X]` field extracts every matching child with `X`'s `Extractor`, and a case class is derived in turn.
+   *
+   * If `T` has a second parameter list with one (auxiliary) parameter, as in
+   * `case class Placemark(Geometry: Seq[Geometry])(val featureData: FeatureData)`,
+   * then the auxiliary value is extracted from the same node, by its own `Extractor`.
+   *
+   * NOTE: the field extractors are found lazily (on the first extraction), so mutually recursive types need no `createLazy`.
+   *
+   * @tparam T a case class.
+   * @return an `Extractor[T]`.
+   */
+  inline def derived[T]: Extractor[T] = ${ DerivedExtractors.productImpl[T] }
+
+  /**
+   * An `Extractor` of `Option[T]` for any `T` which has an `Extractor` (see `lift`).
+   * It's found only where there is no more specific instance (e.g. one defined in `T`'s companion object).
+   *
+   * @tparam T the underlying type, which requires an `Extractor[T]`.
+   * @return an `Extractor[Option[T]]`.
+   */
+  implicit def optionExtractor[T: Extractor]: Extractor[Option[T]] = implicitly[Extractor[T]].lift
+
+  /**
+   * Method to create an `Extractor[T]` for a type `T` which simply wraps a `B` that is extracted from the same node,
+   * as an auxiliary parameter is (e.g. `kml`'s `ContainerData(featureData: FeatureData)`).
+   * See also `Renderer.embedded`.
+   *
+   * @param f a function to construct a `T` from a `B` (usually the `apply` method of `T`).
+   * @tparam B the type of the wrapped value, which requires an `Extractor[B]`.
+   * @tparam T the type of the result.
+   * @return an `Extractor[T]`.
+   */
+  def embedded[B: Extractor, T](f: B => T): Extractor[T] = implicitly[Extractor[B]].map(f)
+
+  /**
    * Method to create an Extractor[T] from a String => Try[T] function.
    *
    * @param parser a String => Try[T] function.
@@ -471,6 +513,11 @@ object Extractor {
     override def toString: String = "charSequenceExtractor"
   }
   /**
+   * String extractor.
+   */
+  implicit val stringExtractor: Extractor[String] = charSequenceExtractor.map(_.toString) ^^ "stringExtractor"
+
+  /**
    * Int extractor.
    */
   implicit val intExtractor: Extractor[Int] = (charSequenceExtractor flatMap {
@@ -603,6 +650,28 @@ object MultiExtractor {
    * @return a MultiExtractor[T].
    */
   def createLazy[T](tm: => MultiExtractor[T]): MultiExtractor[T] = MultiExtractor { (nodes: NodeSeq) => tm.extract(nodes) } ^^ "lazy extractor for $tm"
+
+  /**
+   * Method to derive a `MultiExtractor[Seq[T]]` for a sealed trait (or sealed abstract class) `T`,
+   * replacing the `multiExtractorN` methods.
+   * The tag of each subtype is its class name (e.g. `Placemark`); sealed sub-traits (e.g. `Container`) are flattened.
+   * Each subtype's `Extractor` is a given instance if there is one; otherwise, it is derived.
+   *
+   * Usage: `given MultiExtractor[Seq[Feature]] = MultiExtractor.derived`.
+   *
+   * @tparam T a sealed trait or sealed abstract class.
+   * @return a `MultiExtractor[Seq[T]]`.
+   */
+  inline def derived[T]: MultiExtractor[Seq[T]] = ${ DerivedExtractors.sumImpl[T] }
+
+  /**
+   * A `MultiExtractor` of `Seq[T]` for any `T` which has an `Extractor`: each node is extracted as a `T`, and there may be any number of them.
+   * It's found only where there is no more specific instance (e.g. one, defined in `T`'s companion object, which requires at least one).
+   *
+   * @tparam T the underlying type, which requires an `Extractor[T]`.
+   * @return a `MultiExtractor[Seq[T]]`.
+   */
+  implicit def seqMultiExtractor[T: Extractor]: MultiExtractor[Seq[T]] = MultiExtractorBase[T](MultiExtractorBase.NonNegative)
 }
 
 /**

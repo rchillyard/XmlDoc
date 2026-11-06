@@ -7,9 +7,11 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
 import java.util.regex.Matcher
+import scala.annotation.nowarn
 import scala.util.{Failure, Success, Try}
 import scala.xml.Elem
 
+@nowarn("cat=deprecation") // these tests exercise the (deprecated) arity ladder: see DerivationSpec for derivation
 class ExtractorsSpec extends AnyFlatSpec with should.Matchers with PrivateMethodTester {
 
   case class Simple1(id: Int)

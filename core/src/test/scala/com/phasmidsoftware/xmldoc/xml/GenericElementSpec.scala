@@ -132,18 +132,16 @@ class GenericElementSpec extends AnyFlatSpec with should.Matchers {
   // A deliberately generic field ("note"), alongside an ordinary specific one ("id") - the
   // "known field, deliberately generic value" case the Extractor/Renderer instances are for,
   // as opposed to Story's "capture an unbounded, unnamed remainder" case, which they aren't.
-  // CharSequence, not String: there's no Extractor[String]/Renderer[String] in this framework,
-  // only Extractor[CharSequence]/Renderer[CharSequence] - unrelated to the point of this test.
   // The leading underscore on _id is this framework's own convention for "this is an XML
   // attribute, not a child element" (see fieldExtractor's scaladoc) - a plain "id" here would
-  // have extractor20 look for a child element named "id" instead, and fail.
+  // have the extractor look for a child element named "id" instead, and fail.
   private case class Thing(_id: CharSequence, note: GenericElement)
 
-  private object ThingExtractors extends Extractors {
-    implicit val extractThing: Extractor[Thing] = extractor20(Thing.apply)
+  private object ThingExtractors {
+    implicit val extractThing: Extractor[Thing] = Extractor.derived
   }
 
-  it should "extract via extractor20, with GenericElement as an ordinary field" in {
+  it should "extract via a derived extractor, with GenericElement as an ordinary field" in {
     val xml = <xml id="x1"><note attr="v"><child/></note></xml>
     import ThingExtractors.extractThing
     implicitly[Extractor[Thing]].extract(xml) match {
@@ -156,18 +154,18 @@ class GenericElementSpec extends AnyFlatSpec with should.Matchers {
     }
   }
 
-  it should "fail via extractor20 when the field expecting an element gets something else" in {
+  it should "fail via a derived extractor when the field expecting an element gets something else" in {
     // there is no such child at all, so GenericElement's extractor never even runs here -
-    // this confirms the failure surfaces through the ordinary extractor20 plumbing.
+    // this confirms the failure surfaces through the ordinary field-extraction plumbing.
     val xml = <xml id="x1"/>
     import ThingExtractors.extractThing
     implicitly[Extractor[Thing]].extract(xml) should matchPattern { case Failure(_) => }
   }
 
-  it should "render via renderer2, with GenericElement as an ordinary field" in {
-    object ThingRenderers extends Renderers {
+  it should "render via a derived renderer, with GenericElement as an ordinary field" in {
+    object ThingRenderers {
       implicit val charSeq: Renderer[CharSequence] = Renderers.charSequenceRenderer
-      implicit val rendererThing: Renderer[Thing] = renderer2.apply(Thing.apply)
+      implicit val rendererThing: Renderer[Thing] = Renderer.derived
     }
     import ThingRenderers.rendererThing
     val thing = Thing("x1", GenericElement("note", Seq("attr" -> "v"), Seq(GenericElement("child", Nil, Nil))))

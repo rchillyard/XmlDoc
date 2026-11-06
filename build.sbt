@@ -1,6 +1,6 @@
 ThisBuild / organization := "com.phasmidsoftware"
 
-ThisBuild / version := "1.1.3"
+ThisBuild / version := "1.2.0"
 
 ThisBuild / scalaVersion := "3.9.0" // the current LTS
 
@@ -14,7 +14,8 @@ ThisBuild / scalacOptions ++= Seq(
   "-unchecked",
   "-Wunused:all",
   "-Wvalue-discard",
-  "-Wnonunit-statement"
+  "-Wnonunit-statement",
+  "-Werror"
 )
 // Tests may use a value as a statement (for example, in a matcher), so each project's tests skip -Wnonunit-statement.
 lazy val testScalacOptions = Test / scalacOptions ~= (_.filterNot(_ == "-Wnonunit-statement"))
@@ -22,7 +23,7 @@ lazy val testScalacOptions = Test / scalacOptions ~= (_.filterNot(_ == "-Wnonuni
 lazy val commonSettings = Seq(
   testScalacOptions,
   libraryDependencies ++= Seq(
-    "ch.qos.logback" % "logback-classic" % "1.6.2" % "runtime",
+    "ch.qos.logback" % "logback-classic" % "1.6.2" % Test,
     "org.scalatest" %% "scalatest" % "3.2.20" % Test
   )
 )

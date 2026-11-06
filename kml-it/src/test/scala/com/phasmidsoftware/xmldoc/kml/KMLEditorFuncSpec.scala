@@ -38,9 +38,13 @@ class KMLEditorFuncSpec extends AnyFlatSpec with should.Matchers {
                   case LineString(_, cs) =>
                     cs.head.coordinates.size shouldBe 163
                   // TODO check the ordering of the Coordinate values.
+                  case x => fail(s"unexpected: $x")
                 }
+              case x => fail(s"unexpected: $x")
             }
+          case x => fail(s"unexpected: $x")
         }
+      case x => fail(s"unexpected: $x")
     }
   }
 
@@ -67,9 +71,13 @@ class KMLEditorFuncSpec extends AnyFlatSpec with should.Matchers {
                   case LineString(_, cs) =>
                     cs.head.coordinates.size shouldBe 163
                   // TODO check the ordering of the Coordinate values.
+                  case x => fail(s"unexpected: $x")
                 }
+              case x => fail(s"unexpected: $x")
             }
+          case x => fail(s"unexpected: $x")
         }
+      case x => fail(s"unexpected: $x")
     }
   }
 
@@ -103,9 +111,13 @@ class KMLEditorFuncSpec extends AnyFlatSpec with should.Matchers {
                     coordinates.size shouldBe 405
                     coordinates.head shouldBe Coordinate("-70.25995", "41.69953", Some("0")) // Yarmouth
                     coordinates.last shouldBe Coordinate("-70.184376", "42.05095", Some("0")) // P-town
+                  case x => fail(s"unexpected: $x")
                 }
+              case x => fail(s"unexpected: $x")
             }
+          case x => fail(s"unexpected: $x")
         }
+      case x => fail(s"unexpected: $x")
     }
   }
 

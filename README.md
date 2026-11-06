@@ -18,7 +18,7 @@ extraction and rendering, plus a generic fallback representation for content tha
 modeling as its own type) and format-specific modules built on top of it.
 
 See [DESIGN.md](DESIGN.md) for how the extraction/rendering framework actually works — the type
-class hierarchy, the field-naming conventions, the combinator "arity ladder," and the escape
+class hierarchy, the field-naming conventions, derivation (`derives Extractor, Renderer`), and the escape
 hatches for irregular real-world XML. This README covers what the modules are and how to use them.
 
 Full Scaladoc is at <https://rchillyard.github.io/XmlDoc/latest/api/>.
@@ -34,15 +34,20 @@ Full Scaladoc is at <https://rchillyard.github.io/XmlDoc/latest/api/>.
 
 ## Getting started
 
+This version of the README.md file refers to version: 1.2.0.
+
+Add the modules you need to your _build.sbt_,
+where `x.y.z` is the latest version on Maven Central: it's shown on the [Sonatype Central](https://central.sonatype.com/artifact/com.phasmidsoftware/xmldoc-core_3) badge at the top of this page.
+
 ```scala
 libraryDependencies ++= Seq(
-  "com.phasmidsoftware" %% "xmldoc-core" % "<latest>",
-  "com.phasmidsoftware" %% "xmldoc-kml" % "<latest>"
+    "com.phasmidsoftware" %% "xmldoc-core" % "x.y.z"
+  , "com.phasmidsoftware" %% "xmldoc-kml" % "x.y.z"
 )
 ```
 
-(see the Maven Central badges above for the current published version).
 XmlDoc 1.1.3 and later need Scala 3.9 or later; for Scala 3.8, use 1.1.2. (No release supports Scala 3.3.)
+XmlDoc doesn't include a logging backend (it logs through SLF4J): add one, such as `logback-classic`, to your own application if you want its log messages.
 
 ```scala
 import com.phasmidsoftware.xmldoc.kml.*
@@ -57,11 +62,43 @@ extractMulti[Seq[KML]](xml) match {
 }
 ```
 
+### Your own types
+
+To read (and write) XML of your own, describe each element as a case class and derive its `Extractor` and `Renderer`.
+The field names say where each value is: `_foo` is the attribute `foo`, `` `$` `` the element's text, `foo` the child element `foo`,
+`maybeFoo: Option[...]` an optional child `foo`, and a `Seq` field the repeated children (see [DESIGN.md](DESIGN.md)).
+
+```scala
+import com.phasmidsoftware.xmldoc.core.Text
+import com.phasmidsoftware.xmldoc.render.Renderer
+import com.phasmidsoftware.xmldoc.xml.Extractor
+
+case class Reading(_hour: Int, $: Double) derives Extractor, Renderer
+case class Elevation($: Double) // derived where it's needed
+case class Station(_id: String, name: Text, maybeElevation: Option[Elevation], Readings: Seq[Reading]) derives Extractor, Renderer
+
+val station: scala.util.Try[Station] =
+  Extractor.extract[Station](<station id="S1"><name>Logan</name><Reading hour="1">12.5</Reading></station>)
+```
+
+A field whose type is another case class without instances of its own is derived in turn.
+A case class may also have one *auxiliary* parameter, in a second parameter list, which is read from the same element
+(e.g. `kml`'s `case class Placemark(Geometry: Seq[Geometry])(val featureData: FeatureData)`).
+For a sealed trait, derive the `MultiExtractor` of its sequences and its `Renderer`:
+`given MultiExtractor[Seq[Shape]] = MultiExtractor.derived` and `given Renderer[Shape] = Renderer.derived`;
+each subtype's tag is its class name.
+
 Round-tripping (extract, then render back to XML) is exercised extensively in the test suites —
 see `kml/src/test/scala/.../KmlSpec.scala` for realistic examples, including editing/merging
 `Placemark`s.
 
 ## Versions
+
+Version 1.2.0 Derives `Extractor` and `Renderer` from case classes (`derives Extractor, Renderer`, or `Extractor.derived`/`Renderer.derived`),
+including the auxiliary-parameter pattern, and `MultiExtractor`/`Renderer` for sealed traits (`MultiExtractor.derived`): Issue #63.
+This replaces the arity ladder (`extractor10` ... `extractorPartial72`, `multiExtractorN`, `rendererN`, `rendererNSuper`, `rendererSuperN`),
+which is deprecated, and `kml` now uses derivation throughout; its abstract types (`Feature`, `Geometry`, ...) are sealed.
+`logback-classic` is no longer a (runtime) dependency.
 
 Version 1.1.3 Adds 3-way merging of XML trees to `core` (package `merge`): a PCS representation of
 trees, after Lindholm (`Pcs`), edit detection (`PcsEditDetector`), reconciliation of two edit sets
