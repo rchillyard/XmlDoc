@@ -26,14 +26,16 @@ class ThreeWayCorpusSpec extends AnyFlatSpec with Matchers {
         val right = IdmlPackage.open(temp.resolve(if (swapped) "left.idml" else "right.idml").toFile).get
         val result = IdmlPackageMerger.merge(base, left, right).get
         IdmlMergeAssertions.assertPartConflictsEqual(result.conflicts, CorpusExpectations.conflicts(doc, base), swapActualSides = swapped)
-        if (doc.status == "accept") {
-          val parts = result.partOutcomes.collect { case p: PartContent => p.src -> p.content }.toMap
-          result.partOutcomes.collect { case p: PartRemoved => p.src } shouldBe empty
-          IdmlMergeAssertions.assertXmlPartsEqual(parts, CorpusExpectations.expectedParts(dir, doc))
-          CorpusExpectations.assertPackage(result, temp.resolve(if (swapped) "right.idml" else "left.idml"), dir, doc)
-        } else if (domain) {
-          info(s"${doc.name}: domain oracle validated through the integrated MR11 package entry point")
-          result.partOutcomes should not be empty: Unit
+        doc.status match {
+          case "accept" =>
+            val parts = result.partOutcomes.collect { case p: PartContent => p.src -> p.content }.toMap
+            result.partOutcomes.collect { case p: PartRemoved => p.src } shouldBe empty
+            IdmlMergeAssertions.assertXmlPartsEqual(parts, CorpusExpectations.expectedParts(dir, doc))
+            CorpusExpectations.assertPackage(result, temp.resolve(if (swapped) "right.idml" else "left.idml"), dir, doc)
+          case _ if domain =>
+            info(s"${doc.name}: domain oracle validated through the integrated MR11 package entry point")
+            result.partOutcomes should not be empty: Unit
+          case _ => ()
         }
         CorpusContract.snapshot(temp) shouldBe before
         CorpusContract.snapshot(dir) shouldBe fixtureBefore

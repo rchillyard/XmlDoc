@@ -1,8 +1,7 @@
 package com.phasmidsoftware.xmldoc.merge
 
 import com.phasmidsoftware.xmldoc.xml.GenericElement
-import scala.util.Random
-import scala.util.control.NonFatal
+import scala.util.{Random, Try}
 
 /** Bounded legal recipes. Expected trees and the edit ledger are constructed without a merger.
   * Node counts include the root and three groups; operations are not PCS-edit counts.
@@ -92,8 +91,7 @@ object MergeTreeGenerator {
   /** On failure, greedily remove untouched leaves while preserving that same failed check.
     * This is a locally minimal reproducer under untouched-leaf removal, not a general XML minimizer.
     */
-  def verify(s: Sample)(check: Sample => Unit): Unit = try check(s) catch {
-    case NonFatal(error) =>
+  def verify(s: Sample)(check: Sample => Unit): Unit = Try(check(s)).failed.foreach { error =>
       var small = s
       val protectedIds = s.edits.map(_.id).toSet
       var reduced = true
@@ -103,9 +101,8 @@ object MergeTreeGenerator {
           val key = id(n)
           val candidate = small.copy(base = remove(small.base, key), left = remove(small.left, key),
             right = remove(small.right, key), expected = remove(small.expected, key))
-          try check(candidate) catch {
-            case NonFatal(e) if e.getClass == error.getClass => small = candidate; reduced = true
-            case NonFatal(_) => ()
+          Try(check(candidate)).failed.foreach { e =>
+            if (e.getClass == error.getClass) { small = candidate; reduced = true }
           }
         }
       }
