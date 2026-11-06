@@ -24,12 +24,12 @@ object ZIOXmlStream {
    * Method to stream the results of extracting each selected element of the document read from an input stream.
    * The input stream is opened when the stream starts, and closed when it ends.
    *
-   * @param in       the input stream (evaluated when the stream starts).
    * @param selector a tag (e.g. `Placemark`) or a path of tags (e.g. `Folder/Placemark`).
+   * @param in       the input stream (evaluated when the stream starts).
    * @tparam T the type of each selected element, which has an `Extractor`.
    * @return a stream of the results of extracting each selected element (a malformed document fails the stream).
    */
-  def extract[T: Extractor](in: => InputStream, selector: String): ZStream[Any, Throwable, Try[T]] =
+  def extract[T: Extractor](selector: String, in: => InputStream): ZStream[Any, Throwable, Try[T]] =
     for {
       i <- ZStream.acquireReleaseWith(ZIO.attemptBlocking(in))(i => ZIO.attemptBlocking(i.close()).orDie)
       r <- ZStream.acquireReleaseWith(ZIO.attemptBlocking(XmlStream.reader(i)))(r => ZIO.attemptBlocking(r.close()).orDie)
@@ -45,5 +45,5 @@ object ZIOXmlStream {
    * @return a stream of the results of extracting each selected element.
    */
   def extractFile[T: Extractor](filename: String, selector: String): ZStream[Any, Throwable, Try[T]] =
-    extract[T](new FileInputStream(filename), selector)
+    extract[T](selector, new FileInputStream(filename))
 }

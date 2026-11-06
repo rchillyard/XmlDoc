@@ -50,12 +50,12 @@ class IOXmlStreamSpec extends AnyFlatSpec with Matchers {
     val in: IO[InputStream] = IO(new ByteArrayInputStream("<kml><Placemark><name>x</name></Placemark></kml>".getBytes) {
       override def close(): Unit = closed = true
     })
-    IOXmlStream.extract[Placemark](in, "Placemark").compile.toList.unsafeRunSync().size shouldBe 1
+    IOXmlStream.extract[Placemark]("Placemark", in).compile.toList.unsafeRunSync().size shouldBe 1
     closed shouldBe true
   }
 
   it should "fail the stream for a malformed document" in {
     val in: IO[InputStream] = IO(new ByteArrayInputStream("<kml><Placemark>".getBytes))
-    IOXmlStream.extract[Placemark](in, "Placemark").compile.drain.attempt.unsafeRunSync().isLeft shouldBe true
+    IOXmlStream.extract[Placemark]("Placemark", in).compile.drain.attempt.unsafeRunSync().isLeft shouldBe true
   }
 }

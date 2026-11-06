@@ -67,17 +67,17 @@ class XmlStreamSpec extends AnyFlatSpec with Matchers {
     def in: InputStream = new ByteArrayInputStream(doc.getBytes(StandardCharsets.UTF_8)) {
       override def close(): Unit = closed = true
     }
-    XmlStream.extractFrom[Item, Int](in, "Item")(_.count(_.isSuccess)) shouldBe Success(3)
+    XmlStream.extractFrom[Item, Int]("Item", in)(_.count(_.isSuccess)) shouldBe Success(3)
     closed shouldBe true
   }
 
   it should "fail for a malformed document" in {
-    XmlStream.extractFrom[Item, Int](input("<root><Item id='a'><name>x</name></Item><Item>"), "Item")(_.size) shouldBe a[Failure[?]]
+    XmlStream.extractFrom[Item, Int]("Item", input("<root><Item id='a'><name>x</name></Item><Item>"))(_.size) shouldBe a[Failure[?]]
   }
 
   it should "not read external entities" in {
     val xxe = """<?xml version="1.0"?><!DOCTYPE root [<!ENTITY e SYSTEM "file:///etc/passwd">]><root><Item id="a"><name>&e;</name></Item></root>"""
-    XmlStream.extractFrom[Item, List[String]](input(xxe), "Item")(_.toList.flatMap(_.toOption).map(_.name.$.toString)) match {
+    XmlStream.extractFrom[Item, List[String]]("Item", input(xxe))(_.toList.flatMap(_.toOption).map(_.name.$.toString)) match {
       case Success(names) => names.mkString should not include "root:"
       case Failure(_) => succeed
     }

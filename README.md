@@ -169,7 +169,7 @@ tags are matched by their local names, whatever their namespace. Each element's 
 import com.phasmidsoftware.xmldoc.xml.XmlStream
 import java.io.FileInputStream
 
-XmlStream.extractFrom[Placemark, Int](new FileInputStream("big.kml"), "Placemark")(_.count(_.isSuccess))
+XmlStream.extractFrom[Placemark, Int]("Placemark", new FileInputStream("big.kml"))(_.count(_.isSuccess))
 ```
 
 The Kafka modules stream the same way, so records go to Kafka as they are read (`IOXmlStream` for fs2, `ZIOXmlStream` for ZIO):

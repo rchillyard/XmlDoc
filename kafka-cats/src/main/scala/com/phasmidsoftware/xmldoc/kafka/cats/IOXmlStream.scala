@@ -24,13 +24,13 @@ object IOXmlStream {
    * Method to stream the results of extracting each selected element of the document read from an input stream.
    * The input stream is opened when the stream starts, and closed when it ends.
    *
-   * @param in        an IO of the input stream.
    * @param selector  a tag (e.g. `Placemark`) or a path of tags (e.g. `Folder/Placemark`).
+   * @param in        an IO of the input stream.
    * @param chunkSize the number of results read at a time.
    * @tparam T the type of each selected element, which has an `Extractor`.
    * @return a stream of the results of extracting each selected element (a malformed document fails the stream).
    */
-  def extract[T: Extractor](in: IO[InputStream], selector: String, chunkSize: Int = 64): Stream[IO, Try[T]] =
+  def extract[T: Extractor](selector: String, in: IO[InputStream], chunkSize: Int = 64): Stream[IO, Try[T]] =
     for {
       i <- Stream.bracket(in)(i => IO.blocking(i.close()))
       r <- Stream.bracket(IO.blocking(XmlStream.reader(i)))(r => IO.blocking(r.close()))
@@ -46,5 +46,5 @@ object IOXmlStream {
    * @return a stream of the results of extracting each selected element.
    */
   def extractFile[T: Extractor](filename: String, selector: String): Stream[IO, Try[T]] =
-    extract[T](IO.blocking(new FileInputStream(filename)), selector)
+    extract[T](selector, IO.blocking(new FileInputStream(filename)))
 }

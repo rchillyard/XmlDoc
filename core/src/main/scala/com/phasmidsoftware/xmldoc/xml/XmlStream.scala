@@ -68,17 +68,17 @@ object XmlStream {
    * Method to extract a `T` from each selected element of the document read from an input stream, and to apply a
    * function to the results; the stream and the reader are closed afterwards.
    * {{{
-   *   XmlStream.extractFrom[Placemark, Int](new FileInputStream("big.kml"), "Placemark")(_.count(_.isSuccess))
+   *   XmlStream.extractFrom[Placemark, Int]("Placemark", new FileInputStream("big.kml"))(_.count(_.isSuccess))
    * }}}
    *
-   * @param in       the input stream (opened here, and closed when `f` returns).
    * @param selector a tag or path of tags (see above).
+   * @param in       the input stream (opened here, and closed when `f` returns).
    * @param f        a function of the results, which must use them before it returns.
    * @tparam T the type of each selected element, which has an `Extractor`.
    * @tparam A the type of `f`'s result.
    * @return `f`'s result, or a failure (e.g. if the input stream can't be opened, or the document is malformed).
    */
-  def extractFrom[T: Extractor, A](in: => InputStream, selector: String)(f: Iterator[Try[T]] => A): Try[A] =
+  def extractFrom[T: Extractor, A](selector: String, in: => InputStream)(f: Iterator[Try[T]] => A): Try[A] =
     Using.Manager { use =>
       val r = reader(use(in))
       try f(extract[T](r, selector)) finally r.close()

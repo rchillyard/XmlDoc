@@ -21,7 +21,7 @@ class KmlStreamSpec extends AnyFlatSpec with Matchers {
 
   for (file <- files) it should s"stream the Placemarks of $file as whole-document extraction gives them" in {
     val whole: Seq[Placemark] = KMLCompanion.loadKML(Success(file)).unsafeRunSync() flatMap (k => placemarks(k.features))
-    val streamed: Try[List[Try[Placemark]]] = XmlStream.extractFrom[Placemark, List[Try[Placemark]]](new FileInputStream(file), "Placemark")(_.toList)
+    val streamed: Try[List[Try[Placemark]]] = XmlStream.extractFrom[Placemark, List[Try[Placemark]]]("Placemark", new FileInputStream(file))(_.toList)
     whole should not be empty
     streamed.map(_.map(_.flatMap(render))) shouldBe Success(whole.toList.map(render))
   }
@@ -30,7 +30,7 @@ class KmlStreamSpec extends AnyFlatSpec with Matchers {
     val file = files.head
     val fs: Seq[Folder] = KMLCompanion.loadKML(Success(file)).unsafeRunSync() flatMap (k => folders(k.features))
     val expected = fs.flatMap(_.features.collect { case p: Placemark => p }).toList.map(render)
-    XmlStream.extractFrom[Placemark, List[Try[String]]](new FileInputStream(file), "Folder/Placemark")(_.map(_.flatMap(render)).toList) shouldBe Success(expected)
+    XmlStream.extractFrom[Placemark, List[Try[String]]]("Folder/Placemark", new FileInputStream(file))(_.map(_.flatMap(render)).toList) shouldBe Success(expected)
   }
 }
 

@@ -48,11 +48,11 @@ class ZIOXmlStreamSpec extends AnyFlatSpec with Matchers {
     def in = new ByteArrayInputStream("<kml><Placemark><name>x</name></Placemark></kml>".getBytes) {
       override def close(): Unit = closed = true
     }
-    runZIO(ZIOXmlStream.extract[Placemark](in, "Placemark").runCount) shouldBe Right(1L)
+    runZIO(ZIOXmlStream.extract[Placemark]("Placemark", in).runCount) shouldBe Right(1L)
     closed shouldBe true
   }
 
   it should "fail the stream for a malformed document" in {
-    runZIO(ZIOXmlStream.extract[Placemark](new ByteArrayInputStream("<kml><Placemark>".getBytes), "Placemark").runDrain).isLeft shouldBe true
+    runZIO(ZIOXmlStream.extract[Placemark]("Placemark", new ByteArrayInputStream("<kml><Placemark>".getBytes)).runDrain).isLeft shouldBe true
   }
 }
