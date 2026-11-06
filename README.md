@@ -82,7 +82,7 @@ val station: scala.util.Try[Station] =
 ```
 
 A field whose type is another case class without instances of its own is derived in turn.
-A case class may also have one *auxiliary* parameter, in a second parameter list, which is read from the same element
+A case class may also have one _auxiliary_ parameter, in a second parameter list, which is read from the same element
 (e.g. `kml`'s `case class Placemark(Geometry: Seq[Geometry])(val featureData: FeatureData)`).
 For a sealed trait, derive the `MultiExtractor` of its sequences and its `Renderer`:
 `given MultiExtractor[Seq[Shape]] = MultiExtractor.derived` and `given Renderer[Shape] = Renderer.derived`;
