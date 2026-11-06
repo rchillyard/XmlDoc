@@ -31,9 +31,33 @@ kml-it - integration tests for kml against real third-party .kml files. Not aggr
          root project, so plain `sbt test` stays fast; run explicitly (`sbt kmlIt/test`).
 idml   - early-stage support for Adobe InDesign's IDML format, on core. Uses the generic
          (GenericElement-first) approach rather than kml's fully-typed one.
+json   - records as JSON (circe) and the Spark SQL schema which reads them. Needs nothing
+         from core (its tests use kml).
 ```
 
 `core` has no knowledge of KML or IDML; everything format-specific lives in `kml`/`idml`.
+
+## JSON and the Spark schema (`json`)
+
+The pipeline is XML → XmlDoc → Kafka (JSON) → Spark, where the Spark job (Scala 2.13 or PySpark: Spark isn't
+published for Scala 3) reads each message with `from_json(col("value"), schema)`. `SparkSchema[T]` derives that schema
+from the same case class as circe's `Encoder[T]`, so the producer and the Spark job can't drift apart.
+
+- **Plain records only.** Both circe's derivation and `SparkSchema.derived` use a `Mirror`, which Scala 3 doesn't
+  synthesize for a case class with a second parameter list; so the `kml` model (`Placemark` and so on) isn't written
+  directly. Students build their own flat(ish) record case classes from KML values. (Our own macro, as in `core`'s
+  derivation, could cover the aux pattern, but it would mean a JSON shape of our own to maintain.)
+- **No Spark dependency.** The schema is a `SparkType` (a small model of Spark SQL's types) rendered as a DDL string;
+  every field name is quoted with backticks, so it never depends on Spark's reserved words (with ANSI mode on, by
+  default in Spark 4, names like `order` must be quoted).
+- **The mapping follows circe's default encoders**: `Option[X]` is a nullable `X` (circe writes `None` as `null`),
+  collections are `ARRAY`, `Map[String, X]` is `MAP<STRING, X>` (circe writes a JSON object), a nested case class is a
+  `STRUCT`, an enum without parameters is a `STRING` (with circe's `ConfiguredEnumEncoder`). A value class has no
+  `Mirror`, so both its encoder and its schema are given by hand (`SparkSchema[Double].as`). `java.time.Instant` maps to
+  `TIMESTAMP` (circe writes ISO-8601); if instants have digits beyond milliseconds, check them against Spark's
+  `timestampFormat` option (not tested here, since there's no Spark).
+- **Tested** by checking that the JSON written for a record (including records built from a real `.kml` file) has exactly
+  the fields and kinds of value that its schema describes.
 
 ## The `Extractor[T]` / `Renderer[T]` framework
 
