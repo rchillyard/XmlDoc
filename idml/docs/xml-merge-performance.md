@@ -39,3 +39,27 @@ Add `idml/tools/summarize_merge_benchmark.py` for standard-library distribution 
 rank-checked least squares and gate verification. Raw JSON remains authoritative. Calibration
 will be rerun with the final metadata/gate harness before its digest is frozen; limits above
 will not be raised in response to formal results.
+
+## Formal result (2026-11-06)
+
+Formal source checkpoint: `9696666` (benchmark source SHA-256 is recorded in both raw files).
+25 scenarios × 5 repetitions after 3 warmups: all independent targets and frozen gates passed.
+Maximum total 26.960 ms; prematched merge/rebuild 7.280 ms; sampled heap peak 744.816 MiB;
+aggregate memory-pool heap peak 745.816 MiB. These are local measurements, not remote CI results.
+
+Raw data: [formal](evidence/mr13-formal.json), [calibration](evidence/mr13-calibration.json),
+[frozen gates](evidence/mr13-gates.json), [distributions/model](evidence/mr13-formal-summary.json).
+Final calibration maxima were 110.767 ms total, 65.401 ms merge, 719.5 MiB sampled and
+721.5 MiB pool peak; earlier pilot figures above remain historical. Limits were not changed.
+
+The least-squares merge-only fit uses 120 bounded-text observations (long text excluded):
+`c0=0.9421 ms`, `c1=0.007653 ms/node`, `c2=-0.001893 ms/edit`, R²=0.889,
+residual RMSE=0.562 ms, scaled elimination-pivot ratio=85.7. The negative edit coefficient
+is a warning against causal interpretation: this matrix/timing noise does not identify a
+monotone edit cost. Neither this fit nor its R² proves or refutes the paper's complexity bound.
+XML parse and matching are excluded from the fitted time. Total includes correctness checking
+and reopening the output ZIP; sampled heap is JVM-wide and not per-operation allocation or RSS.
+
+Re-run only on the frozen environment for gate comparisons; recalibrate a new environment
+explicitly without retroactively replacing the committed baseline. Summary command:
+`python3 idml/tools/summarize_merge_benchmark.py idml/docs/evidence/mr13-formal.json /tmp/mr13-summary.json`.
