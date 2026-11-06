@@ -69,4 +69,22 @@ class ZipSpec extends AnyFlatSpec with should.Matchers {
     Zip.writeEntry(file, "designmap.xml", "<Document/>")
     Zip.readEntry(file, "mimetype") shouldBe Success("application/vnd.adobe.indesign-idml-package")
   }
+
+  it should "write an entry in a directory which didn't exist before" in {
+    val file = scratchCopy()
+    Zip.writeEntry(file, "NewDir/NewEntry.txt", "hello") shouldBe Success(())
+    Zip.readEntry(file, "NewDir/NewEntry.txt") shouldBe Success("hello")
+  }
+
+  it should "delete an entry" in {
+    val file = scratchCopy()
+    Zip.deleteEntry(file, "designmap.xml") shouldBe Success(())
+    Zip.readEntry(file, "designmap.xml") should matchPattern { case Failure(_) => }
+    Zip.readEntry(file, "mimetype") shouldBe Success("application/vnd.adobe.indesign-idml-package")
+  }
+
+  it should "delete an entry which isn't there, as a no-op" in {
+    val file = scratchCopy()
+    Zip.deleteEntry(file, "NoSuchEntry.xml") shouldBe Success(())
+  }
 }
