@@ -309,4 +309,23 @@ class PcsMergerSpec extends AnyFlatSpec with should.Matchers {
     }
   }
 
+
+  it should "preserve all indentation nodes across independent inserts at different gaps" in {
+    def formatted(items: GenericElement*) = GenericElement("Spread", Seq("Self" -> "us"),
+      items.flatMap(item => Seq(GenericText("\n  "), item)) :+ GenericText("\n"))
+    val a = rect("a")
+    val b = rect("b")
+    val x = rect("x")
+    val y = rect("y")
+    assertCompatible(formatted(a, b), formatted(x, a, b), formatted(a, b, y), formatted(x, a, b, y))
+  }
+
+  it should "keep indentation payloads significant when both branches edit the same whitespace node" in {
+    def formatted(indent: String) = GenericElement("Spread", Seq("Self" -> "us"),
+      Seq(GenericText(indent), rect("a"), GenericText("\n")))
+    val result = PcsMerger.merge(formatted("\n "), formatted("\n  "), formatted("\n\t"))
+    MergeAssertions.assertConflictsEqual(result.conflicts, Seq(StructuralConflict("content of us::before[a]",
+      Some("\n "), Some("\n  "), Some("\n\t"))))
+    PcsTreeBuilder.build(result).isFailure shouldBe true
+  }
 }

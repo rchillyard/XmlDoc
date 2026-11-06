@@ -746,6 +746,53 @@ case-name/
 - `10b` requires the genuine parent conflict for r3: base=g1, left=ud1 (Spread), right=g2. Other low-level relation contradictions are not ruled out or silently discarded.
 - `06b` and `13` use MR01 Story-level dependency rules, not inferred character-to-frame layout.
 - Thread changes must update both ends of `PreviousTextFrame` / `NextTextFrame` references.
+
+## MR09 executable regression
+
+Run `sbt "idml/testOnly *ThreeWayCorpusSpec"`. All 16 directories are required;
+32 named tests execute normal and swapped orders in independent temporary copies.
+The integrated MR11/MR12 domain reports are now compared exactly as well;
+`ThreeWayPackageCorpusSpec` independently verifies all 32 driver/ZIP permutations.
+For one case, use `sbt 'idml/testOnly *ThreeWayCorpusSpec -- -z 10b-divergent-parent'`.
+Two additional negative tests reject an incomplete directory inventory, damaged JSON
+and an unexpected conflict. Existing contract tests cover hashes, profiles and missing fields.
+
+| Case | Generic expectation | Domain acceptance |
+|---|---|---|
+| 01-single-add | complete candidate package | not required |
+| 02-single-delete | complete candidate package | not required |
+| 03-single-move | complete candidate package | not required |
+| 04-both-add-diff-pos | complete candidate package, including indentation | not required |
+| 05-move-move-divergent | complete predecessor/successor conflict set | not required |
+| 06-delete-vs-modify | exact delete/update report | not required |
+| 06b-delete-thread-vs-content | exact integrated domain conflict | implemented by MR11/MR12 |
+| 07-same-story-diff-para | complete candidate package | not required |
+| 08-same-para-overlap | exact atomic text conflict | not required |
+| 08b-same-para-disjoint | exact atomic text conflict | not required |
+| 09-zorder | complete candidate package | not required |
+| 10-group-ungroup | complete candidate package, reparenting and transform retained | not required |
+| 10b-divergent-parent | complete parent conflict set, g1/ud1/g2 | not required |
+| 11-thread-insert | complete candidate package | integrated MR11/MR12 reference validation |
+| 12-next-divergent | exact NextTextFrame attribute conflict | integrated MR11/MR12 reference validation |
+| 13-parentstory-vs-content | exact integrated domain conflict | implemented by MR11/MR12 |
+
+`CorpusContract` validates schema 3 and input/snapshot digests before test registration.
+`CorpusExpectations` maps the reviewed business assertions to generic report slots;
+it never calls a merger to derive expected results. For case 05 the page-item-only
+context omits Page `ud6` and formatting text, so the adapter explicitly includes
+those actual PCS boundaries. All generic reports are compared as full multisets,
+including slots, base and branch values; swapping changes only left/right values.
+
+For accepted cases, every declared part is compared in full, along with the complete
+logical ZIP entry inventory and unchanged entries' bytes. No fixture or temporary
+input may change. Part outcomes are overlaid in memory; writing/reopening ZIPs,
+patching designmap and failure atomicity are also exercised by the integrated MR12
+package/driver suite. Full generic and domain reports are checked for 06b/13.
+InDesign application evidence remains MR14 work.
+
+Formatting-node identity uses its following matched element only for strictly
+alternating whitespace/element lists. Whitespace payloads are preserved and compared;
+body/mixed text keeps the ordinary text-node identity and strict atomic policy.
 """
 
 
