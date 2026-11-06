@@ -86,6 +86,15 @@ class IdmlMergeDriverSpec extends AnyFlatSpec with should.Matchers with BeforeAn
     val theirs = tempCopyOf("HelloWorld2.idml")
     removePart(theirs, "Stories/Story_u128.xml", "Story") // theirs: deletes a whole Story
 
+    // A deleted Story must not leave its frame's ParentStory dangling.
+    val spreadSrc = "Spreads/Spread_ud1.xml"
+    val spread = IdmlPackage.open(theirs).get.loadPart(spreadSrc).get
+    def removeFrame(e: GenericElement): GenericElement = e.copy(children = e.children.filterNot {
+      case n: GenericElement => n.attributes.contains("Self" -> "u13a")
+      case _ => false
+    }.map { case n: GenericElement => removeFrame(n); case n => n })
+    Zip.writeEntry(theirs, spreadSrc, GenericElement.toXmlString(removeFrame(spread))).get
+
     IdmlMergeDriver.merge(base, ours, theirs).get shouldBe Nil
 
     val merged = IdmlPackage.open(ours).get
