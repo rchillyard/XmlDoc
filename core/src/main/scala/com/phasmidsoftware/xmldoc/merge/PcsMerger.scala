@@ -67,9 +67,15 @@ object PcsMerger {
     leftLabel: NodeRef => String = Pcs.label,
     rightLabel: NodeRef => String = Pcs.label
   ): StructuralMergeResult = {
-    val baseRelations = Pcs.relations(base)
-    val leftEdits = PcsEditDetector.detectEdits(base, left, ignoredAttributes, leftLabel)
-    val rightEdits = PcsEditDetector.detectEdits(base, right, ignoredAttributes, rightLabel)
+    mergeRelations(Pcs.relations(base), Pcs.relations(left, leftLabel), Pcs.relations(right, rightLabel),
+      Pcs.label(NodeRef(NodePath.root, base)), ignoredAttributes)
+  }
+
+  /** Reconcile pre-matched relations without changing the default XML identity policy. */
+  def mergeRelations(baseRelations: RelationSet, leftRelations: RelationSet, rightRelations: RelationSet,
+                     rootLabel: String, ignoredAttributes: Set[String]): StructuralMergeResult = {
+    val leftEdits = PcsEditDetector.detectEdits(baseRelations, leftRelations, ignoredAttributes)
+    val rightEdits = PcsEditDetector.detectEdits(baseRelations, rightRelations, ignoredAttributes)
 
     val baseContent = baseRelations.content.map(c => c.label -> c).toMap
     val (contentEdits, contentConflicts) = reconcile(
@@ -107,7 +113,6 @@ object PcsMerger {
     val (_, parentConflicts) = reconcile(baseParent, parentOf(leftEdits.pcs), parentOf(rightEdits.pcs))
     val parentReports = parentConflicts.map { case (label, b, l, r) => StructuralConflict(s"parent of $label", b, l, r) }
 
-    val rootLabel = Pcs.label(NodeRef(NodePath.root, base))
     StructuralMergeResult(RelationSet(withoutObsoleteBaseLinks(mergedPcs, baseRelations.pcs, rootLabel), mergedContent), rootLabel, contentReports ++ predReports ++ succReports ++ parentReports)
   }
 

@@ -1,5 +1,98 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 3,
+  "policyProfile": "strict-text-node-v1",
+  "provenance": {
+    "layers": [
+      "paper",
+      "idml"
+    ],
+    "reference": "§6.3 Update/Update, p8; thread integrity is separate",
+    "construction": "xml-derived",
+    "oracle": "reviewed-target-recipe-no-merger"
+  },
+  "targets": [
+    {
+      "part": "Spreads/Spread_ud1.xml",
+      "self": "tf1"
+    }
+  ],
+  "identity": {
+    "strategy": "stable-Self-plus-explicit-paragraph-ordinal",
+    "baseSelfByPart": {
+      "Spreads/Spread_ud1.xml": [
+        "g1",
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "tf1",
+        "tf2",
+        "tfA",
+        "tfB",
+        "ud1",
+        "ud6"
+      ],
+      "Stories/Story_story1.xml": [
+        "story1"
+      ],
+      "Stories/Story_story2.xml": [
+        "story2"
+      ]
+    },
+    "selflessMatches": [
+      {
+        "part": "Stories/Story_story1.xml",
+        "selector": "Story[@Self='story1']/ParagraphStyleRange[1]",
+        "baseOrdinal": 1,
+        "leftOrdinal": 1,
+        "rightOrdinal": 1
+      },
+      {
+        "part": "Stories/Story_story1.xml",
+        "selector": "Story[@Self='story1']/ParagraphStyleRange[2]",
+        "baseOrdinal": 2,
+        "leftOrdinal": 2,
+        "rightOrdinal": 2
+      },
+      {
+        "part": "Stories/Story_story1.xml",
+        "selector": "Story[@Self='story1']/ParagraphStyleRange[3]",
+        "baseOrdinal": 3,
+        "leftOrdinal": 3,
+        "rightOrdinal": 3
+      },
+      {
+        "part": "Stories/Story_story1.xml",
+        "selector": "Story[@Self='story1']/ParagraphStyleRange[4]",
+        "baseOrdinal": 4,
+        "leftOrdinal": 4,
+        "rightOrdinal": 4
+      }
+    ],
+    "note": "Paragraph order is unchanged in these 16 cases; this is not a general position matching rule."
+  },
+  "oracle": {
+    "kind": "conflicts",
+    "assertions": [
+      {
+        "level": "generic",
+        "part": "Spreads/Spread_ud1.xml",
+        "target": "tf1",
+        "field": "NextTextFrame",
+        "base": "tf2",
+        "left": "tfA",
+        "right": "tfB",
+        "type": "reference-divergence",
+        "relatedParts": []
+      }
+    ],
+    "entries": {}
+  },
+  "migration": {
+    "fromSchemaVersion": 2,
+    "date": "2026-11-06",
+    "reason": "Schema 3 paper-based correction: case10 accepts reparenting plus content update; add case10b genuine divergent-parent conflict; withdraw forced local-coordinate policy. New case10b has no prior schema; preserve strict-text-node-v1 (including 08b conflict)."
+  },
   "case": "12-next-divergent",
   "requirement": "Divergent NextTextFrame references",
   "expectedStatus": "conflict",

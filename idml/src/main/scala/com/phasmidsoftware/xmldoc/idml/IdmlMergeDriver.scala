@@ -1,9 +1,10 @@
 package com.phasmidsoftware.xmldoc.idml
 
 import com.phasmidsoftware.xmldoc.core.{FP, XmlException}
-import com.phasmidsoftware.xmldoc.xml.{GenericElement, Zip}
+import com.phasmidsoftware.xmldoc.xml.{GenericContent, GenericElement, Zip}
 
 import java.io.File
+import java.nio.file.{Files, Path, StandardCopyOption}
 import scala.util.{Failure, Success, Try}
 
 /**
@@ -38,29 +39,85 @@ object IdmlMergeDriver {
    *         succeeded), or a `Failure` if the files themselves couldn't be read/written.
    */
   def merge(base: File, ours: File, theirs: File, ignoredAttributes: Set[String] = EditDetector.defaultIgnoredAttributes): Try[Seq[PartConflict]] =
+    mergeWithWrites(base, ours, theirs, ignoredAttributes, DefaultWrites)
+
+  /** Per-invocation, narrow write boundary for failure tests; no shared mutable hooks. */
+  private[idml] trait Writes {
+    def part(file: File, outcome: PartOutcome): Try[Unit] = outcome match {
+      case PartContent(src, _, content) => Zip.writeEntry(file, src, xmlDeclaration + GenericElement.toXmlString(content))
+      case PartRemoved(src) => Zip.deleteEntry(file, src)
+    }
+    def manifest(file: File, added: Seq[PartContent], removed: Seq[PartRemoved]): Try[Unit] =
+      patchDesignmap(file, added, removed)
+    def replace(staged: Path, target: Path): Try[Unit] = Try {
+      Files.move(staged, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING)
+      ()
+    }
+  }
+  private object DefaultWrites extends Writes
+
+  private[idml] def mergeWithWrites(base: File, ours: File, theirs: File,
+                                   ignoredAttributes: Set[String], writes: Writes): Try[Seq[PartConflict]] =
     for {
       basePkg <- IdmlPackage.open(base)
       oursPkg <- IdmlPackage.open(ours)
       theirsPkg <- IdmlPackage.open(theirs)
       result <- IdmlPackageMerger.merge(basePkg, oursPkg, theirsPkg, ignoredAttributes)
-      _ <- if (result.conflicts.isEmpty) applyTo(ours, oursPkg, result.partOutcomes) else Success(())
+      _ <- if (result.conflicts.isEmpty) applyAtomically(ours, oursPkg, result.partOutcomes, ignoredAttributes, writes) else Success(())
     } yield result.conflicts
 
-  private def applyTo(ours: File, oursPkg: IdmlPackage, outcomes: Seq[PartOutcome]): Try[Unit] = {
-    val oursSrcs = oursPkg.parts.map(_.src).toSet
-    val toAdd = outcomes.collect { case p: PartContent if !oursSrcs(p.src) => p }
-    val toRemove = outcomes.collect { case p: PartRemoved if oursSrcs(p.src) => p }
-    for {
-      _ <- writeParts(ours, outcomes)
-      _ <- if (toAdd.nonEmpty || toRemove.nonEmpty) patchDesignmap(ours, toAdd, toRemove) else Success(())
-    } yield ()
+  private def applyAtomically(ours: File, oursPkg: IdmlPackage, outcomes: Seq[PartOutcome], ignored: Set[String], writes: Writes): Try[Unit] = Try {
+    val target = ours.toPath.toAbsolutePath
+    val staged = Files.createTempFile(target.getParent, ".idml-merge-", ".idml")
+    var committed = false
+    try {
+      Files.copy(target, staged, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES)
+      val oursSrcs = oursPkg.parts.map(_.src).toSet
+      val toAdd = outcomes.collect { case p: PartContent if !oursSrcs(p.src) => p }
+      val toRemove = outcomes.collect { case p: PartRemoved if oursSrcs(p.src) => p }
+      outcomes.foreach {
+        // Keep untouched entries' original bytes, including XML serialization and PIs.
+        case p: PartContent if oursSrcs(p.src) && sameXml(oursPkg.loadPart(p.src).get, p.content, ignored) => ()
+        case p => writes.part(staged.toFile, p).get
+      }
+      if (toAdd.nonEmpty || toRemove.nonEmpty) writes.manifest(staged.toFile, toAdd, toRemove).get
+      validateStaged(staged.toFile, oursPkg, outcomes, ignored).get
+      // No destructive fallback when the filesystem cannot perform atomic replacement.
+      writes.replace(staged, target).get
+      committed = true
+    } finally {
+      if (!committed) Files.deleteIfExists(staged)
+    }
   }
 
-  private def writeParts(ours: File, outcomes: Seq[PartOutcome]): Try[Unit] =
-    FP.sequence(outcomes.map {
-      case PartContent(src, _, content) => Zip.writeEntry(ours, src, xmlDeclaration + GenericElement.toXmlString(content))
-      case PartRemoved(src) => Zip.deleteEntry(ours, src)
-    }).map(_ => ())
+  private def validateStaged(file: File, original: IdmlPackage, outcomes: Seq[PartOutcome], ignored: Set[String]): Try[Unit] =
+    for {
+      pkg <- IdmlPackage.open(file)
+      loaded <- FP.sequence(pkg.parts.map(p => pkg.loadPart(p.src).map(p.src -> _)))
+      _ <- Try {
+        val expected = outcomes.foldLeft(original.parts.map(_.src).toSet) {
+          case (srcs, p: PartContent) => srcs + p.src
+          case (srcs, p: PartRemoved) => srcs - p.src
+        }
+        require(pkg.parts.map(_.src).distinct.size == pkg.parts.size, "staged designmap.xml: duplicate src")
+        require(loaded.map(_._1).toSet == expected, "staged designmap.xml: part inventory mismatch")
+        val entries = Zip.entries(file).get.toSet
+        val view = loaded.toMap
+        outcomes.foreach {
+          case PartRemoved(src) => require(!entries(src), s"staged ZIP: removed part $src still exists")
+          case PartContent(src, _, e) => require(view.get(src).exists(sameXml(_, e, ignored)), s"staged XML: $src differs from candidate")
+        }
+        IdmlReferenceValidator.requireIdentities(view)
+        require(IdmlReferenceValidator.validate(view).isEmpty, "staged ZIP: invalid frame/Story references")
+      }
+    } yield ()
+
+  private def sameXml(a: GenericContent, b: GenericContent, ignored: Set[String]): Boolean = (a, b) match {
+    case (x: GenericElement, y: GenericElement) =>
+      x.tag == y.tag && x.attributes.filterNot(kv => ignored(kv._1)).toMap == y.attributes.filterNot(kv => ignored(kv._1)).toMap &&
+        x.children.size == y.children.size && x.children.zip(y.children).forall { case (c, d) => sameXml(c, d, ignored) }
+    case _ => a == b
+  }
 
   private val xmlDeclaration = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
 
@@ -76,15 +133,19 @@ object IdmlMergeDriver {
     } yield ()
 
   private def removeIdPkgLine(text: String, src: String): Try[String] = {
-    val pattern = ("(?m)^.*<idPkg:[A-Za-z]+\\b[^>]*\\bsrc=\"" + java.util.regex.Pattern.quote(src) + "\"[^>]*/>\\s*\\R?").r
-    pattern.findFirstIn(text) match {
-      case Some(matched) => Success(text.replaceFirst(java.util.regex.Pattern.quote(matched), ""))
-      case None => Failure(XmlException(s"IdmlMergeDriver: designmap.xml has no idPkg reference to remove for $src"))
+    // Match only the requested element, never another reference on the same line.
+    val pattern = ("<idPkg:[A-Za-z]+\\b[^>]*\\bsrc\\s*=\\s*([\"'])" + java.util.regex.Pattern.quote(scala.xml.Utility.escape(src)) + "\\1[^>]*/>").r
+    val matches = pattern.findAllMatchIn(text).toSeq
+    if (matches.size != 1) Failure(XmlException(s"IdmlMergeDriver: designmap.xml has ${matches.size} idPkg references to remove for $src"))
+    else {
+      val m = matches.head
+      Success(text.substring(0, m.start) + text.substring(m.end))
     }
   }
 
   private def insertIdPkgLine(text: String, partType: String, src: String): Try[String] = {
-    val newLine = s"""\t<idPkg:$partType src="$src" />\n"""
+    val escapedSrc = scala.xml.Utility.escape(src).replace("\"", "&quot;")
+    val newLine = s"""\t<idPkg:$partType src="$escapedSrc" />\n"""
     val marker = "</Document>"
     val count = (text.length - text.replace(marker, "").length) / marker.length
     if (count != 1) Failure(XmlException(s"IdmlMergeDriver: designmap.xml has $count occurrences of $marker, expected exactly 1"))

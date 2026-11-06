@@ -1,7 +1,7 @@
 package com.phasmidsoftware.xmldoc.idml
 
-import com.phasmidsoftware.xmldoc.merge.{Content, ContentMatcher, NodePath, NodeRef, Pcs, PcsMerger, PcsTreeBuilder, RelationSet, StructuralConflict}
-import com.phasmidsoftware.xmldoc.xml.GenericElement
+import com.phasmidsoftware.xmldoc.merge.{ContentMatcher, Sibling, SiblingNode, Content, NodePath, NodeRef, Pcs, PcsMerger, PcsTreeBuilder, RelationSet, StructuralConflict}
+import com.phasmidsoftware.xmldoc.xml.{GenericCData, GenericElement, GenericText}
 
 import scala.util.{Failure, Success}
 
@@ -55,12 +55,15 @@ object ThreeWayMerger {
     val attrSelves = attrOutcomes.flatMap(selfOf).toSet
     val attrConflictReports = attrOutcomes.collect { case c: Conflict => renderAttrConflict(c) }
 
-    val structResult = PcsMerger.merge(base, left, right, ignoredAttributes,
-      matchedLabels(base, left, ignoredAttributes), matchedLabels(base, right, ignoredAttributes))
+    val structResult = PcsMerger.mergeRelations(
+      matchedRelations(base, Pcs.label),
+      matchedRelations(left, matchedLabels(base, left, ignoredAttributes)),
+      matchedRelations(right, matchedLabels(base, right, ignoredAttributes)),
+      Pcs.label(NodeRef(NodePath.root, base)), ignoredAttributes)
     // Merger already handles content-level conflicts for anything with a real Self, finer-grained
     // than PcsMerger's own whole-blob comparison (see the class doc) - keep PcsMerger's content
-    // conflicts only for path-labelled (Self-less) nodes, which Merger never sees at all. A path
-    // label always starts with "/" (NodePath.toString); no real Self ever does.
+    // conflicts for anonymous nodes, which Merger never sees at all. Anonymous identities are
+    // scoped to their matched base location or their inserted Self-bearing ancestor.
     val structConflictReports = structResult.conflicts.filterNot { c =>
       c.slot.startsWith("content of ") && attrSelves.contains(c.slot.stripPrefix("content of "))
     }
@@ -109,7 +112,58 @@ object ThreeWayMerger {
       labels(NodePath.root) = Pcs.label(NodeRef(NodePath.root, base))
       matchAnonymous(NodeRef(NodePath.root, base), NodeRef(NodePath.root, modified))
     }
-    ref => ref.self.getOrElse(labels.getOrElse(ref.path, s"+${ref.path}"))
+    // Scope inserted anonymous descendants to their nearest identified ancestor. Independent
+    // insertions at the same raw path must never share the same anonymous node identities.
+    val modifiedByPath = ms.map(r => r.path -> r).toMap
+    def insertedLabel(ref: NodeRef): String = {
+      val ancestors = (0 to ref.path.indices.size).reverse.map(n => NodePath(ref.path.indices.take(n)))
+      ancestors.flatMap(p => modifiedByPath.get(p).flatMap(r => r.self.map(id => p -> id))).headOption match {
+        case Some((path, id)) => s"+$id::${ref.path.indices.drop(path.indices.size).mkString("/")}"
+        case None => s"+${ref.path}"
+      }
+    }
+    ref => ref.self.getOrElse(labels.getOrElse(ref.path, insertedLabel(ref)))
+  }
+
+  /** Character data is anchored to the following matched element (or the list end),
+    * instead of a text ordinal that shifts after an independent sibling insertion.
+    * Consecutive text/CDATA nodes keep their order and distinct identities. */
+  private def matchedRelations(tree: GenericElement, labelOf: NodeRef => String): RelationSet = {
+    val textLabels = scala.collection.mutable.Map.empty[String, String]
+    def walk(ref: NodeRef): Unit = {
+      val parent = labelOf(ref)
+      var elementOrdinal = 0
+      val children = ref.element.children.map {
+        case e: GenericElement =>
+          val child = NodeRef(ref.path.child(elementOrdinal), e)
+          elementOrdinal += 1
+          Left(child)
+        case c => Right(c)
+      }
+      var ordinal = 0
+      val perAnchor = scala.collection.mutable.Map.empty[String, Int]
+      children.zipWithIndex.foreach {
+        case (Left(child), _) => walk(child)
+        case (Right(_: GenericText | _: GenericCData), i) =>
+          val anchor = children.drop(i + 1).collectFirst { case Left(next) => s"before[${labelOf(next)}]" }.getOrElse("end")
+          val occurrence = perAnchor.getOrElse(anchor, 0)
+          perAnchor(anchor) = occurrence + 1
+          // Text-only parents retain the established public text-slot vocabulary.
+          if (children.exists(_.isLeft))
+            textLabels(s"$parent::text[$ordinal]") = s"$parent::$anchor::text[$occurrence]"
+          ordinal += 1
+        case _ => ()
+      }
+    }
+    walk(NodeRef(NodePath.root, tree))
+    def rename(label: String): String = textLabels.getOrElse(label, label)
+    def sibling(s: Sibling): Sibling = s match {
+      case SiblingNode(label) => SiblingNode(rename(label))
+      case marker => marker
+    }
+    val relations = Pcs.relations(tree, labelOf)
+    RelationSet(relations.pcs.map(p => Pcs(rename(p.parent), sibling(p.predecessor), sibling(p.successor))),
+      relations.content.map(c => c.copy(label = rename(c.label))))
   }
 
   private def selfOf(o: MergeOutcome): Option[String] = o match {

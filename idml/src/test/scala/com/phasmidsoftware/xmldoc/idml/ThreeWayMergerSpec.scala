@@ -127,12 +127,16 @@ class ThreeWayMergerSpec extends AnyFlatSpec with should.Matchers {
     conflicts.map(_.slot) should contain("LinkImportTime of u10d")
   }
 
-  it should "surface the real Insert/Insert collision (u11c) as a single conflict, from Mergeable-Left/-Right" in {
+  it should "deduplicate the whole-node Insert/Insert report for u11c while allowing descendant diagnostics" in {
     val base = spread("Mergeable.idml", "Spreads/Spread_ud1.xml")
     val left = spread("Mergeable-Left.idml", "Spreads/Spread_ud1.xml")
     val right = spread("Mergeable-Right.idml", "Spreads/Spread_ud1.xml")
     val conflicts = expectConflicts(ThreeWayMerger.merge(base, left, right))
-    conflicts.count(_.slot.contains("u11c")) shouldBe 1
+    val slot = "(whole inserted node) of u11c"
+    val a = left.childElements.find(_.attributes.contains("Self" -> "u11c")).get
+    val b = right.childElements.find(_.attributes.contains("Self" -> "u11c")).get
+    IdmlMergeAssertions.assertConflictsEqual(conflicts.filter(_.slot == slot),
+      Seq(StructuralConflict(slot, None, Some(a.toString), Some(b.toString))))
   }
 
   private def mr08Story(values: String*): GenericElement = {
@@ -208,4 +212,43 @@ class ThreeWayMergerSpec extends AnyFlatSpec with should.Matchers {
     ThreeWayMerger.merge(plain, wrapped, plain) shouldBe Right(wrapped)
     ThreeWayMerger.merge(plain, plain, wrapped) shouldBe Right(wrapped)
   }
+  private def xml(s: String): GenericElement = GenericElement.fromElem(scala.xml.XML.loadString(s))
+
+  it should "merge independent insertions with anonymous descendants and preserve every whitespace node" in {
+    val a = "<Item Self='a'><Properties Value='a'/></Item>"
+    val b = "<Item Self='b'><Properties Value='b'/></Item>"
+    val c = "<Item Self='c'><Properties Value='c'/></Item>"
+    val x = "<Item Self='x'><Properties Value='x'/></Item>"
+    val y = "<Item Self='y'><Properties Value='y'/></Item>"
+    def root(items: String*) = xml(items.mkString("<Root Self='r'>\n  ", "\n  ", "\n</Root>"))
+    val base = root(a, b, c)
+    Seq((root(a, x, b, c), root(a, b, y, c)), (root(a, b, y, c), root(a, x, b, c))).foreach { case (l, r) =>
+      IdmlMergeAssertions.assertXmlEquals(expectMerged(ThreeWayMerger.merge(base, l, r)), root(a, x, b, y, c))
+    }
+    // Two different insertions into the same gap remain a real strict relation conflict.
+    expectConflicts(ThreeWayMerger.merge(base, root(a, x, b, c), root(a, y, b, c))) should not be empty
+  }
+
+  it should "keep moved anonymous descendants matched for an independent property edit" in {
+    val a = "<Item Self='a'><Properties Value='base'/></Item>"
+    val edited = "<Item Self='a'><Properties Value='edited'/></Item>"
+    val base = xml(s"<Root Self='r'><Group Self='g'>$a</Group><Item Self='b'/></Root>")
+    val left = xml(s"<Root Self='r'><Group Self='g'/><Item Self='b'/>$a</Root>")
+    val right = xml(s"<Root Self='r'><Group Self='g'>$edited</Group><Item Self='b'/></Root>")
+    val expected = xml(s"<Root Self='r'><Group Self='g'/><Item Self='b'/>$edited</Root>")
+    IdmlMergeAssertions.assertXmlEquals(expectMerged(ThreeWayMerger.merge(base, left, right)), expected)
+  }
+
+  it should "preserve consecutive text and CDATA while merging an element insertion with a text edit" in {
+    import com.phasmidsoftware.xmldoc.xml.{GenericText, GenericCData}
+    val a = rect("a")
+    val b = rect("b")
+    val x = rect("x")
+    val base = GenericElement("Root", Seq("Self" -> "r"), Seq(GenericText(" lead "), GenericCData("<raw>"), a, GenericText(" middle "), b))
+    val left = base.copy(children = Seq(GenericText(" lead "), GenericCData("<raw>"), a, GenericText(" inserted "), x, GenericText(" middle "), b))
+    val right = base.copy(children = Seq(GenericText(" changed "), GenericCData("<raw>"), a, GenericText(" middle "), b))
+    val expected = left.copy(children = GenericText(" changed ") +: left.children.tail)
+    IdmlMergeAssertions.assertXmlEquals(expectMerged(ThreeWayMerger.merge(base, left, right)), expected)
+  }
+
 }
