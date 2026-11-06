@@ -78,15 +78,47 @@ lazy val json = (project in file("json"))
     )
   )
 
+// The sending is TableParser's (tableparser-kafka-cats and tableparser-kafka-zio); the message value is a record's JSON.
+// The tests use the Kafka client's MockProducer, so they need no broker; they use json's test records (from a KML file).
+lazy val tableParserVersion = "2.3.0"
+
+lazy val kafkaCats = (project in file("kafka-cats"))
+  .dependsOn(json % "compile->compile;test->test")
+  .settings(commonSettings)
+  .settings(
+    name := "xmldoc-kafka-cats",
+    libraryDependencies += "com.phasmidsoftware" %% "tableparser-kafka-cats" % tableParserVersion
+  )
+
+lazy val kafkaZio = (project in file("kafka-zio"))
+  .dependsOn(json % "compile->compile;test->test")
+  .settings(commonSettings)
+  .settings(
+    name := "xmldoc-kafka-zio",
+    libraryDependencies += "com.phasmidsoftware" %% "tableparser-kafka-zio" % tableParserVersion
+  )
+
+// Integration tests of kafka-cats and kafka-zio against a Kafka broker which they start (deliberately not aggregated
+// by the root project, so `sbt test` stays fast): run them with `sbt kafkaIt/test`.
+lazy val kafkaIt = (project in file("kafka-it"))
+  .dependsOn(kafkaCats % "compile->compile;test->test", kafkaZio)
+  .settings(commonSettings)
+  .settings(
+    name := "xmldoc-kafka-it",
+    publish / skip := true,
+    // The broker is built with Scala 2.13: it runs with core's Scala 3 build of scala-logging instead of its own.
+    libraryDependencies += "io.github.embeddedkafka" %% "embedded-kafka" % "4.4.0" % Test exclude("com.typesafe.scala-logging", "scala-logging_2.13")
+  )
+
 lazy val root = (project in file("."))
   .enablePlugins(ScalaUnidocPlugin, GhpagesPlugin)
-  .aggregate(core, kml, idml, json)
+  .aggregate(core, kml, idml, json, kafkaCats, kafkaZio)
   .settings(
     testScalacOptions,
     name := "XmlDoc",
     publish / skip := true,
     // The unified Scaladoc is published to https://rchillyard.github.io/XmlDoc/latest/api/ by `sbt ghpagesPushSite`
-    ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(core, kml, idml, json),
+    ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(core, kml, idml, json, kafkaCats, kafkaZio),
     ScalaUnidoc / siteSubdirName := "latest/api",
     addMappingsToSiteDir(ScalaUnidoc / packageDoc / mappings, ScalaUnidoc / siteSubdirName),
     git.remoteRepo := "git@github.com:rchillyard/XmlDoc.git"

@@ -1,21 +1,16 @@
 package com.phasmidsoftware.xmldoc.json
 
 import cats.effect.unsafe.implicits.global
-import com.phasmidsoftware.xmldoc.kml.*
 import io.circe.derivation.{Configuration, ConfiguredEnumEncoder}
 import io.circe.parser.parse
 import io.circe.{Encoder, Json}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-import scala.util.Success
-
 object SparkSchemaSpec {
+  import KmlRecords.*
+
   given Configuration = Configuration.default
-
-  case class Point(lon: Double, lat: Double) derives Encoder.AsObject, SparkSchema
-
-  case class Station(name: String, point: Point, elevation: Option[Double]) derives Encoder.AsObject, SparkSchema
 
   enum Mode derives ConfiguredEnumEncoder, SparkSchema {
     case Ground, Air
@@ -53,6 +48,7 @@ object SparkSchemaSpec {
 
 class SparkSchemaSpec extends AnyFlatSpec with Matchers {
 
+  import KmlRecords.*
   import SparkSchemaSpec.*
 
   behavior of "SparkSchema.ddl"
@@ -85,10 +81,10 @@ class SparkSchemaSpec extends AnyFlatSpec with Matchers {
 
   behavior of "JsonLines"
 
-  private val stations = Seq(Station("Boston", Point(-71.06, 42.36), Some(43.0)), Station("Nowhere", Point(0, 0), None))
+  private val someStations = Seq(Station("Boston", Point(-71.06, 42.36), Some(43.0)), Station("Nowhere", Point(0, 0), None))
 
   it should "render one record per line" in {
-    JsonLines.render(stations) shouldBe
+    JsonLines.render(someStations) shouldBe
       """{"name":"Boston","point":{"lon":-71.06,"lat":42.36},"elevation":43.0}
         |{"name":"Nowhere","point":{"lon":0.0,"lat":0.0},"elevation":null}
         |""".stripMargin
@@ -96,14 +92,14 @@ class SparkSchemaSpec extends AnyFlatSpec with Matchers {
 
   it should "write what the schema describes (round trip)" in {
     val schema = SparkSchema[Station].sparkType
-    JsonLines.lines(stations).toSeq.map(parse) foreach {
+    JsonLines.lines(someStations).toSeq.map(parse) foreach {
       case Right(json) => conforms(json, schema) shouldBe true
       case Left(e) => fail(e)
     }
   }
 
   it should "write what the schema describes, for collections, maps, enums and value classes" in {
-    val track = Track(1, "x", List(Mode.Ground, Mode.Air), Vector(Meters(2.5)), Set("a"), Map("k" -> 3L), stations)
+    val track = Track(1, "x", List(Mode.Ground, Mode.Air), Vector(Meters(2.5)), Set("a"), Map("k" -> 3L), someStations)
     val json = parse(JsonLines.line(track))
     json.map(_.hcursor.downField("modes").focus) shouldBe Right(Some(Json.arr(Json.fromString("Ground"), Json.fromString("Air"))))
     json.map(conforms(_, SparkSchema[Track].sparkType)) shouldBe Right(true)
@@ -116,21 +112,8 @@ class SparkSchemaSpec extends AnyFlatSpec with Matchers {
 
   behavior of "records from a real KML file"
 
-  private def placemarks(fs: Seq[Feature]): Seq[Placemark] = fs flatMap {
-    case p: Placemark => Seq(p)
-    case h: HasFeatures => placemarks(h.features)
-    case _ => Nil
-  }
-
-  private def toStations(p: Placemark): Seq[Station] = for {
-    case point: com.phasmidsoftware.xmldoc.kml.Point <- p.Geometry
-    cs <- point.coordinates
-    c <- cs.coordinates
-  } yield Station(p.name.$.toString, Point(c.long.toDouble, c.lat.toDouble), c.maybeAlt.map(_.toDouble))
-
   it should "send the Points of KML_Samples.kml as JSON which the schema describes" in {
-    val kmls = KMLCompanion.loadKML(Success("kml/src/test/resources/KML_Samples.kml")).unsafeRunSync()
-    val records = kmls.flatMap(k => placemarks(k.features)).flatMap(toStations)
+    val records = stations(samples).unsafeRunSync()
     records.size shouldBe 4
     records.head shouldBe Station("Simple placemark", Point(-122.0822035425683, 37.42228990140251), Some(0.0))
     val schema = SparkSchema[Station].sparkType

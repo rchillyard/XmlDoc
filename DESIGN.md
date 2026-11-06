@@ -33,6 +33,11 @@ idml   - early-stage support for Adobe InDesign's IDML format, on core. Uses the
          (GenericElement-first) approach rather than kml's fully-typed one.
 json   - records as JSON (circe) and the Spark SQL schema which reads them. Needs nothing
          from core (its tests use kml).
+kafka-cats, kafka-zio
+       - send records to Kafka as JSON messages (fs2-kafka, zio-kafka), on json and
+         TableParser's Kafka modules.
+kafka-it - integration tests of the Kafka modules against a broker started in the JVM
+         (embedded-kafka). Not aggregated by the root project; run `sbt kafkaIt/test`.
 ```
 
 `core` has no knowledge of KML or IDML; everything format-specific lives in `kml`/`idml`.
@@ -58,6 +63,15 @@ from the same case class as circe's `Encoder[T]`, so the producer and the Spark 
   `timestampFormat` option (not tested here, since there's no Spark).
 - **Tested** by checking that the JSON written for a record (including records built from a real `.kml` file) has exactly
   the fields and kinds of value that its schema describes.
+
+## Kafka (`kafka-cats`, `kafka-zio`)
+
+Each module is one method, `toKafka(topic, settings)(key)`, for any record type with a circe `Encoder`: it's
+TableParser's `toKafkaWith` with `JsonLines.line` as the message value. Depending on TableParser's modules (rather than
+copying their code, or splitting it into a shared library) was Robin's choice on #65: the cost is that these two modules
+bring in `tableparser-core`; the rest of XmlDoc doesn't. The unit tests use the Kafka client's `MockProducer`; `kafka-it`
+sends the same records to a real broker (embedded-kafka, a Scala 2.13 build, with its `scala-logging_2.13` excluded)
+and reads them back. The records in both are built from a real `.kml` file (`KmlRecords`, in `json`'s tests).
 
 ## The `Extractor[T]` / `Renderer[T]` framework
 

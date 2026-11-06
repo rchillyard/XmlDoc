@@ -54,6 +54,11 @@ jobs:
           name: Integration test
           command: cat /dev/null | sbt kmlIt/test
 
+      # Kafka integration tests (kafka-it starts a broker in the JVM; like kml-it, it isn't aggregated by root)
+      - run:
+          name: Kafka integration test
+          command: cat /dev/null | sbt kafkaIt/test
+
       # Generate the unified Scaladoc (catches doc warnings, and it is what GitHub Pages publishes)
       - run:
           name: Doc
