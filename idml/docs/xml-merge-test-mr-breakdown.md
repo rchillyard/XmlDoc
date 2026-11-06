@@ -462,6 +462,14 @@ Files:
 - core/src/main/scala/com/phasmidsoftware/xmldoc/xml/Zip.scala（仅必要写入修复）
 - idml/src/test/scala/com/phasmidsoftware/xmldoc/idml/ThreeWayCorpusSpec.scala
 
+MR12 实施补充（2026-11-06，用户确认必要核心修复范围）：
+- core/src/main/scala/com/phasmidsoftware/xmldoc/merge/PcsEditDetector.scala（提取既有关系差集入口）
+- core/src/main/scala/com/phasmidsoftware/xmldoc/merge/PcsMerger.scala（提取既有关系协调入口，不改默认策略）
+- idml/src/main/scala/com/phasmidsoftware/xmldoc/idml/ThreeWayMerger.scala（修复 case 04 暴露的匿名后代/字符身份错位）
+- idml/src/test/scala/com/phasmidsoftware/xmldoc/idml/ThreeWayMergerSpec.scala（最小修复回归）
+- idml/docs/xml-merge-test-spec.md（范围与验证证据）
+- 包完整性和 XML 重开断言集中在 IdmlPackageMergerSpec、IdmlMergeDriverSpec 与 ThreeWayCorpusSpec；IdmlPackageSpec 和 Zip.scala 无需改动。
+
 What to change:
 - 依赖 MR01、MR02、MR03、MR11。覆盖 part 新增、删除、同 src 双侧不同新增、删除/修改、多个 part 独立更新；完成 corpus 的领域层与 driver 层验证。
 - 成功后重新打开 ZIP、解析所有相关 XML，检查 part 清单与 designmap 互相一致；比较完整目标 XML及未编辑二进制 entry 的字节。

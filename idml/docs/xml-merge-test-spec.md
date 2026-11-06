@@ -1,6 +1,6 @@
 # IDML XML Merge Test Specification
 
-状态：MR03 schema 3、16 组样本契约已修订；MR11 引用与领域依赖检查已实现；实际验收仍按各 MR 范围验证。记录日期：2026-11-06。
+状态：MR03、MR11 已合并为 MR0311；MR12 包完整性与原子写入已实现，16 组 corpus 双向包入口/driver 验证通过。其他 MR 与 InDesign 应用验收仍按原计划执行。记录日期：2026-11-06。
 
 本规格是后续 MR 的预期来源，不是当前实现通过证明。执行顺序以 [MR 拆分计划](xml-merge-test-mr-breakdown.md) 为基础；下文冻结决策替代计划中的相应待决策条目。MR01 只修改文档；本轮 MR03 修订样本契约、生成器、读取器和测试，不修改生产合并算法或 driver。
 
@@ -72,7 +72,7 @@ Locked scope
 | 领域冲突 | 使用下文 story 级保守依赖规则；06b、13 为要求支持的冲突 | 2026-11-06 | 不依赖不可得的字符排版流映射 | 11、12 |
 | 身份与输入 | 各 part 内重复 Self、包级 frame/Story 索引重复身份显式失败；不同身份类别不盲目建立全包通用唯一性约束 | 2026-11-06 | TreeMatcher.matchBySelf 当前假定唯一，不应静默覆盖 | 04、11 |
 | 忽略字段 | 仅 LinkImportTime、StyleUniqueId；具体比较与保留规则见下文 | 2026-11-06 | 与 EditDetector.defaultIgnoredAttributes 一致 | 02、03、08、10 |
-| 写入 | 冲突和函数返回 I/O 失败均保持 ours 原字节；独立目标可并行，同目标并发不支持 | 2026-11-06 | 当前顺序写包不足以保证失败原子性；目标待 MR12 实现 | 12 |
+| 写入 | 冲突和函数返回 I/O 失败均保持 ours 原字节；独立目标可并行，同目标并发不支持 | 2026-11-06 | MR12 同目录临时副本校验后原子替换；不支持原子替换时失败 | 12 |
 | 外部接口 | 保留现有 merge 方法签名和 CLI 退出码 | 2026-11-06 | 不改变 Git driver 接入方式 | 11、12 |
 
 ### 领域依赖规则
@@ -169,9 +169,9 @@ Locked scope
 ## 当前缺口与验收规则
 
 - MR03 已将原有 15 组 expected.json 从 schema 2 显式迁移到 schema 3，并新增 10b，共 16 组、8 accept/8 conflict。case 10 成功，10b 冲突；08b 保持 strict-text-node-v1 冲突。schema 1/2 均被显式拒绝。此状态只证明样本契约，不证明实际 merger 全 corpus 通过。
-- 06b、13 的跨 part 意图检查已由 MR11 在包入口验证；MR12 仍负责完整包完整性、失败原子性和 corpus 契约贯通。
+- 06b、13 的跨 part 意图检查已由 MR11 在包入口验证；MR12 已贯通 corpus 的领域与 driver 层，最终应用验收仍归 MR14。
 - 无 Self 匹配进入 ThreeWayMerger 的正确性、元数据处理、严格深层 Delete/Edit 均是待验证假设。
-- driver 当前直接逐项写 ours，失败原子性是 MR12 目标，尚未得到保证。
+- driver 已由 MR12 改为同目录临时副本内写入与校验，再原子替换；返回冲突及已覆盖 I/O/校验失败时保留 ours。进程被强杀、断电及同目标并发不在保证范围。
 - 后续每 MR 合并后须可构建、相关测试通过；修复与回归同 MR 交付，不允许为了主干绿灯静默跳过要求支持的用例。
 
 ## Launch blockers
@@ -220,3 +220,17 @@ Locked scope
 - `python3 idml/tools/generate_three_way_corpus.py --verify`：16 组、schema 3、strict-text-node-v1 校验通过；前后全部文件内容哈希与 mtime 一致。
 - 临时目录独立重建与仓库完整文件清单及字节一致；原有 45 个输入逐个对照旧 MR03 提交未变，仅新增 10b 的 3 个输入包。case 10 快照独立构造，生产合并算法未修改。
 - 本记录是本地样本契约与既有回归验证，不代表 MR06/MR07/MR09 的实际 merger 场景验证、远程 CI 或 InDesign 应用验收已完成。
+
+## MR12 package integrity evidence (2026-11-06)
+
+- Branch ancestry: MR03 `d047951` + MR11 `ce5ae98` → MR0311 `bd1a657` → MR12. Each new branch was published before its implementation was written. The MR0311 documentation conflict preserves both schema 3 and the MR11 rules; its IDML regression passed 83 tests.
+- The public merge signature and CLI remain unchanged. The driver creates a unique `.idml-merge-*.idml` copy beside ours, applies all writes and manifest patches there, reopens the ZIP, parses every declared XML part, checks the complete candidate inventory/XML and references, then uses `ATOMIC_MOVE` with `REPLACE_EXISTING`. Pre-replacement failures delete staging and preserve ours; unsupported atomic moves fail without a destructive fallback. No fallible I/O follows successful replacement.
+- A per-call, package-visible Writes boundary injects failures only at part writing, manifest writing and replacement; there are no shared mutable hooks. Tests inject failures after partial writes, after manifest writing, during staged XML validation, during replacement and for unsupported atomic moves. Missing inputs, corrupt ZIP/XML and a real manifest patch failure also preserve ours and clean staging. Four independent targets merge concurrently without sharing temporary files; same-target concurrency remains unsupported.
+- Untouched XML entries retain ours' original bytes, including PIs, attribute order and ignored metadata. Untouched binary entries retain their bytes. Without part additions/removals, designmap is not written. With additions/removals, only the relevant idPkg elements change; aid PI and other content survive. Removing a reference supports single quotes and adjacent references on one line without deleting that whole line.
+- IdmlPackageIntegritySpec exercises additions, one/both-side deletions, divergent additions at the same src, delete/modify and independent multi-part updates in both branch orders. Successful packages are reopened and compared for complete XML/entry inventory, assets and non-reference manifest content; conflicts preserve ours. Base and theirs remain unchanged.
+- ThreeWayCorpusSpec strictly loads the MR03 schema-3 contract: 16 cases × 2 orders = 32 tests, each exercising both package merge and the real driver. Accepted results compare the complete independent oracle inventory, every XML entry, binary bytes, logical candidate and static references. Conflict results preserve ours; 06b/13 additionally compare complete domain reports derived from oracle target/relatedParts. Detailed generic business-conflict mapping still belongs to MR09; status assertions here do not claim that layer's acceptance.
+- User-approved scope extension: the MR03+MR11 baseline falsely conflicted on case 04 because anonymous descendants used raw paths and indentation text used shifting ordinals. The IDML entry now matches anonymous nodes beneath corresponding Self anchors, scopes inserted anonymous descendants to their nearest Self ancestor, and anchors character nodes to the following element/end plus consecutive character ordinal. Node kind, exact text and order remain preserved. The anonymous-parent matching helper follows MR08 `a3b7bc6`; no MR04–MR08 branch is merged.
+- Core changes only expose the existing RelationSet edit calculation and reconciliation for prematched identities; default XML entry behavior and conflict policy are unchanged. Focused regressions compare complete independent insertions with whitespace, require same-gap insertions to conflict, combine a moved anonymous descendant with an independent property edit, and preserve consecutive text/CDATA during insertion plus text editing. The real Insert/Insert regression now checks the exact whole-node slot rather than counting Self substrings inside valid descendant diagnostics.
+- `sbt 'core/test' 'idml/test' 'kml/test'`: core 212 passed (the existing ExtractorsSpec.extractor3B remains ignored); IDML 142 and KML 109 passed with zero ignored/pending. Real Java subprocesses verify CLI 0 for success, 1 for conflict and 2 for argument/read/XML/write failures, including byte preservation.
+- `python3 idml/tools/generate_three_way_corpus.py --verify`: 16 cases/schema 3 passed read-only validation. `python3 -m unittest discover -s idml/tools -p test_three_way_corpus.py`: 17 passed. All corpus file SHA-256 hashes and mtimes were unchanged, and all 48 IDML inputs remain byte-identical to MR0311. Oracles were not changed to accommodate the implementation.
+- `git diff --check` passed. These are local automated results, not remote CI or completion of other MRs or InDesign open/save/reopen acceptance.

@@ -121,3 +121,57 @@ class IdmlPackageMergerSpec extends AnyFlatSpec with Matchers {
     } finally originals.foreach(_.delete())
   }
 }
+
+class IdmlPackageIntegritySpec extends AnyFlatSpec with Matchers {
+  import PackageTestSupport.*
+  private val baseParts = Map("s" -> "base", "t" -> "other")
+  private val scenarios = Seq(
+    ("one added part", baseParts + ("u" -> "added"), baseParts, Some(baseParts + ("u" -> "added"))),
+    ("one removed part", baseParts - "t", baseParts, Some(baseParts - "t")),
+    ("both removed part", baseParts - "t", baseParts - "t", Some(baseParts - "t")),
+    ("same src divergent additions", baseParts + ("u" -> "left"), baseParts + ("u" -> "right"), None),
+    ("delete versus modify", baseParts - "t", baseParts.updated("t", "edited"), None),
+    ("independent part edits", baseParts.updated("s", "left"), baseParts.updated("t", "right"), Some(Map("s" -> "left", "t" -> "right"))))
+
+  scenarios.foreach { case (name, leftParts, rightParts, expectedParts) =>
+    Seq(false, true).foreach { swapped =>
+      it should s"preserve package inventory and assets for $name (swapped=$swapped)" in withDirectory { dir =>
+        val b = write(dir.resolve("base.idml"), simple(baseParts))
+        val l = write(dir.resolve("ours.idml"), simple(if (swapped) rightParts else leftParts))
+        val r = write(dir.resolve("theirs.idml"), simple(if (swapped) leftParts else rightParts))
+        val before = Seq(b, l, r).map(f => Files.readAllBytes(f.toPath))
+        val result = IdmlPackageMerger.merge(IdmlPackage.open(b).get, IdmlPackage.open(l).get, IdmlPackage.open(r).get).get
+        val conflicts = IdmlMergeDriver.merge(b, l, r).get
+        IdmlMergeAssertions.assertPartConflictsEqual(conflicts, result.conflicts)
+        expectedParts match {
+          case None =>
+            conflicts should not be empty
+            Files.readAllBytes(l.toPath) shouldBe before(1)
+            val src = if (name.startsWith("same src")) "Stories/u.xml" else "Stories/t.xml"
+            conflicts.map(_.src) shouldBe Seq(src)
+          case Some(parts) =>
+            conflicts shouldBe empty
+            val expected = simple(parts)
+            val actual = entries(l)
+            actual.keySet shouldBe expected.keySet
+            val expectedXml = parts.map { case (id, text) => s"Stories/$id.xml" -> xml(story(id, text)) }
+            IdmlMergeAssertions.assertXmlPartsEqual(xmlParts(l), expectedXml)
+            IdmlReferenceValidator.validate(xmlParts(l)) shouldBe empty
+            actual.filterNot(_._1.endsWith(".xml")).foreach { case (n, data) => data shouldBe expected(n) }
+            val originalMap = new String(entries(write(dir.resolve("original.idml"), simple(if (swapped) rightParts else leftParts)))("designmap.xml"), java.nio.charset.StandardCharsets.UTF_8)
+            val finalMap = new String(actual("designmap.xml"), java.nio.charset.StandardCharsets.UTF_8)
+            if ((if (swapped) rightParts else leftParts).keySet == parts.keySet) finalMap shouldBe originalMap
+            finalMap should include("<?aid preserve='yes'?>")
+            finalMap should include("<Other keep='yes'/>")
+            // Compare all non-reference text verbatim, allowing only inserted reference whitespace.
+            def withoutReferences(s: String) = s.replaceAll("<idPkg:Story[^>]*/>", "").replace("\t", "").replace("\n", "")
+            withoutReferences(finalMap) shouldBe withoutReferences(originalMap)
+            val manifest = IdmlPackage.open(l).get.parts.map(_.src).toSet
+            manifest shouldBe expectedXml.keySet
+        }
+        Files.readAllBytes(b.toPath) shouldBe before(0)
+        Files.readAllBytes(r.toPath) shouldBe before(2)
+      }
+    }
+  }
+}
