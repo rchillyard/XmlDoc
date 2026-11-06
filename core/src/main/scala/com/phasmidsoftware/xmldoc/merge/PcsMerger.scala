@@ -107,8 +107,27 @@ object PcsMerger {
     val (_, parentConflicts) = reconcile(baseParent, parentOf(leftEdits.pcs), parentOf(rightEdits.pcs))
     val parentReports = parentConflicts.map { case (label, b, l, r) => StructuralConflict(s"parent of $label", b, l, r) }
 
+    // A moved child no longer contributes its old parent's chain links. Resolving only
+    // (parent, predecessor) slots can leave an unreachable old tail such as p:g -> End
+    // after p becomes empty and g moves to q. Remove only unchanged base links invalidated
+    // by an unambiguous, actual parent change; conflicting edits remain for reporting.
+    val leftParents = parentOf(Pcs.relations(left, leftLabel).pcs)
+    val rightParents = parentOf(Pcs.relations(right, rightLabel).pcs)
+    val movedParents = baseParent.flatMap { case (label, oldParent) =>
+      val newParents = Seq(leftParents.get(label), rightParents.get(label)).flatten.filterNot(_ == oldParent).distinct
+      if (newParents.size == 1) Some(label -> newParents.head) else None
+    }
+    val editedPcs = leftEdits.pcs ++ rightEdits.pcs
+    val resolvedPcs = mergedPcs.filterNot { relation =>
+      baseRelations.pcs(relation) && !editedPcs(relation) &&
+        Seq(relation.predecessor, relation.successor).exists {
+          case SiblingNode(label) => movedParents.get(label).exists(_ != relation.parent)
+          case _ => false
+        }
+    }
+
     val rootLabel = Pcs.label(NodeRef(NodePath.root, base))
-    StructuralMergeResult(RelationSet(mergedPcs, mergedContent), rootLabel, contentReports ++ predReports ++ succReports ++ parentReports)
+    StructuralMergeResult(RelationSet(resolvedPcs, mergedContent), rootLabel, contentReports ++ predReports ++ succReports ++ parentReports)
   }
 
   /**
