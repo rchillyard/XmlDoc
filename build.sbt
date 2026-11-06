@@ -64,15 +64,29 @@ lazy val idml = (project in file("idml"))
     name := "xmldoc-idml"
   )
 
+lazy val circeVersion = "0.14.17"
+
+// Records as JSON (circe), with the Spark schema which reads them. It needs nothing from core; its tests use kml.
+lazy val json = (project in file("json"))
+  .dependsOn(kml % "test->compile")
+  .settings(commonSettings)
+  .settings(
+    name := "xmldoc-json",
+    libraryDependencies ++= Seq(
+      "io.circe" %% "circe-core" % circeVersion,
+      "io.circe" %% "circe-parser" % circeVersion % Test
+    )
+  )
+
 lazy val root = (project in file("."))
   .enablePlugins(ScalaUnidocPlugin, GhpagesPlugin)
-  .aggregate(core, kml, idml)
+  .aggregate(core, kml, idml, json)
   .settings(
     testScalacOptions,
     name := "XmlDoc",
     publish / skip := true,
     // The unified Scaladoc is published to https://rchillyard.github.io/XmlDoc/latest/api/ by `sbt ghpagesPushSite`
-    ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(core, kml, idml),
+    ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(core, kml, idml, json),
     ScalaUnidoc / siteSubdirName := "latest/api",
     addMappingsToSiteDir(ScalaUnidoc / packageDoc / mappings, ScalaUnidoc / siteSubdirName),
     git.remoteRepo := "git@github.com:rchillyard/XmlDoc.git"

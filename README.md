@@ -30,6 +30,7 @@ Full Scaladoc is at <https://rchillyard.github.io/XmlDoc/latest/api/>.
 | [`core`](core) | `xmldoc-core` | Published. Format-agnostic: the `Extractor[T]`/`Renderer[T]` framework, `GenericElement` (generic XML tree), `Zip` helpers. |
 | [`kml`](kml) | `xmldoc-kml` | Published. A fairly complete typed model of the [KML reference](https://developers.google.com/kml/documentation/kmlreference) — extraction, rendering, and simple editing/merging of `.kml` files. |
 | [`kml-it`](kml-it) | not published | Integration tests against real third-party `.kml` files (deliberately not aggregated by the root project, so `sbt test` stays fast). |
+| [`json`](json) | `xmldoc-json` | New in 1.2.0. Records as JSON (circe), one per line, and the Spark SQL schema which reads them (see [Records as JSON, for Spark](#records-as-json-for-spark)). |
 | [`idml`](idml) | not published | Early-stage support for Adobe InDesign's IDML format, built on `core`'s generic representation rather than `kml`'s fully-typed one. Not yet released. |
 
 ## Getting started
@@ -92,6 +93,40 @@ Round-tripping (extract, then render back to XML) is exercised extensively in th
 see `kml/src/test/scala/.../KmlSpec.scala` for realistic examples, including editing/merging
 `Placemark`s.
 
+### Records as JSON, for Spark
+
+The `json` module (`"com.phasmidsoftware" %% "xmldoc-json" % "x.y.z"`) writes records as JSON, one object per line
+(for a Kafka message or a `.jsonl` file), and derives from the same case class the Spark schema which reads that JSON,
+so the two can't drift apart.
+Build plain record case classes from the KML values you need (a type with a second parameter list, such as `Placemark`, can't be written directly),
+and derive circe's `Encoder` and XmlDoc's `SparkSchema` for each:
+
+```scala
+import com.phasmidsoftware.xmldoc.json.{JsonLines, SparkSchema}
+import io.circe.Encoder
+
+case class Point(lon: Double, lat: Double) derives Encoder.AsObject, SparkSchema
+case class Station(name: String, point: Point, elevation: Option[Double]) derives Encoder.AsObject, SparkSchema
+
+JsonLines.line(Station("Logan", Point(-71.01, 42.37), Some(6.0)))
+// {"name":"Logan","point":{"lon":-71.01,"lat":42.37},"elevation":6.0}
+SparkSchema.ddl[Station]
+// `name` STRING, `point` STRUCT<`lon`: DOUBLE, `lat`: DOUBLE>, `elevation` DOUBLE
+```
+
+On the Spark side (Scala 2.13 or PySpark), paste the schema string in and parse each message with `from_json`:
+
+```scala
+val schema = "`name` STRING, `point` STRUCT<`lon`: DOUBLE, `lat`: DOUBLE>, `elevation` DOUBLE"
+val stations = spark.readStream.format("kafka").option("subscribe", "stations") /* ... */ .load()
+  .select(from_json(col("value").cast("string"), schema, Map.empty[String, String]).as("station"))
+  .select("station.*")
+```
+
+`Option[X]` maps to a nullable `X`; `Seq`, `List`, `Vector` and `Set` to `ARRAY`; `Map[String, X]` to `MAP<STRING, X>`;
+a nested case class to `STRUCT`; and an enum without parameters to `STRING` (derive its encoder with circe's `ConfiguredEnumEncoder`).
+A value class has no `Mirror`, so give it the schema of what it's written as: `given SparkSchema[Meters] = SparkSchema[Double].as`.
+
 ## Versions
 
 Version 1.2.0 Derives `Extractor` and `Renderer` from case classes (`derives Extractor, Renderer`, or `Extractor.derived`/`Renderer.derived`),
@@ -99,6 +134,7 @@ including the auxiliary-parameter pattern, and `MultiExtractor`/`Renderer` for s
 This replaces the arity ladder (`extractor10` ... `extractorPartial72`, `multiExtractorN`, `rendererN`, `rendererNSuper`, `rendererSuperN`),
 which is deprecated, and `kml` now uses derivation throughout; its abstract types (`Feature`, `Geometry`, ...) are sealed.
 `logback-classic` is no longer a (runtime) dependency.
+A new module, `json` (`xmldoc-json`), writes records as JSON Lines with circe, and derives the Spark SQL schema which reads them (`SparkSchema.ddl`): Issue #64.
 
 Version 1.1.3 Adds 3-way merging of XML trees to `core` (package `merge`): a PCS representation of
 trees, after Lindholm (`Pcs`), edit detection (`PcsEditDetector`), reconciliation of two edit sets
