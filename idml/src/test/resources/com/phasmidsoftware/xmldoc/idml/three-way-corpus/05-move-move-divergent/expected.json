@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "policyProfile": "strict-text-node-v1",
   "provenance": {
     "layers": [
@@ -68,7 +68,7 @@
         "rightOrdinal": 4
       }
     ],
-    "note": "Paragraph order is unchanged in these 15 inputs; this is not a general position matching rule."
+    "note": "Paragraph order is unchanged in these 16 cases; this is not a general position matching rule."
   },
   "oracle": {
     "kind": "conflicts",
@@ -97,9 +97,9 @@
     "entries": {}
   },
   "migration": {
-    "fromSchemaVersion": 1,
+    "fromSchemaVersion": 2,
     "date": "2026-11-06",
-    "reason": "Freeze MR01 strict-text-node-v1; 08b changes accept to conflict; correct case10 policy attribution."
+    "reason": "Schema 3 paper-based correction: case10 accepts reparenting plus content update; add case10b genuine divergent-parent conflict; withdraw forced local-coordinate policy. New case10b has no prior schema; preserve strict-text-node-v1 (including 08b conflict)."
   },
   "case": "05-move-move-divergent",
   "requirement": "Both sides move the same node",

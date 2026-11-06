@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 3,
+  "policyProfile": "strict-text-node-v1",
+  "provenance": {
+    "layers": [
+      "paper"
+    ],
+    "reference": "§5 unique parent, p6; §6.3 Position/Position, p8: two incompatible parent edits",
+    "construction": "xml-derived",
+    "oracle": "reviewed-target-recipe-no-merger"
+  },
+  "targets": [
+    {
+      "part": "Spreads/Spread_ud1.xml",
+      "self": "g1"
+    },
+    {
+      "part": "Spreads/Spread_ud1.xml",
+      "self": "g2"
+    },
+    {
+      "part": "Spreads/Spread_ud1.xml",
+      "self": "r3"
+    },
+    {
+      "part": "Spreads/Spread_ud1.xml",
+      "self": "r4"
+    },
+    {
+      "part": "Spreads/Spread_ud1.xml",
+      "self": "r6"
+    }
+  ],
+  "identity": {
+    "strategy": "stable-Self-plus-explicit-paragraph-ordinal",
+    "baseSelfByPart": {
+      "Spreads/Spread_ud1.xml": [
+        "g1",
+        "g2",
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "r6",
+        "tf1",
+        "tf2",
+        "tfA",
+        "tfB",
+        "ud1",
+        "ud6"
+      ],
+      "Stories/Story_story1.xml": [
+        "story1"
+      ],
+      "Stories/Story_story2.xml": [
+        "story2"
+      ]
+    },
+    "selflessMatches": [
+      {
+        "part": "Stories/Story_story1.xml",
+        "selector": "Story[@Self='story1']/ParagraphStyleRange[1]",
+        "baseOrdinal": 1,
+        "leftOrdinal": 1,
+        "rightOrdinal": 1
+      },
+      {
+        "part": "Stories/Story_story1.xml",
+        "selector": "Story[@Self='story1']/ParagraphStyleRange[2]",
+        "baseOrdinal": 2,
+        "leftOrdinal": 2,
+        "rightOrdinal": 2
+      },
+      {
+        "part": "Stories/Story_story1.xml",
+        "selector": "Story[@Self='story1']/ParagraphStyleRange[3]",
+        "baseOrdinal": 3,
+        "leftOrdinal": 3,
+        "rightOrdinal": 3
+      },
+      {
+        "part": "Stories/Story_story1.xml",
+        "selector": "Story[@Self='story1']/ParagraphStyleRange[4]",
+        "baseOrdinal": 4,
+        "leftOrdinal": 4,
+        "rightOrdinal": 4
+      }
+    ],
+    "note": "Paragraph order is unchanged in these 16 cases; this is not a general position matching rule."
+  },
+  "oracle": {
+    "kind": "conflicts",
+    "assertions": [
+      {
+        "level": "generic",
+        "part": "Spreads/Spread_ud1.xml",
+        "target": "r3",
+        "field": "parent",
+        "base": "g1",
+        "left": "ud1",
+        "right": "g2",
+        "type": "position-position",
+        "relatedParts": []
+      }
+    ],
+    "entries": {}
+  },
+  "migration": {
+    "fromSchemaVersion": null,
+    "date": "2026-11-06",
+    "reason": "Schema 3 paper-based correction: case10 accepts reparenting plus content update; add case10b genuine divergent-parent conflict; withdraw forced local-coordinate policy. New case10b has no prior schema; preserve strict-text-node-v1 (including 08b conflict)."
+  },
+  "case": "10b-divergent-parent",
+  "requirement": "Two genuine edits assign different new parents",
+  "expectedStatus": "conflict",
+  "acceptedEdits": [],
+  "conflicts": [
+    {
+      "type": "position-position",
+      "target": "r3@parent",
+      "left": "ud1",
+      "right": "g2",
+      "resolution": "manual"
+    }
+  ],
+  "invariants": {
+    "commonBase": true,
+    "unchangedSelfValuesStable": true,
+    "reciprocalThreadReferencesRequired": true
+  },
+  "artifacts": {
+    "base.idml": {
+      "sha256": "b4b131ce0540a18dae29cfb7b60dc23c66617875eecda34bba5dd8549a421ac0",
+      "bytes": 39599
+    },
+    "left.idml": {
+      "sha256": "8c8018ffdde95ee0110d1af95d5a5329ca9181ac5dfb4bb1b68113225a163cd4",
+      "bytes": 39580
+    },
+    "right.idml": {
+      "sha256": "12200599bb9d9af3eda26b658bac0e8631b8f5dfa340c3e51642f68b18d2fef0",
+      "bytes": 39598
+    }
+  },
+  "note": "g2 and r6 exist in the common base. Required parent conflict is base=g1, left=ud1, right=g2; any additional PCS contradictions must be derived, not suppressed to force one low-level report."
+}

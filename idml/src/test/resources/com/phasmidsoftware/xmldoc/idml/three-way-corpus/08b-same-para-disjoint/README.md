@@ -6,7 +6,7 @@ Disjoint edits in one paragraph. This fixture is expected to **conflict**: Repor
 
 ## Contract and evidence
 
-Profile: `strict-text-node-v1`. Schema: `2`. Sources: project.
+Profile: `strict-text-node-v1`. Schema: `3`. Sources: project.
 Basis: MR01 strict-text-node-v1; no token merge guarantee in §7, p9.
 Structured targets, identity matching and exact business conflict objects (including base/left/right) are in `expected.json`.
 Successful cases compare the complete package entry inventory: changed XML uses the listed `expected/` snapshots; unchanged entries use the exact base bytes. No expected output is obtained from a merger. Domain reports are not claimed to exist in the current implementation.

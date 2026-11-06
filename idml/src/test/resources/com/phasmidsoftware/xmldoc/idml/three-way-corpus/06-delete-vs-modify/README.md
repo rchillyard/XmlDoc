@@ -6,7 +6,7 @@ One side deletes; the other modifies. This fixture is expected to **conflict**: 
 
 ## Contract and evidence
 
-Profile: `strict-text-node-v1`. Schema: `2`. Sources: paper, project.
+Profile: `strict-text-node-v1`. Schema: `3`. Sources: paper, project.
 Basis: §6.3 optional Delete/Edit, p8; project strict mode.
 Structured targets, identity matching and exact business conflict objects (including base/left/right) are in `expected.json`.
 Successful cases compare the complete package entry inventory: changed XML uses the listed `expected/` snapshots; unchanged entries use the exact base bytes. No expected output is obtained from a merger. Domain reports are not claimed to exist in the current implementation.
