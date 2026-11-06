@@ -159,5 +159,86 @@ class FPSpec extends AnyFlatSpec with should.Matchers {
     resourceForClass(".txt", getClass) should matchPattern { case Failure(_) => }
   }
 
+  behavior of "resource"
+  it should "find a resource relative to a class" in {
+    resource[FPSpec]("testFile.txt") should matchPattern { case Success(_) => }
+    resource[FPSpec]("noSuchFile.txt") should matchPattern { case Failure(FPException(_, None)) => }
+  }
+
+  behavior of "sequence (Iterator)"
+  it should "sequence an Iterator of Try" in {
+    sequence(Iterator(Success(1), Success(2))).map(_.toList) shouldBe Success(List(1, 2))
+    sequence(Iterator[Try[Int]](Success(1), Failure(FPException("bad")))) shouldBe Failure(FPException("bad"))
+  }
+
+  behavior of "partition"
+  it should "partition an Iterable of Try into successes and failures" in {
+    val bad = Failure(FPException("bad"))
+    val (successes, failures) = partition(List[Try[Int]](Success(1), bad, Success(2)))
+    successes shouldBe List(Success(1), Success(2))
+    failures shouldBe List(bad)
+  }
+  it should "partition an Iterator of Try into successes and failures" in {
+    val bad = Failure(FPException("bad"))
+    val (successes, failures) = partition(Iterator[Try[Int]](Success(1), bad, Success(2)))
+    successes.toList shouldBe List(Success(1), Success(2))
+    failures.toList shouldBe List(bad)
+  }
+
+  behavior of "tryToOption"
+  it should "turn a Success into Some, and a non-fatal Failure into None (calling f)" in {
+    val sb = new StringBuilder()
+    val log: Throwable => Unit = x => sb.append(x.getMessage)
+    tryToOption(log)(Success(1)) shouldBe Some(1)
+    sb.result() shouldBe ""
+    tryToOption(log)(Failure(FPException("bad"))) shouldBe None
+    sb.result() shouldBe "bad"
+  }
+  it should "throw a fatal Failure" in {
+    an[InterruptedException] should be thrownBy tryToOption(_ => ())(Failure(new InterruptedException("fatal")))
+  }
+
+  behavior of "optionToTry and tryNotNull"
+  it should "optionToTry" in {
+    optionToTry(Some(1)) shouldBe Success(1)
+    optionToTry(None) should matchPattern { case Failure(_: NoSuchElementException) => }
+    optionToTry(None, FPException("none")) shouldBe Failure(FPException("none"))
+  }
+  it should "tryNotNull" in {
+    tryNotNull("x")("never") shouldBe Success("x")
+    tryNotNull(null: String)("missing") match {
+      case Failure(x: NoSuchElementException) => x.getMessage shouldBe "tryNotNull: null: missing"
+      case x => fail(s"expected a failure, but got $x")
+    }
+  }
+
+  behavior of "uncurried"
+  it should "uncurry functions of arity 6, 7 and 8" in {
+    val f6: Int => Int => Int => Int => Int => Int => Int = a => b => c => d => e => f => a + b + c + d + e + f
+    val f7: Int => Int => Int => Int => Int => Int => Int => Int = a => b => c => d => e => f => g => a + b + c + d + e + f + g
+    val f8: Int => Int => Int => Int => Int => Int => Int => Int => Int = a => b => c => d => e => f => g => h => a + b + c + d + e + f + g + h
+    uncurried(f6)(1, 2, 3, 4, 5, 6) shouldBe 21
+    uncurried(f7)(1, 2, 3, 4, 5, 6, 7) shouldBe 28
+    uncurried(f8)(1, 2, 3, 4, 5, 6, 7, 8) shouldBe 36
+  }
+
+  behavior of "mapTryGuarded"
+  it should "map a Success which satisfies the predicate, and fail otherwise" in {
+    val half = mapTryGuarded[Int, Int](_ % 2 == 0, "even")(_ / 2)
+    half(Success(4)) shouldBe Success(2)
+    half(Success(3)) shouldBe Failure(FPException("mapTryGuarded: even failed for 3"))
+    half(Failure(FPException("bad"))) shouldBe Failure(FPException("bad"))
+    mapTryGuarded[Int, Int](_ > 0)(identity)(Success(0)) shouldBe Failure(FPException("mapTryGuarded: predicate failed for 0"))
+  }
+
+  behavior of "TryUsing"
+  it should "use a Try of a resource" in {
+    var closed = false
+    def resource: AutoCloseable = () => closed = true
+    TryUsing(Success(resource))(_ => Success(42)) shouldBe Success(42)
+    closed shouldBe true
+    TryUsing(Failure[AutoCloseable](FPException("no resource")))(_ => Success(42)) shouldBe Failure(FPException("no resource"))
+  }
+
 
 }
