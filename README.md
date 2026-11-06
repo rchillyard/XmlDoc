@@ -31,6 +31,8 @@ Full Scaladoc is at <https://rchillyard.github.io/XmlDoc/latest/api/>.
 | [`kml`](kml) | `xmldoc-kml` | Published. A fairly complete typed model of the [KML reference](https://developers.google.com/kml/documentation/kmlreference) — extraction, rendering, and simple editing/merging of `.kml` files. |
 | [`kml-it`](kml-it) | not published | Integration tests against real third-party `.kml` files (deliberately not aggregated by the root project, so `sbt test` stays fast). |
 | [`json`](json) | `xmldoc-json` | New in 1.2.0. Records as JSON (circe), one per line, and the Spark SQL schema which reads them (see [Records as JSON, for Spark](#records-as-json-for-spark)). |
+| [`kafka-cats`](kafka-cats), [`kafka-zio`](kafka-zio) | `xmldoc-kafka-cats`, `xmldoc-kafka-zio` | New in 1.2.0. Send records to Kafka, one JSON message per record, with fs2-kafka or zio-kafka (see [Sending records to Kafka](#sending-records-to-kafka)). |
+| [`kafka-it`](kafka-it) | not published | Integration tests of the Kafka modules against a broker which they start (not aggregated by the root project: run `sbt kafkaIt/test`). |
 | [`idml`](idml) | not published | Early-stage support for Adobe InDesign's IDML format, built on `core`'s generic representation rather than `kml`'s fully-typed one. Not yet released. |
 
 ## Getting started
@@ -127,6 +129,35 @@ val stations = spark.readStream.format("kafka").option("subscribe", "stations") 
 a nested case class to `STRUCT`; and an enum without parameters to `STRING` (derive its encoder with circe's `ConfiguredEnumEncoder`).
 A value class has no `Mirror`, so give it the schema of what it's written as: `given SparkSchema[Meters] = SparkSchema[Double].as`.
 
+### Sending records to Kafka
+
+`xmldoc-kafka-cats` (fs2-kafka) and `xmldoc-kafka-zio` (zio-kafka) send each record to a topic as one JSON message
+(its `JsonLines.line`), with a key of your choice. They use TableParser's Kafka modules (`tableparser-kafka-cats`/`-zio`).
+
+```scala
+import cats.effect.IO
+import com.phasmidsoftware.xmldoc.kafka.cats.IOKafka
+import fs2.Stream
+import fs2.kafka.ProducerSettings
+
+val settings = ProducerSettings[IO, String, String].withBootstrapServers("localhost:9092")
+Stream.emits(stations).through(IOKafka.toKafka("stations", settings)(_.name)).compile.drain
+```
+
+```scala
+import com.phasmidsoftware.xmldoc.kafka.zio.ZIOKafka
+import zio.ZLayer
+import zio.kafka.producer.{Producer, ProducerSettings}
+import zio.kafka.serde.Serde
+import zio.stream.ZStream
+
+val producer = ZLayer.scoped(Producer.make(ProducerSettings(List("localhost:9092"))))
+ZStream.fromIterable(stations).via(ZIOKafka.toKafka("stations", Serde.string)(_.name)).runDrain.provideLayer(producer)
+```
+
+For messages without a key, use a `Unit` key: `ProducerSettings[IO, Unit, String]` with `(_ => ())`, or `ZIOKafka.unitSerializer`.
+The Spark job then reads the topic with `from_json` and `SparkSchema.ddl` (above).
+
 ## Versions
 
 Version 1.2.0 Derives `Extractor` and `Renderer` from case classes (`derives Extractor, Renderer`, or `Extractor.derived`/`Renderer.derived`),
@@ -135,6 +166,7 @@ This replaces the arity ladder (`extractor10` ... `extractorPartial72`, `multiEx
 which is deprecated, and `kml` now uses derivation throughout; its abstract types (`Feature`, `Geometry`, ...) are sealed.
 `logback-classic` is no longer a (runtime) dependency.
 A new module, `json` (`xmldoc-json`), writes records as JSON Lines with circe, and derives the Spark SQL schema which reads them (`SparkSchema.ddl`): Issue #64.
+Two more, `kafka-cats` and `kafka-zio` (`xmldoc-kafka-cats`, `xmldoc-kafka-zio`), send records to Kafka as JSON messages, using TableParser's Kafka modules: Issue #65.
 
 Version 1.1.3 Adds 3-way merging of XML trees to `core` (package `merge`): a PCS representation of
 trees, after Lindholm (`Pcs`), edit detection (`PcsEditDetector`), reconciliation of two edit sets
