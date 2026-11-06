@@ -27,7 +27,7 @@ Full Scaladoc is at <https://rchillyard.github.io/XmlDoc/latest/api/>.
 
 | Module | Artifact | Status |
 |---|---|---|
-| [`core`](core) | `xmldoc-core` | Published. Format-agnostic: the `Extractor[T]`/`Renderer[T]` framework, `GenericElement` (generic XML tree), `Zip` helpers. |
+| [`core`](core) | `xmldoc-core` | Published. Format-agnostic: the `Extractor[T]`/`Renderer[T]` framework, streaming extraction (`XmlStream`), `GenericElement` (generic XML tree), `Zip` helpers. |
 | [`kml`](kml) | `xmldoc-kml` | Published. A fairly complete typed model of the [KML reference](https://developers.google.com/kml/documentation/kmlreference) — extraction, rendering, and simple editing/merging of `.kml` files. |
 | [`kml-it`](kml-it) | not published | Integration tests against real third-party `.kml` files (deliberately not aggregated by the root project, so `sbt test` stays fast). |
 | [`json`](json) | `xmldoc-json` | New in 1.2.0. Records as JSON (circe), one per line, and the Spark SQL schema which reads them (see [Records as JSON, for Spark](#records-as-json-for-spark)). |
@@ -158,6 +158,35 @@ ZStream.fromIterable(stations).via(ZIOKafka.toKafka("stations", Serde.string)(_.
 For messages without a key, use a `Unit` key: `ProducerSettings[IO, Unit, String]` with `(_ => ())`, or `ZIOKafka.unitSerializer`.
 The Spark job then reads the topic with `from_json` and `SparkSchema.ddl` (above).
 
+### Streaming a large file
+
+To avoid loading a whole document before extracting from it, `XmlStream` (in `core`) reads it with a pull parser (StAX)
+and extracts each element which matches a selector as soon as that element has been read; nothing else is kept.
+A selector is a tag (`Placemark`, at any depth), a path of tags (`Folder/Placemark`), or a path from the root (`/kml/Document/Placemark`);
+tags are matched by their local names, whatever their namespace. Each element's extraction succeeds or fails on its own (a `Try`).
+
+```scala
+import com.phasmidsoftware.xmldoc.xml.XmlStream
+import java.io.FileInputStream
+
+XmlStream.extractFrom[Placemark, Int](new FileInputStream("big.kml"), "Placemark")(_.count(_.isSuccess))
+```
+
+The Kafka modules stream the same way, so records go to Kafka as they are read (`IOXmlStream` for fs2, `ZIOXmlStream` for ZIO):
+
+```scala
+import com.phasmidsoftware.xmldoc.kafka.cats.{IOKafka, IOXmlStream}
+import scala.util.Success
+
+IOXmlStream.extractFile[Placemark]("big.kml", "Placemark")
+  .collect { case Success(p) => p }
+  .flatMap(p => Stream.emits(toStations(p)))
+  .through(IOKafka.toKafka("stations", settings)(_.name))
+  .compile.drain
+```
+
+A record which needs something from outside its element (e.g. a `Style` defined at the document level) must be completed separately.
+
 ## Versions
 
 Version 1.2.0 Derives `Extractor` and `Renderer` from case classes (`derives Extractor, Renderer`, or `Extractor.derived`/`Renderer.derived`),
@@ -167,6 +196,8 @@ which is deprecated, and `kml` now uses derivation throughout; its abstract type
 `logback-classic` is no longer a (runtime) dependency.
 A new module, `json` (`xmldoc-json`), writes records as JSON Lines with circe, and derives the Spark SQL schema which reads them (`SparkSchema.ddl`): Issue #64.
 Two more, `kafka-cats` and `kafka-zio` (`xmldoc-kafka-cats`, `xmldoc-kafka-zio`), send records to Kafka as JSON messages, using TableParser's Kafka modules: Issue #65.
+`XmlStream` (in `core`) extracts the selected elements of a large document as they are read, with a StAX pull parser,
+and `IOXmlStream`/`ZIOXmlStream` (in the Kafka modules) do so as fs2/ZIO streams: Issue #66.
 
 Version 1.1.3 Adds 3-way merging of XML trees to `core` (package `merge`): a PCS representation of
 trees, after Lindholm (`Pcs`), edit detection (`PcsEditDetector`), reconciliation of two edit sets

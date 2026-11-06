@@ -27,15 +27,21 @@ object KmlRecords {
    * @return an IO of the Stations, in document order.
    */
   def stations(filename: String): IO[Seq[Station]] =
-    KMLCompanion.loadKML(Success(filename)) map (_ flatMap (k => placemarks(k.features)) flatMap toStations)
+    KMLCompanion.loadKML(Success(filename)) map (_ flatMap (k => placemarks(k.features)) flatMap stationsOf)
 
-  private def placemarks(fs: Seq[Feature]): Seq[Placemark] = fs flatMap {
+  /**
+   * Method to get the Placemarks among some features (and their sub-features), in document order.
+   */
+  def placemarks(fs: Seq[Feature]): Seq[Placemark] = fs flatMap {
     case p: Placemark => Seq(p)
     case h: HasFeatures => placemarks(h.features)
     case _ => Nil
   }
 
-  private def toStations(p: Placemark): Seq[Station] = for {
+  /**
+   * Method to get the Stations of a Placemark: one for each coordinate of each of its Points.
+   */
+  def stationsOf(p: Placemark): Seq[Station] = for {
     case point: com.phasmidsoftware.xmldoc.kml.Point <- p.Geometry
     cs <- point.coordinates
     c <- cs.coordinates
