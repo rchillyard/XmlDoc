@@ -159,7 +159,7 @@ Locked scope
 | corpus | 16 | 原有 15 组 + 10b | 固定清单，8 accept/8 conflict | 2026-11-06 |
 | 输入 IDML | 48 | 每组 base/left/right | 原有 45 个字节不变，10b 新增 3 个 | 2026-11-06 |
 | 分支排列 | 2 | 正常与交换各一次/组 | §6.4 | 2026-11-06 |
-| 生成规模和种子数量 | 待决策，不填猜测值 | 实际节点、检测编辑、独立种子；与生成操作数分列 | MR10 前测量 CI 时间和样本分布 | MR10 实施前，由 MR10 写入本表 |
+| 生成规模和种子数量 | 8 个种子（0—7）；8/32/96 节点；每组合 7 个兼容 recipe | 根及 3 个 Group 计入节点；生成树无正文节点；每模块 168 个成功样本，另有 24 组有意冲突 | 2026-11-06 试运行 core 2.3s、IDML 3.8s；见下方冻结记录 | MR10 正式验证前冻结，2026-11-06 |
 | 基准规模、预热和重复数 | 待决策 | 节点、编辑、次数 | 固定环境试运行与资源预算 | MR13 正式测量前，由 MR13 写入 |
 | 性能阈值 | 待决策 | ms、MiB、相对基线倍数；分段统计 | 先采基线，再冻结门禁，不按失败结果抬高 | MR13 正式测量前 |
 | 真实验收数量与样本清单 | 待决策 | 独立 base/left/right 组 | 授权样本可用性；必须覆盖文字、结构、引用、资产 | MR14 实施前，由 MR14 写入 |
@@ -234,3 +234,57 @@ Locked scope
 - `sbt 'core/test' 'idml/test' 'kml/test'`: core 212 passed (the existing ExtractorsSpec.extractor3B remains ignored); IDML 142 and KML 109 passed with zero ignored/pending. Real Java subprocesses verify CLI 0 for success, 1 for conflict and 2 for argument/read/XML/write failures, including byte preservation.
 - `python3 idml/tools/generate_three_way_corpus.py --verify`: 16 cases/schema 3 passed read-only validation. `python3 -m unittest discover -s idml/tools -p test_three_way_corpus.py`: 17 passed. All corpus file SHA-256 hashes and mtimes were unchanged, and all 48 IDML inputs remain byte-identical to MR0311. Oracles were not changed to accommodate the implementation.
 - `git diff --check` passed. These are local automated results, not remote CI or completion of other MRs or InDesign open/save/reopen acceptance.
+
+
+## MR10 生成性质测试冻结记录（2026-11-06）
+
+- 默认固定种子 `0..7`，节点数 `8,32,96`；种子和节点数共同初始化 PRNG。
+  共 24 棵合法 base 树，每棵生成 7 个兼容 recipe：独立内容更新、不同位置插入、
+  删除与无关更新、移动与同节点更新、双方相同新父、重排与无关更新、双方相同更新。
+  每组合另生成原子内容分歧和两个不同新父的冲突。不会假定任意随机编辑都兼容。
+- 节点数精确包括根、3 个 Group 和 `n-4` 个带 Self 的叶节点；值长度有界。
+  XML 派生 corpus 的参考 base Spread 有 185 个元素及 302 段 text/tail，Story 有
+  16 个元素及 29 段 text/tail。这里选择更小且可缩减的树作为性质测试，真实形状、
+  无 Self、正文和严格深层 Delete/Edit 另用固定回归覆盖；不是规模性能验收。
+- 首轮候选规模试运行使用本机 Java 21、Scala 3.8.4：core 生成 suite 约 2.3s，
+  IDML 约 3.8s（ScalaTest suite 时间，不含 sbt 启动/编译）。正式采用上述规模；
+  预期预热后新增 suite 各低于 30s，不设脆弱的墙钟断言。这是单元测试预算，
+  不替代、提前冻结或放宽 MR13 的性能门禁。
+- 每模块每个节点规模的 56 个成功 recipe 共记录 96 项生成操作（双方同编辑按
+  ledger 中的一项有效意图计，不把两个分支副本重复计数）。core 单独统计两侧
+  `E` 的并集：首轮 8/32/96 节点分别为 1—8、1—12、1—33 条关系编辑。
+  一次 move/reorder 可以形成多条 PCS 编辑，操作数与 E 数不等同。
+- 四项恒等式为 `M(B,B,B)=B`、`M(B,X,B)=X`、`M(B,B,X)=X`、`M(B,X,X)=X`。
+  对每个成功 recipe 的左右输入均执行，并检查成功结果对称性、完整 expected 树、
+  可达身份唯一性及操作 ledger 中的删除、插入、父节点、属性和顺序意图。
+- 原子 PCS 的 `E⊆Δ⊆T*` 用相同身份下的状态关系集合计算；`T*` 为三份输入关系的并集。
+  该原始集合断言使用无忽略字段的生成树。忽略字段按冻结策略单独测试输出保留；
+  IDML 属性细化逐属性检查值来源及完整目标树，允许合法的两侧属性组合。
+- 已有节点保留 base 的忽略字段；单侧新节点保留来源值；双侧同身份且仅忽略字段
+  不同，比较按属性名排序、XML 转义后的完整属性集合的 UTF-8 无符号字节顺序，
+  选较小的整组属性。两层均有左右交换对照，不逐字段拼接忽略值。
+- 不共享跨模块 Test classpath。IDML 文件内保存同一 recipe 规范的独立薄生成器；
+  两者默认规模、种子和操作分布一致，不增加生成框架依赖。
+- 重放：`sbt -Dmerge.seed=3 -Dmerge.size=32 'core/testOnly *MergePropertiesSpec'`
+  或 `sbt -Dmerge.seed=3 -Dmerge.size=32 'idml/testOnly *ThreeWayMergerPropertiesSpec'`。
+  失败报告 recipe、种子、原始规模和三方 XML；自动删除不涉及编辑目标的叶节点，
+  保留同一检查失败，生成在该删除规则下局部最小的三方输入。不是通用 XML 最小化器。
+- oracle 自检注入丢编辑、偏向左输入、凭空关系/属性的反例，必须被断言拒绝。
+  06b/13 的领域门禁、真实 InDesign 和大规模性能证据仍属于 MR11—MR14。
+
+
+## V1_1_3-Kaining-2 整合记录（2026-11-06）
+
+- 上述 MR12、MR10 证据保留各自原分支历史；本轮从 `V1_1_3-Robin-Kaining-Merged`
+  创建整合主干，顺序为 MR08、MR12、MR10，使用保留历史的普通 merge。
+- MR12 先 rebase 到含 MR08 的主干；MR10 再 rebase 到含 MR12 的主干。
+  MR02/MR03 的等价提交被识别并跳过，不重复应用已合入改动。
+- 保留 MR08 的重建校验及混排内容、MR12 的原子写入及匿名后代身份、MR07 的严格
+  不可达区域检查。严格删除检查复用与候选合并相同的预匹配关系，防止身份模型不一致。
+- `ThreeWayCorpusSpec` 核对全部通用/领域冲突；`ThreeWayPackageCorpusSpec` 保留全部
+  包/driver 用例。06b/13 的 oracle 中 tf1.NextTextFrame 改变与 tf2 删除/重连分别
+  产生两端的领域报告，适配层逐条核对完整集合，不过滤额外冲突。领域阻塞说明由
+  本整合状态取代；InDesign、MR13 性能和 MR14 最终验收仍待完成。
+- 整合后的干净构建验证：`sbt 'core/clean' 'idml/clean' 'kml/clean' 'core/test' 'idml/test' 'kml/test'`
+  通过 core 432、IDML 398、KML 110 项，共 940 项；core 原有 1 项忽略，无新增忽略或 pending。
+  corpus 只读校验 16 组通过；Python 校验测试 17 项通过。

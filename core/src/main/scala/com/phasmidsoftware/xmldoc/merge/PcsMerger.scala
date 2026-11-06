@@ -80,8 +80,19 @@ object PcsMerger {
     val baseContent = baseRelations.content.map(c => c.label -> c).toMap
     val (contentEdits, contentConflicts) = reconcile(
       baseContent,
-      leftEdits.content.map(c => c.label -> c).toMap,
-      rightEdits.content.map(c => c.label -> c).toMap
+      leftEdits.content.map(c => c.label -> preserveIgnored(c, baseContent.get(c.label), ignoredAttributes)).toMap,
+      rightEdits.content.map(c => c.label -> preserveIgnored(c, baseContent.get(c.label), ignoredAttributes)).toMap,
+      (a: Content, b: Content) => a.copy(attributes = Nil) == b.copy(attributes = Nil) &&
+        a.attributes.filterNot(x => ignoredAttributes(x._1)).toMap == b.attributes.filterNot(x => ignoredAttributes(x._1)).toMap,
+      (a: Content, b: Content) => {
+        def bytes(c: Content) = {
+          val value = if (c.kind == ElementNode)
+            GenericElement.toXmlString(GenericElement("Attributes", c.attributes.sortBy(_._1), Nil))
+          else render(c)
+          value.getBytes(java.nio.charset.StandardCharsets.UTF_8)
+        }
+        if (java.util.Arrays.compareUnsigned(bytes(a), bytes(b)) <= 0) a else b
+      }
     )
     val mergedContent = (baseContent ++ contentEdits).values.toSet
     val contentReports = contentConflicts.map { case (label, b, l, r) =>
@@ -168,6 +179,11 @@ object PcsMerger {
     pcs -- (base -- used)
   }
 
+  private def preserveIgnored(content: Content, base: Option[Content], ignored: Set[String]): Content =
+    if (ignored.isEmpty || base.isEmpty) content
+    else content.copy(attributes = content.attributes.filterNot(x => ignored(x._1)) ++
+      base.get.attributes.filter(x => ignored(x._1)))
+
   private def byPredecessor(pcs: Set[Pcs]): Map[(String, Sibling), Sibling] = pcs.map(p => (p.parent, p.predecessor) -> p.successor).toMap
 
   private def bySuccessor(pcs: Set[Pcs]): Map[(String, Sibling), Sibling] = pcs.map(p => (p.parent, p.successor) -> p.predecessor).toMap
@@ -187,11 +203,13 @@ object PcsMerger {
    * fall back on). A slot neither side touched needs no entry at all - the caller already has
    * `base`'s own map for that.
    */
-  private def reconcile[K, V](base: Map[K, V], left: Map[K, V], right: Map[K, V]): (Map[K, V], Seq[(K, Option[V], Option[V], Option[V])]) = {
+  private def reconcile[K, V](base: Map[K, V], left: Map[K, V], right: Map[K, V],
+                              equivalent: (V, V) => Boolean = (a: V, b: V) => a == b,
+                              choose: (V, V) => V = (a: V, b: V) => a): (Map[K, V], Seq[(K, Option[V], Option[V], Option[V])]) = {
     val touched = left.keySet ++ right.keySet
     val resolved = touched.flatMap { k =>
       (left.get(k), right.get(k)) match {
-        case (Some(l), Some(r)) if l == r => Some(k -> l)
+        case (Some(l), Some(r)) if equivalent(l, r) => Some(k -> choose(l, r))
         case (Some(l), None) => Some(k -> l)
         case (None, Some(r)) => Some(k -> r)
         case _ => None
@@ -199,7 +217,7 @@ object PcsMerger {
     }.toMap
     val conflicts = touched.toSeq.flatMap { k =>
       (left.get(k), right.get(k)) match {
-        case (Some(l), Some(r)) if l != r => Some((k, base.get(k), Some(l), Some(r)))
+        case (Some(l), Some(r)) if !equivalent(l, r) => Some((k, base.get(k), Some(l), Some(r)))
         case _ => None
       }
     }
