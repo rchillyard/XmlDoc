@@ -36,7 +36,7 @@ class IdmlMergeAcceptanceSpec extends AnyFlatSpec with Matchers {
     val after = CorpusContract.snapshot(dir)
     after("base.idml") shouldBe before("base.idml")
     after("right.idml") shouldBe before("right.idml")
-    after.keySet shouldBe before.keySet
+    after.keySet shouldBe before.keySet: Unit
   }
 
   for (name <- Seq("10b-divergent-parent", "06b-delete-thread-vs-content")) {
@@ -46,7 +46,7 @@ class IdmlMergeAcceptanceSpec extends AnyFlatSpec with Matchers {
       val doc = CorpusContract.read(corpus.resolve(name), Files.readString(corpus.resolve(name).resolve("expected.json")))
       val actual = IdmlMergeDriver.merge(base.toFile, ours.toFile, theirs.toFile).get
       IdmlMergeAssertions.assertPartConflictsEqual(actual, CorpusExpectations.conflicts(doc, IdmlPackage.open(base.toFile).get))
-      CorpusContract.snapshot(dir) shouldBe before
+      CorpusContract.snapshot(dir) shouldBe before: Unit
     }
   }
 
@@ -58,7 +58,7 @@ class IdmlMergeAcceptanceSpec extends AnyFlatSpec with Matchers {
     }
     val result = IdmlMergeDriver.mergeWithWrites(base.toFile, ours.toFile, theirs.toFile, EditDetector.defaultIgnoredAttributes, writes)
     result.failed.get.getMessage should include ("MR14 injected")
-    CorpusContract.snapshot(dir) shouldBe before
+    CorpusContract.snapshot(dir) shouldBe before: Unit
   }
 
   it should "reject corrupt input without modifying ours or leaving staging" in withDirectory { dir =>
@@ -66,7 +66,7 @@ class IdmlMergeAcceptanceSpec extends AnyFlatSpec with Matchers {
     Files.writeString(base, "not a ZIP")
     val before = CorpusContract.snapshot(dir)
     IdmlMergeDriver.merge(base.toFile, ours.toFile, theirs.toFile).isFailure shouldBe true
-    CorpusContract.snapshot(dir) shouldBe before
+    CorpusContract.snapshot(dir) shouldBe before: Unit
   }
 
   it should "validate a fixed real-world inventory while reporting absent application evidence explicitly" in {
@@ -103,7 +103,7 @@ class IdmlMergeAcceptanceSpec extends AnyFlatSpec with Matchers {
           if (name.endsWith(".xml")) IdmlMergeAssertions.assertXmlEquals(xml(bytes), xml(expected(name)), EditDetector.defaultIgnoredAttributes)
           else bytes shouldBe expected(name)
         }
-        IdmlReferenceValidator.validate(xmlParts(ours.toFile)) shouldBe empty
+        IdmlReferenceValidator.validate(xmlParts(ours.toFile)) shouldBe empty: Unit
       } else {
         def opt(v: ujson.Value) = if (v == ujson.Null) None else Some(v.str)
         val expected = ujson.read(Files.readString(source.resolve("expected-conflicts.json"))).arr.map { p =>
@@ -111,7 +111,7 @@ class IdmlMergeAcceptanceSpec extends AnyFlatSpec with Matchers {
             opt(c("baseValue")), opt(c("leftValue")), opt(c("rightValue")))))
         }.toSeq
         IdmlMergeAssertions.assertPartConflictsEqual(reports, expected, swapActualSides = swapped)
-        Files.readAllBytes(ours) shouldBe before
+        Files.readAllBytes(ours) shouldBe before: Unit
       }
     }
   }

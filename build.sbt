@@ -48,7 +48,7 @@ lazy val idml = (project in file("idml"))
   .settings(commonSettings)
   .settings(
     name := "xmldoc-idml",
-    libraryDependencies += "com.lihaoyi" % "ujson_2.13" % "4.4.3" % Test
+    libraryDependencies += "com.lihaoyi" %% "ujson" % "4.4.3" % Test
   )
 
 lazy val root = (project in file("."))

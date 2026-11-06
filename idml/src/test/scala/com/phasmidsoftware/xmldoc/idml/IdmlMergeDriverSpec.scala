@@ -152,7 +152,7 @@ class IdmlMergeDriverAtomicSpec extends AnyFlatSpec with should.Matchers {
       if (Set("replace", "atomic-unsupported")(stage)) replacements shouldBe 1 else replacements shouldBe 0
       Seq(b, l, r).zip(before).foreach { case (f, bytes) => Files.readAllBytes(f.toPath) shouldBe bytes }
       val files = Files.list(dir)
-      try files.count() shouldBe 3L finally files.close()
+      try files.count() shouldBe 3L: Unit finally files.close()
     }
   }
 
@@ -174,7 +174,7 @@ class IdmlMergeDriverAtomicSpec extends AnyFlatSpec with should.Matchers {
       IdmlMergeDriver.merge(b, l, r).isFailure shouldBe true
       Files.readAllBytes(l.toPath) shouldBe before
       val files = Files.list(dir)
-      try files.iterator().asScala.exists(_.getFileName.toString.startsWith(".idml-merge-")) shouldBe false finally files.close()
+      try files.iterator().asScala.exists(_.getFileName.toString.startsWith(".idml-merge-")) shouldBe false: Unit finally files.close()
     }
   }
 
@@ -186,7 +186,7 @@ class IdmlMergeDriverAtomicSpec extends AnyFlatSpec with should.Matchers {
     val r = write(dir.resolve("theirs.idml"), simple(unchanged.updated("s", "edited")))
     IdmlMergeDriver.merge(b, l, r).get shouldBe empty
     entries(l)("Stories/t.xml") shouldBe original("Stories/t.xml")
-    entries(l)("designmap.xml") shouldBe original("designmap.xml")
+    entries(l)("designmap.xml") shouldBe original("designmap.xml"): Unit
   }
 
   it should "merge independent targets concurrently without sharing staging or write hooks" in withDirectory { dir =>
@@ -199,7 +199,7 @@ class IdmlMergeDriverAtomicSpec extends AnyFlatSpec with should.Matchers {
     Await.result(Future.sequence(targets.map(f => Future(IdmlMergeDriver.merge(b, f, r).get))), 30.seconds).foreach(_ shouldBe empty)
     targets.foreach(f => IdmlMergeAssertions.assertXmlPartsEqual(xmlParts(f), xmlParts(r)))
     val files = Files.list(dir)
-    try files.count() shouldBe 6L finally files.close()
+    try files.count() shouldBe 6L: Unit finally files.close()
   }
 
   it should "return CLI exit codes 0, 1 and 2 in real subprocesses" in withDirectory { dir =>
@@ -233,6 +233,6 @@ class IdmlMergeDriverAtomicSpec extends AnyFlatSpec with should.Matchers {
     exit(Seq(b.getPath, patchFailure.getPath, r.getPath)) shouldBe 2
     Files.readAllBytes(patchFailure.toPath) shouldBe patchBefore
     exit(Seq(b.getPath, l.getPath, dir.resolve("missing.idml").toString)) shouldBe 2
-    Files.readAllBytes(l.toPath) shouldBe before
+    Files.readAllBytes(l.toPath) shouldBe before: Unit
   }
 }

@@ -97,7 +97,7 @@ class ThreeWayPackageCorpusSpec extends AnyFlatSpec with Matchers {
         }
         Seq(b, l, r).map(f => CorpusContract.digest(Files.readAllBytes(f.toPath))) shouldBe inputsBefore
         val files = Files.list(dir)
-        try files.iterator().asScala.map(_.getFileName.toString).toSet shouldBe Set("ours.idml") finally files.close()
+        try files.iterator().asScala.map(_.getFileName.toString).toSet shouldBe Set("ours.idml"): Unit finally files.close()
       }
     }
   }

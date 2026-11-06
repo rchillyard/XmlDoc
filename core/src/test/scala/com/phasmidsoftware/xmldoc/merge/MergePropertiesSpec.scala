@@ -12,7 +12,7 @@ class MergePropertiesSpec extends AnyFlatSpec with Matchers {
     val edits = union(PcsEditDetector.detectEdits(s.base, s.left), PcsEditDetector.detectEdits(s.base, s.right))
     val all = union(union(Pcs.relations(s.base), Pcs.relations(s.left)), Pcs.relations(s.right))
     assert(included(edits, delta), "E subset Delta: an edit was lost")
-    assert(included(delta, all), "Delta subset T*: an invented relation appeared")
+    assert(included(delta, all), "Delta subset T*: an invented relation appeared"): Unit
   }
   private def merged(b: GenericElement, l: GenericElement, r: GenericElement): StructuralMergeResult = {
     val result = PcsMerger.merge(b, l, r)
@@ -57,7 +57,7 @@ class MergePropertiesSpec extends AnyFlatSpec with Matchers {
       content.conflicts.head.baseValue.get should include (s"Value=\"$old\"")
       content.conflicts.head.leftValue.get should include ("Value=\"LEFT\"")
       content.conflicts.head.rightValue.get should include ("Value=\"RIGHT\"")
-      PcsTreeBuilder.build(content).isFailure shouldBe true
+      PcsTreeBuilder.build(content).isFailure shouldBe true: Unit
       }
       val parent = "p" // first leaf in the generated traversal is under p
       val l = move(sample.base, key, "q")
@@ -67,7 +67,7 @@ class MergePropertiesSpec extends AnyFlatSpec with Matchers {
       MergeAssertions.assertConflictsEqual(result.conflicts,
         Seq(StructuralConflict(s"parent of $key", Some(parent), Some("q"), Some("z"))))
       MergeAssertions.assertConflictsEqual(PcsMerger.merge(c.base, c.right, c.left).conflicts, result.conflicts, swapActualSides = true)
-      PcsTreeBuilder.build(result).isFailure shouldBe true
+      PcsTreeBuilder.build(result).isFailure shouldBe true: Unit
       }
     }
   }

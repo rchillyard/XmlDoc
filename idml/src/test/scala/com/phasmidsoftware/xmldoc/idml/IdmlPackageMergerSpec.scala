@@ -55,7 +55,7 @@ class IdmlPackageMergerSpec extends AnyFlatSpec with Matchers {
         val before = Files.readAllBytes(ours.toPath)
         IdmlMergeDriver.merge(file(name, "base"), ours, file(name, "right")).get should not be empty
         Files.readAllBytes(ours.toPath) shouldBe before
-      } finally ours.delete()
+      } finally ours.delete(): Unit
     }
     Seq("duplicate", "missing").foreach { mode =>
       val ours = File.createTempFile("mr11-invalid-", ".idml")
@@ -75,7 +75,7 @@ class IdmlPackageMergerSpec extends AnyFlatSpec with Matchers {
         result.isFailure shouldBe true
         result.failed.get.getMessage should include(part.src)
         Files.readAllBytes(ours.toPath) shouldBe before
-      } finally ours.delete()
+      } finally ours.delete(): Unit
     }
   }
 
@@ -160,7 +160,7 @@ class IdmlPackageIntegritySpec extends AnyFlatSpec with Matchers {
             actual.filterNot(_._1.endsWith(".xml")).foreach { case (n, data) => data shouldBe expected(n) }
             val originalMap = new String(entries(write(dir.resolve("original.idml"), simple(if (swapped) rightParts else leftParts)))("designmap.xml"), java.nio.charset.StandardCharsets.UTF_8)
             val finalMap = new String(actual("designmap.xml"), java.nio.charset.StandardCharsets.UTF_8)
-            if ((if (swapped) rightParts else leftParts).keySet == parts.keySet) finalMap shouldBe originalMap
+            if ((if (swapped) rightParts else leftParts).keySet == parts.keySet) finalMap shouldBe originalMap: Unit
             finalMap should include("<?aid preserve='yes'?>")
             finalMap should include("<Other keep='yes'/>")
             // Compare all non-reference text verbatim, allowing only inserted reference whitespace.
@@ -170,7 +170,7 @@ class IdmlPackageIntegritySpec extends AnyFlatSpec with Matchers {
             manifest shouldBe expectedXml.keySet
         }
         Files.readAllBytes(b.toPath) shouldBe before(0)
-        Files.readAllBytes(r.toPath) shouldBe before(2)
+        Files.readAllBytes(r.toPath) shouldBe before(2): Unit
       }
     }
   }

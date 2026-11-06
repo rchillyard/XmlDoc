@@ -33,7 +33,7 @@ class ThreeWayCorpusSpec extends AnyFlatSpec with Matchers {
           CorpusExpectations.assertPackage(result, temp.resolve(if (swapped) "right.idml" else "left.idml"), dir, doc)
         } else if (domain) {
           info(s"${doc.name}: domain oracle validated through the integrated MR11 package entry point")
-          result.partOutcomes should not be empty
+          result.partOutcomes should not be empty: Unit
         }
         CorpusContract.snapshot(temp) shouldBe before
         CorpusContract.snapshot(dir) shouldBe fixtureBefore

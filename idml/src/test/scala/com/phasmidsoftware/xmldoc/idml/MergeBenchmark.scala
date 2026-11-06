@@ -5,7 +5,7 @@ import com.phasmidsoftware.xmldoc.xml.{GenericElement, GenericText}
 import java.lang.management.ManagementFactory
 import java.nio.file.{Files, Path}
 import java.nio.charset.StandardCharsets.UTF_8
-import java.util.zip.{ZipEntry, ZipFile, ZipOutputStream}
+import java.util.zip.{ZipEntry, ZipOutputStream}
 import scala.jdk.CollectionConverters.*
 import scala.util.Random
 
@@ -161,7 +161,7 @@ object MergeBenchmark {
         }
         require((failures ++ ratios).isEmpty, (failures ++ ratios).mkString("formal gate failed: ", "; ", ""))
       }
-      if (formal) { doc("gateStatus") = "passed"; Files.writeString(output, ujson.write(doc, indent = 2)) }
+      if (formal) { doc("gateStatus") = "passed"; Files.writeString(output, ujson.write(doc, indent = 2)): Unit }
       println(s"Wrote ${runs.size} scenarios to $output; all independent targets verified")
     } finally {
       Files.deleteIfExists(directory.resolve("candidate.idml")); Files.delete(directory)

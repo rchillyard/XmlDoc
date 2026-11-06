@@ -86,7 +86,7 @@ object IdmlMergeDriver {
       writes.replace(staged, target).get
       committed = true
     } finally {
-      if (!committed) Files.deleteIfExists(staged)
+      if (!committed) Files.deleteIfExists(staged): Unit
     }
   }
 

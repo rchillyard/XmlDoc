@@ -170,14 +170,14 @@ class ThreeWayMergerPropertiesSpec extends org.scalatest.flatspec.AnyFlatSpec
         val actual = ThreeWayMerger.merge(c.base, c.left, c.right).swap.toOption.get
         IdmlMergeAssertions.assertConflictsEqual(actual, expectedConflicts)
         IdmlMergeAssertions.assertConflictsEqual(ThreeWayMerger.merge(c.base, c.right, c.left).swap.toOption.get,
-          expectedConflicts, swapActualSides = true)
+          expectedConflicts, swapActualSides = true): Unit
         }
         val l = move(s.base, key, "q")
         val r = move(s.base, key, "z")
         val parents = Seq(StructuralConflict(s"parent of $key", Some("p"), Some("q"), Some("z")))
         verify(s.copy(name = "parent-conflict", left = l, right = r, edits = Seq(Edit("move", key)))) { c =>
         IdmlMergeAssertions.assertConflictsEqual(ThreeWayMerger.merge(c.base, c.left, c.right).swap.toOption.get, parents)
-        IdmlMergeAssertions.assertConflictsEqual(ThreeWayMerger.merge(c.base, c.right, c.left).swap.toOption.get, parents, swapActualSides = true)
+        IdmlMergeAssertions.assertConflictsEqual(ThreeWayMerger.merge(c.base, c.right, c.left).swap.toOption.get, parents, swapActualSides = true): Unit
         }
       }
     }
