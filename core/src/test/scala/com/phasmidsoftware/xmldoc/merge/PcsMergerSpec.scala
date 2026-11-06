@@ -101,16 +101,16 @@ class PcsMergerSpec extends AnyFlatSpec with should.Matchers {
 
   behavior of "PcsMerger.merge, the unique-parent rule (Kaining's 10-group-ungroup)"
 
-  it should "report a parent conflict for every node whose new parent the two sides disagree about" in {
-    val g1 = GenericElement("Group", Seq("Self" -> "g1"), Seq(rect("x")))
-    val y = rect("y")
-    val base = spreadOf("us", g1, y)
-    val left = spreadOf("us", rect("x"), y) // left ungroups g1: x is promoted to a direct child of us, g1 vanishes
-    val right = spreadOf("us", GenericElement("Group", Seq("Self" -> "g1"), Seq(rect("x"), y))) // right moves y inside g1
-    val result = PcsMerger.merge(base, left, right)
-    val bySlot = result.conflicts.map(c => c.slot -> c).toMap
-    bySlot("parent of x") shouldBe StructuralConflict("parent of x", Some("g1"), Some("us"), Some("g1"))
-    bySlot("parent of y") shouldBe StructuralConflict("parent of y", Some("us"), Some("us"), Some("g1"))
+  it should "report two genuinely different new parents for the same node (10b)" in {
+    val base = spreadOf("us", group("g1", rect("x")), group("g2"))
+    val left = spreadOf("us", rect("x"), group("g2"))
+    val right = spreadOf("us", group("g1"), group("g2", rect("x")))
+    val expected = Seq(StructuralConflict("parent of x", Some("g1"), Some("us"), Some("g2")))
+    for ((l, r, swap) <- Seq((left, right, false), (right, left, true))) {
+      val result = PcsMerger.merge(base, l, r)
+      MergeAssertions.assertConflictsEqual(result.conflicts, expected, swapActualSides = swap)
+      PcsTreeBuilder.build(result).isFailure shouldBe true
+    }
   }
 
   it should "not confuse a single-sided move to a new parent (no disagreement) with a conflict" in {
@@ -174,5 +174,158 @@ class PcsMergerSpec extends AnyFlatSpec with should.Matchers {
     byContent.conflicts shouldBe Nil
     val rebuilt = PcsTreeBuilder.build(byContent).get
     rebuilt.childElements.flatMap(_.children).collect { case GenericText(t) => t } should contain allOf("B", "C-updated")
+  }
+
+  behavior of "MR06 compatible edits with complete results"
+
+  private def group(id: String, children: GenericElement*): GenericElement =
+    GenericElement("Group", Seq("Self" -> id), children)
+
+  private def assertCompatible(base: GenericElement, left: GenericElement, right: GenericElement,
+                               expected: GenericElement): Unit = {
+    for ((l, r) <- Seq(left -> right, right -> left)) {
+      val result = PcsMerger.merge(base, l, r)
+      MergeAssertions.assertConflictsEqual(result.conflicts, Nil)
+      result.rootLabel shouldBe "us"
+      result.relations shouldBe Pcs.relations(expected)
+      MergeAssertions.assertXmlEquals(PcsTreeBuilder.build(result).get, expected)
+    }
+  }
+
+  it should "combine a move of b past c with b's FillColor update exactly once" in {
+    val a = rect("a", "Keep" -> "A")
+    val b = rect("b", "FillColor" -> "None")
+    val c = rect("c", "Keep" -> "C")
+    val red = rect("b", "FillColor" -> "Red")
+    assertCompatible(spreadOf("us", a, b, c), spreadOf("us", a, c, b),
+      spreadOf("us", a, red, c), spreadOf("us", a, c, red))
+  }
+
+  it should "combine a parent's cross-parent move with its children's reorder" in {
+    val a = rect("a")
+    val b = rect("b")
+    val g = group("g", a, b)
+    val reordered = group("g", b, a)
+    assertCompatible(spreadOf("us", group("p", g), group("q")),
+      spreadOf("us", group("p"), group("q", g)),
+      spreadOf("us", group("p", reordered), group("q")),
+      spreadOf("us", group("p"), group("q", reordered)))
+  }
+
+  it should "close a nonempty source gap and preserve the exact target anchor during a parent move" in {
+    val x = rect("x")
+    val y = rect("y")
+    val z = rect("z")
+    val g = group("g", rect("a"), rect("b"))
+    val reordered = group("g", rect("b"), rect("a"))
+    val base = spreadOf("us", group("p", x, g, y), group("q", z))
+    val moved = spreadOf("us", group("p", x, y), group("q", z, g))
+    val edited = spreadOf("us", group("p", x, reordered, y), group("q", z))
+    assertCompatible(base, moved, edited,
+      spreadOf("us", group("p", x, y), group("q", z, reordered)))
+    assertCompatible(base, moved, moved, moved)
+  }
+
+  it should "combine inserts in distinct compatible gaps without losing surrounding nodes" in {
+    val a = rect("a")
+    val b = rect("b")
+    val x = rect("x", "FillColor" -> "Blue")
+    val y = rect("y", "FillColor" -> "Green")
+    assertCompatible(spreadOf("us", a, b), spreadOf("us", x, a, b),
+      spreadOf("us", a, b, y), spreadOf("us", x, a, b, y))
+  }
+
+  it should "coalesce identical updates and identical structural changes" in {
+    val a = rect("a")
+    val b = rect("b", "FillColor" -> "None")
+    val base = spreadOf("us", a, b)
+    val changed = spreadOf("us", a, rect("b", "FillColor" -> "Red"))
+    assertCompatible(base, changed, changed, changed)
+    val reordered = spreadOf("us", b, a)
+    assertCompatible(base, reordered, reordered, reordered)
+    val inserted = spreadOf("us", a, b, rect("x"))
+    assertCompatible(base, inserted, inserted, inserted)
+  }
+
+  it should "keep whole content atomic when different attributes of one node change" in {
+    val base = spreadOf("us", rect("b", "FillColor" -> "None", "StrokeColor" -> "None"))
+    val left = spreadOf("us", rect("b", "FillColor" -> "Red", "StrokeColor" -> "None"))
+    val right = spreadOf("us", rect("b", "FillColor" -> "None", "StrokeColor" -> "Black"))
+    val expected = Seq(StructuralConflict("content of b",
+      Some("<Rectangle Self=\"b\" FillColor=\"None\" StrokeColor=\"None\">"),
+      Some("<Rectangle Self=\"b\" FillColor=\"Red\" StrokeColor=\"None\">"),
+      Some("<Rectangle Self=\"b\" FillColor=\"None\" StrokeColor=\"Black\">")))
+    for ((l, r, swap) <- Seq((left, right, false), (right, left, true))) {
+      val result = PcsMerger.merge(base, l, r)
+      MergeAssertions.assertConflictsEqual(result.conflicts, expected, swapActualSides = swap)
+      result.relations shouldBe Pcs.relations(base)
+    }
+  }
+
+
+  private def ordered(ids: String): GenericElement = spreadOf("us", ids.map(c => rect(c.toString))*)
+
+  it should "report exactly b's successor and c's predecessor guard conflicts" in {
+    val base = ordered("abcd")
+    val left = ordered("bacd")
+    val right = ordered("abdc")
+    val expected = Seq(
+      StructuralConflict("successor after b under us", Some("c"), Some("a"), Some("d")),
+      StructuralConflict("predecessor before c under us", Some("b"), Some("a"), Some("d")))
+    for ((l, r, swap) <- Seq((left, right, false), (right, left, true))) {
+      val result = PcsMerger.merge(base, l, r)
+      MergeAssertions.assertConflictsEqual(result.conflicts, expected, swapActualSides = swap)
+      PcsTreeBuilder.build(result).isFailure shouldBe true
+    }
+  }
+
+  it should "merge isolated reorder contexts into the complete baced tree" in {
+    assertCompatible(ordered("abcde"), ordered("bacde"), ordered("abced"), ordered("baced"))
+  }
+
+  it should "report both slot conflicts for distinct inserts in the same gap" in {
+    val base = ordered("ab")
+    val left = ordered("axb")
+    val right = ordered("ayb")
+    val expected = Seq(
+      StructuralConflict("successor after a under us", Some("b"), Some("x"), Some("y")),
+      StructuralConflict("predecessor before b under us", Some("a"), Some("x"), Some("y")))
+    for ((l, r, swap) <- Seq((left, right, false), (right, left, true))) {
+      val result = PcsMerger.merge(base, l, r)
+      MergeAssertions.assertConflictsEqual(result.conflicts, expected, swapActualSides = swap)
+      PcsTreeBuilder.build(result).isFailure shouldBe true
+    }
+  }
+
+  it should "preserve an ungrouped child's independent content update (case 10)" in {
+    val base = spreadOf("us", group("g", rect("x", "ItemTransform" -> "old")))
+    val left = spreadOf("us", rect("x", "ItemTransform" -> "old"))
+    val right = spreadOf("us", group("g", rect("x", "ItemTransform" -> "new")))
+    for ((l, r) <- Seq(left -> right, right -> left)) {
+      val result = PcsMerger.merge(base, l, r)
+      MergeAssertions.assertConflictsEqual(result.conflicts, Nil)
+      MergeAssertions.assertXmlEquals(PcsTreeBuilder.build(result).get,
+        spreadOf("us", rect("x", "ItemTransform" -> "new")))
+    }
+  }
+
+
+  it should "preserve all indentation nodes across independent inserts at different gaps" in {
+    def formatted(items: GenericElement*) = GenericElement("Spread", Seq("Self" -> "us"),
+      items.flatMap(item => Seq(GenericText("\n  "), item)) :+ GenericText("\n"))
+    val a = rect("a")
+    val b = rect("b")
+    val x = rect("x")
+    val y = rect("y")
+    assertCompatible(formatted(a, b), formatted(x, a, b), formatted(a, b, y), formatted(x, a, b, y))
+  }
+
+  it should "keep indentation payloads significant when both branches edit the same whitespace node" in {
+    def formatted(indent: String) = GenericElement("Spread", Seq("Self" -> "us"),
+      Seq(GenericText(indent), rect("a"), GenericText("\n")))
+    val result = PcsMerger.merge(formatted("\n "), formatted("\n  "), formatted("\n\t"))
+    MergeAssertions.assertConflictsEqual(result.conflicts, Seq(StructuralConflict("content of us::before[a]",
+      Some("\n "), Some("\n  "), Some("\n\t"))))
+    PcsTreeBuilder.build(result).isFailure shouldBe true
   }
 }

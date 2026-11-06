@@ -1,0 +1,954 @@
+{
+  "schemaVersion": 1,
+  "gateStatus": "calibration-only",
+  "mode": "calibration",
+  "warmups": 1,
+  "repetitions": 2,
+  "sourceCommit": "eb491e250416f9a63bf77f772dc803cfb8baad74",
+  "sourceSha256": "2947ca751fc0c3b01ca24fefb827cef2454d762182b33a22201ec2a3332876eb",
+  "gateSha256": "not-formal",
+  "environment": {
+    "java": "21.0.12.1",
+    "vm": "OpenJDK 64-Bit Server VM",
+    "os": "Mac OS X",
+    "arch": "aarch64",
+    "processors": 10,
+    "maxHeapMiB": 1024,
+    "jvmArguments": [
+      "-Dfile.encoding=UTF-8",
+      "-Xms1024m",
+      "-Xmx1024m",
+      "-Xss4M",
+      "-XX:ReservedCodeCacheSize=128m",
+      "-Dsbt.script=/opt/homebrew/Cellar/sbt/2.0.8/libexec/bin/sbt",
+      "-Dscala.ext.dirs=/Users/lady_penguin/.sbt/1.0/java9-rt-ext-homebrew_21_0_12_1"
+    ]
+  },
+  "runs": [
+    {
+      "nodes": 32,
+      "budget": 0,
+      "seed": 13,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 3.251292,
+          "matchMs": 4.516459,
+          "mergeMs": 4.139917,
+          "writeMs": 1.59075,
+          "totalMs": 16.578167,
+          "E": 0,
+          "sampledHeapPeakMiB": 263.5,
+          "poolHeapPeakMiB": 263.5,
+          "correct": true
+        },
+        {
+          "parseMs": 2.729791,
+          "matchMs": 3.74525,
+          "mergeMs": 12.352459,
+          "writeMs": 1.367,
+          "totalMs": 23.451583,
+          "E": 0,
+          "sampledHeapPeakMiB": 264.5,
+          "poolHeapPeakMiB": 276.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 32,
+      "budget": 4,
+      "seed": 13,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 3,
+        "delete": 1,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 1.874375,
+          "matchMs": 2.710875,
+          "mergeMs": 2.244667,
+          "writeMs": 1.186625,
+          "totalMs": 9.897875,
+          "E": 13,
+          "sampledHeapPeakMiB": 134.5,
+          "poolHeapPeakMiB": 134.5,
+          "correct": true
+        },
+        {
+          "parseMs": 1.08125,
+          "matchMs": 3.114416,
+          "mergeMs": 65.400875,
+          "writeMs": 1.292875,
+          "totalMs": 110.766667,
+          "E": 13,
+          "sampledHeapPeakMiB": 136.5,
+          "poolHeapPeakMiB": 136.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 32,
+      "budget": 0,
+      "seed": 37,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 0.843542,
+          "matchMs": 1.924875,
+          "mergeMs": 15.447958,
+          "writeMs": 1.025042,
+          "totalMs": 26.508333,
+          "E": 0,
+          "sampledHeapPeakMiB": 139.5,
+          "poolHeapPeakMiB": 139.5,
+          "correct": true
+        },
+        {
+          "parseMs": 2.008875,
+          "matchMs": 2.411417,
+          "mergeMs": 3.523,
+          "writeMs": 1.675458,
+          "totalMs": 12.431041,
+          "E": 0,
+          "sampledHeapPeakMiB": 140.5,
+          "poolHeapPeakMiB": 140.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 32,
+      "budget": 4,
+      "seed": 37,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 2,
+        "delete": 0,
+        "move": 1,
+        "update": 1
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 0.740583,
+          "matchMs": 0.996084,
+          "mergeMs": 2.179917,
+          "writeMs": 1.04325,
+          "totalMs": 9.177875,
+          "E": 12,
+          "sampledHeapPeakMiB": 144.5,
+          "poolHeapPeakMiB": 144.5,
+          "correct": true
+        },
+        {
+          "parseMs": 1.672167,
+          "matchMs": 0.902,
+          "mergeMs": 1.561083,
+          "writeMs": 1.040584,
+          "totalMs": 9.149375,
+          "E": 12,
+          "sampledHeapPeakMiB": 146.5,
+          "poolHeapPeakMiB": 146.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 32,
+      "budget": 0,
+      "seed": 73,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 0.594375,
+          "matchMs": 1.358375,
+          "mergeMs": 1.131083,
+          "writeMs": 2.048708,
+          "totalMs": 6.56025,
+          "E": 0,
+          "sampledHeapPeakMiB": 149.5,
+          "poolHeapPeakMiB": 149.5,
+          "correct": true
+        },
+        {
+          "parseMs": 0.834708,
+          "matchMs": 0.928583,
+          "mergeMs": 1.140583,
+          "writeMs": 0.970417,
+          "totalMs": 4.647667,
+          "E": 0,
+          "sampledHeapPeakMiB": 150.5,
+          "poolHeapPeakMiB": 150.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 32,
+      "budget": 4,
+      "seed": 73,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 2,
+        "move": 2,
+        "update": 0
+      },
+      "rejections": 1,
+      "measurements": [
+        {
+          "parseMs": 0.579208,
+          "matchMs": 0.81825,
+          "mergeMs": 1.181459,
+          "writeMs": 0.952292,
+          "totalMs": 4.331333,
+          "E": 8,
+          "sampledHeapPeakMiB": 153.5,
+          "poolHeapPeakMiB": 154.5,
+          "correct": true
+        },
+        {
+          "parseMs": 0.540084,
+          "matchMs": 0.68725,
+          "mergeMs": 0.993875,
+          "writeMs": 0.98725,
+          "totalMs": 3.938875,
+          "E": 8,
+          "sampledHeapPeakMiB": 155.5,
+          "poolHeapPeakMiB": 155.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 0,
+      "seed": 13,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 1.610833,
+          "matchMs": 2.193667,
+          "mergeMs": 3.202709,
+          "writeMs": 1.203,
+          "totalMs": 10.070583,
+          "E": 0,
+          "sampledHeapPeakMiB": 166.5,
+          "poolHeapPeakMiB": 166.5,
+          "correct": true
+        },
+        {
+          "parseMs": 1.474708,
+          "matchMs": 2.27025,
+          "mergeMs": 2.464833,
+          "writeMs": 1.102375,
+          "totalMs": 8.789417,
+          "E": 0,
+          "sampledHeapPeakMiB": 171.5,
+          "poolHeapPeakMiB": 171.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 4,
+      "seed": 13,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 3,
+        "delete": 1,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 1.070625,
+          "matchMs": 2.13925,
+          "mergeMs": 2.562042,
+          "writeMs": 1.09025,
+          "totalMs": 8.496125,
+          "E": 13,
+          "sampledHeapPeakMiB": 180.5,
+          "poolHeapPeakMiB": 181.5,
+          "correct": true
+        },
+        {
+          "parseMs": 1.188041,
+          "matchMs": 2.533208,
+          "mergeMs": 2.862542,
+          "writeMs": 1.072667,
+          "totalMs": 9.210375,
+          "E": 13,
+          "sampledHeapPeakMiB": 186.5,
+          "poolHeapPeakMiB": 186.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 16,
+      "seed": 13,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 5,
+        "delete": 3,
+        "move": 4,
+        "update": 4
+      },
+      "rejections": 2,
+      "measurements": [
+        {
+          "parseMs": 1.33625,
+          "matchMs": 2.379,
+          "mergeMs": 2.358792,
+          "writeMs": 1.038792,
+          "totalMs": 8.58525,
+          "E": 39,
+          "sampledHeapPeakMiB": 197.5,
+          "poolHeapPeakMiB": 197.5,
+          "correct": true
+        },
+        {
+          "parseMs": 1.185875,
+          "matchMs": 1.976541,
+          "mergeMs": 2.630583,
+          "writeMs": 1.065125,
+          "totalMs": 8.441875,
+          "E": 39,
+          "sampledHeapPeakMiB": 201.5,
+          "poolHeapPeakMiB": 202.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 0,
+      "seed": 37,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 1.050084,
+          "matchMs": 1.80675,
+          "mergeMs": 1.956625,
+          "writeMs": 1.075916,
+          "totalMs": 7.509417,
+          "E": 0,
+          "sampledHeapPeakMiB": 212.5,
+          "poolHeapPeakMiB": 212.5,
+          "correct": true
+        },
+        {
+          "parseMs": 1.1735,
+          "matchMs": 1.98625,
+          "mergeMs": 1.983292,
+          "writeMs": 0.973916,
+          "totalMs": 7.559667,
+          "E": 0,
+          "sampledHeapPeakMiB": 217.5,
+          "poolHeapPeakMiB": 217.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 4,
+      "seed": 37,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 2,
+        "delete": 0,
+        "move": 1,
+        "update": 1
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 1.142333,
+          "matchMs": 1.901708,
+          "mergeMs": 2.310167,
+          "writeMs": 0.972167,
+          "totalMs": 7.72875,
+          "E": 12,
+          "sampledHeapPeakMiB": 226.5,
+          "poolHeapPeakMiB": 226.5,
+          "correct": true
+        },
+        {
+          "parseMs": 1.197542,
+          "matchMs": 1.956041,
+          "mergeMs": 2.498292,
+          "writeMs": 0.971292,
+          "totalMs": 7.9715,
+          "E": 12,
+          "sampledHeapPeakMiB": 232.5,
+          "poolHeapPeakMiB": 232.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 16,
+      "seed": 37,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 4,
+        "delete": 2,
+        "move": 3,
+        "update": 7
+      },
+      "rejections": 4,
+      "measurements": [
+        {
+          "parseMs": 1.081833,
+          "matchMs": 2.019208,
+          "mergeMs": 2.17775,
+          "writeMs": 0.968709,
+          "totalMs": 7.607917,
+          "E": 34,
+          "sampledHeapPeakMiB": 242.5,
+          "poolHeapPeakMiB": 242.5,
+          "correct": true
+        },
+        {
+          "parseMs": 1.113875,
+          "matchMs": 1.811333,
+          "mergeMs": 2.047917,
+          "writeMs": 0.968833,
+          "totalMs": 7.231541,
+          "E": 34,
+          "sampledHeapPeakMiB": 247.5,
+          "poolHeapPeakMiB": 247.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 0,
+      "seed": 73,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 0.843791,
+          "matchMs": 1.711833,
+          "mergeMs": 1.764083,
+          "writeMs": 1.001625,
+          "totalMs": 6.580292,
+          "E": 0,
+          "sampledHeapPeakMiB": 256.5,
+          "poolHeapPeakMiB": 257.5,
+          "correct": true
+        },
+        {
+          "parseMs": 1.040834,
+          "matchMs": 1.761209,
+          "mergeMs": 1.851292,
+          "writeMs": 0.931334,
+          "totalMs": 6.956292,
+          "E": 0,
+          "sampledHeapPeakMiB": 261.5,
+          "poolHeapPeakMiB": 262.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 4,
+      "seed": 73,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 3,
+        "move": 1,
+        "update": 0
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 0.938125,
+          "matchMs": 2.015042,
+          "mergeMs": 1.913125,
+          "writeMs": 0.971,
+          "totalMs": 7.085791,
+          "E": 6,
+          "sampledHeapPeakMiB": 271.5,
+          "poolHeapPeakMiB": 271.5,
+          "correct": true
+        },
+        {
+          "parseMs": 0.865792,
+          "matchMs": 1.669625,
+          "mergeMs": 1.795792,
+          "writeMs": 0.984042,
+          "totalMs": 6.507542,
+          "E": 6,
+          "sampledHeapPeakMiB": 276.5,
+          "poolHeapPeakMiB": 276.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 128,
+      "budget": 16,
+      "seed": 73,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 3,
+        "delete": 6,
+        "move": 6,
+        "update": 1
+      },
+      "rejections": 3,
+      "measurements": [
+        {
+          "parseMs": 0.97425,
+          "matchMs": 1.808666,
+          "mergeMs": 1.917375,
+          "writeMs": 0.982375,
+          "totalMs": 6.864625,
+          "E": 37,
+          "sampledHeapPeakMiB": 286.5,
+          "poolHeapPeakMiB": 286.5,
+          "correct": true
+        },
+        {
+          "parseMs": 0.846833,
+          "matchMs": 1.635208,
+          "mergeMs": 1.735416,
+          "writeMs": 0.928708,
+          "totalMs": 6.16475,
+          "E": 37,
+          "sampledHeapPeakMiB": 292.5,
+          "poolHeapPeakMiB": 292.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 0,
+      "seed": 13,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 2.7065,
+          "matchMs": 5.629375,
+          "mergeMs": 5.896375,
+          "writeMs": 1.212125,
+          "totalMs": 18.636375,
+          "E": 0,
+          "sampledHeapPeakMiB": 329.5,
+          "poolHeapPeakMiB": 329.5,
+          "correct": true
+        },
+        {
+          "parseMs": 3.099417,
+          "matchMs": 5.642542,
+          "mergeMs": 6.087875,
+          "writeMs": 1.225583,
+          "totalMs": 19.09175,
+          "E": 0,
+          "sampledHeapPeakMiB": 349.5,
+          "poolHeapPeakMiB": 349.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 4,
+      "seed": 13,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 3,
+        "delete": 1,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 2.863041,
+          "matchMs": 5.571167,
+          "mergeMs": 7.158625,
+          "writeMs": 1.326,
+          "totalMs": 19.963959,
+          "E": 13,
+          "sampledHeapPeakMiB": 387.5,
+          "poolHeapPeakMiB": 387.5,
+          "correct": true
+        },
+        {
+          "parseMs": 2.291834,
+          "matchMs": 5.774625,
+          "mergeMs": 6.245542,
+          "writeMs": 1.190291,
+          "totalMs": 18.400209,
+          "E": 13,
+          "sampledHeapPeakMiB": 406.5,
+          "poolHeapPeakMiB": 406.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 16,
+      "seed": 13,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 5,
+        "delete": 3,
+        "move": 2,
+        "update": 6
+      },
+      "rejections": 1,
+      "measurements": [
+        {
+          "parseMs": 2.21375,
+          "matchMs": 5.130917,
+          "mergeMs": 6.612542,
+          "writeMs": 1.210041,
+          "totalMs": 18.124291,
+          "E": 35,
+          "sampledHeapPeakMiB": 444.5,
+          "poolHeapPeakMiB": 444.5,
+          "correct": true
+        },
+        {
+          "parseMs": 1.90875,
+          "matchMs": 5.013833,
+          "mergeMs": 6.906166,
+          "writeMs": 1.191959,
+          "totalMs": 17.785833,
+          "E": 35,
+          "sampledHeapPeakMiB": 462.5,
+          "poolHeapPeakMiB": 462.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 0,
+      "seed": 37,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 1.868833,
+          "matchMs": 4.634792,
+          "mergeMs": 6.141792,
+          "writeMs": 1.184875,
+          "totalMs": 16.573792,
+          "E": 0,
+          "sampledHeapPeakMiB": 498.5,
+          "poolHeapPeakMiB": 499.5,
+          "correct": true
+        },
+        {
+          "parseMs": 1.807458,
+          "matchMs": 4.794458,
+          "mergeMs": 6.244708,
+          "writeMs": 1.198,
+          "totalMs": 16.577041,
+          "E": 0,
+          "sampledHeapPeakMiB": 517.5,
+          "poolHeapPeakMiB": 517.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 4,
+      "seed": 37,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 2,
+        "delete": 0,
+        "move": 1,
+        "update": 1
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 1.182,
+          "matchMs": 4.047792,
+          "mergeMs": 6.705667,
+          "writeMs": 1.18075,
+          "totalMs": 15.557375,
+          "E": 12,
+          "sampledHeapPeakMiB": 554.5,
+          "poolHeapPeakMiB": 554.5,
+          "correct": true
+        },
+        {
+          "parseMs": 1.21575,
+          "matchMs": 4.689083,
+          "mergeMs": 6.386625,
+          "writeMs": 1.318708,
+          "totalMs": 16.2015,
+          "E": 12,
+          "sampledHeapPeakMiB": 571.5,
+          "poolHeapPeakMiB": 572.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 16,
+      "seed": 37,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 4,
+        "delete": 4,
+        "move": 4,
+        "update": 4
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 1.48775,
+          "matchMs": 3.832042,
+          "mergeMs": 6.444125,
+          "writeMs": 1.153833,
+          "totalMs": 15.264625,
+          "E": 36,
+          "sampledHeapPeakMiB": 608.5,
+          "poolHeapPeakMiB": 608.5,
+          "correct": true
+        },
+        {
+          "parseMs": 1.401125,
+          "matchMs": 3.664084,
+          "mergeMs": 6.828292,
+          "writeMs": 1.22025,
+          "totalMs": 15.571417,
+          "E": 36,
+          "sampledHeapPeakMiB": 626.5,
+          "poolHeapPeakMiB": 626.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 0,
+      "seed": 73,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 0,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 1.310166,
+          "matchMs": 3.649083,
+          "mergeMs": 6.302708,
+          "writeMs": 1.398667,
+          "totalMs": 14.575416,
+          "E": 0,
+          "sampledHeapPeakMiB": 662.5,
+          "poolHeapPeakMiB": 662.5,
+          "correct": true
+        },
+        {
+          "parseMs": 1.210958,
+          "matchMs": 3.268292,
+          "mergeMs": 5.488167,
+          "writeMs": 1.165541,
+          "totalMs": 13.181209,
+          "E": 0,
+          "sampledHeapPeakMiB": 680.5,
+          "poolHeapPeakMiB": 680.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 4,
+      "seed": 73,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 0,
+        "delete": 3,
+        "move": 1,
+        "update": 0
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 1.428209,
+          "matchMs": 3.663125,
+          "mergeMs": 5.655708,
+          "writeMs": 1.153833,
+          "totalMs": 13.445667,
+          "E": 6,
+          "sampledHeapPeakMiB": 715.5,
+          "poolHeapPeakMiB": 715.5,
+          "correct": true
+        },
+        {
+          "parseMs": 1.418958,
+          "matchMs": 10.623417,
+          "mergeMs": 5.141792,
+          "writeMs": 1.087417,
+          "totalMs": 19.451625,
+          "E": 6,
+          "sampledHeapPeakMiB": 719.5,
+          "poolHeapPeakMiB": 721.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 512,
+      "budget": 16,
+      "seed": 73,
+      "textBytesPerLeaf": 0,
+      "operations": {
+        "insert": 4,
+        "delete": 7,
+        "move": 2,
+        "update": 3
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 1.051084,
+          "matchMs": 3.151791,
+          "mergeMs": 5.540708,
+          "writeMs": 1.161791,
+          "totalMs": 12.19675,
+          "E": 32,
+          "sampledHeapPeakMiB": 179.5,
+          "poolHeapPeakMiB": 179.5,
+          "correct": true
+        },
+        {
+          "parseMs": 0.91675,
+          "matchMs": 3.197667,
+          "mergeMs": 5.592541,
+          "writeMs": 1.246542,
+          "totalMs": 12.317042,
+          "E": 32,
+          "sampledHeapPeakMiB": 197.5,
+          "poolHeapPeakMiB": 197.5,
+          "correct": true
+        }
+      ]
+    },
+    {
+      "nodes": 32,
+      "budget": 4,
+      "seed": 13,
+      "textBytesPerLeaf": 65536,
+      "operations": {
+        "insert": 3,
+        "delete": 1,
+        "move": 0,
+        "update": 0
+      },
+      "rejections": 0,
+      "measurements": [
+        {
+          "parseMs": 3.802958,
+          "matchMs": 1.309375,
+          "mergeMs": 1.540667,
+          "writeMs": 16.8535,
+          "totalMs": 27.551917,
+          "E": 22,
+          "sampledHeapPeakMiB": 433.5,
+          "poolHeapPeakMiB": 433.5,
+          "correct": true
+        },
+        {
+          "parseMs": 3.992292,
+          "matchMs": 1.238,
+          "mergeMs": 0.918708,
+          "writeMs": 17.2435,
+          "totalMs": 27.313458,
+          "E": 22,
+          "sampledHeapPeakMiB": 551.5,
+          "poolHeapPeakMiB": 551.5,
+          "correct": true
+        }
+      ]
+    }
+  ]
+}

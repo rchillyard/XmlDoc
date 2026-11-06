@@ -61,7 +61,8 @@ lazy val idml = (project in file("idml"))
   .dependsOn(core)
   .settings(commonSettings)
   .settings(
-    name := "xmldoc-idml"
+    name := "xmldoc-idml",
+    libraryDependencies += "com.lihaoyi" %% "ujson" % "4.4.3" % Test
   )
 
 lazy val circeVersion = "0.14.17"

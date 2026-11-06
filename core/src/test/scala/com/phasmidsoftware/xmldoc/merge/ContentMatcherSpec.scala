@@ -80,4 +80,56 @@ class ContentMatcherSpec extends AnyFlatSpec with should.Matchers {
     // the reorder, so "a" correctly keeps its own base identity.
     ContentMatcher.matchedLabel(base, modified, Set("stamp"))(NodeRef(modifiedA, item("a", 2))) shouldBe basesOwnLabelForA
   }
+
+  it should "keep the base identities of B and C across left deletion and right update" in {
+    def paragraph(text: String): GenericElement = GenericElement("Paragraph", Nil,
+      Seq(com.phasmidsoftware.xmldoc.xml.GenericText(text)))
+    def story(texts: String*): GenericElement = GenericElement("Story", Nil, texts.map(paragraph))
+    val base = story("A", "B", "C")
+    val left = ContentMatcher.matchTrees(base, story("B", "C"))
+    val right = ContentMatcher.matchTrees(base, story("A", "B", "C′"))
+    def paths(m: Matching) = m.matched.map { case (b, r) => b.path -> r.path }.toSet
+    paths(left) shouldBe Set(NodePath.root -> NodePath.root,
+      NodePath(Vector(1)) -> NodePath(Vector(0)), NodePath(Vector(2)) -> NodePath(Vector(1)))
+    paths(right) shouldBe Set(NodePath.root -> NodePath.root,
+      NodePath(Vector(0)) -> NodePath(Vector(0)), NodePath(Vector(1)) -> NodePath(Vector(1)),
+      NodePath(Vector(2)) -> NodePath(Vector(2)))
+    left.onlyInLeft.map(_.path) shouldBe Seq(NodePath(Vector(0)))
+    left.onlyInRight shouldBe empty
+    right.onlyInLeft shouldBe empty
+    right.onlyInRight shouldBe empty
+    for (m <- Seq(left, right); (matched, unmatched) <- Seq(
+      m.matched.map(_._1) -> m.onlyInLeft, m.matched.map(_._2) -> m.onlyInRight)) {
+      matched.map(_.path).distinct.size shouldBe matched.size
+      (matched.map(_.path).toSet intersect unmatched.map(_.path).toSet) shouldBe empty
+    }
+  }
+
+  it should "reject ambiguous repeated content when deletion or insertion changes copy counts" in {
+    val two = GenericElement("Root", Nil, Seq(rect("same"), rect("anchor"), rect("same")))
+    val one = GenericElement("Root", Nil, Seq(rect("anchor"), rect("same")))
+    for ((base, modified) <- Seq(two -> one, one -> two)) {
+      intercept[IllegalArgumentException](ContentMatcher.matchTrees(base, modified))
+        .getMessage should include ("Ambiguous content matching")
+      intercept[IllegalArgumentException](ContentMatcher.matchedLabel(base, modified))
+    }
+    // With unchanged multiplicity, the documented convention is document order only.
+    val m = ContentMatcher.matchTrees(two, two)
+    m.matched.map { case (b, r) => b.path -> r.path } shouldBe
+      Seq(NodePath.root -> NodePath.root, NodePath(Vector(0)) -> NodePath(Vector(0)),
+        NodePath(Vector(1)) -> NodePath(Vector(1)), NodePath(Vector(2)) -> NodePath(Vector(2)))
+  }
+
+  it should "include every descendant of an unmatched subtree exactly once" in {
+    val empty = GenericElement("Root", Nil, Nil)
+    val full = GenericElement("Root", Nil, Seq(GenericElement("Group", Nil, Seq(rect("nested")))))
+    for ((base, modified) <- Seq(full -> empty, empty -> full)) {
+      val m = ContentMatcher.matchTrees(base, modified)
+      m.matched.map { case (b, r) => b.path -> r.path } shouldBe Seq(NodePath.root -> NodePath.root)
+      val unmatched = if (base == full) m.onlyInLeft else m.onlyInRight
+      unmatched.map(_.path) shouldBe Seq(NodePath(Vector(0)), NodePath(Vector(0, 0)))
+      val other = if (base == full) m.onlyInRight else m.onlyInLeft
+      other shouldBe Seq.empty
+    }
+  }
 }

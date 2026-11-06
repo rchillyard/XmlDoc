@@ -44,4 +44,23 @@ class PcsIdmlSpec extends AnyFlatSpec with should.Matchers {
     rs.content.map(_.label) should contain("u13a") // a real page item's Self, from TreeMatcherIdmlSpec
     rs.pcs.collect { case Pcs(_, SiblingNode("u13a"), _) => () } should not be empty
   }
+
+  it should "encode a complete IDML Story including wrappers and ordered text" in {
+    import com.phasmidsoftware.xmldoc.merge.{ListEnd, RelationSet}
+    import com.phasmidsoftware.xmldoc.xml.GenericText
+    val story = GenericElement("Story", Seq("Self" -> "s"), Seq(
+      GenericElement("ParagraphStyleRange", Nil, Seq(
+        GenericElement("Content", Nil, Seq(GenericText(" A ")))))))
+    // Wrapper identities are paths; only the Story has Self. No artificial root parent.
+    Pcs.relations(story) shouldBe RelationSet(Set(
+      Pcs("s", ListStart, SiblingNode("/0")), Pcs("s", SiblingNode("/0"), ListEnd),
+      Pcs("/0", ListStart, SiblingNode("/0/0")), Pcs("/0", SiblingNode("/0/0"), ListEnd),
+      Pcs("/0/0", ListStart, SiblingNode("/0/0::text[0]")),
+      Pcs("/0/0", SiblingNode("/0/0::text[0]"), ListEnd),
+      Pcs("/0/0::text[0]", ListStart, ListEnd)), Set(
+      Content.element("s", "Story", Seq("Self" -> "s")),
+      Content.element("/0", "ParagraphStyleRange", Nil),
+      Content.element("/0/0", "Content", Nil), Content.text("/0/0::text[0]", " A ")))
+  }
+
 }

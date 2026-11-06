@@ -1,0 +1,12 @@
+{
+  "contractValid": true,
+  "releaseReady": false,
+  "plannedCases": 4,
+  "suppliedCases": 0,
+  "blockers": [
+    "real-01-text-move: real exported inputs, authorization and InDesign record missing",
+    "real-02-ungroup-style: real exported inputs, authorization and InDesign record missing",
+    "real-03-thread-delete-edit: real exported inputs, authorization and InDesign record missing",
+    "real-04-thread-assets: real exported inputs, authorization and InDesign record missing"
+  ]
+}
