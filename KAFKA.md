@@ -7,7 +7,10 @@ The Kafka broker runs in Docker (`docker-compose.yml`, in the root of this repos
 
 ## The architecture
 
-Each box names the XmlDoc module (or library) which does that step. Only one `Placemark` at a time is ever in memory.
+Each box names the XmlDoc module (or library) which does that step.
+However big the file, the memory used is bounded: the selected elements (here, Placemarks) are read a chunk (64) at a
+time, and the Kafka producer buffers what it hasn't yet sent (up to its `buffer.memory`, 32 MB by default).
+Each selected element is built whole, though, so choose a selector (like `Placemark`) whose elements are small.
 
 ```mermaid
 flowchart LR
