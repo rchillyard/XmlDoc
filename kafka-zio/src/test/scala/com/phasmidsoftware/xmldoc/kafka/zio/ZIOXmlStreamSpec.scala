@@ -52,6 +52,12 @@ class ZIOXmlStreamSpec extends AnyFlatSpec with Matchers {
     closed shouldBe true
   }
 
+  it should "read the elements chunkSize at a time" in {
+    val placemarks = (1 to 150).map(i => s"<Placemark><name>p$i</name></Placemark>").mkString
+    val in = new ByteArrayInputStream(s"<kml>$placemarks</kml>".getBytes)
+    runZIO(ZIOXmlStream.extract[Placemark]("Placemark", in).chunks.map(_.size).runCollect).map(_.toList) shouldBe Right(List(64, 64, 22))
+  }
+
   it should "fail the stream for a malformed document" in {
     runZIO(ZIOXmlStream.extract[Placemark]("Placemark", new ByteArrayInputStream("<kml><Placemark>".getBytes)).runDrain).isLeft shouldBe true
   }
