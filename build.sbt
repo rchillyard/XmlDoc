@@ -20,6 +20,14 @@ ThisBuild / scalacOptions ++= Seq(
 // Tests may use a value as a statement (for example, in a matcher), so each project's tests skip -Wnonunit-statement.
 lazy val testScalacOptions = Test / scalacOptions ~= (_.filterNot(_ == "-Wnonunit-statement"))
 
+// MiMa checks each published module for binary compatibility with the last release: `sbt mimaReportBinaryIssues`.
+// The version scheme is PVP (see publish.sbt): a patch release must pass; a minor release may break compatibility,
+// on purpose and with a release note, by listing the breaks in mimaBinaryIssueFilters (or, after the release, by moving previousRelease on).
+val previousRelease = "1.2.0"
+lazy val mimaSettings = mimaPreviousArtifacts := Set(organization.value %% name.value % previousRelease)
+// For the projects which aren't published, so there's nothing to compare.
+lazy val noMimaSettings = mimaFailOnNoPrevious := false
+
 lazy val commonSettings = Seq(
   testScalacOptions,
   libraryDependencies ++= Seq(
@@ -31,6 +39,7 @@ lazy val commonSettings = Seq(
 lazy val core = (project in file("core"))
   .settings(commonSettings)
   .settings(
+    mimaSettings,
     name := "xmldoc-core",
     libraryDependencies ++= Seq(
       scalaModules %% "scala-xml" % "2.4.0",
@@ -45,6 +54,7 @@ lazy val kml = (project in file("kml"))
   .dependsOn(core)
   .settings(commonSettings)
   .settings(
+    mimaSettings,
     name := "xmldoc-kml",
     libraryDependencies += "com.phasmidsoftware" %% "args" % "2.1.0"
   )
@@ -53,6 +63,7 @@ lazy val kmlIt = (project in file("kml-it"))
   .dependsOn(kml)
   .settings(commonSettings)
   .settings(
+    noMimaSettings,
     name := "xmldoc-kml-it",
     publish / skip := true
   )
@@ -61,6 +72,7 @@ lazy val idml = (project in file("idml"))
   .dependsOn(core)
   .settings(commonSettings)
   .settings(
+    mimaSettings,
     name := "xmldoc-idml"
   )
 
@@ -71,6 +83,7 @@ lazy val json = (project in file("json"))
   .dependsOn(kml % "test->compile")
   .settings(commonSettings)
   .settings(
+    mimaSettings,
     name := "xmldoc-json",
     libraryDependencies ++= Seq(
       "io.circe" %% "circe-core" % circeVersion,
@@ -87,6 +100,7 @@ lazy val kafkaCats = (project in file("kafka-cats"))
   .dependsOn(core, json % "compile->compile;test->test")
   .settings(commonSettings)
   .settings(
+    mimaSettings,
     name := "xmldoc-kafka-cats",
     libraryDependencies += "com.phasmidsoftware" %% "tableparser-kafka-cats" % tableParserVersion
   )
@@ -95,6 +109,7 @@ lazy val kafkaZio = (project in file("kafka-zio"))
   .dependsOn(core, json % "compile->compile;test->test")
   .settings(commonSettings)
   .settings(
+    mimaSettings,
     name := "xmldoc-kafka-zio",
     libraryDependencies += "com.phasmidsoftware" %% "tableparser-kafka-zio" % tableParserVersion
   )
@@ -105,6 +120,7 @@ lazy val kafkaIt = (project in file("kafka-it"))
   .dependsOn(kafkaCats % "compile->compile;test->test", kafkaZio)
   .settings(commonSettings)
   .settings(
+    noMimaSettings,
     name := "xmldoc-kafka-it",
     publish / skip := true,
     // `sendStations` (the example of KAFKA.md) runs in its own JVM, in the root of the build (where its default KML file is).
@@ -119,6 +135,7 @@ lazy val root = (project in file("."))
   .aggregate(core, kml, idml, json, kafkaCats, kafkaZio)
   .settings(
     testScalacOptions,
+    noMimaSettings,
     name := "XmlDoc",
     publish / skip := true,
     // The unified Scaladoc is published to https://rchillyard.github.io/XmlDoc/latest/api/ by `sbt ghpagesPushSite`
