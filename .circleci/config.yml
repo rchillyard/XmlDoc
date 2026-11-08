@@ -49,6 +49,11 @@ jobs:
           name: Test
           command: cat /dev/null | sbt test
 
+      # Binary compatibility with the last release (MiMa: see previousRelease in build.sbt)
+      - run:
+          name: Binary compatibility
+          command: cat /dev/null | sbt mimaReportBinaryIssues
+
       # Integration tests (kml-it is deliberately not aggregated by root, so it's run explicitly)
       - run:
           name: Integration test
