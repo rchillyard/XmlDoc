@@ -1,6 +1,6 @@
 ThisBuild / organization := "com.phasmidsoftware"
 
-ThisBuild / version := "1.2.1"
+ThisBuild / version := "1.2.2"
 
 ThisBuild / scalaVersion := "3.9.0" // the current LTS
 
@@ -23,7 +23,7 @@ lazy val testScalacOptions = Test / scalacOptions ~= (_.filterNot(_ == "-Wnonuni
 // MiMa checks each published module for binary compatibility with the last release: `sbt mimaReportBinaryIssues`.
 // The version scheme is PVP (see publish.sbt): a patch release must pass; a minor release may break compatibility,
 // on purpose and with a release note, by listing the breaks in mimaBinaryIssueFilters (or, after the release, by moving previousRelease on).
-val previousRelease = "1.2.0"
+val previousRelease = "1.2.1"
 lazy val mimaSettings = mimaPreviousArtifacts := Set(organization.value %% name.value % previousRelease)
 // For the projects which aren't published, so there's nothing to compare.
 lazy val noMimaSettings = mimaFailOnNoPrevious := false
