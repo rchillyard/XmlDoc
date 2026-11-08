@@ -7,13 +7,25 @@ import com.phasmidsoftware.xmldoc.xml.{Extractor, RichXml}
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
-import java.io.FileWriter
+import java.io.{File, FileWriter}
 import scala.util.{Failure, Success, Try}
 import scala.xml.{Elem, XML}
 
 class KmlSpec extends AnyFlatSpec with should.Matchers {
 
   KML.init()
+
+  /**
+   * A temporary file (deleted on exit) for a test's output, so that no test writes into the working directory.
+   *
+   * @param prefix the prefix of the file's name.
+   * @return a new, empty file in the system temp directory.
+   */
+  private def tempOutputFile(prefix: String): File = {
+    val file = File.createTempFile(prefix, ".kml")
+    file.deleteOnExit()
+    file
+  }
 
   behavior of "renderers"
 
@@ -5086,7 +5098,8 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
       case Success(ks) =>
         ks.size shouldBe 1
         val kml = KML_Binding(ks.head, xml.scope)
-        val ksy: Try[Seq[KML]] = TryUsing(new FileWriter("miniSampleOutput.kml")) {
+        val output = tempOutputFile("miniSampleOutput")
+        val ksy: Try[Seq[KML]] = TryUsing(new FileWriter(output)) {
           fw =>
             fw.write(
               """<?xml version="1.0" encoding="UTF-8"?>
@@ -5097,6 +5110,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                  } yield ks2
         }
         ksy shouldBe Success(ks)
+        output.length() should be > 0L
       case Failure(x) => fail(x)
     }
   }
@@ -5108,7 +5122,8 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
       case Success(ks) =>
         ks.size shouldBe 1
         val kml = KML_Binding(ks.head, xml.scope)
-        val ksy: Try[Seq[KML]] = TryUsing(new FileWriter("xmlOutput.kml")) {
+        val output = tempOutputFile("xmlOutput")
+        val ksy: Try[Seq[KML]] = TryUsing(new FileWriter(output)) {
           fw =>
             fw.write(
               """<?xml version="1.0" encoding="UTF-8"?>
@@ -5119,6 +5134,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
                  } yield ks2
         }
         ksy shouldBe Success(ks)
+        output.length() should be > 0L
       case Failure(x) => fail(x)
     }
   }
@@ -5130,8 +5146,8 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
       case Success(ks) =>
         ks.size shouldBe 1
         val kml = KML_Binding(ks.head, xml.scope)
-        val filename = "KML_Samples_output.kml"
-        val fw = new FileWriter(filename)
+        val output = tempOutputFile("KML_Samples_output")
+        val fw = new FileWriter(output)
         fw.write(
           """<?xml version="1.0" encoding="UTF-8"?>
             |""".stripMargin)
@@ -5139,6 +5155,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
           case Success(w) =>
             fw.write(w)
             fw.close()
+            output.length() should be > 0L
             extractMulti[Seq[KML]](XML.loadString(w)) match {
               case Success(ks2) => ks2 shouldBe ks
               case Failure(x) => fail("could not re-extract the rendered output", x)

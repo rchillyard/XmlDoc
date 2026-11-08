@@ -35,7 +35,10 @@ ThisBuild / developers := List(
 // Optional
 
 // Publishing settings
-ThisBuild / versionScheme := Some("early-semver")
+// PVP (the Haskell Package Versioning Policy): the first two numbers (x.y) make the major version, so a patch release
+// (x.y.z+1) must be binary compatible with x.y.z, while a minor release (x.y+1.0) may break compatibility, with a release
+// note. MiMa (see build.sbt) checks it.
+ThisBuild / versionScheme := Some("pvp")
 ThisBuild / publishConfiguration := publishConfiguration.value.withOverwrite(true)
 ThisBuild / publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
 
