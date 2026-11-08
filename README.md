@@ -37,7 +37,7 @@ Full Scaladoc is at <https://rchillyard.github.io/XmlDoc/latest/api/>.
 
 ## Getting started
 
-This version of the README.md file refers to version: 1.2.0.
+This version of the README.md file refers to version: 1.2.1.
 
 Add the modules you need to your _build.sbt_,
 where `x.y.z` is the latest version on Maven Central: it's shown on the [Sonatype Central](https://central.sonatype.com/artifact/com.phasmidsoftware/xmldoc-core_3) badge at the top of this page.
@@ -190,6 +190,14 @@ IOXmlStream.extractFile[Placemark]("big.kml", "Placemark")
 A record which needs something from outside its element (e.g. a `Style` defined at the document level) must be completed separately.
 
 ## Versions
+
+Version 1.2.1 Fixes `KMLCompanion.loadKML(URL)`, which loaded the URL's path as a local file name, so that it failed for a resource
+in a jar (that is, whenever `xmldoc-kml` was a dependency), for an `http:` URL, and for a `file:` URL whose path has a space;
+it now reads the URL itself: Issue #95.
+The version scheme is now PVP rather than early-semver: the first two numbers make the major version, so a patch release
+(such as this one) is binary compatible with the previous release, while a minor release may break compatibility, with a release note: Issue #96.
+MiMa checks that, in the build and in CI (`sbt mimaReportBinaryIssues`): Issue #98.
+The tests no longer write their output into the working directory: Issue #97.
 
 Version 1.2.0 Derives `Extractor` and `Renderer` from case classes (`derives Extractor, Renderer`, or `Extractor.derived`/`Renderer.derived`),
 including the auxiliary-parameter pattern, and `MultiExtractor`/`Renderer` for sealed traits (`MultiExtractor.derived`): Issue #63.

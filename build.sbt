@@ -1,6 +1,6 @@
 ThisBuild / organization := "com.phasmidsoftware"
 
-ThisBuild / version := "1.2.0"
+ThisBuild / version := "1.2.1"
 
 ThisBuild / scalaVersion := "3.9.0" // the current LTS
 
