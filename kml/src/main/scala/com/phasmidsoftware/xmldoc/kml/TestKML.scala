@@ -10,7 +10,7 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import java.io.PrintStream
 import java.net.URL
-import scala.util.Try
+import scala.util.{Try, Using}
 import scala.xml.{Elem, XML}
 
 /**
@@ -91,15 +91,18 @@ object KMLCompanion {
   /**
    * Loads KML content from the specified resource URL, processes it, and returns a sequence of KML objects.
    *
+   * The URL itself is read (not its path, as a local file name), so that it may be any URL: a resource in a jar,
+   * an http: URL, or a file: URL whose path has a space (encoded as %20).
+   *
    * @param resource the URL pointing to the KML resource to be loaded.
    * @return an IO action that yields a sequence of KML objects when executed.
    */
-  def loadKML(resource: URL): IO[Seq[KML]] = loadKML(
+  def loadKML(resource: URL): IO[Seq[KML]] =
     for {
-      u <- tryNotNull(resource)(s"resource $resource is null")
-      p <- tryNotNull(u.getPath)(s"$resource yielded empty filename")
-    } yield p
-  )
+      u <- fromTry(tryNotNull(resource)(s"resource $resource is null"))
+      elem <- IO.blocking(Using.resource(u.openStream())(XML.load))
+      fs <- fromTry(extractKML(elem))
+    } yield fs
 
   /**
    * Loads a KML file from the given filename encapsulated in a Try. If the filename is valid, the method reads and processes the KML content.
