@@ -106,6 +106,7 @@ node3 -> node2;
             <div class="cover">
              <div class="doc">
               <p>Loads KML content from the specified resource URL, processes it, and returns a sequence of KML objects.</p>
+              <p>The URL itself is read (not its path, as a local file name), so that it may be any URL: a resource in a jar, an http: URL, or a file: URL whose path has a space (encoded as %20).</p>
              </div>
              <h2 class="h200">Value parameters</h2>
              <dl class="attributes attributes-small">
