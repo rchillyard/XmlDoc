@@ -21,8 +21,15 @@ import scala.util.Try
 object ZIOXmlStream {
 
   /**
+   * The number of results read at a time (as in `IOXmlStream`), which bounds how many extracted elements the stream holds.
+   * (Without it, `ZStream.fromIterator` would read ZIO's default chunk, 4096 elements, at a time.)
+   */
+  val chunkSize: Int = 64
+
+  /**
    * Method to stream the results of extracting each selected element of the document read from an input stream.
    * The input stream is opened when the stream starts, and closed when it ends.
+   * The elements are read `chunkSize` at a time.
    *
    * @param selector a tag (e.g. `Placemark`) or a path of tags (e.g. `Folder/Placemark`).
    * @param in       the input stream (evaluated when the stream starts).
@@ -33,7 +40,7 @@ object ZIOXmlStream {
     for {
       i <- ZStream.acquireReleaseWith(ZIO.attemptBlocking(in))(i => ZIO.attemptBlocking(i.close()).orDie)
       r <- ZStream.acquireReleaseWith(ZIO.attemptBlocking(XmlStream.reader(i)))(r => ZIO.attemptBlocking(r.close()).orDie)
-      t <- ZStream.blocking(ZStream.fromIterator(XmlStream.extract[T](r, selector)))
+      t <- ZStream.blocking(ZStream.fromIterator(XmlStream.extract[T](r, selector), chunkSize))
     } yield t
 
   /**

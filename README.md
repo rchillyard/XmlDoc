@@ -33,7 +33,7 @@ Full Scaladoc is at <https://rchillyard.github.io/XmlDoc/latest/api/>.
 | [`json`](json) | `xmldoc-json` | New in 1.2.0. Records as JSON (circe), one per line, and the Spark SQL schema which reads them (see [Records as JSON, for Spark](#records-as-json-for-spark)). |
 | [`kafka-cats`](kafka-cats), [`kafka-zio`](kafka-zio) | `xmldoc-kafka-cats`, `xmldoc-kafka-zio` | New in 1.2.0. Send records to Kafka, one JSON message per record, with fs2-kafka or zio-kafka (see [Sending records to Kafka](#sending-records-to-kafka)). |
 | [`kafka-it`](kafka-it) | not published | Integration tests of the Kafka modules against a broker which they start (not aggregated by the root project: run `sbt kafkaIt/test`). |
-| [`idml`](idml) | not published | Early-stage support for Adobe InDesign's IDML format, built on `core`'s generic representation rather than `kml`'s fully-typed one. Not yet released. |
+| [`idml`](idml) | `xmldoc-idml` | Early-stage support for Adobe InDesign's IDML format, built on `core`'s generic representation rather than `kml`'s fully-typed one. Published since 1.1.2, but its API may still change. |
 
 ## Getting started
 
@@ -187,9 +187,13 @@ IOXmlStream.extractFile[Placemark]("big.kml", "Placemark")
   .compile.drain
 ```
 
+Both read the selected elements 64 (`chunkSize`) at a time, so the memory they use is bounded by a chunk of elements,
+however big the file (see [KAFKA.md](KAFKA.md)).
 A record which needs something from outside its element (e.g. a `Style` defined at the document level) must be completed separately.
 
 ## Versions
+
+Not yet released: `ZIOXmlStream` reads the selected elements 64 at a time, like `IOXmlStream`, rather than ZIO's default chunk of 4096: Issue #101.
 
 Version 1.2.1 Fixes `KMLCompanion.loadKML(URL)`, which loaded the URL's path as a local file name, so that it failed for a resource
 in a jar (that is, whenever `xmldoc-kml` was a dependency), for an `http:` URL, and for a `file:` URL whose path has a space;
