@@ -1,0 +1,17 @@
+version	21.5.1.73
+rw-story2frame	3211	TextFrame	1985	3,30,10,83.9999999999999	story=3193	previous=null	next=null	overflows=false
+rw-tfB	3188	TextFrame	1985	44,51,49,66	story=3170	previous=null	next=null	overflows=false
+rw-tfA	3165	TextFrame	1985	44,33,49,48	story=3147	previous=null	next=null	overflows=false
+rw-tf2	3142	TextFrame	1985	22,4.99999999999999,30,84	story=3101	previous=[object TextFrame]	next=null	overflows=false
+rw-tf1	3119	TextFrame	1985	13,4.99999999999999,19,84	story=3101	previous=null	next=[object TextFrame]	overflows=false
+rw-g2	3099	Group	1985	34,53,41,69
+rw-r7	3098	Rectangle	3099	34,62,41,69
+rw-r6	3097	Rectangle	3099	34,53,41,60
+rw-g1	3096	Group	1985	34,30,41,46
+rw-r4	3095	Rectangle	3096	34,39,41,46
+rw-r3	3094	Rectangle	3096	34,30,41,37
+rw-r2	3093	Rectangle	1985	36,12,43,24
+rw-r1	3092	Rectangle	1985	34,5.00000000000001,41,17
+font	Arial	Regular	1718831470
+link	logo-color.ai	1852797549
+link	logo-white.ai	1852797549

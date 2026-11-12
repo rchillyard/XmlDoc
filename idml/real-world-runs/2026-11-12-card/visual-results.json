@@ -1,0 +1,138 @@
+[
+  {
+    "case": "01-single-add",
+    "errors": [],
+    "lifecycle": true,
+    "pages": [
+      {
+        "file": "merged-page2.png",
+        "pixelEqual": true,
+        "diffBounds": null
+      },
+      {
+        "file": "merged-page22.png",
+        "pixelEqual": true,
+        "diffBounds": null
+      }
+    ]
+  },
+  {
+    "case": "02-single-delete",
+    "errors": [],
+    "lifecycle": true,
+    "pages": [
+      {
+        "file": "merged-page2.png",
+        "pixelEqual": true,
+        "diffBounds": null
+      },
+      {
+        "file": "merged-page22.png",
+        "pixelEqual": true,
+        "diffBounds": null
+      }
+    ]
+  },
+  {
+    "case": "03-single-move",
+    "errors": [],
+    "lifecycle": true,
+    "pages": [
+      {
+        "file": "merged-page2.png",
+        "pixelEqual": true,
+        "diffBounds": null
+      },
+      {
+        "file": "merged-page22.png",
+        "pixelEqual": true,
+        "diffBounds": null
+      }
+    ]
+  },
+  {
+    "case": "04-both-add-diff-pos",
+    "errors": [],
+    "lifecycle": true,
+    "pages": [
+      {
+        "file": "merged-page2.png",
+        "pixelEqual": true,
+        "diffBounds": null
+      },
+      {
+        "file": "merged-page22.png",
+        "pixelEqual": true,
+        "diffBounds": null
+      }
+    ]
+  },
+  {
+    "case": "07-same-story-diff-para",
+    "errors": [],
+    "lifecycle": true,
+    "pages": [
+      {
+        "file": "merged-page2.png",
+        "pixelEqual": true,
+        "diffBounds": null
+      },
+      {
+        "file": "merged-page22.png",
+        "pixelEqual": true,
+        "diffBounds": null
+      }
+    ]
+  },
+  {
+    "case": "09-zorder",
+    "errors": [],
+    "lifecycle": true,
+    "pages": [
+      {
+        "file": "merged-page2.png",
+        "pixelEqual": true,
+        "diffBounds": null
+      },
+      {
+        "file": "merged-page22.png",
+        "pixelEqual": true,
+        "diffBounds": null
+      }
+    ]
+  },
+  {
+    "case": "10-group-ungroup",
+    "errors": [],
+    "lifecycle": true,
+    "pages": [
+      {
+        "file": "merged-page2.png",
+        "pixelEqual": true,
+        "diffBounds": null
+      },
+      {
+        "file": "merged-page22.png",
+        "pixelEqual": true,
+        "diffBounds": null
+      }
+    ]
+  },
+  {
+    "case": "11-thread-insert",
+    "errors": [],
+    "lifecycle": true,
+    "pages": [
+      {
+        "file": "merged-page2.png",
+        "pixelEqual": true,
+        "diffBounds": null
+      },
+      {
+        "file": "merged-page22.png",
+        "pixelEqual": true,
+        "diffBounds": null
+      }
+    ]
+  }
+]

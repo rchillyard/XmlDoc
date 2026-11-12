@@ -1,0 +1,12 @@
+{
+  "sourcePage": "https://helpx.adobe.com/ph_fil/indesign/how-to/business-card-design.html",
+  "downloadUrl": "https://learndownload.adobe.com/pub/learn/indesign/business-card-design-practice.zip",
+  "sourceArchiveSha256": "5e3362af5a1fec850fcff760549deb469232712bd1fb0e23f937379cb2c09366",
+  "indesignVersion": "21.5.1.73",
+  "gitHead": "aa698b2675a7103546072fee5bbc5067bb965ef1",
+  "authorization": "User requested downloading a small sample and running scenarios 01\u201313 including 06b, 08b, 10b through InDesign scripts and UI checks.",
+  "baselinePreparation": "Adobe two-page business card END document. Relink supplied logos, normalize text to installed Arial, resize back logo and add labeled rectangles, two groups and threaded text frames. Save current-version INDD and close. Reopen the same closed baseline separately for each side.",
+  "oracleMethod": "Independently replay both operations on the baseline in InDesign for each accepting case. Render both reference pages and compare with the reopened merge output.",
+  "executionWorkspace": "/tmp/codex-idml-card",
+  "artifactDirectory": "/Users/lady_penguin/Documents/3-way-merge/idml/real-world-runs/2026-11-12-card"
+}

@@ -1,0 +1,3 @@
+idml-merge: 1 conflicting part(s):
+  Spreads/Spread_u7c1.xml:
+    NextTextFrame of uc2f: ours=uc5d theirs=uc74

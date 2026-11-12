@@ -1,0 +1,3 @@
+idml-merge: 1 conflicting part(s):
+  Stories/Story_uc1d.xml:
+    content of /0/2/0/3::text[0]: ours=The swift brown fox jumps over the lazy dog. theirs=The quick brown fox jumps over the sleepy dog.

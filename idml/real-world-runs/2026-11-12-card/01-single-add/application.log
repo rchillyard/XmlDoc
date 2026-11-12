@@ -1,0 +1,23 @@
+OPEN PASS
+version=21.5.1.73 pages=2
+target=rw-story2frame id=454 bounds=3,30,10,83.9999999999999 story=436 text=Alternate story.
+target=rw-tfB id=432 bounds=44,51,49,66 story=414 text=
+target=rw-tfA id=410 bounds=44,33,49,48 story=392 text=
+target=rw-tf2 id=388 bounds=22,4.99999999999999,30,84 story=348 text=Card merge baseline.|The quick brown fox jumps over the lazy dog.|Third paragraph retained.|Fourth paragraph baseline.
+target=rw-tf1 id=366 bounds=13,4.99999999999999,19,84 story=348 text=Card merge baseline.|The quick brown fox jumps over the lazy dog.|Third paragraph retained.|Fourth paragraph baseline.
+target=rw-g2 id=344 bounds=34,53,41,69
+target=rw-r7 id=346 bounds=34,62,41,69
+target=rw-r6 id=345 bounds=34,53,41,60
+target=rw-g1 id=341 bounds=34,30,41,46
+target=rw-r4 id=343 bounds=34,39,41,46
+target=rw-r3 id=342 bounds=34,30,41,37
+target=rw-r1 id=340 bounds=34,5.00000000000001,41,17
+target=rw-r2 id=339 bounds=36,12,43,24
+target=rw-added-left id=338 bounds=44,71,49,77
+font=Arial	Regular status=1718831470
+link=logo-color.ai status=1852797549
+link=logo-white.ai status=1852797549
+SAVE PASS
+CLOSE PASS
+REOPEN PASS
+RENDER PASS

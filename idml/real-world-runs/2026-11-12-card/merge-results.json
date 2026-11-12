@@ -1,0 +1,114 @@
+[
+  {
+    "case": "01-single-add",
+    "expectedExit": 0,
+    "actualExit": 0,
+    "statusMatches": true,
+    "oursUnchanged": true
+  },
+  {
+    "case": "02-single-delete",
+    "expectedExit": 0,
+    "actualExit": 0,
+    "statusMatches": true,
+    "oursUnchanged": true
+  },
+  {
+    "case": "03-single-move",
+    "expectedExit": 0,
+    "actualExit": 0,
+    "statusMatches": true,
+    "oursUnchanged": true
+  },
+  {
+    "case": "04-both-add-diff-pos",
+    "expectedExit": 0,
+    "actualExit": 0,
+    "statusMatches": true,
+    "oursUnchanged": false
+  },
+  {
+    "case": "05-move-move-divergent",
+    "expectedExit": 1,
+    "actualExit": 1,
+    "statusMatches": true,
+    "oursUnchanged": true
+  },
+  {
+    "case": "06-delete-vs-modify",
+    "expectedExit": 1,
+    "actualExit": 1,
+    "statusMatches": true,
+    "oursUnchanged": true
+  },
+  {
+    "case": "06b-delete-thread-vs-content",
+    "expectedExit": 1,
+    "actualExit": 1,
+    "statusMatches": true,
+    "oursUnchanged": true
+  },
+  {
+    "case": "07-same-story-diff-para",
+    "expectedExit": 0,
+    "actualExit": 0,
+    "statusMatches": true,
+    "oursUnchanged": false
+  },
+  {
+    "case": "08-same-para-overlap",
+    "expectedExit": 1,
+    "actualExit": 1,
+    "statusMatches": true,
+    "oursUnchanged": true
+  },
+  {
+    "case": "08b-same-para-disjoint",
+    "expectedExit": 1,
+    "actualExit": 1,
+    "statusMatches": true,
+    "oursUnchanged": true
+  },
+  {
+    "case": "09-zorder",
+    "expectedExit": 0,
+    "actualExit": 0,
+    "statusMatches": true,
+    "oursUnchanged": true
+  },
+  {
+    "case": "10-group-ungroup",
+    "expectedExit": 0,
+    "actualExit": 0,
+    "statusMatches": true,
+    "oursUnchanged": false
+  },
+  {
+    "case": "10b-divergent-parent",
+    "expectedExit": 1,
+    "actualExit": 1,
+    "statusMatches": true,
+    "oursUnchanged": true
+  },
+  {
+    "case": "11-thread-insert",
+    "expectedExit": 0,
+    "actualExit": 0,
+    "statusMatches": true,
+    "oursUnchanged": true
+  },
+  {
+    "case": "12-next-divergent",
+    "expectedExit": 1,
+    "actualExit": 1,
+    "statusMatches": true,
+    "oursUnchanged": true
+  },
+  {
+    "case": "13-parentstory-vs-content",
+    "expectedExit": 1,
+    "actualExit": 1,
+    "statusMatches": true,
+    "oursUnchanged": true
+  }
+]

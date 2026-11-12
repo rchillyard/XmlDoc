@@ -1,0 +1,4 @@
+idml-merge: 1 conflicting part(s):
+  Spreads/Spread_u7c1.xml:
+    successor after uc14 under u7c1: ours=u7c1::trailing theirs=u7c1::before[u7f5]
+    predecessor before u7c1::before[uc14] under u7c1: ours=uc8b theirs=u7c6

@@ -1,0 +1,5 @@
+idml-merge: 2 conflicting part(s):
+  Spreads/Spread_u7c1.xml:
+    Self=uc2f attribute=layout target=uc1d body=Stories/Story_uc1d.xml/Story[uc1d]/*: ours=frame=uc2f layout changed theirs=Story=uc1d body edited
+  Spreads/Spread_u7c1.xml:
+    Self=uc46 attribute=layout target=uc1d body=Stories/Story_uc1d.xml/Story[uc1d]/*: ours=frame=uc46 layout changed theirs=Story=uc1d body edited

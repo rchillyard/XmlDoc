@@ -1,0 +1,34 @@
+VERSION 21.5.1.73 PAGES 2
+PAGE 1 items 4
+Rectangle id=3041 bounds=0.25,0.25,1.0634,0.97135774858164
+PDF id=3036 bounds=0.25,0.25,1.0634,0.97135774858164
+TextFrame id=2871 bounds=1.27889763779528,0.25,1.75,1.75 story=2874 text=Studio iconic|Product Design
+TextFrame id=2848 bounds=0.25,2,1.75,3.25 story=2851 text=Oden Quest|Creative Director||T	+1 408 456 7890|M	+1 408 456 8956
+|1234 Main Street|Santa Clara, CA
+PAGE 2 items 3
+Rectangle id=3052 bounds=0.21953155617493,1.06801266364814,1.77747324725565,2.44966168098213
+PDF id=3047 bounds=0.21953155617493,1.06801266364814,1.77747324725565,2.44966168098213
+Rectangle id=2037 bounds=-0.125,-0.125,2.125,3.625
+FONT Minion Pro	Bold Cond Italic 1718834037
+FONT Helvetica	Bold 1718831470
+FONT Avenir Next Condensed	Demi Bold 1718832705
+LINK logo-color.ai 1282237028
+LINK logo-white.ai 1282237028
+AVAILABLE Arial	Regular
+AVAILABLE Arial	Italic
+AVAILABLE Arial	Bold
+AVAILABLE Arial	Bold Italic
+AVAILABLE Arial Black	Regular
+AVAILABLE Arial Narrow	Regular
+AVAILABLE Arial Narrow	Italic
+AVAILABLE Arial Narrow	Bold
+AVAILABLE Arial Narrow	Bold Italic
+AVAILABLE Arial Rounded MT Bold	Regular
+AVAILABLE Arial Unicode MS	Regular
+AVAILABLE Arial Hebrew	Light
+AVAILABLE Arial Hebrew	Regular
+AVAILABLE Arial Hebrew	Bold
+AVAILABLE Arial Hebrew Scholar	Light
+AVAILABLE Arial Hebrew Scholar	Regular
+AVAILABLE Arial Hebrew Scholar	Bold
+DONE

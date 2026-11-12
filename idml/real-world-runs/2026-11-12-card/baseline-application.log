@@ -1,0 +1,17 @@
+version=21.5.1.73 pages=2
+target=rw-story2frame id=3211 bounds=3,30,10,83.9999999999999 story=3193 text=Alternate story.
+target=rw-tfB id=3188 bounds=44,51,49,66 story=3170 text=
+target=rw-tfA id=3165 bounds=44,33,49,48 story=3147 text=
+target=rw-tf2 id=3142 bounds=22,4.99999999999999,30,84 story=3101 text=Card merge baseline.|The quick brown fox jumps over the lazy dog.|Third paragraph retained.|Fourth paragraph baseline.
+target=rw-tf1 id=3119 bounds=13,4.99999999999999,19,84 story=3101 text=Card merge baseline.|The quick brown fox jumps over the lazy dog.|Third paragraph retained.|Fourth paragraph baseline.
+target=rw-g2 id=3099 bounds=34,53,41,69
+target=rw-r7 id=3098 bounds=34,62,41,69
+target=rw-r6 id=3097 bounds=34,53,41,60
+target=rw-g1 id=3096 bounds=34,30,41,46
+target=rw-r4 id=3095 bounds=34,39,41,46
+target=rw-r3 id=3094 bounds=34,30,41,37
+target=rw-r1 id=3092 bounds=34,5.00000000000001,41,17
+target=rw-r2 id=3093 bounds=36,12,43,24
+font=Arial	Regular status=1718831470
+link=logo-color.ai status=1852797549
+link=logo-white.ai status=1852797549

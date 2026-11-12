@@ -1,0 +1,155 @@
+Window: "baseline.indd @ 281% [GPU Preview]", App: InDesign.
+0 standard window baseline.indd @ 281% [GPU Preview], URL: file:///private/tmp/codex-idml-card/baseline.indd, Secondary Actions: Raise
+	1 close button
+	2 minimize button
+	3 zoom button
+	4 scroll bar (selectable, collapsed, settable) Description: UI_ScrollBar, Value: 62, Secondary Actions: Pick, Confirm, Cancel, Expand
+		5 value indicator UI_ScrollThumb
+	6 scroll bar (selectable, collapsed, settable) Description: UI_ScrollBar, Value: 32, Secondary Actions: Pick, Confirm, Cancel, Expand
+		7 value indicator UI_ScrollThumb
+	8 button Description: UI_PictureButton, Value: Not Selected, Secondary Actions: Cancel
+	9 ComboBox Value: 281.22%, Secondary Actions: Cancel
+		10 unknown 5%
+		11 unknown 12.5%
+		12 unknown 25%
+		13 unknown 50%
+		14 unknown 75%
+		15 unknown 100%
+		16 unknown 125%
+		17 unknown 150%
+		18 unknown 200%
+		19 unknown 300%
+		20 unknown 400%
+		21 unknown 600%
+		22 unknown 800%
+		23 unknown 1200%
+		24 unknown 1600%
+		25 unknown 2400%
+		26 unknown 3200%
+		27 unknown 4000%
+	28 button Description: First Page, Value: Not Selected, Secondary Actions: Cancel
+	29 button Description: Previous Page, Value: Not Selected, Secondary Actions: Cancel
+	30 ComboBox Value: 2, Secondary Actions: Cancel
+		31 unknown 1
+		32 unknown 2
+		33 unknown A-Master
+	34 button (disabled) Description: Next Page, Value: Disabled, Secondary Actions: Cancel
+	35 button (disabled) Description: Last Page, Value: Disabled, Secondary Actions: Cancel
+	36 button Description: Open, Value: Not Selected, Secondary Actions: Cancel
+	37 ComboBox Description: Preflight Profile, Value: [Basic] (working), Secondary Actions: Cancel
+		38 unknown [Basic] (working)
+		39 unknown Digital Publishing
+	40 button Description: UI_PictureButton, Value: Not Selected, Secondary Actions: Cancel
+	41 text (selectable, collapsed, settable) No errors
+	42 button Description: Preflight menu, Value: Not Selected, Secondary Actions: Cancel
+	43 button Description: Click to split the layout view, Value: Not Selected, Secondary Actions: Cancel
+	44 button Description: Home, Secondary Actions: Cancel
+	45 text (selectable, collapsed, settable) Adobe InDesign 2026
+	46 button Description: Share, Secondary Actions: Cancel
+	47 unknown UI_SearchBoxBase
+		48 text field (selectable, collapsed, settable) Description: UI_SearchBoxBasePopupEdit, Value: Adobe Stock
+			49 button Description: UI_PictureButton, Secondary Actions: Cancel
+	50 button Description: Selection Tool (V, Escape), Value: Selected, Secondary Actions: Cancel
+	51 button Description: Direct Selection Tool (A), Value: Not Selected, Secondary Actions: Cancel
+	52 button Description: Page Tool (Shift+P), Value: Not Selected, Secondary Actions: Cancel
+	53 button Description: Gap Tool (U), Value: Not Selected, Secondary Actions: Cancel
+	54 button Description: Content Collector Tool (B), Value: Not Selected, Secondary Actions: Cancel
+	55 button Description: Type Tool (T), Value: Not Selected, Secondary Actions: Cancel
+	56 button Description: Line Tool (\), Value: Not Selected, Secondary Actions: Cancel
+	57 button Description: Pen Tool (P), Value: Not Selected, Secondary Actions: Cancel
+	58 button Description: Pencil Tool (N), Value: Not Selected, Secondary Actions: Cancel
+	59 button Description: Rectangle Frame Tool (F), Value: Not Selected, Secondary Actions: Cancel
+	60 button Description: Rectangle Tool (M), Value: Not Selected, Secondary Actions: Cancel
+	61 button Description: Scissors Tool (C), Value: Not Selected, Secondary Actions: Cancel
+	62 button Description: Free Transform Tool (E), Value: Not Selected, Secondary Actions: Cancel
+	63 button Description: Gradient Swatch Tool (G), Value: Not Selected, Secondary Actions: Cancel
+	64 button Description: Gradient Feather Tool (Shift+G), Value: Not Selected, Secondary Actions: Cancel
+	65 button Description: Note Tool, Value: Not Selected, Secondary Actions: Cancel
+	66 button Description: Eyedropper Tool (I), Value: Not Selected, Secondary Actions: Cancel
+	67 button Description: Hand Tool (H), Value: Not Selected, Secondary Actions: Cancel
+	68 button Description: Zoom Tool (Z), Value: Not Selected, Secondary Actions: Cancel
+	69 button Description: UI_PictureButton, Value: Not Selected, Secondary Actions: Cancel
+	70 button Description: UI_PictureButton, Value: Not Selected, Secondary Actions: Cancel
+	71 button Description: UI_PictureButton, Value: Selected, Secondary Actions: Cancel
+	72 button Description: UI_PictureButton, Value: Not Selected, Secondary Actions: Cancel
+	73 button Description: Apply Color (,), Value: Selected, Secondary Actions: Cancel
+	74 button Description: View Options, Value: Not Selected, Secondary Actions: Cancel
+	75 button Description: Preview (W), Value: Selected, Secondary Actions: Cancel
+	76 text (selectable, collapsed, settable) Description: No Selection, Value: No Selection Document
+	77 ComboBox Value: US Business Card, Secondary Actions: Cancel
+		78 unknown Letter
+		79 unknown Legal
+		80 unknown Tabloid
+		81 unknown Letter - Half
+		82 unknown Legal - Half
+		83 unknown A5
+		84 unknown A4
+		85 unknown A3
+		86 unknown B5
+		87 unknown US Business Card
+		88 unknown Compact Disc
+		89 unknown Custom...
+		90 unknown [Custom]
+	91 button Description: Portrait, Value: Not Selected, Secondary Actions: Cancel
+	92 button Description: Landscape, Value: Selected, Secondary Actions: Cancel
+	93 text (selectable, collapsed, settable) W:
+	94 Stepper decrease Description: W:, Secondary Actions: Increment, Decrement
+	95 Stepper increase Description: W:, Secondary Actions: Increment, Decrement
+	96 text field (selectable, collapsed, settable) Description: W:, Value: 88.9 mm
+	97 layout area Pages
+	98 text field (selectable, collapsed, settable) Description: Number of &Pages:, Value: 2
+	99 text (selectable, collapsed, settable) H:
+	100 Stepper decrease Description: H:, Secondary Actions: Increment, Decrement
+	101 Stepper increase Description: H:, Secondary Actions: Increment, Decrement
+	102 text field (selectable, collapsed, settable) Description: H:, Value: 50.8 mm
+	103 checkbox Description: Facing Pages, Value: off, Secondary Actions: Cancel
+	104 text (selectable, collapsed, settable) Margins
+	105 layout area Top
+	106 Stepper decrease Description: Top, Secondary Actions: Increment, Decrement
+	107 Stepper increase Description: Top, Secondary Actions: Increment, Decrement
+	108 text field (selectable, collapsed, settable) Description: Top, Value: 12.7 mm
+	109 layout area Bottom
+	110 Stepper decrease Description: Bottom, Secondary Actions: Increment, Decrement
+	111 Stepper increase Description: Bottom, Secondary Actions: Increment, Decrement
+	112 text field (selectable, collapsed, settable) Description: Bottom, Value: 12.7 mm
+	113 button Description: Make all settings the same, Value: Not Selected, Secondary Actions: Cancel
+	114 layout area Left
+	115 Stepper decrease Description: Inside, Secondary Actions: Increment, Decrement
+	116 Stepper increase Description: Inside, Secondary Actions: Increment, Decrement
+	117 text field (selectable, collapsed, settable) Description: Inside, Value: 12.7 mm
+	118 layout area Right
+	119 Stepper decrease Description: Outside, Secondary Actions: Increment, Decrement
+	120 Stepper increase Description: Outside, Secondary Actions: Increment, Decrement
+	121 text field (selectable, collapsed, settable) Description: Outside, Value: 12.7 mm
+	122 button Description: Adjust Layout, Secondary Actions: Cancel
+	123 text (selectable, collapsed, settable) Page
+	124 ComboBox Value: 2, Secondary Actions: Cancel
+		125 unknown 1
+		126 unknown 2
+		127 unknown A-Parent
+	128 button Description: Create new page, Value: Not Selected, Secondary Actions: Cancel
+	129 button Description: Delete selected pages, Value: Not Selected, Secondary Actions: Cancel
+	130 button Description: Edit Page, Secondary Actions: Cancel
+	131 text (selectable, collapsed, settable) Rulers & Grids
+	132 button Description: Rulers, Value: Selected, Secondary Actions: Cancel
+	133 button Description: Baseline Grid, Value: Not Selected, Secondary Actions: Cancel
+	134 button Description: Document Grid, Value: Not Selected, Secondary Actions: Cancel
+	135 text (selectable, collapsed, settable) Guides
+	136 button Description: Hide Guides, Value: Selected, Secondary Actions: Cancel
+	137 button Description: Lock Guides, Value: Selected, Secondary Actions: Cancel
+	138 button Description: Hide Smart Guides, Value: Selected, Secondary Actions: Cancel
+	139 text (settable) Quick Actions
+	140 button Description: Import File, Secondary Actions: Cancel
+	141 button Description: Text to Image, Secondary Actions: Cancel
+142 menu bar
+	143 InDesign, ID: dispatchMenuSelection:
+	144 File
+	145 Edit
+	146 Layout
+	147 Type
+	148 Object
+	149 Table
+	150 View
+	151 Plug-Ins
+	152 Window
+	153 Help
