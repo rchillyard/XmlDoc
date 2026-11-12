@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>可用于集合运算的 XML 树表示 · 论文 §2.3 图解</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#e9edf3;
+    --panel:#ffffff;
+    --panel-2:#f3f6fa;
+    --ink:#14161c;
+    --ink-soft:#333846;
+    --muted:#5c6472;
+    --line:#d6dde7;
+    --line-strong:#c2cbd8;
+
+    /* 双域编码：紫=论文形式模型，青=Pcs.scala 实现 */
+    --formal:#5a3ec8;
+    --formal-tint:#efeafd;
+    --formal-line:#d3c6f6;
+    --code:#0d7d6f;
+    --code-tint:#e3f3f0;
+    --code-line:#bfe3dc;
+
+    /* diff 语义色 */
+    --add:#1b7a45;
+    --add-tint:#e6f4ec;
+    --del:#b42318;
+    --del-tint:#fbeceb;
+
+    --sans:"IBM Plex Sans","PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+    --display:"Space Grotesk","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    --mono:"IBM Plex Mono","Sarasa Mono SC","PingFang SC",ui-monospace,Menlo,Consolas,monospace;
+    --maxw:880px;
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 78% -8%, #f0edfb 0%, rgba(240,237,251,0) 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.75;
+    letter-spacing:.005em;
+  }
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+  .wide{max-width:1040px}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    border-bottom:1px solid var(--line);
+    background:rgba(233,237,243,.82);
+    backdrop-filter:saturate(140%) blur(6px);
+    position:sticky;top:0;z-index:20;
+  }
+  .topbar-in{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 22px;max-width:1040px;margin:0 auto;flex-wrap:wrap}
+  .brand{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+  .brand b{color:var(--ink);font-weight:600}
+  .legend{display:flex;gap:14px;font-size:.78rem;color:var(--muted);flex-wrap:wrap}
+  .legend .k{display:inline-flex;align-items:center;gap:6px}
+  .swatch{width:11px;height:11px;border-radius:3px;display:inline-block}
+  .sw-f{background:var(--formal)}
+  .sw-c{background:var(--code)}
+
+  /* ---------- hero ---------- */
+  .hero{padding:64px 0 40px}
+  .eyebrow{font-family:var(--mono);font-size:.82rem;color:var(--formal);margin:0 0 18px;letter-spacing:.02em}
+  h1{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(2.1rem,5.2vw,3.4rem);
+    line-height:1.08;
+    letter-spacing:-.01em;
+    margin:0 0 20px;
+  }
+  .lede{font-size:1.12rem;line-height:1.7;color:var(--ink-soft);max-width:44ch;margin:0}
+  .lede code{font-family:var(--mono);font-size:.94em;background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:.05em .35em}
+
+  /* hero decomposition graphic */
+  .decomp{
+    margin-top:40px;
+    background:var(--panel);
+    border:1px solid var(--line-strong);
+    border-radius:16px;
+    padding:26px;
+    display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+    box-shadow:0 1px 0 rgba(20,22,28,.03), 0 18px 40px -30px rgba(20,22,28,.4);
+  }
+  .decomp-col{flex:1 1 180px;min-width:160px}
+  .decomp .arrow{
+    flex:0 0 auto;text-align:center;color:var(--muted);
+    font-family:var(--mono);font-size:.8rem;min-width:96px;
+  }
+  .decomp .arrow .glyph{font-size:1.6rem;color:var(--ink);display:block;line-height:1}
+  .minitree{width:100%;height:auto;display:block}
+  .setbox{border:1px solid var(--line);border-radius:11px;padding:12px 13px;font-family:var(--mono);font-size:.8rem;line-height:1.6}
+  .setbox+.setbox{margin-top:11px}
+  .setbox .st{font-weight:600;font-size:.82rem;margin-bottom:4px;font-family:var(--display);letter-spacing:0}
+  .setbox.f{background:var(--formal-tint);border-color:var(--formal-line)}
+  .setbox.f .st{color:var(--formal)}
+  .setbox.c{background:var(--code-tint);border-color:var(--code-line)}
+  .setbox.c .st{color:var(--code)}
+  .setbox .dim{color:var(--muted)}
+  .tree-cap{font-family:var(--mono);font-size:.76rem;color:var(--muted);text-align:center;margin-top:8px}
+
+  /* ---------- sections ---------- */
+  section{padding:46px 0;border-top:1px solid var(--line)}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px}
+  .sec-idx{font-family:var(--mono);font-size:.95rem;color:var(--formal);font-weight:500;flex:0 0 auto}
+  h2{font-family:var(--display);font-weight:600;font-size:1.62rem;line-height:1.2;margin:0;letter-spacing:-.005em}
+  .sec-sub{color:var(--muted);margin:2px 0 22px;font-size:1rem}
+  p{margin:0 0 15px}
+  p.note{color:var(--ink-soft)}
+  strong{font-weight:600;color:var(--ink)}
+  .fx{color:var(--formal);font-weight:600}
+  .cx{color:var(--code);font-weight:600}
+
+  /* formal notation inline */
+  .fnote{font-family:var(--mono);color:var(--formal);background:var(--formal-tint);border:1px solid var(--formal-line);border-radius:5px;padding:.05em .4em;font-size:.9em;white-space:nowrap}
+  code.inl{font-family:var(--mono);font-size:.9em;background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:.05em .38em}
+
+  /* paired panels: paper vs code */
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  @media(max-width:720px){.pair{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel)}
+  .card .tag{
+    font-family:var(--mono);font-size:.75rem;padding:8px 13px;display:flex;justify-content:space-between;gap:10px;align-items:center;border-bottom:1px solid var(--line)
+  }
+  .card.f{border-color:var(--formal-line)}
+  .card.f .tag{background:var(--formal-tint);color:var(--formal);border-color:var(--formal-line)}
+  .card.c{border-color:var(--code-line)}
+  .card.c .tag{background:var(--code-tint);color:var(--code);border-color:var(--code-line)}
+  .card .tag .file{color:var(--muted);font-size:.72rem;font-weight:400}
+  .card .body{padding:13px 15px}
+  .card .body p:last-child{margin-bottom:0}
+
+  /* code block */
+  pre{
+    margin:0;font-family:var(--mono);font-size:.82rem;line-height:1.65;
+    background:#fbfcfe;color:var(--ink-soft);
+    padding:14px 15px;overflow-x:auto;white-space:pre;
+  }
+  .card pre{border-top:0}
+  pre .kw{color:var(--formal);font-weight:500}
+  pre .st2{color:var(--code)}
+  pre .cm{color:#8a93a3;font-style:italic}
+  pre .tag2{color:var(--del)}
+
+  .codeblock{border:1px solid var(--line);border-radius:11px;overflow:hidden;margin:16px 0;background:#fbfcfe}
+  .codeblock .cb-tag{font-family:var(--mono);font-size:.74rem;color:var(--muted);padding:7px 14px;border-bottom:1px solid var(--line);background:var(--panel-2);display:flex;justify-content:space-between;gap:10px}
+  .codeblock .cb-tag .nm{color:var(--code);font-weight:600}
+
+  /* mapping table */
+  .maptable{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem;background:var(--panel);border:1px solid var(--line);border-radius:11px;overflow:hidden}
+  .maptable th,.maptable td{padding:9px 14px;text-align:left;border-bottom:1px solid var(--line)}
+  .maptable thead th{font-family:var(--display);font-weight:600;font-size:.82rem}
+  .maptable thead th:first-child{color:var(--formal)}
+  .maptable thead th:last-child{color:var(--code)}
+  .maptable tbody tr:last-child td{border-bottom:0}
+  .maptable td:first-child{font-family:var(--mono);font-size:.86rem;color:var(--formal)}
+  .maptable td:last-child{font-family:var(--mono);font-size:.86rem;color:var(--code)}
+  .maptable td .muted{color:var(--muted);font-family:var(--sans);font-size:.85rem}
+  .maptable tr.eng td:first-child{color:var(--muted)}
+
+  /* PCS chain */
+  .chainwrap{background:var(--panel);border:1px solid var(--line-strong);border-radius:12px;padding:20px 18px;margin:18px 0}
+  .chain{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;font-family:var(--mono)}
+  .node{
+    border:1px solid var(--line-strong);border-radius:9px;padding:9px 15px;font-size:.9rem;font-weight:600;background:var(--panel-2);color:var(--ink)
+  }
+  .node.child{background:var(--code-tint);border-color:var(--code-line);color:var(--code)}
+  .node.bound{background:var(--formal-tint);border-color:var(--formal-line);color:var(--formal);font-size:1.05rem}
+  .ar{color:var(--muted);font-size:1.3rem;line-height:1}
+  .chain-cap{text-align:center;color:var(--muted);font-family:var(--mono);font-size:.78rem;margin-top:12px}
+  .triples{font-family:var(--mono);font-size:.82rem;color:var(--ink-soft);margin-top:16px;display:flex;flex-direction:column;gap:4px;align-items:center;line-height:1.5}
+  .triples .t{background:var(--panel-2);border:1px solid var(--line);border-radius:6px;padding:3px 10px}
+
+  /* PCS anatomy svg holder */
+  .anatomy{background:var(--panel);border:1px solid var(--line-strong);border-radius:12px;padding:18px;margin:18px 0}
+  .anatomy svg{width:100%;height:auto;max-width:460px;display:block;margin:0 auto}
+
+  /* steps (real sequence) */
+  .steps{margin:18px 0;display:flex;flex-direction:column;gap:12px}
+  .step{display:grid;grid-template-columns:34px 1fr;gap:14px;align-items:start}
+  .step-n{font-family:var(--display);font-weight:600;color:var(--formal);border:1px solid var(--formal-line);background:var(--formal-tint);border-radius:8px;height:34px;display:flex;align-items:center;justify-content:center;font-size:.95rem}
+  .step-b{border:1px solid var(--line);border-radius:11px;background:var(--panel);overflow:hidden}
+  .step-b .sh{padding:10px 14px;font-weight:600;font-family:var(--display);font-size:.98rem;border-bottom:1px solid var(--line)}
+  .step-b .sc{padding:0}
+  .step-b pre{border-radius:0}
+  .step-b .sd{padding:10px 14px;color:var(--muted);font-size:.9rem}
+
+  /* diff two columns */
+  .diffgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+  @media(max-width:720px){.diffgrid{grid-template-columns:1fr}}
+  .diffcol{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel)}
+  .diffcol .dh{font-family:var(--display);font-weight:600;font-size:.92rem;padding:10px 14px;border-bottom:1px solid var(--line)}
+  .diffcol .dh.same{color:var(--muted)}
+  .diffcol .dh.same .badge,.diffcol .dh.chg .badge{font-family:var(--mono);font-size:.68rem;font-weight:600;border-radius:20px;padding:2px 9px;margin-left:8px}
+  .diffcol .dh.same .badge{background:var(--panel-2);color:var(--muted);border:1px solid var(--line)}
+  .diffcol .dh.chg{color:var(--del)}
+  .diffcol .dh.chg .badge{background:var(--del-tint);color:var(--del);border:1px solid #f0cfcc}
+  .diffcol ul{list-style:none;margin:0;padding:10px 14px;font-family:var(--mono);font-size:.8rem;line-height:1.7}
+  .diffcol li{padding:2px 8px;border-radius:5px}
+  .diffcol li.unchanged{color:var(--ink-soft)}
+  .diffcol li.removed{background:var(--del-tint);color:var(--del);text-decoration:line-through;text-decoration-color:rgba(180,35,24,.5)}
+  .diffcol li.added{background:var(--add-tint);color:var(--add)}
+
+  /* callout */
+  .callout{border:1px solid var(--line);border-left:3px solid var(--formal);background:var(--formal-tint);border-radius:0 11px 11px 0;padding:13px 16px;margin:16px 0;font-size:.94rem;color:var(--ink-soft)}
+  .callout.warn{border-left-color:var(--del);background:var(--del-tint)}
+  .callout.code{border-left-color:var(--code);background:var(--code-tint)}
+  .callout b{color:var(--ink)}
+
+  /* difference blocks */
+  .diffblock{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:16px 0;background:var(--panel)}
+  .diffblock .db-h{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:baseline}
+  .diffblock .db-h .dl{font-family:var(--mono);font-size:.75rem;color:var(--del);border:1px solid #f0cfcc;background:var(--del-tint);border-radius:20px;padding:2px 10px;flex:0 0 auto}
+  .diffblock .db-h .dt{font-family:var(--display);font-weight:600;font-size:1.02rem}
+  .diffblock .db-b{padding:14px 16px}
+  .diffblock .db-b p:last-child{margin-bottom:0}
+
+  /* summary */
+  .summary{padding:48px 0 30px;border-top:2px solid var(--ink)}
+  .sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+  @media(max-width:720px){.sum-grid{grid-template-columns:1fr}}
+  .sum-card{border:1px solid var(--line);border-radius:12px;padding:16px 17px;background:var(--panel)}
+  .sum-card h4{margin:0 0 8px;font-family:var(--display);font-size:1rem}
+  .sum-card.ok h4{color:var(--code)}
+  .sum-card.simplify h4{color:var(--formal)}
+  .sum-card ul{margin:0;padding-left:18px;font-size:.92rem;color:var(--ink-soft);line-height:1.65}
+  .sum-card li{margin-bottom:5px}
+  .verdict{margin-top:22px;font-size:1rem;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:18px}
+
+  footer{padding:26px 0 50px;color:var(--muted);font-family:var(--mono);font-size:.76rem;border-top:1px solid var(--line);text-align:center}
+
+  /* load reveal (single, restrained) */
+  @media(prefers-reduced-motion:no-preference){
+    .hero>*{animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
+    .hero .eyebrow{animation-delay:.02s}
+    .hero h1{animation-delay:.08s}
+    .hero .lede{animation-delay:.16s}
+    .hero .decomp{animation-delay:.24s}
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  :focus-visible{outline:2px solid var(--formal);outline-offset:2px;border-radius:3px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="brand"><b>A Three-way Merge for XML Documents</b> · §2.3 · Pcs.scala</div>
+    <div class="legend">
+      <span class="k"><span class="swatch sw-f"></span>论文形式模型</span>
+      <span class="k"><span class="swatch sw-c"></span>Pcs.scala 实现</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap wide">
+  <header class="hero">
+    <p class="eyebrow">论文第 3 页 · 集合运算的前提，而非合并算法本身</p>
+    <h1>可用于集合运算的<br>XML 树表示</h1>
+    <p class="lede">§2.3 的核心是先定义一种能做差集与并集的 XML 树表示。后续的编辑检测 <code>E = T* − T0*</code> 与三路协调，全部建立在这个表示之上。</p>
+
+    <div class="decomp">
+      <div class="decomp-col">
+        <svg class="minitree" viewBox="0 0 210 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="有序 XML 树：根 us 有两个子节点 u1 u2">
+          <line x1="105" y1="46" x2="60" y2="98" stroke="#c2cbd8" stroke-width="1.6"/>
+          <line x1="105" y1="46" x2="150" y2="98" stroke="#c2cbd8" stroke-width="1.6"/>
+          <g font-family="IBM Plex Mono, monospace" font-size="13" font-weight="600">
+            <rect x="82" y="20" width="46" height="30" rx="8" fill="#f3f6fa" stroke="#c2cbd8"/>
+            <text x="105" y="39" text-anchor="middle" fill="#14161c">us</text>
+            <rect x="38" y="98" width="44" height="30" rx="8" fill="#e3f3f0" stroke="#bfe3dc"/>
+            <text x="60" y="117" text-anchor="middle" fill="#0d7d6f">u1</text>
+            <rect x="128" y="98" width="44" height="30" rx="8" fill="#e3f3f0" stroke="#bfe3dc"/>
+            <text x="150" y="117" text-anchor="middle" fill="#0d7d6f">u2</text>
+          </g>
+        </svg>
+        <div class="tree-cap">有序树 · 每节点唯一 label</div>
+      </div>
+
+      <div class="arrow">
+        <span class="glyph">→</span>
+        relations()
+      </div>
+
+      <div class="decomp-col">
+        <div class="setbox f">
+          <div class="st">Content 集合</div>
+          <div>c(us, …)</div>
+          <div>c(u1, …)  <span class="dim">节点内容</span></div>
+          <div>c(u2, …)</div>
+        </div>
+        <div class="setbox c">
+          <div class="st">PCS 集合</div>
+          <div>pcs(us, ⊣, u1)</div>
+          <div>pcs(us, u1, u2)  <span class="dim">父子 + 顺序</span></div>
+          <div>pcs(us, u2, ⊢)</div>
+        </div>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="wrap">
+
+  <!-- 1 -->
+  <section>
+    <div class="sec-head"><span class="sec-idx">01</span><h2>XML 树的定义</h2></div>
+    <p class="sec-sub">节点 = 身份 + 内容；整棵树用两种关系表达</p>
+    <p>论文把 XML 文档视为<strong>一棵有顺序的、每个节点具有唯一标签的树</strong>。每个节点承载两类信息：<span class="fx">节点身份</span>（label，例如 <code class="inl">a0</code>、<code class="inl">b0</code>）与<span class="fx">节点内容</span>（元素名、属性、文本等）。</p>
+    <p class="note">整棵树随后被两种关系完全表达：<strong>Content 关系</strong>描述“某个标签的节点内容是什么”，<strong>PCS 关系</strong>描述“节点之间的父子与前后顺序”。这两组关系放进统一集合后，就能用集合差集来表达文档之间的编辑。</p>
+  </section>
+
+  <!-- 2 -->
+  <section>
+    <div class="sec-head"><span class="sec-idx">02</span><h2>Content 关系 <span class="fnote">c(n, c)</span></h2></div>
+    <p class="sec-sub">标签为 n 的节点，其内容是 c</p>
+    <p>例如 <span class="fnote">c(a0, {type:element, name:a, attributes:{}})</span> 表示 <code class="inl">a0</code> 是一个名为 <code class="inl">&lt;a&gt;</code> 的元素。实现侧对应一个 case class：</p>
+
+    <div class="pair">
+      <div class="card f">
+        <div class="tag"><span>论文 · 形式定义</span></div>
+        <div class="body">
+          <p style="font-family:var(--mono);font-size:.85rem;color:var(--formal);margin:0 0 8px">c(n, c)</p>
+          <p style="margin:0;font-size:.9rem">n 为标签，c 为该节点的完整内容描述（元素名、属性、字符数据）。</p>
+        </div>
+      </div>
+      <div class="card c">
+        <div class="tag"><span>Pcs.scala · 实现</span><span class="file">line 28</span></div>
+        <pre><span class="kw">case class</span> Content(
+  label: String,
+  tag: String,
+  attributes: Seq[(String, String)],
+  text: Option[String] = None,
+  textIsCData: Boolean = <span class="kw">false</span>
+)</pre>
+      </div>
+    </div>
+
+    <table class="maptable">
+      <thead><tr><th>论文</th><th>Pcs.scala</th></tr></thead>
+      <tbody>
+        <tr><td>节点标签 n</td><td>label</td></tr>
+        <tr><td>element name</td><td>tag</td></tr>
+        <tr><td>attributes</td><td>attributes</td></tr>
+        <tr><td>text character data</td><td>text</td></tr>
+        <tr class="eng"><td>（论文未区分）</td><td>textIsCData</td></tr>
+      </tbody>
+    </table>
+    <div class="callout code"><b>textIsCData</b> 是分支为了 XML round-trip 增加的工程字段，不属于论文模型的原有字段。</div>
+  </section>
+
+  <!-- 3 -->
+  <section>
+    <div class="sec-head"><span class="sec-idx">03</span><h2>PCS 关系 <span class="fnote">pcs(r, p, s)</span></h2></div>
+    <p class="sec-sub">父子关系与 sibling 顺序，一次编码两件事</p>
+    <p>论文定义 <span class="fnote">pcs(r, p, s)</span> 表示：<strong>r 是 p 和 s 的父节点</strong>，且在 r 的有序子节点列表中，<strong>s 紧跟在 p 后面</strong>。</p>
+
+    <div class="anatomy">
+      <svg viewBox="0 0 460 190" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PCS 关系结构：父节点 r 下，predecessor p 后紧跟 successor s">
+        <!-- parent -->
+        <rect x="185" y="18" width="90" height="34" rx="9" fill="#f3f6fa" stroke="#c2cbd8"/>
+        <text x="230" y="40" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" font-weight="600" fill="#14161c">r (parent)</text>
+        <!-- edges from parent -->
+        <line x1="230" y1="52" x2="120" y2="108" stroke="#c2cbd8" stroke-width="1.5"/>
+        <line x1="230" y1="52" x2="340" y2="108" stroke="#c2cbd8" stroke-width="1.5"/>
+        <!-- children -->
+        <rect x="58" y="108" width="124" height="36" rx="9" fill="#e3f3f0" stroke="#bfe3dc"/>
+        <text x="120" y="131" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" font-weight="600" fill="#0d7d6f">p (predecessor)</text>
+        <rect x="278" y="108" width="124" height="36" rx="9" fill="#e3f3f0" stroke="#bfe3dc"/>
+        <text x="340" y="131" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" font-weight="600" fill="#0d7d6f">s (successor)</text>
+        <!-- sibling order arrow -->
+        <defs>
+          <marker id="ah" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+            <path d="M0,0 L9,4.5 L0,9 Z" fill="#5a3ec8"/>
+          </marker>
+        </defs>
+        <line x1="182" y1="126" x2="272" y2="126" stroke="#5a3ec8" stroke-width="2" marker-end="url(#ah)"/>
+        <text x="230" y="175" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11.5" fill="#5a3ec8">s 紧跟 p（有序）</text>
+      </svg>
+    </div>
+
+    <div class="pair">
+      <div class="card c">
+        <div class="tag"><span>Pcs.scala · 实现</span><span class="file">line 20</span></div>
+        <pre><span class="kw">case class</span> Pcs(
+  parent: String,
+  predecessor: Sibling,
+  successor: Sibling
+)</pre>
+      </div>
+      <div class="card f">
+        <div class="tag"><span>示例</span></div>
+        <pre>Pcs(
+  <span class="st2">"spread"</span>,
+  SiblingNode(<span class="st2">"u1"</span>),
+  SiblingNode(<span class="st2">"u2"</span>)
+)</pre>
+        <div class="body"><p style="margin:0;font-size:.88rem">在 spread 的子节点列表里，u2 紧跟 u1，且二者父节点都是 spread。</p></div>
+      </div>
+    </div>
+    <div class="callout"><b>为什么比普通 parent-child 边更适合三路合并：</b>PCS 同时编码父子关系与 sibling 顺序，一条关系里就带上了“谁在谁后面”，因此顺序变化也能通过集合差集被检测到。</div>
+  </section>
+
+  <!-- 4 -->
+  <section>
+    <div class="sec-head"><span class="sec-idx">04</span><h2>列表边界标记 <span class="fnote">⊣ ⊢</span></h2></div>
+    <p class="sec-sub">让第一个和最后一个子节点也有前驱、后继</p>
+    <p>为使首、末子节点也拥有前驱与后继，论文引入两个<strong>不能被编辑的特殊标记</strong>：<span class="fx">⊣</span>（列表开始）与 <span class="fx">⊢</span>（列表结束）。</p>
+
+    <div class="codeblock">
+      <div class="cb-tag"><span class="nm">Pcs.scala</span><span>line 12 · Sibling 密封类型</span></div>
+      <pre><span class="kw">sealed trait</span> Sibling
+
+<span class="kw">case class</span> SiblingNode(label: String) <span class="kw">extends</span> Sibling
+<span class="kw">case object</span> ListStart <span class="kw">extends</span> Sibling  <span class="cm">// ⊣</span>
+<span class="kw">case object</span> ListEnd   <span class="kw">extends</span> Sibling  <span class="cm">// ⊢</span></pre>
+    </div>
+
+    <p>若某个 Spread 的子节点顺序是 <code class="inl">u1, u2</code>，则展开为一条带边界的链：</p>
+    <div class="chainwrap">
+      <div class="chain">
+        <span class="node bound">⊣</span><span class="ar">→</span>
+        <span class="node child">u1</span><span class="ar">→</span>
+        <span class="node child">u2</span><span class="ar">→</span>
+        <span class="node bound">⊢</span>
+      </div>
+      <div class="triples">
+        <span class="t">Pcs("spread", ListStart, SiblingNode("u1"))</span>
+        <span class="t">Pcs("spread", SiblingNode("u1"), SiblingNode("u2"))</span>
+        <span class="t">Pcs("spread", SiblingNode("u2"), ListEnd)</span>
+      </div>
+      <div class="chain-cap">开头插入 · 结尾插入 · 交换 · 删除首末 —— 全部统一为 PCS 关系变化</div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section>
+    <div class="sec-head"><span class="sec-idx">05</span><h2>叶节点也有 PCS 关系</h2></div>
+    <p class="sec-sub">即使没有子节点，也产生一条空链 <span class="fnote">pcs(n, ⊣, ⊢)</span></p>
+    <p>论文规定，即使节点没有任何子节点，也要产生一条从列表开始直接指向列表结束的空链。</p>
+
+    <div class="chainwrap">
+      <div class="chain">
+        <span class="node bound">⊣</span><span class="ar">→</span>
+        <span class="node bound">⊢</span>
+      </div>
+      <div class="triples"><span class="t">Pcs(parentLabel, ListStart, ListEnd)</span></div>
+      <div class="chain-cap">siblings 为空时的结果</div>
+    </div>
+
+    <div class="codeblock">
+      <div class="cb-tag"><span class="nm">Pcs.scala</span><span>line 117 · zip 构链</span></div>
+      <pre><span class="kw">val</span> chain =
+  (ListStart +: siblings) <span class="st2">zip</span>
+  (siblings :+ ListEnd)
+
+<span class="cm">// siblings 为空时：</span>
+<span class="cm">//   ListStart +: Nil  ->  Seq(ListStart)</span>
+<span class="cm">//   Nil :+ ListEnd    ->  Seq(ListEnd)</span>
+<span class="cm">//   zip 得到          ->  (ListStart, ListEnd)</span></pre>
+    </div>
+    <div class="callout">保证每个元素节点<b>至少有一条 PCS 关系</b>，后续算法无需为叶节点单独编写特殊分支。</div>
+  </section>
+
+  <!-- 6 -->
+  <section>
+    <div class="sec-head"><span class="sec-idx">06</span><h2>relations 如何分解整棵树</h2></div>
+    <p class="sec-sub">入口 <code class="inl">relations(root, labelOf)</code>（line 113），递归函数 go 对每个节点执行四步</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">1</div>
+        <div class="step-b">
+          <div class="sh">生成节点内容</div>
+          <div class="sc"><pre><span class="kw">val</span> here = Content(
+  labelOf(ref),
+  ref.element.tag,
+  ref.element.attributes,
+  leafText(ref.element),
+  leafIsCData(ref.element)
+)</pre></div>
+          <div class="sd">为当前节点生成一个 c(n, c)。</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">2</div>
+        <div class="step-b">
+          <div class="sh">取得元素子节点</div>
+          <div class="sc"><pre><span class="kw">val</span> kids =
+  ref.element.childElements.zipWithIndex.map {
+    <span class="kw">case</span> (c, i) =&gt; NodeRef(ref.path.child(i), c)
+  }</pre></div>
+          <div class="sd">只把 GenericElement 放进 PCS 链；GenericText 不作为独立结构节点。</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">3</div>
+        <div class="step-b">
+          <div class="sh">生成 PCS 链</div>
+          <div class="sc"><pre><span class="kw">val</span> siblings = kids.map(k =&gt; SiblingNode(labelOf(k)))
+<span class="kw">val</span> chain    = (ListStart +: siblings) <span class="st2">zip</span> (siblings :+ ListEnd)
+<span class="kw">val</span> pcsHere  = chain.map { <span class="kw">case</span> (p, s) =&gt; Pcs(labelOf(ref), p, s) }.toSet</pre></div>
+          <div class="sd">若子节点为 [u1,u2]，chain 为 (⊣,u1) (u1,u2) (u2,⊢)。</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-n">4</div>
+        <div class="step-b">
+          <div class="sh">递归并求并集</div>
+          <div class="sc"><pre><span class="kw">val</span> below = kids.map(go)
+
+RelationSet(
+  pcsHere ++ below.flatMap(_.pcs),
+  Set(here) ++ below.flatMap(_.content)
+)</pre></div>
+          <div class="sd">当前节点与所有后代的关系合并为一个 RelationSet。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout code">论文把所有关系放在<b>统一集合 Tk</b> 中；Scala 实现为了类型安全，将它拆成 <code class="inl" style="border-color:var(--code-line);background:var(--code-tint);color:var(--code)">pcs</code> 与 <code class="inl" style="border-color:var(--code-line);background:var(--code-tint);color:var(--code)">content</code> 两个集合（<code class="inl">RelationSet(pcs, content)</code>）。</div>
+  </section>
+
+  <!-- 7 -->
+  <section>
+    <div class="sec-head"><span class="sec-idx">07</span><h2>一个 IDML 示例</h2></div>
+    <p class="sec-sub">纯 reorder 如何体现在两个集合上</p>
+
+    <div class="codeblock">
+      <div class="cb-tag"><span class="nm">输入 XML</span></div>
+      <pre>&lt;Spread Self=<span class="st2">"us"</span>&gt;
+  &lt;Rectangle Self=<span class="st2">"u1"</span>/&gt;
+  &lt;Rectangle Self=<span class="st2">"u2"</span>/&gt;
+&lt;/Spread&gt;</pre>
+    </div>
+
+    <div class="pair">
+      <div class="card f">
+        <div class="tag"><span>content 集合</span></div>
+        <pre>Content(<span class="st2">"us"</span>, <span class="st2">"Spread"</span>, …)
+Content(<span class="st2">"u1"</span>, <span class="st2">"Rectangle"</span>, …)
+Content(<span class="st2">"u2"</span>, <span class="st2">"Rectangle"</span>, …)</pre>
+      </div>
+      <div class="card c">
+        <div class="tag"><span>pcs 集合</span></div>
+        <pre>Pcs(<span class="st2">"us"</span>, ListStart, u1)
+Pcs(<span class="st2">"us"</span>, u1, u2)
+Pcs(<span class="st2">"us"</span>, u2, ListEnd)
+Pcs(<span class="st2">"u1"</span>, ListStart, ListEnd)
+Pcs(<span class="st2">"u2"</span>, ListStart, ListEnd)</pre>
+      </div>
+    </div>
+
+    <p class="note">若把顺序改为 <code class="inl">u2, u1</code>，三个 Content 完全不变，而父节点的 PCS 关系全部改变：</p>
+
+    <div class="diffgrid">
+      <div class="diffcol">
+        <div class="dh same">content 集合<span class="badge">三条不变</span></div>
+        <ul>
+          <li class="unchanged">Content("us", "Spread", …)</li>
+          <li class="unchanged">Content("u1", "Rectangle", …)</li>
+          <li class="unchanged">Content("u2", "Rectangle", …)</li>
+        </ul>
+      </div>
+      <div class="diffcol">
+        <div class="dh chg">pcs 集合（父节点 us）<span class="badge">三条改变</span></div>
+        <ul>
+          <li class="removed">Pcs("us", ListStart, u1)</li>
+          <li class="removed">Pcs("us", u1, u2)</li>
+          <li class="removed">Pcs("us", u2, ListEnd)</li>
+          <li class="added">Pcs("us", ListStart, u2)</li>
+          <li class="added">Pcs("us", u2, u1)</li>
+          <li class="added">Pcs("us", u1, ListEnd)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout"><b>结论：</b>PCS 模型能够检测纯 reorder；而只比较属性的 EditDetector 检测不到这种变化。</div>
+  </section>
+
+  <!-- 8 -->
+  <section>
+    <div class="sec-head"><span class="sec-idx">08</span><h2>节点标签如何映射到 IDML</h2></div>
+    <p class="sec-sub">论文假设 label 在所有版本中唯一且稳定</p>
+
+    <div class="codeblock">
+      <div class="cb-tag"><span class="nm">Pcs.scala</span><span>line 68 · label 规则</span></div>
+      <pre><span class="kw">def</span> label(ref: NodeRef): String =
+  ref.self.getOrElse(ref.path.toString)</pre>
+    </div>
+
+    <div class="pair">
+      <div class="card c">
+        <div class="tag"><span>有 IDML Self</span></div>
+        <pre>&lt;Rectangle Self=<span class="st2">"u13d"</span>/&gt;
+<span class="cm">// label = "u13d"</span></pre>
+      </div>
+      <div class="card c">
+        <div class="tag"><span>没有 Self → 用路径</span></div>
+        <pre>&lt;Properties&gt;…&lt;/Properties&gt;
+<span class="cm">// label = "/0/2"</span></pre>
+      </div>
+    </div>
+
+    <div class="callout warn"><b>路径匹配的隐患：</b>相同 path 字符串会在不同版本间被视为同一 label。只要结构不移动，这种位置匹配可以工作；<b>一旦前面插入或删除 sibling，路径就会漂移，甚至匹配到错误节点</b>。因此弱身份文档需要先经 <code class="inl">ContentMatcher.matchedLabel</code> 把 modified 节点映射回 base 标签。</div>
+  </section>
+
+  <!-- 9 -->
+  <section>
+    <div class="sec-head"><span class="sec-idx">09</span><h2>代码与论文第 2.3 节的两个关键差异</h2></div>
+    <p class="sec-sub">实现更紧凑，但覆盖范围小于完整模型</p>
+
+    <div class="diffblock">
+      <div class="db-h"><span class="dl">差异一</span><span class="dt">文本节点没有作为独立 PCS 节点</span></div>
+      <div class="db-b">
+        <div class="pair" style="margin-top:0">
+          <div class="card f">
+            <div class="tag"><span>论文 · 建两个节点</span></div>
+            <pre><span class="cm">// &lt;a&gt;hello&lt;/a&gt;</span>
+<span class="cm">// a0 元素节点，b0 文本节点</span>
+pcs(a0, ⊣, b0)
+pcs(a0, b0, ⊢)
+pcs(b0, ⊣, ⊢)
+c(a0, element a)
+c(b0, text <span class="st2">"hello"</span>)</pre>
+          </div>
+          <div class="card c">
+            <div class="tag"><span>代码 · 文本折叠进内容</span></div>
+            <pre>Content(<span class="st2">"/"</span>, <span class="st2">"a"</span>, Nil, Some(<span class="st2">"hello"</span>))
+Pcs(<span class="st2">"/"</span>, ListStart, ListEnd)</pre>
+          </div>
+        </div>
+        <div class="callout warn" style="margin-bottom:0"><b>后果：</b>实现更紧凑，但无法完整表示 <code class="inl">&lt;p&gt;Hello &lt;b&gt;world&lt;/b&gt;!&lt;/p&gt;</code> 这类 text 与 element 交错的 mixed content。</div>
+      </div>
+    </div>
+
+    <div class="diffblock">
+      <div class="db-h"><span class="dl">差异二</span><span class="dt">没有显式人工根节点 ⊥</span></div>
+      <div class="db-b">
+        <div class="pair" style="margin-top:0">
+          <div class="card f">
+            <div class="tag"><span>论文 · 给真实根加人工父</span></div>
+            <pre>pcs(⊥0, ⊣, root)
+pcs(⊥0, root, ⊢)</pre>
+          </div>
+          <div class="card c">
+            <div class="tag"><span>代码 · 直接从真实 root 开始</span></div>
+            <pre>go(NodeRef(NodePath.root, root))
+<span class="cm">// 不生成 ⊥ 关系</span></pre>
+          </div>
+        </div>
+        <div class="callout" style="margin-bottom:0"><code class="inl">Pcs.relations</code> 直接从真实 root 递归，不建立人工根；后续重建依赖单独保存的 <code class="inl">rootLabel</code>。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- summary -->
+  <section class="summary">
+    <div class="sec-head"><span class="sec-idx" style="color:var(--ink)">∑</span><h2>总结</h2></div>
+    <p class="sec-sub">对论文最核心思想的实现是准确的，代价是两个工程简化</p>
+
+    <div class="sum-grid">
+      <div class="sum-card ok">
+        <h4>准确实现的核心</h4>
+        <ul>
+          <li>将有序 XML 树分解成 Content 集合与 PCS 邻接关系集合</li>
+          <li>使内容更新、插入、删除、移动都能通过集合差异表达</li>
+          <li>纯 reorder 可被 PCS 检测，属性级检测器无法覆盖</li>
+        </ul>
+      </div>
+      <div class="sum-card simplify">
+        <h4>两个工程简化</h4>
+        <ul>
+          <li>文本叶节点折叠进父元素的 Content</li>
+          <li>不建立论文中的人工根节点 ⊥</li>
+          <li>统一集合 Tk 拆为 pcs / content 两集合</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="verdict">这套表示对以 <strong>Self、属性和元素顺序</strong>为核心的 IDML 结构非常实用；但对 <strong>Story mixed content</strong>、<strong>根节点冲突</strong>和<strong>完整 XML Infoset</strong> 仍不够完整。</p>
+  </section>
+
+  <footer>
+    图解依据论文原文第 3 页与 Pcs.scala 源码行号 · 双域对照：论文形式模型 / Pcs.scala 实现
+  </footer>
+
+</div>
+</body>
+</html>

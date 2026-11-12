@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>三方 XML 合并测试计划图解</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F3F6F8; --panel:#FFFFFF; --panel-2:#FAFCFD;
+  --ink:#15212C; --ink-soft:#48596A; --ink-faint:#7A8996;
+  --line:#DCE4EA; --line-2:#C6D2DB;
+  --t0:#5C7080; --t1:#1590A6; --t2:#A24C86; --tm:#2C9C6A;
+  --t0-ink:#4A5D6B; --t1-ink:#0E7C8E; --t2-ink:#8E3F73; --tm-ink:#218254;
+  --t0-bg:#F1F3F5; --t1-bg:#EBF6F8; --t2-bg:#F6ECF2; --tm-bg:#E8F5EE;
+  --ins:#2C9C6A; --upd:#C67A1E; --del:#CE4B42; --mov:#5B6CC4;
+  --upd-ink:#9E5C10; --del-ink:#B23A30; --mov-ink:#4756A8;
+  --upd-bg:#FBF1E3; --del-bg:#FBE9E7; --mov-bg:#ECEEFA;
+  --o-bg:#E7F1FB; --o-ink:#26658F;
+  --node:#6E7F8C; --edge:#B7C2CC; --arrow:#9AA9B5;
+  --nt-bg:#EAF0F3; --nt-line:#DCE6EA; --nt-ink:#14323A;
+  --link:#0E7C8E;
+  --code-bg:#10202B; --code-ink:#D6E3EA;
+  --font-cjk:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC","Noto Sans CJK SC","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:"JetBrains Mono","SF Mono",ui-monospace,Menlo,Consolas,"DejaVu Sans Mono",monospace;
+  --maxw:1180px;
+  --content:800px;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E161C; --panel:#141F27; --panel-2:#17232C;
+    --ink:#E2EAF0; --ink-soft:#A7B6C1; --ink-faint:#7D8E9A;
+    --line:#24333E; --line-2:#33454F;
+    --t0:#8597A5; --t1:#35B0C6; --t2:#CC77AF; --tm:#46BC86;
+    --t0-ink:#A9BAC6; --t1-ink:#5CC6D8; --t2-ink:#DD96C4; --tm-ink:#66CF9E;
+    --t0-bg:#1A262E; --t1-bg:#10303A; --t2-bg:#33202C; --tm-bg:#11301F;
+    --ins:#46BC86; --upd:#DD9541; --del:#E2675E; --mov:#7F8EE4;
+    --upd-ink:#E9AE63; --del-ink:#F08A82; --mov-ink:#9EA9EE;
+    --upd-bg:#36291A; --del-bg:#3A1E1C; --mov-bg:#1F2442;
+    --o-bg:#15283A; --o-ink:#7DB6E0;
+    --node:#5D6F7C; --edge:#3D4F5B; --arrow:#5D707D;
+    --nt-bg:#1C2A33; --nt-line:#2A3A45; --nt-ink:#CFE3EA;
+    --link:#4FB8CB;
+    --code-bg:#0A141B; --code-ink:#D6E3EA;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E161C; --panel:#141F27; --panel-2:#17232C;
+  --ink:#E2EAF0; --ink-soft:#A7B6C1; --ink-faint:#7D8E9A;
+  --line:#24333E; --line-2:#33454F;
+  --t0:#8597A5; --t1:#35B0C6; --t2:#CC77AF; --tm:#46BC86;
+  --t0-ink:#A9BAC6; --t1-ink:#5CC6D8; --t2-ink:#DD96C4; --tm-ink:#66CF9E;
+  --t0-bg:#1A262E; --t1-bg:#10303A; --t2-bg:#33202C; --tm-bg:#11301F;
+  --ins:#46BC86; --upd:#DD9541; --del:#E2675E; --mov:#7F8EE4;
+  --upd-ink:#E9AE63; --del-ink:#F08A82; --mov-ink:#9EA9EE;
+  --upd-bg:#36291A; --del-bg:#3A1E1C; --mov-bg:#1F2442;
+  --o-bg:#15283A; --o-ink:#7DB6E0;
+  --node:#5D6F7C; --edge:#3D4F5B; --arrow:#5D707D;
+  --nt-bg:#1C2A33; --nt-line:#2A3A45; --nt-ink:#CFE3EA;
+  --link:#4FB8CB;
+  --code-bg:#0A141B; --code-ink:#D6E3EA;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 24px);}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--font-cjk);font-size:17px;line-height:1.75;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+code,.mono{font-family:var(--font-mono);}
+a{color:var(--link);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--link) 40%,transparent);}
+a:hover{border-bottom-color:var(--link);}
+a:focus-visible,button:focus-visible{outline:2px solid var(--t1);outline-offset:2px;border-radius:4px;}
+
+/* ---------- HERO (fixed dark band, as in the reference page) ---------- */
+.hero{position:relative;overflow:hidden;background:linear-gradient(180deg,#0F1B25 0%,#132532 100%);
+  color:#EAF1F5;padding:64px 24px 52px;border-bottom:1px solid var(--line);}
+.hero .grid-bg{position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:34px 34px;-webkit-mask-image:radial-gradient(ellipse 80% 90% at 50% 30%,#000 40%,transparent 90%);
+  mask-image:radial-gradient(ellipse 80% 90% at 50% 30%,#000 40%,transparent 90%);}
+.hero-inner{position:relative;max-width:var(--maxw);margin:0 auto;}
+.kicker{font-family:var(--font-mono);font-size:12.5px;color:#8FB6C4;margin:0 0 14px;}
+.hero h1{font-size:clamp(28px,4.6vw,46px);line-height:1.18;margin:0 0 14px;font-weight:800;letter-spacing:.01em;}
+.hero .sub{max-width:680px;color:#B6C7D1;font-size:17px;margin:0 0 6px;line-height:1.7;}
+.hero .byline{font-family:var(--font-mono);color:#7E97A4;font-size:12.5px;margin-top:16px;}
+.hero-fig{margin-top:30px;width:100%;height:auto;max-width:840px;display:block;}
+
+/* ---------- LAYOUT ---------- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;
+  display:grid;grid-template-columns:220px minmax(0,1fr);gap:48px;align-items:start;}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 20px);align-self:start;padding:26px 0 40px;}
+.toc h4{font-size:12.5px;color:var(--ink-faint);font-weight:700;margin:0 0 12px;}
+.toc ol{list-style:none;margin:0;padding:0;}
+.toc a{display:block;padding:5px 12px;border-left:2px solid var(--line);color:var(--ink-soft);
+  font-size:14px;line-height:1.5;border-bottom:none;transition:color .15s,border-color .15s;}
+.toc a:hover{color:var(--ink);}
+.toc a.active{color:var(--t1-ink);border-left-color:var(--t1);font-weight:600;}
+.toc a .n{font-family:var(--font-mono);color:var(--ink-faint);font-size:12px;margin-right:8px;display:inline-block;min-width:16px;}
+.content{min-width:0;max-width:var(--content);padding:36px 0 90px;}
+section{scroll-margin-top:24px;padding:24px 0 8px;border-top:1px solid var(--line);margin-top:32px;}
+section:first-of-type{border-top:none;margin-top:8px;}
+.sec-tag{font-family:var(--font-mono);font-size:12.5px;color:var(--t1-ink);font-weight:600;display:inline-block;margin-bottom:6px;}
+h2{font-size:26px;line-height:1.3;margin:2px 0 16px;font-weight:800;}
+h3{font-size:18.5px;margin:32px 0 10px;font-weight:700;color:var(--ink);}
+p{margin:14px 0;}
+.lead{font-size:17.5px;color:var(--ink-soft);}
+strong,b{font-weight:700;}
+.nt{font-family:var(--font-mono);background:var(--nt-bg);border-radius:5px;padding:1px 6px;
+  font-size:.86em;color:var(--nt-ink);border:1px solid var(--nt-line);white-space:nowrap;}
+
+/* ---------- FIGURE ---------- */
+figure{margin:24px 0;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 20px 14px;}
+figure svg{width:100%;height:auto;display:block;}
+.fig-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.fig-scroll>svg{min-width:620px;}
+figcaption{font-size:13.5px;color:var(--ink-faint);margin-top:12px;line-height:1.7;padding-top:10px;border-top:1px dashed var(--line);}
+figcaption b{color:var(--ink-soft);}
+
+/* SVG classes: every colour comes from a token, so figures follow light and dark mode */
+figure svg text{font-family:var(--font-cjk);fill:var(--ink);}
+figure svg .m{font-family:var(--font-mono);}
+figure svg .b{font-weight:700;}
+figure svg .s{fill:var(--ink-soft);}
+figure svg .f{fill:var(--ink-faint);}
+figure svg .k0{fill:var(--t0-ink);}
+figure svg .k1{fill:var(--t1-ink);}
+figure svg .k2{fill:var(--t2-ink);}
+figure svg .km{fill:var(--tm-ink);}
+figure svg .kd{fill:var(--del-ink);}
+figure svg .ku{fill:var(--upd-ink);}
+figure svg .ko{fill:var(--o-ink);}
+figure svg .nl{fill:#fff;font-family:var(--font-mono);font-weight:700;}
+figure svg .nd,figure svg .chip{fill:var(--node);}
+figure svg .nu{fill:var(--upd);}
+figure svg .d1{fill:var(--t1);}
+figure svg .d2{fill:var(--t2);}
+figure svg .rg{stroke:var(--mov);stroke-width:3;}
+figure svg .nx{fill:none;stroke:var(--del);stroke-width:2;stroke-dasharray:3 3;}
+figure svg .xl{stroke:var(--del);stroke-width:2;}
+figure svg .ed{stroke:var(--edge);stroke-width:1.6;fill:none;}
+figure svg .edx{stroke:var(--del);stroke-width:1.4;stroke-dasharray:3 3;fill:none;opacity:.6;}
+figure svg .ar{stroke:var(--arrow);stroke-width:1.8;fill:none;}
+figure svg .ah{fill:var(--arrow);}
+figure svg .dv{stroke:var(--line-2);stroke-dasharray:4 4;fill:none;}
+figure svg .sp{stroke:var(--line-2);stroke-width:1;fill:none;}
+figure svg .sp2{stroke:var(--ink-faint);stroke-width:1.4;fill:none;}
+figure svg .bx{fill:var(--panel);stroke:var(--line-2);}
+figure svg .bx2{fill:var(--panel-2);stroke:var(--line-2);}
+figure svg .b0{fill:var(--t0-bg);stroke:var(--t0);}
+figure svg .b1{fill:var(--t1-bg);stroke:var(--t1);}
+figure svg .b2{fill:var(--t2-bg);stroke:var(--t2);}
+figure svg .bm{fill:var(--tm-bg);stroke:var(--tm);}
+figure svg .bd{fill:var(--del-bg);stroke:var(--del);}
+figure svg .bu{fill:var(--upd-bg);stroke:var(--upd);}
+figure svg .bo{fill:var(--o-bg);stroke:var(--o-ink);}
+figure svg .fp{fill:var(--panel);}
+figure svg .fp2{fill:var(--panel-2);}
+figure svg .f0{fill:var(--t0-bg);}
+figure svg .f1{fill:var(--t1-bg);}
+figure svg .f2{fill:var(--t2-bg);}
+figure svg .fn{fill:none;}
+figure svg .lp{stroke:var(--ink-soft);stroke-width:1.6;}
+figure svg .lj{stroke:var(--ink-soft);stroke-width:1.6;stroke-dasharray:7 5;}
+figure svg .li{stroke:var(--ink-soft);stroke-width:2.2;stroke-dasharray:.5 5;stroke-linecap:round;}
+figure svg .le{stroke:var(--ink-soft);stroke-width:1.1;}
+figure svg .cx{stroke:var(--del);stroke-width:1.8;fill:none;}
+figure svg .mt{stroke:var(--ink-faint);stroke-width:1.4;stroke-dasharray:2 3;fill:none;}
+figure svg .mx{stroke:var(--del);stroke-width:1.6;stroke-dasharray:5 3;fill:none;}
+figure svg .tmo{stroke:var(--tm);stroke-width:2;stroke-dasharray:6 4;fill:none;}
+figure svg .dl{stroke:var(--ink);stroke-width:2;fill:none;}
+figure svg .ht{stroke:var(--del);stroke-width:1.3;opacity:.5;}
+figure svg .bxd{fill:none;stroke:var(--del);stroke-width:1.6;stroke-dasharray:4 3;}
+figure svg .ck{fill:var(--panel);stroke:var(--t1);stroke-width:1.6;}
+figure svg .bk{stroke:var(--tm);stroke-width:1.6;fill:none;}
+
+/* ---------- legend (overview) ---------- */
+.lg{display:grid;grid-template-columns:56px 1fr;gap:12px 14px;margin:20px 0;font-size:14.5px;align-items:center;}
+.lg dt{font-size:13px;color:var(--ink-faint);}
+.lg dd{margin:0;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;color:var(--ink-soft);}
+.sw{display:inline-flex;align-items:center;gap:7px;}
+.sq{width:12px;height:12px;border-radius:3px;display:inline-block;}
+.dotn{width:13px;height:13px;border-radius:50%;display:inline-block;}
+.dotn.del{border:2px dashed var(--del);}
+.dotn.mov{background:var(--node);box-shadow:inset 0 0 0 2.5px var(--mov);}
+.lsw{display:inline-block;width:30px;height:0;border-top:2px solid var(--ink-soft);}
+.lsw.j{border-top-style:dashed;}
+.lsw.i{border-top-style:dotted;border-top-width:3px;}
+.lsw.e{border-top-style:double;border-top-width:5px;}
+
+/* ---------- callouts ---------- */
+.note{border-left:3px solid var(--tm);background:var(--panel-2);border-radius:0 10px 10px 0;padding:14px 18px;margin:18px 0;font-size:15.5px;}
+.note .lbl{font-size:13px;color:var(--tm-ink);font-weight:700;display:block;margin-bottom:4px;}
+.note.info{border-left-color:var(--t1);}
+.note.info .lbl{color:var(--t1-ink);}
+.note.o{border-left-color:var(--o-ink);}
+.note.o .lbl{color:var(--o-ink);}
+
+/* ---------- tables ---------- */
+.spec{width:100%;border-collapse:collapse;margin:18px 0;font-size:15px;}
+.spec td{padding:10px 4px;border-bottom:1px solid var(--line);vertical-align:top;}
+.spec td:first-child{color:var(--ink-faint);width:150px;font-size:14px;padding-right:14px;}
+.spec.code td:first-child{font-family:var(--font-mono);color:var(--ink);font-size:13.5px;width:170px;}
+.spec.code td:nth-child(2){font-family:var(--font-mono);font-size:13.5px;width:70px;color:var(--tm-ink);font-weight:700;}
+.spec.code td:nth-child(3){color:var(--ink-soft);}
+
+.badge{display:inline-block;font-family:var(--font-mono);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;vertical-align:middle;}
+.badge.c{background:var(--del-bg);color:var(--del-ink);}
+.badge.o{background:var(--o-bg);color:var(--o-ink);}
+
+/* ---------- coverage matrix ---------- */
+.chips-legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:16px 0 4px;font-size:13.5px;color:var(--ink-soft);align-items:center;}
+.matrix{border-collapse:separate;border-spacing:6px;width:100%;min-width:720px;font-size:13px;line-height:1.55;table-layout:fixed;}
+.matrix th{font-family:var(--font-mono);font-size:12.5px;color:var(--ink-soft);font-weight:700;text-align:left;padding:4px 6px;white-space:nowrap;}
+.matrix thead th{border-bottom:1.5px solid var(--line-2);}
+.matrix tbody th{vertical-align:top;padding-top:10px;}
+.matrix td{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:8px 9px;vertical-align:top;}
+.matrix td.sym{background:transparent;border:none;color:var(--line-2);text-align:center;vertical-align:middle;font-family:var(--font-mono);font-size:15px;}
+.case{display:block;margin:0 0 9px;}
+.case:last-child{margin-bottom:0;}
+.case .rel{display:block;font-size:12px;color:var(--ink-faint);margin-bottom:2px;}
+.out{display:inline-block;font-style:normal;font-size:12.5px;padding:1px 7px;border-radius:6px;line-height:1.55;margin:1px 4px 1px 0;}
+.out.ok{background:var(--tm-bg);color:var(--tm-ink);}
+.out.c{background:var(--del-bg);color:var(--del-ink);}
+.out.o{background:var(--o-bg);color:var(--o-ink);}
+.out.pol{border:1.5px dashed var(--ink-faint);color:var(--ink-soft);padding:0 6px;}
+.out.ext{color:var(--ink-faint);padding-left:0;}
+.ref{display:block;font-family:var(--font-mono);font-size:11.5px;color:var(--ink-faint);margin-top:2px;}
+.mx-extra{display:grid;gap:6px;margin-top:12px;font-size:14px;color:var(--ink-soft);}
+.mx-extra .ref-in{font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);margin-left:6px;}
+
+/* ---------- tabs ---------- */
+.tabs{display:flex;gap:8px;margin:18px 0 0;flex-wrap:wrap;}
+.tab-btn{font-family:var(--font-cjk);font-size:14px;padding:8px 14px;border-radius:8px;border:1px solid var(--line-2);
+  background:var(--panel);color:var(--ink-soft);cursor:pointer;transition:color .15s,background .15s;}
+.tab-btn:hover{color:var(--ink);}
+.tab-btn.active{background:var(--ink);color:var(--panel);border-color:var(--ink);}
+.tab-panel{display:none;margin-top:6px;}
+.tab-panel.active{display:block;}
+.tab-panel>p{margin:14px 0 0;color:var(--ink-soft);font-size:15.5px;}
+
+/* ---------- lists ---------- */
+.checks{list-style:none;padding:0;margin:12px 0 18px;}
+.checks li{position:relative;padding:7px 0 7px 32px;border-bottom:1px solid var(--line);font-size:16px;}
+.checks li::before{content:"";position:absolute;left:3px;top:13px;width:15px;height:15px;border-radius:4px;background:var(--tm-bg);border:1.5px solid var(--tm);}
+.checks li::after{content:"";position:absolute;left:7.5px;top:16.5px;width:7px;height:3.5px;border-left:2px solid var(--tm-ink);border-bottom:2px solid var(--tm-ink);transform:rotate(-45deg);}
+.steps{list-style:none;counter-reset:s;padding:0;margin:16px 0;}
+.steps>li{position:relative;padding:11px 0 11px 46px;border-bottom:1px solid var(--line);font-size:16px;}
+.steps>li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:12px;width:30px;height:24px;border-radius:6px;
+  background:var(--t0);color:#fff;font-family:var(--font-mono);font-size:12.5px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.steps .to{font-size:13px;margin-left:8px;white-space:nowrap;}
+.steps.chk>li::before{background:var(--panel);color:var(--t1-ink);border:1.6px solid var(--t1);border-radius:50%;width:24px;left:3px;}
+
+/* ---------- sample directory ---------- */
+.dirtree{display:grid;grid-template-columns:max-content 1fr;gap:9px 24px;align-items:baseline;font-size:15px;}
+.dirtree .p{font-family:var(--font-mono);font-size:13.5px;white-space:pre;color:var(--ink-faint);}
+.dirtree .p b{font-weight:700;}
+.dirtree .d{color:var(--ink-soft);}
+.c0{color:var(--t0-ink);} .c1{color:var(--t1-ink);} .c2{color:var(--t2-ink);} .cm{color:var(--tm-ink);} .cx{color:var(--ink);}
+
+/* ---------- assertion cards ---------- */
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0;}
+.duo .card{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:14px 16px;min-width:0;}
+.duo .card h4{margin:0 0 4px;font-size:15px;}
+.duo .card p{margin:8px 0 0;font-size:14.5px;color:var(--ink-soft);}
+.duo .card.pri{border-color:var(--tm);}
+.duo .card.pri h4{color:var(--tm-ink);}
+pre.algo{background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:14px 16px;overflow-x:auto;
+  font-family:var(--font-mono);font-size:12.8px;line-height:1.7;margin:10px 0 0;}
+pre.algo .cm{color:#6F8C9C;}
+pre.algo .kw{color:#7FD4E0;}
+pre.algo .fn{color:#F2C97D;}
+
+/* ---------- conflict record ---------- */
+.rec{border:1px solid var(--line-2);border-radius:12px;background:var(--panel);overflow:hidden;margin:20px 0;}
+.rec-h{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 16px;background:var(--panel-2);border-bottom:1px solid var(--line);font-size:14px;font-weight:700;}
+.rec dl{display:grid;grid-template-columns:120px 1fr;margin:0;}
+.rec dt,.rec dd{padding:9px 16px;border-bottom:1px solid var(--line);margin:0;font-size:15px;}
+.rec dt{color:var(--ink-faint);font-size:13.5px;}
+.rec dl>*:nth-last-child(-n+2){border-bottom:none;}
+.vals{display:flex;gap:8px;flex-wrap:wrap;}
+.val{font-family:var(--font-mono);font-size:13px;padding:1px 8px;border-radius:6px;border:1px solid;}
+.val.v0{background:var(--t0-bg);border-color:var(--t0);color:var(--t0-ink);}
+.val.v1{background:var(--t1-bg);border-color:var(--t1);color:var(--t1-ink);}
+.val.v2{background:var(--t2-bg);border-color:var(--t2);color:var(--t2-ink);}
+
+/* ---------- traceability matrix ---------- */
+.trace{width:100%;border-collapse:collapse;font-size:14.5px;min-width:640px;}
+.trace th{text-align:left;font-size:13px;color:var(--ink-faint);font-weight:700;padding:8px;border-bottom:1.5px solid var(--line-2);}
+.trace td{padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink-soft);}
+.trace td.id{font-family:var(--font-mono);font-size:13px;white-space:nowrap;color:var(--ink);}
+.src{display:inline-block;font-size:12.5px;padding:1px 8px;border-radius:6px;margin:2px 6px 2px 0;color:var(--ink-soft);border:1.5px solid var(--ink-faint);white-space:nowrap;}
+.src.j{border-style:dashed;}
+.src.i{border-style:dotted;border-width:2px;}
+.src.e{border-style:double;border-width:3.5px;}
+
+/* ---------- footer & responsive ---------- */
+.foot{max-width:var(--maxw);margin:0 auto;padding:28px 24px 56px;color:var(--ink-faint);font-size:13px;border-top:1px solid var(--line);}
+.toc-toggle{display:none;}
+@media (max-width:920px){
+  .wrap{grid-template-columns:1fr;gap:0;}
+  .toc{position:static;padding:0;border-bottom:1px solid var(--line);}
+  .toc h4{display:none;}
+  .toc-toggle{display:block;width:100%;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;margin:18px 0 0;font-family:var(--font-cjk);font-size:14px;color:var(--ink-soft);cursor:pointer;}
+  .toc ol{display:none;padding:10px 0 6px;}
+  .toc.open ol{display:block;}
+  .content{padding-top:20px;}
+}
+@media (max-width:700px){
+  .duo{grid-template-columns:1fr;}
+  .dirtree{grid-template-columns:1fr;gap:2px;}
+  .dirtree .d{margin-bottom:10px;}
+  .rec dl{grid-template-columns:1fr;}
+  .rec dt{border-bottom:none;padding-bottom:0;}
+}
+@media (max-width:560px){
+  body{font-size:16px;}
+  figure{padding:16px 12px 10px;}
+  .hero{padding:48px 18px 40px;}
+  .spec td:first-child{width:110px;}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="grid-bg"></div>
+  <div class="hero-inner">
+    <p class="kicker">测试计划图解 · 依据 Lindholm, DocEng ’04</p>
+    <h1>三方 XML 合并测试计划图解</h1>
+    <p class="sub">按测试计划的九个部分逐一配图，每张图注明对应的论文章节或项目规则。</p>
+    <p class="byline">论文：Tancred Lindholm, A Three-way Merge for XML Documents, DocEng 2004　·　版式沿用 Three-way_XML_Merge.html</p>
+
+    <svg class="hero-fig" viewBox="0 0 820 290" role="img" aria-label="三方合并流程与五个测试层">
+      <defs>
+        <marker id="hah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8FB6C4"/></marker>
+        <marker id="hahf" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4C6472"/></marker>
+      </defs>
+      <g fill="none" stroke-width="2">
+        <path d="M120,115 C190,115 232,60 294,60" stroke="#8FB6C4" marker-end="url(#hah)"/>
+        <path d="M120,115 C190,115 232,170 294,170" stroke="#8FB6C4" marker-end="url(#hah)"/>
+        <path d="M366,60 C440,60 484,115 546,115" stroke="#8FB6C4" marker-end="url(#hah)"/>
+        <path d="M366,170 C440,170 484,115 546,115" stroke="#8FB6C4" marker-end="url(#hah)"/>
+        <path d="M120,115 L546,115" stroke="#4C6472" stroke-width="1.6" stroke-dasharray="5 5" marker-end="url(#hahf)"/>
+        <path d="M622,115 L686,115" stroke="#8FB6C4" marker-end="url(#hah)"/>
+      </g>
+      <g font-family="'JetBrains Mono','SF Mono',ui-monospace,monospace" font-size="11.5" fill="#9CC0CD">
+        <text x="330" y="107" text-anchor="middle" fill="#6E8896">base</text>
+        <text x="176" y="76">E1</text>
+        <text x="176" y="164">E2</text>
+      </g>
+      <g font-family="-apple-system,'PingFang SC','Microsoft YaHei','Noto Sans SC','Noto Sans CJK SC',sans-serif" font-size="12" fill="#9CC0CD">
+        <text x="478" y="74">协调</text>
+        <text x="478" y="164">协调</text>
+        <text x="654" y="105" text-anchor="middle">写包</text>
+      </g>
+
+      <!-- T0 -->
+      <g transform="translate(90,115)">
+        <line x1="0" y1="-18" x2="-20" y2="14" stroke="#476070" stroke-width="2"/>
+        <line x1="0" y1="-18" x2="20" y2="14" stroke="#476070" stroke-width="2"/>
+        <circle cx="0" cy="-18" r="13" fill="#5C7080"/>
+        <circle cx="-20" cy="14" r="10" fill="#728794"/>
+        <circle cx="20" cy="14" r="10" fill="#728794"/>
+        <text x="0" y="-40" text-anchor="middle" fill="#CFE0E8" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="13" font-weight="700">T0</text>
+        <text x="0" y="43" text-anchor="middle" fill="#8AA6B3" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5">base</text>
+      </g>
+      <!-- T1 -->
+      <g transform="translate(330,60)">
+        <line x1="0" y1="-18" x2="-20" y2="14" stroke="#0E7C8E" stroke-width="2"/>
+        <line x1="0" y1="-18" x2="20" y2="14" stroke="#0E7C8E" stroke-width="2"/>
+        <circle cx="0" cy="-18" r="13" fill="#1590A6"/>
+        <circle cx="-20" cy="14" r="10" fill="#3BA7BA"/>
+        <circle cx="20" cy="14" r="10" fill="#3BA7BA"/>
+        <text x="0" y="-38" text-anchor="middle" fill="#BEE6EE" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="13" font-weight="700">T1 · left</text>
+      </g>
+      <!-- T2 -->
+      <g transform="translate(330,170)">
+        <line x1="0" y1="-18" x2="-20" y2="14" stroke="#8E3F73" stroke-width="2"/>
+        <line x1="0" y1="-18" x2="20" y2="14" stroke="#8E3F73" stroke-width="2"/>
+        <circle cx="0" cy="-18" r="13" fill="#A24C86"/>
+        <circle cx="-20" cy="14" r="10" fill="#B96AA0"/>
+        <circle cx="20" cy="14" r="10" fill="#B96AA0"/>
+        <text x="0" y="44" text-anchor="middle" fill="#E4BFD6" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="13" font-weight="700">T2 · right</text>
+      </g>
+      <!-- Tm -->
+      <g transform="translate(584,115)">
+        <line x1="0" y1="-20" x2="-24" y2="16" stroke="#218254" stroke-width="2"/>
+        <line x1="0" y1="-20" x2="0" y2="16" stroke="#218254" stroke-width="2"/>
+        <line x1="0" y1="-20" x2="24" y2="16" stroke="#218254" stroke-width="2"/>
+        <circle cx="0" cy="-20" r="14" fill="#2C9C6A"/>
+        <circle cx="-24" cy="16" r="11" fill="#49B487"/>
+        <circle cx="0" cy="16" r="11" fill="#49B487"/>
+        <circle cx="24" cy="16" r="11" fill="#49B487"/>
+        <text x="0" y="-42" text-anchor="middle" fill="#BFEBD6" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="14" font-weight="700">Tm</text>
+        <text x="0" y="46" text-anchor="middle" fill="#8FCFB1" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="10.5">merged</text>
+      </g>
+      <!-- IDML package -->
+      <path d="M690,97 Q690,89 698,89 L758,89 L774,105 L774,133 Q774,141 766,141 L698,141 Q690,141 690,133 Z" fill="#16303D" stroke="#8FB6C4" stroke-width="1.6"/>
+      <path d="M758,89 L758,105 L774,105" fill="none" stroke="#8FB6C4" stroke-width="1.4"/>
+      <text x="731" y="120" text-anchor="middle" fill="#CFE0E8" font-family="'JetBrains Mono',ui-monospace,monospace" font-size="13" font-weight="700">IDML</text>
+
+      <!-- five test layers mapped onto the flow -->
+      <line x1="150" y1="242" x2="770" y2="242" stroke="#29404E" stroke-width="1.5"/>
+      <g font-family="'JetBrains Mono',ui-monospace,monospace" font-size="11.5" font-weight="700" text-anchor="middle" fill="#CFE0E8">
+        <circle cx="205" cy="242" r="11" fill="#132532" stroke="#8FB6C4" stroke-width="1.5"/><text x="205" y="246">1</text>
+        <circle cx="330" cy="242" r="11" fill="#132532" stroke="#8FB6C4" stroke-width="1.5"/><text x="330" y="246">2</text>
+        <circle cx="462" cy="242" r="11" fill="#132532" stroke="#8FB6C4" stroke-width="1.5"/><text x="462" y="246">3</text>
+        <circle cx="584" cy="242" r="11" fill="#132532" stroke="#8FB6C4" stroke-width="1.5"/><text x="584" y="246">4</text>
+        <circle cx="731" cy="242" r="11" fill="#132532" stroke="#8FB6C4" stroke-width="1.5"/><text x="731" y="246">5</text>
+      </g>
+      <g font-family="-apple-system,'PingFang SC','Microsoft YaHei','Noto Sans SC','Noto Sans CJK SC',sans-serif" font-size="12.5" text-anchor="middle" fill="#9CC0CD">
+        <text x="205" y="274">节点匹配</text>
+        <text x="330" y="274">PCS 关系</text>
+        <text x="462" y="274">编辑检测与协调</text>
+        <text x="584" y="274">重建 Tm</text>
+        <text x="731" y="274">IDML 包</text>
+      </g>
+    </svg>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <nav class="toc" id="toc" aria-label="目录">
+    <button class="toc-toggle" id="tocToggle" aria-expanded="false" aria-controls="tocList">目录 ▾</button>
+    <h4>目录</h4>
+    <ol id="tocList">
+      <li><a href="#overview"><span class="n">00</span>记号与图目录</a></li>
+      <li><a href="#basis"><span class="n">一</span>预期依据</a></li>
+      <li><a href="#samples"><span class="n">二</span>测试样本</a></li>
+      <li><a href="#layers"><span class="n">三</span>五层测试</a></li>
+      <li><a href="#matrix"><span class="n">四</span>场景矩阵</a></li>
+      <li><a href="#assert"><span class="n">五</span>断言方式</a></li>
+      <li><a href="#props"><span class="n">六</span>性质测试</a></li>
+      <li><a href="#corpus"><span class="n">七</span>现有用例</a></li>
+      <li><a href="#idml"><span class="n">八</span>IDML 端到端</a></li>
+      <li><a href="#plan"><span class="n">九</span>实施顺序</a></li>
+    </ol>
+  </nav>
+
+  <main class="content">
+
+    <!-- ===== OVERVIEW ===== -->
+    <section id="overview">
+      <span class="sec-tag">总览</span>
+      <h2>记号与图目录</h2>
+      <p class="lead">全页沿用论文图解的配色：颜色区分版本与操作，边框线型区分预期依据的来源。</p>
+      <dl class="lg">
+        <dt>版本</dt>
+        <dd>
+          <span class="sw"><i class="sq" style="background:var(--t0)"></i>T0 base</span>
+          <span class="sw"><i class="sq" style="background:var(--t1)"></i>T1 left</span>
+          <span class="sw"><i class="sq" style="background:var(--t2)"></i>T2 right</span>
+          <span class="sw"><i class="sq" style="background:var(--tm)"></i>Tm merged</span>
+        </dd>
+        <dt>操作</dt>
+        <dd>
+          <span class="sw"><i class="dotn" style="background:var(--ins)"></i>insert</span>
+          <span class="sw"><i class="dotn" style="background:var(--upd)"></i>update</span>
+          <span class="sw"><i class="dotn del"></i>delete</span>
+          <span class="sw"><i class="dotn mov"></i>move</span>
+        </dd>
+        <dt>依据</dt>
+        <dd>
+          <span class="sw"><i class="lsw"></i>论文规则</span>
+          <span class="sw"><i class="lsw j"></i>项目策略</span>
+          <span class="sw"><i class="lsw i"></i>IDML 规则</span>
+          <span class="sw"><i class="lsw e"></i>工程契约</span>
+        </dd>
+        <dt>冲突</dt>
+        <dd>
+          <span class="sw"><span class="badge c">C</span>core：无法构造一致的 Δ</span>
+          <span class="sw"><span class="badge o">O</span>optional：需要单独检测</span>
+        </dd>
+      </dl>
+      <table class="spec">
+        <tr><td>一　预期依据</td><td>欧拉图：四层依据的适用范围</td></tr>
+        <tr><td>二　测试样本</td><td>T0、T1、T2、Tm 树图；样本目录图</td></tr>
+        <tr><td>三　五层测试</td><td>数据流图：匹配、PCS、编辑检测与协调、重建、IDML 包</td></tr>
+        <tr><td>四　场景矩阵</td><td>覆盖矩阵；guards、删除祖先、无 Self 匹配三张细节图</td></tr>
+        <tr><td>五　断言方式</td><td>欧拉图：E ⊂ Δ ⊂ T*；冲突记录示例</td></tr>
+        <tr><td>六　性质测试</td><td>交换图；恒等关系表；编辑保留对照图</td></tr>
+        <tr><td>七　现有用例</td><td>需求追溯矩阵</td></tr>
+        <tr><td>八　IDML 端到端</td><td>有向依赖图；冲突输出流程图</td></tr>
+        <tr><td>九　实施顺序</td><td>步骤列表；耗时分段示意图</td></tr>
+      </table>
+    </section>
+
+    <!-- ===== 一 预期依据 ===== -->
+    <section id="basis">
+      <span class="sec-tag">一 · 论文 §3.1、§5、§6</span>
+      <h2>测试预期按来源分四层</h2>
+      <p class="lead">先确定预期依据，再写断言。预期以规则为准，不以实现当前的行为为准。</p>
+
+      <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 720 330" role="img" aria-label="四层预期依据的包含关系">
+          <!-- 工程契约：双线 -->
+          <rect x="12" y="12" width="696" height="306" rx="18" class="fn le"/>
+          <rect x="16" y="16" width="688" height="298" rx="15" class="fn le"/>
+          <text x="32" y="42" font-size="13.5" class="b">工程契约 · merge driver 接口契约</text>
+          <text x="32" y="62" font-size="12" class="f">例：冲突时不覆盖输入文件；输出包能够重新打开</text>
+          <text x="692" y="42" font-size="12" text-anchor="end" class="f">按 IdmlMergeDriver 契约验收</text>
+          <!-- IDML：点线 -->
+          <rect x="36" y="76" width="648" height="230" rx="16" class="fp2 li"/>
+          <text x="56" y="102" font-size="13.5" class="b">IDML 领域规则 · 业务约束</text>
+          <text x="56" y="122" font-size="12" class="f">例：TextFrame 串联引用一致；ParentStory 指向存在的 Story</text>
+          <text x="668" y="102" font-size="12" text-anchor="end" class="f">跨 part 引用在 PCS 树模型之外（§9）</text>
+          <!-- 项目：虚线 -->
+          <rect x="60" y="138" width="600" height="158" rx="14" class="fp lj"/>
+          <text x="80" y="164" font-size="13.5" class="b">项目细化 · 项目声明的合并策略</text>
+          <text x="80" y="184" font-size="12" class="f">例：同一元素的不同属性分别修改时自动合并</text>
+          <text x="644" y="164" font-size="12" text-anchor="end" class="f">严格 Delete/Edit、文本 token 模式在此声明</text>
+          <!-- 论文：实线 -->
+          <rect x="84" y="200" width="552" height="86" rx="12" class="f0 lp"/>
+          <text x="104" y="226" font-size="13.5" class="b">论文规则 · 通用树合并（§3.1、§5、§6）</text>
+          <text x="104" y="246" font-size="12" class="f">例：移动节点与修改其内容可以合并；结构关系不能互相矛盾</text>
+          <text x="104" y="270" font-size="12" class="ko">Delete/Edit 为可选冲突（O，§6.3）</text>
+        </svg>
+        </div>
+        <figcaption><b>图 1</b>　欧拉图表示适用范围：内层是论文的通用树合并，向外依次是项目细化、IDML 领域规则和工程契约。边框线型与全页记号一致。</figcaption>
+      </figure>
+
+      <div class="note o"><span class="lbl">Delete/Edit 属于可选冲突</span>§6.3（第 8 页）：基础算法允许编辑留在被删除的子树中，避免丢失编辑需要额外检查。项目采用严格策略时，在测试中明确声明。</div>
+      <div class="note o"><span class="lbl">文本 token merge 属于项目策略</span>§2.3（第 3 页）把文本节点的字符数据视为内容；§7（第 9 页）讨论了文本局部匹配与格式结构变化的局限。同一文本节点中两处不重叠的修改是否自动合并，由项目策略决定。</div>
+      <div class="note o"><span class="lbl">跨文件引用另设测试层</span>ParentStory、NextTextFrame 等跨 XML 文件的引用语义，不在通用 PCS 树模型之内。§9（第 10 页）把领域知识专门化列为后续方向。</div>
+    </section>
+
+    <!-- ===== 二 测试样本 ===== -->
+    <section id="samples">
+      <span class="sec-tag">二 · 论文 §2.1、§3、§3.1</span>
+      <h2>两类样本：最小 XML 与完整 IDML</h2>
+      <p class="lead">沿用论文 §3（第 4 页）的做法：准备输入 XML，明确合并任务，手工构造预期结果。小型抽象案例验证单一规则，真实文档案例验证产品行为。</p>
+
+      <h3>最小 XML 样本：左侧移动，右侧修改内容</h3>
+      <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 720 290" role="img" aria-label="最小样本：T1 移动 b，T2 修改 b 的 FillColor">
+          <line x1="180" y1="8" x2="180" y2="282" class="dv"/>
+          <line x1="360" y1="8" x2="360" y2="282" class="dv"/>
+          <line x1="540" y1="8" x2="540" y2="282" class="dv"/>
+
+          <!-- T0 -->
+          <g>
+            <text x="90" y="20" text-anchor="middle" font-size="12.5" class="m b k0">T0 base</text>
+            <line x1="90" y1="54" x2="40" y2="114" class="ed"/><line x1="90" y1="54" x2="90" y2="114" class="ed"/><line x1="90" y1="54" x2="140" y2="114" class="ed"/>
+            <circle cx="90" cy="54" r="15" class="nd"/><text x="90" y="55" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">s</text>
+            <circle cx="40" cy="114" r="14" class="nd"/><text x="40" y="115" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">a</text>
+            <circle cx="90" cy="114" r="14" class="nd"/><text x="90" y="115" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">b</text>
+            <circle cx="140" cy="114" r="14" class="nd"/><text x="140" y="115" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">c</text>
+            <text x="40" y="148" text-anchor="middle" font-size="10.5" class="m f">None</text>
+            <text x="90" y="148" text-anchor="middle" font-size="10.5" class="m f">None</text>
+            <text x="140" y="148" text-anchor="middle" font-size="10.5" class="m f">None</text>
+            <text x="90" y="178" text-anchor="middle" font-size="12.5" class="m s">⊣ a b c ⊢</text>
+            <text x="90" y="204" text-anchor="middle" font-size="11.5" class="f">协调中移除的 base 关系</text>
+            <text x="90" y="224" text-anchor="middle" font-size="11.5" class="m f">pcs(s,a,b)</text>
+            <text x="90" y="242" text-anchor="middle" font-size="11.5" class="m f">pcs(s,b,c)</text>
+            <text x="90" y="260" text-anchor="middle" font-size="11.5" class="m f">pcs(s,c,⊢)</text>
+            <text x="90" y="278" text-anchor="middle" font-size="11.5" class="m f">c(b,None)</text>
+          </g>
+          <!-- T1 -->
+          <g transform="translate(180,0)">
+            <text x="90" y="20" text-anchor="middle" font-size="12.5" class="m b k1">T1 left</text>
+            <line x1="90" y1="54" x2="40" y2="114" class="ed"/><line x1="90" y1="54" x2="90" y2="114" class="ed"/><line x1="90" y1="54" x2="140" y2="114" class="ed"/>
+            <circle cx="90" cy="54" r="15" class="nd"/><text x="90" y="55" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">s</text>
+            <circle cx="40" cy="114" r="14" class="nd"/><text x="40" y="115" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">a</text>
+            <circle cx="90" cy="114" r="14" class="nd"/><text x="90" y="115" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">c</text>
+            <circle cx="140" cy="114" r="14" class="nd rg"/><text x="140" y="115" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">b</text>
+            <text x="40" y="148" text-anchor="middle" font-size="10.5" class="m f">None</text>
+            <text x="90" y="148" text-anchor="middle" font-size="10.5" class="m f">None</text>
+            <text x="140" y="148" text-anchor="middle" font-size="10.5" class="m f">None</text>
+            <text x="90" y="178" text-anchor="middle" font-size="12.5" class="m s">⊣ a c b ⊢</text>
+            <text x="90" y="204" text-anchor="middle" font-size="11.5" class="k1">T1 的编辑</text>
+            <text x="90" y="224" text-anchor="middle" font-size="11.5" class="m k1">pcs(s,a,c)</text>
+            <text x="90" y="242" text-anchor="middle" font-size="11.5" class="m k1">pcs(s,c,b)</text>
+            <text x="90" y="260" text-anchor="middle" font-size="11.5" class="m k1">pcs(s,b,⊢)</text>
+          </g>
+          <!-- T2 -->
+          <g transform="translate(360,0)">
+            <text x="90" y="20" text-anchor="middle" font-size="12.5" class="m b k2">T2 right</text>
+            <line x1="90" y1="54" x2="40" y2="114" class="ed"/><line x1="90" y1="54" x2="90" y2="114" class="ed"/><line x1="90" y1="54" x2="140" y2="114" class="ed"/>
+            <circle cx="90" cy="54" r="15" class="nd"/><text x="90" y="55" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">s</text>
+            <circle cx="40" cy="114" r="14" class="nd"/><text x="40" y="115" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">a</text>
+            <circle cx="90" cy="114" r="14" class="nu"/><text x="90" y="115" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">b′</text>
+            <circle cx="140" cy="114" r="14" class="nd"/><text x="140" y="115" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">c</text>
+            <text x="40" y="148" text-anchor="middle" font-size="10.5" class="m f">None</text>
+            <text x="90" y="148" text-anchor="middle" font-size="10.5" class="m b ku">Red</text>
+            <text x="140" y="148" text-anchor="middle" font-size="10.5" class="m f">None</text>
+            <text x="90" y="178" text-anchor="middle" font-size="12.5" class="m s">⊣ a b c ⊢</text>
+            <text x="90" y="204" text-anchor="middle" font-size="11.5" class="k2">T2 的编辑</text>
+            <text x="90" y="224" text-anchor="middle" font-size="11.5" class="m k2">c(b,FillColor=Red)</text>
+          </g>
+          <!-- Tm -->
+          <g transform="translate(540,0)">
+            <text x="90" y="20" text-anchor="middle" font-size="12.5" class="m b km">Tm merged</text>
+            <line x1="90" y1="54" x2="40" y2="114" class="ed"/><line x1="90" y1="54" x2="90" y2="114" class="ed"/><line x1="90" y1="54" x2="140" y2="114" class="ed"/>
+            <circle cx="90" cy="54" r="15" class="nd"/><text x="90" y="55" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">s</text>
+            <circle cx="40" cy="114" r="14" class="nd"/><text x="40" y="115" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">a</text>
+            <circle cx="90" cy="114" r="14" class="nd"/><text x="90" y="115" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">c</text>
+            <circle cx="140" cy="114" r="14" class="nu rg"/><text x="140" y="115" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">b′</text>
+            <text x="40" y="148" text-anchor="middle" font-size="10.5" class="m f">None</text>
+            <text x="90" y="148" text-anchor="middle" font-size="10.5" class="m f">None</text>
+            <text x="140" y="148" text-anchor="middle" font-size="10.5" class="m b ku">Red</text>
+            <text x="90" y="178" text-anchor="middle" font-size="12.5" class="m km">⊣ a c b ⊢</text>
+            <text x="90" y="204" text-anchor="middle" font-size="11.5" class="km">Tm 的预期</text>
+            <text x="90" y="224" text-anchor="middle" font-size="11.5" class="m km">b.FillColor=Red</text>
+            <text x="90" y="242" text-anchor="middle" font-size="11.5" class="km">b 只出现一次</text>
+            <text x="90" y="260" text-anchor="middle" font-size="11.5" class="km">其余保持原值</text>
+          </g>
+        </svg>
+        </div>
+        <figcaption><b>图 2</b>　T1 把 b 移到末尾，T2 把 b.FillColor 改为 Red。T1 的三条结构编辑与 T2 的一条内容编辑互不矛盾；协调阶段只移除来自 base 的关系，Tm 同时含有移动与修改。依据：§2.1（第 2 页）；§3.1 规则 4、7（第 4—5 页）。</figcaption>
+      </figure>
+
+      <p>预期必须同时满足：</p>
+      <ul class="checks">
+        <li>合并成功</li>
+        <li>子节点顺序为 <span class="nt">a, c, b</span></li>
+        <li><span class="nt">b.FillColor == Red</span></li>
+        <li>b 只出现一次</li>
+        <li>其他节点及属性保持原值</li>
+      </ul>
+      <div class="note info"><span class="lbl">选择依据</span>移动与内容修改的组合，对应 §2.1 强调的 reorganization in the large 与 updates to the details，比单独检测 move 更能验证论文的核心能力。</div>
+
+      <h3>完整 IDML 样本：验证最终产品行为</h3>
+      <figure>
+        <div class="dirtree">
+          <span class="p"><b class="cx">case-name/</b></span><span class="d">一个场景一个目录</span>
+          <span class="p">├─ <b class="c0">base.idml</b></span><span class="d">共同祖先 T0</span>
+          <span class="p">├─ <b class="c1">left.idml</b></span><span class="d">T1；与 right 从同一个 base 副本产生</span>
+          <span class="p">├─ <b class="c2">right.idml</b></span><span class="d">T2</span>
+          <span class="p">├─ <b class="cm">expected.json</b></span><span class="d">预期结果：成功或冲突，以及冲突对象</span>
+          <span class="p">├─ <b class="cm">expected/</b></span><span class="d">成功案例的预期 XML，或明确的语义断言</span>
+          <span class="p">└─ <b class="cx">README.md</b></span><span class="d">左右分支各做了什么；对应的论文章节和规则；合并策略；应当成功或冲突的理由；样本由 XML 构造，还是由 InDesign 实际编辑导出</span>
+        </div>
+        <figcaption><b>图 3</b>　每个场景一个目录。已有 three-way-corpus 的 15 组 base/left/right/expected.json 可直接作为起点；这些包由 XML 构造，InDesign 实际导出的样本另作验收。</figcaption>
+      </figure>
+
+      <p>构造样本时：</p>
+      <ul class="checks">
+        <li>两个分支从同一个关闭保存后的 base 副本产生</li>
+        <li>未变化节点保留原 Self</li>
+        <li>新节点使用不会意外碰撞的身份</li>
+        <li>无 Self 的节点，单独记录预期匹配关系</li>
+        <li>expected 不由待测 merger 生成</li>
+      </ul>
+      <div class="note info"><span class="lbl">Self 与匹配</span>保留 Self 是项目可靠的样本策略。§4（第 5 页）要求的是正确的节点匹配（R1 一对一，R2–R5 等价关系），并未规定使用 Self。</div>
+    </section>
+
+    <!-- ===== 三 五层测试 ===== -->
+    <section id="layers">
+      <span class="sec-tag">三 · 论文 §2、§2.3、§4、§5、§6</span>
+      <h2>五层测试对齐论文的处理流程</h2>
+      <p class="lead">每层单独断言，错误可以定位到具体阶段；最终入口测试覆盖整条链路。两类测试同时保留。</p>
+
+      <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 720 444" role="img" aria-label="五层测试的数据流">
+          <defs>
+            <marker id="a4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+          </defs>
+
+          <!-- band 1 -->
+          <rect x="16" y="16" width="632" height="64" rx="10" class="fp lp"/>
+          <line x1="214" y1="26" x2="214" y2="70" class="sp"/><line x1="508" y1="26" x2="508" y2="70" class="sp"/>
+          <circle cx="42" cy="48" r="13" class="nd"/><text x="42" y="49" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">1</text>
+          <text x="64" y="44" font-size="14" class="b">节点匹配</text>
+          <text x="64" y="64" font-size="11.5" class="m f">m(n, m) · R1–R5</text>
+          <text x="228" y="44" font-size="12.5" class="s">移动后身份不变；相似新节点不误配</text>
+          <text x="228" y="64" font-size="12.5" class="s">匹配一对一</text>
+          <text x="522" y="42" font-size="12" class="m b k0">§4</text>
+          <text x="522" y="62" font-size="11.5" class="m s">TreeMatcher</text>
+
+          <path d="M42,82 L42,101" class="ar" marker-end="url(#a4)"/>
+          <text x="58" y="96" font-size="11.5" class="f">节点类与类代表</text>
+
+          <!-- band 2 -->
+          <rect x="16" y="104" width="632" height="64" rx="10" class="fp lp"/>
+          <line x1="214" y1="114" x2="214" y2="158" class="sp"/><line x1="508" y1="114" x2="508" y2="158" class="sp"/>
+          <circle cx="42" cy="136" r="13" class="nd"/><text x="42" y="137" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">2</text>
+          <text x="64" y="132" font-size="14" class="b">XML → PCS 关系</text>
+          <text x="64" y="152" font-size="11.5" class="m f">pcs(r,p,s) · c(n,c)</text>
+          <text x="228" y="132" font-size="12.5" class="s">parent、前驱、后继准确</text>
+          <text x="228" y="152" font-size="12.5" class="s">边界 ⊣ ⊢ 与文本顺序准确</text>
+          <text x="522" y="130" font-size="12" class="m b k0">§2.3</text>
+          <text x="522" y="150" font-size="11.5" class="m s">Pcs</text>
+
+          <path d="M42,170 L42,189" class="ar" marker-end="url(#a4)"/>
+          <text x="58" y="184" font-size="11.5" class="m f">T*₀、T*₁、T*₂</text>
+
+          <!-- band 3 -->
+          <rect x="16" y="192" width="632" height="64" rx="10" class="fp lp"/>
+          <line x1="214" y1="202" x2="214" y2="246" class="sp"/><line x1="508" y1="202" x2="508" y2="246" class="sp"/>
+          <circle cx="42" cy="224" r="13" class="nd"/><text x="42" y="225" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">3</text>
+          <text x="64" y="220" font-size="14" class="b">编辑检测与协调</text>
+          <text x="64" y="240" font-size="11.5" class="m f">E = T* − T*₀ → Δ</text>
+          <text x="228" y="220" font-size="12.5" class="s">无漏报、无误报</text>
+          <text x="228" y="240" font-size="12.5" class="s">冲突包含正确的 base、left、right 值</text>
+          <text x="522" y="214" font-size="12" class="m b k0">§2、§5、§6</text>
+          <text x="522" y="232" font-size="11.5" class="m s">PcsEditDetector</text>
+          <text x="522" y="248" font-size="11.5" class="m s">PcsMerger</text>
+
+          <path d="M42,258 L42,277" class="ar" marker-end="url(#a4)"/>
+          <text x="58" y="272" font-size="11.5" class="f">Δ 或冲突集合</text>
+
+          <!-- band 4 -->
+          <rect x="16" y="280" width="632" height="64" rx="10" class="fp lp"/>
+          <line x1="214" y1="290" x2="214" y2="334" class="sp"/><line x1="508" y1="290" x2="508" y2="334" class="sp"/>
+          <circle cx="42" cy="312" r="13" class="nd"/><text x="42" y="313" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">4</text>
+          <text x="64" y="308" font-size="14" class="b">重建 XML</text>
+          <text x="64" y="328" font-size="11.5" class="m f">Δ → Tm</text>
+          <text x="228" y="308" font-size="12.5" class="s">结构、内容、顺序完整</text>
+          <text x="228" y="328" font-size="12.5" class="s">不丢节点、不重复</text>
+          <text x="522" y="306" font-size="12" class="m b k0">§6</text>
+          <text x="522" y="326" font-size="11.5" class="m s">PcsTreeBuilder</text>
+
+          <path d="M42,346 L42,365" class="ar" marker-end="url(#a4)"/>
+          <text x="58" y="360" font-size="11.5" class="m f">Tm</text>
+
+          <!-- band 5 (IDML / engineering: dotted) -->
+          <rect x="16" y="368" width="632" height="64" rx="10" class="fp li"/>
+          <line x1="214" y1="378" x2="214" y2="422" class="sp"/><line x1="508" y1="378" x2="508" y2="422" class="sp"/>
+          <circle cx="42" cy="400" r="13" class="nd"/><text x="42" y="401" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">5</text>
+          <text x="64" y="396" font-size="14" class="b">IDML 包与应用</text>
+          <text x="64" y="416" font-size="11.5" class="m f">parts · designmap</text>
+          <text x="228" y="396" font-size="12.5" class="s">parts、designmap 与跨文件引用一致</text>
+          <text x="228" y="416" font-size="12.5" class="s">应用打开检查</text>
+          <text x="522" y="394" font-size="12" class="b k0">IDML · 工程</text>
+          <text x="522" y="414" font-size="11.5" class="m s">IdmlMergeDriver</text>
+
+          <!-- end-to-end bracket over layers 1–4 -->
+          <path d="M658,18 L668,18 L668,342 L658,342" class="sp2"/>
+          <text transform="translate(690,180) rotate(-90)" text-anchor="middle" font-size="12" class="s">最终入口测试 · ThreeWayMerger</text>
+        </svg>
+        </div>
+        <figcaption><b>图 4</b>　数据流图。① 对应 §4 的匹配前提；② 对应 §2.3 的 PCS 与内容关系；③ 对应 §2 的 edit detection 与 reconciliation，以及 §5 的一致性；④ 对应 §6 从关系集合构建合并树；⑤ 属于 IDML 与工程验收。类名按名称与测试计划对应，以代码为准。</figcaption>
+      </figure>
+    </section>
+
+    <!-- ===== 四 场景矩阵 ===== -->
+    <section id="matrix">
+      <span class="sec-tag">四 · 论文 §3.1、§6.3、§6.4</span>
+      <h2>场景覆盖矩阵</h2>
+      <p class="lead">行列为两侧的操作类型，单元格内按位置关系细分预期。“冲突”均指规则或策略规定的冲突，不依据操作名称判断。</p>
+
+      <div class="chips-legend">
+        <span><i class="out ok">可合并</i></span>
+        <span><i class="out c">C</i>core 冲突</span>
+        <span><i class="out o">O</i>optional 冲突</span>
+        <span><i class="out pol">依策略</i>项目策略另定</span>
+        <span><i class="out ext">可扩展</i>本计划未列出</span>
+      </div>
+
+      <figure>
+        <div class="fig-scroll">
+        <table class="matrix">
+          <colgroup><col style="width:10%"><col style="width:13%"><col style="width:18%"><col style="width:15%"><col style="width:22%"><col style="width:22%"></colgroup>
+          <thead>
+            <tr><th>T1＼T2</th><th>无</th><th>insert</th><th>delete</th><th>move</th><th>update</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>无</th>
+              <td><div class="case"><span class="out ok">返回 base 的等价树</span><span class="ref">§6</span></div></td>
+              <td><div class="case"><span class="out ok">新节点、位置、内容保留</span><span class="ref">规则 5</span></div></td>
+              <td><div class="case"><span class="out ok">节点消失，原位置邻接正确</span><span class="ref">规则 6</span></div></td>
+              <td><div class="case"><span class="out ok">源位置与目的位置均正确</span><span class="ref">规则 7</span></div></td>
+              <td><div class="case"><span class="out ok">新内容保留</span><span class="ref">规则 4 · merge(B,B,R)=R</span></div></td>
+            </tr>
+            <tr>
+              <th>insert</th>
+              <td class="sym">≡</td>
+              <td>
+                <div class="case"><span class="rel">不同且兼容的位置</span><span class="out ok">两次插入均保留</span><span class="ref">规则 5 · §5</span></div>
+                <div class="case"><span class="rel">同一间隙、不同节点</span><span class="out c">C&nbsp;严格模式</span><span class="out pol">推测合并另定</span><span class="ref">§6.3</span></div>
+              </td>
+              <td><div class="case"><span class="out ext">可扩展</span><span class="ref">规则 5、6</span></div></td>
+              <td><div class="case"><span class="out ext">可扩展</span><span class="ref">§6.3 move/insert</span></div></td>
+              <td><div class="case"><span class="out ext">可扩展</span><span class="ref">规则 4、5</span></div></td>
+            </tr>
+            <tr>
+              <th>delete</th>
+              <td class="sym">≡</td>
+              <td class="sym">≡</td>
+              <td><div class="case"><span class="out ext">可扩展</span><span class="ref">§6.3 delete/delete</span></div></td>
+              <td><div class="case"><span class="out ext">可扩展</span><span class="ref">§6.3 move/delete</span></div></td>
+              <td>
+                <div class="case"><span class="rel">同一节点</span><span class="out o">O&nbsp;Delete/Edit</span><span class="ref">§6.3 · 严格模式报告</span></div>
+                <div class="case"><span class="rel">删除祖先、编辑深层后代</span><span class="out o">O&nbsp;检查整棵被删子树</span><span class="ref">§6.3 · §6.4 · 图 6b</span></div>
+              </td>
+            </tr>
+            <tr>
+              <th>move</th>
+              <td class="sym">≡</td>
+              <td class="sym">≡</td>
+              <td class="sym">≡</td>
+              <td>
+                <div class="case"><span class="rel">同一节点、不同目的地</span><span class="out c">C&nbsp;Position/Position</span><span class="ref">§6.3</span></div>
+                <div class="case"><span class="rel">父节点移动、子节点重排</span><span class="out ok">两者保留</span><span class="ref">规则 7a · 论文图 3</span></div>
+                <div class="case"><span class="rel">相邻区域分别移动</span><span class="out c">C&nbsp;严格上下文</span><span class="out pol">宽松策略单独命名</span><span class="ref">规则 3、7c、7d · 图 6a</span></div>
+              </td>
+              <td><div class="case"><span class="rel">同一节点</span><span class="out ok">移动与修改同时保留</span><span class="ref">§2.1 · 规则 4、7 · 图 2</span></div></td>
+            </tr>
+            <tr>
+              <th>update</th>
+              <td class="sym">≡</td>
+              <td class="sym">≡</td>
+              <td class="sym">≡</td>
+              <td class="sym">≡</td>
+              <td>
+                <div class="case"><span class="rel">结果相同</span><span class="out ok">无内容矛盾</span><span class="ref">§5 · §6</span></div>
+                <div class="case"><span class="rel">结果不同</span><span class="out c">C&nbsp;Update/Update</span><span class="ref">§6.3</span></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="mx-extra">
+          <div><b>文本与元素混排</b>：精确保留文本、元素及其顺序<span class="ref-in">§2.3 有序树模型</span></div>
+          <div><b>无 Self 节点位置变化</b>：保留 B 与修改后的 C<span class="ref-in">§4 · 图 6c</span></div>
+        </div>
+        <figcaption><b>图 5</b>　覆盖矩阵。合并结果与 T1、T2 的编号无关（§6.4 Symmetry），下三角与上三角相同，以 ≡ 表示。“可扩展”格为本计划未列出的组合，括注论文中相关的规则或 Position/Position 子类。</figcaption>
+      </figure>
+
+      <h3>三个重点场景</h3>
+      <div class="tabs" role="tablist" aria-label="重点场景">
+        <button class="tab-btn active" role="tab" id="tb-guard" aria-selected="true" aria-controls="tab-guard" data-tab="tab-guard">guards：相邻移动</button>
+        <button class="tab-btn" role="tab" id="tb-anc" aria-selected="false" aria-controls="tab-anc" data-tab="tab-anc" tabindex="-1">删除祖先与编辑后代</button>
+        <button class="tab-btn" role="tab" id="tb-noself" aria-selected="false" aria-controls="tab-noself" data-tab="tab-noself" tabindex="-1">无 Self 节点的匹配</button>
+      </div>
+
+      <!-- 6a guards -->
+      <div class="tab-panel active" id="tab-guard" role="tabpanel" aria-labelledby="tb-guard">
+        <p>论文 §3.1 规则 7d（第 5 页）把这一情形列为修改过近、不能安全合并的例子。“左边交换 a、b，右边交换 c、d”不能直接视为独立修改。</p>
+        <figure>
+          <div class="fig-scroll">
+          <svg viewBox="0 0 720 372" role="img" aria-label="guards 场景：abcd、bacd、abdc">
+            <text x="16" y="45" font-size="13" class="m b k0">T0</text>
+            <text x="16" y="97" font-size="13" class="m b k1">T1</text>
+            <text x="16" y="149" font-size="13" class="m b k2">T2</text>
+            <text x="56" y="45" text-anchor="middle" font-size="14" class="m f">⊣</text>
+            <text x="56" y="97" text-anchor="middle" font-size="14" class="m f">⊣</text>
+            <text x="56" y="149" text-anchor="middle" font-size="14" class="m f">⊣</text>
+            <text x="244" y="45" text-anchor="middle" font-size="14" class="m f">⊢</text>
+            <text x="244" y="97" text-anchor="middle" font-size="14" class="m f">⊢</text>
+            <text x="244" y="149" text-anchor="middle" font-size="14" class="m f">⊢</text>
+            <!-- T0: a b c d -->
+            <rect x="72" y="24" width="32" height="32" rx="7" class="chip"/><text x="88" y="41" text-anchor="middle" dominant-baseline="central" font-size="14" class="nl">a</text>
+            <rect x="112" y="24" width="32" height="32" rx="7" class="chip"/><text x="128" y="41" text-anchor="middle" dominant-baseline="central" font-size="14" class="nl">b</text>
+            <rect x="152" y="24" width="32" height="32" rx="7" class="chip"/><text x="168" y="41" text-anchor="middle" dominant-baseline="central" font-size="14" class="nl">c</text>
+            <rect x="192" y="24" width="32" height="32" rx="7" class="chip"/><text x="208" y="41" text-anchor="middle" dominant-baseline="central" font-size="14" class="nl">d</text>
+            <!-- T1: b a c d -->
+            <rect x="72" y="76" width="32" height="32" rx="7" class="chip rg"/><text x="88" y="93" text-anchor="middle" dominant-baseline="central" font-size="14" class="nl">b</text>
+            <rect x="112" y="76" width="32" height="32" rx="7" class="chip rg"/><text x="128" y="93" text-anchor="middle" dominant-baseline="central" font-size="14" class="nl">a</text>
+            <rect x="152" y="76" width="32" height="32" rx="7" class="chip"/><text x="168" y="93" text-anchor="middle" dominant-baseline="central" font-size="14" class="nl">c</text>
+            <rect x="192" y="76" width="32" height="32" rx="7" class="chip"/><text x="208" y="93" text-anchor="middle" dominant-baseline="central" font-size="14" class="nl">d</text>
+            <!-- T2: a b d c -->
+            <rect x="72" y="128" width="32" height="32" rx="7" class="chip"/><text x="88" y="145" text-anchor="middle" dominant-baseline="central" font-size="14" class="nl">a</text>
+            <rect x="112" y="128" width="32" height="32" rx="7" class="chip"/><text x="128" y="145" text-anchor="middle" dominant-baseline="central" font-size="14" class="nl">b</text>
+            <rect x="152" y="128" width="32" height="32" rx="7" class="chip rg"/><text x="168" y="145" text-anchor="middle" dominant-baseline="central" font-size="14" class="nl">d</text>
+            <rect x="192" y="128" width="32" height="32" rx="7" class="chip rg"/><text x="208" y="145" text-anchor="middle" dominant-baseline="central" font-size="14" class="nl">c</text>
+            <text x="16" y="198" font-size="12" class="f">规则 7d 的例子：abcd、bacd、abdc</text>
+
+            <!-- edits -->
+            <text x="300" y="34" font-size="13" class="b k1">T1 的编辑</text>
+            <text x="300" y="60" font-size="12.5" class="m k1">pcs(R, ⊣, b)</text>
+            <text x="300" y="84" font-size="12.5" class="m k1">pcs(R, b, a)</text>
+            <text x="300" y="108" font-size="12.5" class="m k1">pcs(R, a, c)</text>
+            <text x="520" y="34" font-size="13" class="b k2">T2 的编辑</text>
+            <text x="520" y="60" font-size="12.5" class="m k2">pcs(R, b, d)</text>
+            <text x="520" y="84" font-size="12.5" class="m k2">pcs(R, d, c)</text>
+            <text x="520" y="108" font-size="12.5" class="m k2">pcs(R, c, ⊢)</text>
+            <line x1="400" y1="80" x2="514" y2="56" class="cx"/>
+            <line x1="400" y1="104" x2="514" y2="80" class="cx"/>
+            <circle cx="457" cy="68" r="9" class="bd"/><text x="457" y="69" text-anchor="middle" dominant-baseline="central" font-size="11" class="m b kd">1</text>
+            <circle cx="457" cy="92" r="9" class="bd"/><text x="457" y="93" text-anchor="middle" dominant-baseline="central" font-size="11" class="m b kd">2</text>
+            <text x="300" y="142" font-size="12.5" class="kd">① b 的后继同时为 a 与 d（Uniq. successor）</text>
+            <text x="300" y="164" font-size="12.5" class="kd">② c 的前驱同时为 a 与 d（Uniq. predecessor）</text>
+            <rect x="300" y="178" width="404" height="34" rx="8" class="bd"/>
+            <text x="316" y="200" font-size="12.5" class="kd">两条矛盾都由编辑构成 → Position/Position（C）</text>
+
+            <line x1="16" y1="230" x2="704" y2="230" class="dv"/>
+
+            <!-- contrast -->
+            <text x="16" y="256" font-size="12.5" class="b s">对照（按 §6 定义推导）：两处交换之间隔一个未改动的节点 c</text>
+            <text x="16" y="288" font-size="12" class="m b k0">T0</text>
+            <text x="16" y="320" font-size="12" class="m b k1">T1</text>
+            <text x="16" y="352" font-size="12" class="m b k2">T2</text>
+            <text x="52" y="288" text-anchor="middle" font-size="13" class="m f">⊣</text>
+            <text x="52" y="320" text-anchor="middle" font-size="13" class="m f">⊣</text>
+            <text x="52" y="352" text-anchor="middle" font-size="13" class="m f">⊣</text>
+            <text x="234" y="288" text-anchor="middle" font-size="13" class="m f">⊢</text>
+            <text x="234" y="320" text-anchor="middle" font-size="13" class="m f">⊢</text>
+            <text x="234" y="352" text-anchor="middle" font-size="13" class="m f">⊢</text>
+            <!-- T0: a b c d e -->
+            <rect x="64" y="270" width="26" height="26" rx="6" class="chip"/><text x="77" y="284" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">a</text>
+            <rect x="96" y="270" width="26" height="26" rx="6" class="chip"/><text x="109" y="284" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">b</text>
+            <rect x="128" y="270" width="26" height="26" rx="6" class="chip"/><text x="141" y="284" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">c</text>
+            <rect x="160" y="270" width="26" height="26" rx="6" class="chip"/><text x="173" y="284" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">d</text>
+            <rect x="192" y="270" width="26" height="26" rx="6" class="chip"/><text x="205" y="284" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">e</text>
+            <!-- T1: b a c d e -->
+            <rect x="64" y="302" width="26" height="26" rx="6" class="chip rg"/><text x="77" y="316" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">b</text>
+            <rect x="96" y="302" width="26" height="26" rx="6" class="chip rg"/><text x="109" y="316" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">a</text>
+            <rect x="128" y="302" width="26" height="26" rx="6" class="chip"/><text x="141" y="316" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">c</text>
+            <rect x="160" y="302" width="26" height="26" rx="6" class="chip"/><text x="173" y="316" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">d</text>
+            <rect x="192" y="302" width="26" height="26" rx="6" class="chip"/><text x="205" y="316" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">e</text>
+            <!-- T2: a b c e d -->
+            <rect x="64" y="334" width="26" height="26" rx="6" class="chip"/><text x="77" y="348" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">a</text>
+            <rect x="96" y="334" width="26" height="26" rx="6" class="chip"/><text x="109" y="348" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">b</text>
+            <rect x="128" y="334" width="26" height="26" rx="6" class="chip"/><text x="141" y="348" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">c</text>
+            <rect x="160" y="334" width="26" height="26" rx="6" class="chip rg"/><text x="173" y="348" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">e</text>
+            <rect x="192" y="334" width="26" height="26" rx="6" class="chip rg"/><text x="205" y="348" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="nl">d</text>
+            <text x="300" y="288" font-size="12.5" class="k1">T1 编辑　<tspan class="m">pcs(R,⊣,b)　pcs(R,b,a)　pcs(R,a,c)</tspan></text>
+            <text x="300" y="320" font-size="12.5" class="k2">T2 编辑　<tspan class="m">pcs(R,c,e)　pcs(R,e,d)　pcs(R,d,⊢)</tspan></text>
+            <text x="300" y="352" font-size="12.5" class="km">编辑互不矛盾 → Tm：<tspan class="m">⊣ b a c e d ⊢</tspan></text>
+          </svg>
+          </div>
+          <figcaption><b>图 6a</b>　两侧编辑在“b 的后继”和“c 的前驱”上互相矛盾，严格上下文规则下报告 Position/Position。一次业务冲突对应两条关系矛盾。下方对照由 §6 的定义推导：两处交换之间隔一个未改动节点时，编辑互不矛盾。项目若采用更宽松的策略，单独命名并说明。</figcaption>
+        </figure>
+      </div>
+
+      <!-- 6b ancestor delete -->
+      <div class="tab-panel" id="tab-anc" role="tabpanel" aria-labelledby="tb-anc">
+        <p>同一节点的“删除 r / 修改 r”用例之外，严格 Delete/Edit 检查需要深入整个被删子树。</p>
+        <figure>
+          <div class="fig-scroll">
+          <svg viewBox="0 0 720 316" role="img" aria-label="删除祖先 g，另一侧修改后代 r">
+            <defs>
+              <pattern id="h6" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" class="ht"/></pattern>
+            </defs>
+            <line x1="180" y1="8" x2="180" y2="222" class="dv"/>
+            <line x1="360" y1="8" x2="360" y2="222" class="dv"/>
+            <line x1="540" y1="8" x2="540" y2="222" class="dv"/>
+            <text x="90" y="20" text-anchor="middle" font-size="12.5" class="m b k0">T0 base</text>
+            <text x="270" y="20" text-anchor="middle" font-size="12.5" class="b k1">T1 left：删除 g</text>
+            <text x="450" y="20" text-anchor="middle" font-size="12.5" class="b k2">T2 right：修改 r</text>
+            <text x="630" y="20" text-anchor="middle" font-size="12.5" class="b s">Δ：一致的关系森林</text>
+
+            <!-- T0 -->
+            <line x1="90" y1="54" x2="55" y2="110" class="ed"/><line x1="90" y1="54" x2="125" y2="110" class="ed"/><line x1="125" y1="110" x2="125" y2="164" class="ed"/>
+            <circle cx="90" cy="54" r="14" class="nd"/><text x="90" y="55" text-anchor="middle" dominant-baseline="central" font-size="12" class="nl">s</text>
+            <circle cx="55" cy="110" r="13" class="nd"/><text x="55" y="111" text-anchor="middle" dominant-baseline="central" font-size="12" class="nl">a</text>
+            <circle cx="125" cy="110" r="13" class="nd"/><text x="125" y="111" text-anchor="middle" dominant-baseline="central" font-size="12" class="nl">g</text>
+            <circle cx="125" cy="164" r="12" class="nd"/><text x="125" y="165" text-anchor="middle" dominant-baseline="central" font-size="12" class="nl">r</text>
+            <text x="90" y="206" text-anchor="middle" font-size="11" class="m f">s Spread · g Group</text>
+            <text x="90" y="222" text-anchor="middle" font-size="11" class="m f">a, r Rectangle</text>
+
+            <!-- T1: g subtree deleted -->
+            <line x1="270" y1="54" x2="235" y2="110" class="ed"/>
+            <line x1="270" y1="54" x2="305" y2="110" class="edx"/><line x1="305" y1="110" x2="305" y2="164" class="edx"/>
+            <circle cx="270" cy="54" r="14" class="nd"/><text x="270" y="55" text-anchor="middle" dominant-baseline="central" font-size="12" class="nl">s</text>
+            <circle cx="235" cy="110" r="13" class="nd"/><text x="235" y="111" text-anchor="middle" dominant-baseline="central" font-size="12" class="nl">a</text>
+            <circle cx="305" cy="110" r="13" class="nx"/><text x="325" y="111" dominant-baseline="central" font-size="12" class="m b kd">g</text>
+            <line x1="296" y1="101" x2="314" y2="119" class="xl"/><line x1="314" y1="101" x2="296" y2="119" class="xl"/>
+            <circle cx="305" cy="164" r="12" class="nx"/><text x="324" y="165" dominant-baseline="central" font-size="12" class="m b kd">r</text>
+            <line x1="297" y1="156" x2="313" y2="172" class="xl"/><line x1="313" y1="156" x2="297" y2="172" class="xl"/>
+            <text x="270" y="210" text-anchor="middle" font-size="11.5" class="m k1">edit：pcs(s, a, ⊢)</text>
+
+            <!-- T2: r updated -->
+            <line x1="450" y1="54" x2="415" y2="110" class="ed"/><line x1="450" y1="54" x2="485" y2="110" class="ed"/><line x1="485" y1="110" x2="485" y2="164" class="ed"/>
+            <circle cx="450" cy="54" r="14" class="nd"/><text x="450" y="55" text-anchor="middle" dominant-baseline="central" font-size="12" class="nl">s</text>
+            <circle cx="415" cy="110" r="13" class="nd"/><text x="415" y="111" text-anchor="middle" dominant-baseline="central" font-size="12" class="nl">a</text>
+            <circle cx="485" cy="110" r="13" class="nd"/><text x="485" y="111" text-anchor="middle" dominant-baseline="central" font-size="12" class="nl">g</text>
+            <circle cx="485" cy="164" r="12" class="nu"/><text x="485" y="165" text-anchor="middle" dominant-baseline="central" font-size="12" class="nl">r′</text>
+            <text x="485" y="192" text-anchor="middle" font-size="10.5" class="m b ku">Red</text>
+            <text x="450" y="210" text-anchor="middle" font-size="11" class="m k2">edit：c(r, FillColor=Red)</text>
+
+            <!-- Δ forest -->
+            <rect x="556" y="36" width="76" height="108" rx="10" class="tmo"/>
+            <line x1="594" y1="62" x2="594" y2="114" class="ed"/>
+            <circle cx="594" cy="62" r="13" class="nd"/><text x="594" y="63" text-anchor="middle" dominant-baseline="central" font-size="12" class="nl">s</text>
+            <circle cx="594" cy="114" r="12" class="nd"/><text x="594" y="115" text-anchor="middle" dominant-baseline="central" font-size="12" class="nl">a</text>
+            <text x="594" y="162" text-anchor="middle" font-size="12" class="m b km">Tm</text>
+            <rect x="646" y="52" width="62" height="120" rx="10" fill="url(#h6)"/>
+            <rect x="646" y="52" width="62" height="120" rx="10" class="bxd"/>
+            <line x1="677" y1="82" x2="677" y2="134" class="ed"/>
+            <circle cx="677" cy="82" r="12" class="nd"/><text x="677" y="83" text-anchor="middle" dominant-baseline="central" font-size="12" class="nl">g</text>
+            <circle cx="677" cy="134" r="12" class="nu"/><text x="677" y="135" text-anchor="middle" dominant-baseline="central" font-size="12" class="nl">r′</text>
+            <text x="677" y="192" text-anchor="middle" font-size="11.5" class="m kd">Δ − Tm</text>
+            <text x="677" y="208" text-anchor="middle" font-size="11.5" class="kd">被删子树</text>
+
+            <!-- formula -->
+            <rect x="16" y="232" width="688" height="72" rx="10" class="bo"/>
+            <text x="32" y="261" font-size="13" class="ko"><tspan class="m">(Δ − Tm) ∩ E = { c(r, FillColor=Red) } ≠ ∅</tspan>　→　Delete/Edit（O）</text>
+            <text x="32" y="287" font-size="12.5" class="s">r 的内容编辑仍在 Δ 中，但位于自 <tspan class="m">⊥₀</tspan> 不可达的被删子树；检查范围为整棵被删子树，后代可在任意深度。</text>
+          </svg>
+          </div>
+          <figcaption><b>图 6b</b>　依据 §6.3 的 Delete/Edit（O）检查式与 §6.4 的编辑保留性质。严格模式下报告冲突，后代编辑不会被静默丢弃。</figcaption>
+        </figure>
+      </div>
+
+      <!-- 6c no-Self matching -->
+      <div class="tab-panel" id="tab-noself" role="tabpanel" aria-labelledby="tb-noself">
+        <p>base 有段落 A、B、C；左侧删除 A，右侧修改 C。预期保留 B 与修改后的 C。该场景用于发现“用绝对路径代替身份”造成的错配。</p>
+        <figure>
+          <div class="fig-scroll">
+          <svg viewBox="0 0 720 410" role="img" aria-label="无 Self 节点：按身份匹配与按位置匹配">
+            <defs>
+              <marker id="a6c" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+            </defs>
+            <!-- panel A -->
+            <text x="16" y="22" font-size="13" class="b km">按身份匹配（预期）</text>
+            <text x="96" y="48" text-anchor="middle" font-size="12" class="m b k1">T1 left</text>
+            <text x="276" y="48" text-anchor="middle" font-size="12" class="m b k0">T0 base</text>
+            <text x="456" y="48" text-anchor="middle" font-size="12" class="m b k2">T2 right</text>
+            <text x="636" y="48" text-anchor="middle" font-size="12" class="m b km">Tm</text>
+            <rect x="50" y="60" width="92" height="28" rx="6" class="b1"/><text x="96" y="75" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="k1">段落 B</text>
+            <rect x="50" y="96" width="92" height="28" rx="6" class="b1"/><text x="96" y="111" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="k1">段落 C</text>
+            <rect x="230" y="60" width="92" height="28" rx="6" class="b0"/><text x="276" y="75" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="k0">段落 A</text>
+            <rect x="230" y="96" width="92" height="28" rx="6" class="b0"/><text x="276" y="111" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="k0">段落 B</text>
+            <rect x="230" y="132" width="92" height="28" rx="6" class="b0"/><text x="276" y="147" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="k0">段落 C</text>
+            <rect x="410" y="60" width="92" height="28" rx="6" class="b2"/><text x="456" y="75" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="k2">段落 A</text>
+            <rect x="410" y="96" width="92" height="28" rx="6" class="b2"/><text x="456" y="111" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="k2">段落 B</text>
+            <rect x="410" y="132" width="92" height="28" rx="6" class="bu"/><text x="456" y="147" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="ku">段落 C′</text>
+            <rect x="590" y="60" width="92" height="28" rx="6" class="bm"/><text x="636" y="75" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="km">段落 B</text>
+            <rect x="590" y="96" width="92" height="28" rx="6" class="bu"/><text x="636" y="111" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="ku">段落 C′</text>
+            <path d="M230,110 L142,74" class="mt"/>
+            <path d="M230,146 L142,110" class="mt"/>
+            <path d="M322,74 L410,74" class="mt"/>
+            <path d="M322,110 L410,110" class="mt"/>
+            <path d="M322,146 L410,146" class="mt"/>
+            <text x="186" y="66" text-anchor="middle" font-size="11.5" class="kd">T1 中删除 A</text>
+            <path d="M508,92 L584,92" class="ar" marker-end="url(#a6c)"/>
+            <text x="546" y="84" text-anchor="middle" font-size="11.5" class="f">合并</text>
+
+            <line x1="16" y1="182" x2="704" y2="182" class="dv"/>
+
+            <!-- panel B -->
+            <text x="16" y="208" font-size="13" class="b kd">按位置匹配（错配）</text>
+            <text x="96" y="234" text-anchor="middle" font-size="12" class="m b k1">T1 left</text>
+            <text x="276" y="234" text-anchor="middle" font-size="12" class="m b k0">T0 base</text>
+            <text x="456" y="234" text-anchor="middle" font-size="12" class="m b k2">T2 right</text>
+            <text x="636" y="234" text-anchor="middle" font-size="12" class="m b km">Tm</text>
+            <text x="16" y="264" font-size="11" class="m f">P[1]</text>
+            <text x="16" y="300" font-size="11" class="m f">P[2]</text>
+            <text x="16" y="336" font-size="11" class="m f">P[3]</text>
+            <rect x="50" y="246" width="92" height="28" rx="6" class="b1"/><text x="96" y="261" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="k1">段落 B</text>
+            <rect x="50" y="282" width="92" height="28" rx="6" class="b1"/><text x="96" y="297" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="k1">段落 C</text>
+            <rect x="230" y="246" width="92" height="28" rx="6" class="b0"/><text x="276" y="261" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="k0">段落 A</text>
+            <rect x="230" y="282" width="92" height="28" rx="6" class="b0"/><text x="276" y="297" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="k0">段落 B</text>
+            <rect x="230" y="318" width="92" height="28" rx="6" class="b0"/><text x="276" y="333" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="k0">段落 C</text>
+            <rect x="410" y="246" width="92" height="28" rx="6" class="b2"/><text x="456" y="261" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="k2">段落 A</text>
+            <rect x="410" y="282" width="92" height="28" rx="6" class="b2"/><text x="456" y="297" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="k2">段落 B</text>
+            <rect x="410" y="318" width="92" height="28" rx="6" class="bu"/><text x="456" y="333" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="ku">段落 C′</text>
+            <rect x="590" y="246" width="92" height="28" rx="6" class="bm"/><text x="636" y="261" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="km">段落 B</text>
+            <rect x="590" y="282" width="92" height="28" rx="6" class="bm"/><text x="636" y="297" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="km">段落 C</text>
+            <rect x="590" y="318" width="92" height="28" rx="6" class="bxd"/><text x="636" y="333" text-anchor="middle" dominant-baseline="central" font-size="12.5" class="kd">段落 C′</text>
+            <text x="636" y="364" text-anchor="middle" font-size="11" class="kd">被删子树</text>
+            <path d="M230,260 L142,260" class="mx"/>
+            <path d="M230,296 L142,296" class="mx"/>
+            <text x="186" y="254" text-anchor="middle" font-size="11" class="kd">误判 update</text>
+            <text x="186" y="290" text-anchor="middle" font-size="11" class="kd">误判 update</text>
+            <text x="186" y="337" text-anchor="middle" font-size="11" class="kd">误判 delete</text>
+            <path d="M322,260 L410,260" class="mt"/>
+            <path d="M322,296 L410,296" class="mt"/>
+            <path d="M322,332 L410,332" class="mt"/>
+            <path d="M508,278 L584,278" class="ar" marker-end="url(#a6c)"/>
+            <text x="546" y="270" text-anchor="middle" font-size="11.5" class="f">合并</text>
+            <text x="16" y="386" font-size="12" class="s">Tm 显示 B、C：A↔B、B↔C 被当作 update，C 被当作 delete。</text>
+            <text x="16" y="404" font-size="12" class="s">C′ 落入被删子树：基础算法丢失该修改，严格模式报告 Delete/Edit（O）。</text>
+          </svg>
+          </div>
+          <figcaption><b>图 6c</b>　§4（第 5 页）指出，对没有唯一元素标识的文档，准确构建匹配具有重要的实际意义。位置标签在插入、删除之后不保证稳定，测试需要单独记录预期匹配关系。</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ===== 五 断言方式 ===== -->
+    <section id="assert">
+      <span class="sec-tag">五 · 论文 §5、§6、§6.3</span>
+      <h2>成功比较完整结果，冲突检查冲突对象</h2>
+      <p class="lead">成功案例断言完整的 Tm，冲突案例逐项断言冲突记录。两者都以 §6 的集合关系为边界。</p>
+
+      <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 720 300" role="img" aria-label="E、Δ、Tm 与 T* 的包含关系">
+          <defs>
+            <pattern id="h7" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" class="ht"/></pattern>
+          </defs>
+          <rect x="16" y="30" width="400" height="252" rx="14" class="f0 lp"/>
+          <text x="30" y="54" font-size="14" class="m b">T*</text>
+          <text x="30" y="176" font-size="12" class="k0"><tspan class="m">T*₀</tspan>：base 关系</text>
+          <!-- E split into the two modified trees -->
+          <rect x="252" y="72" width="136" height="68" class="f1"/>
+          <rect x="252" y="140" width="136" height="68" class="f2"/>
+          <rect x="252" y="72" width="136" height="136" class="fn lp"/>
+          <text x="262" y="92" font-size="12.5" class="m b">E = T* − T*₀</text>
+          <text x="262" y="118" font-size="12" class="k1">T1 的编辑</text>
+          <text x="262" y="182" font-size="12" class="k2">T2 的编辑</text>
+          <!-- Δ and Tm -->
+          <rect x="146" y="56" width="262" height="212" rx="12" class="dl"/>
+          <text x="128" y="74" font-size="14" class="m b">Δ</text>
+          <rect x="156" y="64" width="246" height="160" rx="10" class="tmo"/>
+          <text x="166" y="88" font-size="13" class="m b km">Tm</text>
+          <rect x="152" y="230" width="250" height="32" rx="7" fill="url(#h7)"/>
+          <line x1="122" y1="246" x2="150" y2="246" class="sp2"/>
+          <text x="26" y="242" font-size="11.5" class="m kd">Δ − Tm</text>
+          <text x="26" y="258" font-size="11.5" class="kd">被删子树</text>
+
+          <!-- conditions -->
+          <text x="444" y="46" font-size="13.5" class="b">§6 对 Δ 的四个条件</text>
+          <text x="444" y="74" font-size="12.5"><tspan class="m f">1</tspan>　Δ 是一致的森林</text>
+          <text x="444" y="98" font-size="12.5"><tspan class="m f">2</tspan>　Tm ⊂ Δ，Tm 的根为 <tspan class="m">⊥₀</tspan></text>
+          <text x="444" y="122" font-size="12.5"><tspan class="m f">3</tspan>　E ⊂ Δ：编辑全部保留</text>
+          <text x="444" y="146" font-size="12.5"><tspan class="m f">4</tspan>　Δ ⊂ T*：不凭空创造</text>
+          <text x="444" y="184" font-size="13" class="b">推论</text>
+          <text x="444" y="206" font-size="12.5"><tspan class="m">T* − E ⊂ T*₀</tspan>：只能丢弃 base 关系</text>
+          <text x="444" y="244" font-size="13" class="b">严格 Delete/Edit 检查</text>
+          <text x="444" y="266" font-size="12.5" class="m">(Δ − Tm) ∩ E = ∅ ⇒ E ⊂ Tm</text>
+        </svg>
+        </div>
+        <figcaption><b>图 7</b>　欧拉图。E ⊂ Δ ⊂ T* 说明协调阶段只能丢弃来自 base 的关系；启用 Delete/Edit 检查后，被删子树中不含编辑，E ⊂ Tm。</figcaption>
+      </figure>
+
+      <h3>成功案例：完整结果比较</h3>
+      <div class="duo">
+        <div class="card pri">
+          <h4>完整结果比较</h4>
+<pre class="algo"><span class="kw">val</span> actual = ThreeWayMerger.<span class="fn">merge</span>(base, left, right)
+actual shouldBe Right(expected)</pre>
+          <p>结果中的多余关系与缺失修改都会被发现。</p>
+        </div>
+        <div class="card">
+          <h4>仅局部断言</h4>
+<pre class="algo">result.conflicts shouldBe empty
+result.relations.pcs should contain(expectedRelation)</pre>
+          <p>输出可能还含多余关系，或漏掉其他修改。</p>
+        </div>
+      </div>
+      <p>真实 XML 的直接对象相等会受属性排列影响，改用明确的语义比较器：</p>
+      <table class="spec">
+        <tr><td>元素</td><td>名称及命名空间一致</td></tr>
+        <tr><td>属性</td><td>按集合比较</td></tr>
+        <tr><td>子节点</td><td>顺序严格比较，保持原顺序。论文处理的是有序树，顺序本身是合并结果的一部分</td></tr>
+        <tr><td>文本</td><td>精确比较，保留空白。IDML Story 中的空格可能就是正文内容</td></tr>
+        <tr><td>身份与引用</td><td>节点身份和引用值精确比较</td></tr>
+      </table>
+
+      <h3>冲突案例：冲突记录逐项断言</h3>
+      <div class="rec">
+        <div class="rec-h"><span>冲突记录示例</span><span class="badge c">Update/Update · C</span></div>
+        <dl>
+          <dt>part</dt><dd><span class="nt">Spreads/Spread_s.xml</span>（示意）</dd>
+          <dt>节点</dt><dd>Rectangle <span class="nt">Self="b"</span></dd>
+          <dt>冲突字段</dt><dd>FillColor</dd>
+          <dt>三方值</dt><dd><span class="vals"><span class="val v0">base None</span><span class="val v1">left Blue</span><span class="val v2">right Red</span></span></dd>
+          <dt>附带断言</dt><dd>预期冲突无漏报；无关节点无误报；对外入口不把冲突结果当成功文件写出</dd>
+        </dl>
+      </div>
+      <div class="note info"><span class="lbl">断言粒度</span>§5（第 6 页）列出四项一致性约束：唯一内容、唯一父节点、唯一前驱、唯一后继。关系层的一次业务冲突可能对应多条矛盾（图 6a 中为两条），业务层断言冲突对象集合；底层 PCS 测试精确断言完整的关系冲突集合。</div>
+    </section>
+
+    <!-- ===== 六 性质测试 ===== -->
+    <section id="props">
+      <span class="sec-tag">六 · 论文 §6、§6.4、§7</span>
+      <h2>性质测试：对称性、恒等关系与编辑保留</h2>
+      <p class="lead">性质测试检查规则本身是否成立，与具体例子互为补充。</p>
+
+      <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 720 236" role="img" aria-label="对称性的交换图">
+          <defs>
+            <marker id="a8" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+          </defs>
+          <rect x="40" y="28" width="170" height="46" rx="10" class="bx"/>
+          <text x="125" y="52" text-anchor="middle" dominant-baseline="central" font-size="14" class="m b">(B, L, R)</text>
+          <rect x="40" y="150" width="170" height="46" rx="10" class="bx"/>
+          <text x="125" y="174" text-anchor="middle" dominant-baseline="central" font-size="14" class="m b">(B, R, L)</text>
+          <rect x="400" y="28" width="190" height="46" rx="10" class="bm"/>
+          <text x="495" y="52" text-anchor="middle" dominant-baseline="central" font-size="13" class="km">Tm 或冲突集合 C</text>
+          <rect x="400" y="150" width="190" height="46" rx="10" class="bm"/>
+          <text x="495" y="174" text-anchor="middle" dominant-baseline="central" font-size="13" class="km">Tm′ 或冲突集合 C′</text>
+          <path d="M212,51 L396,51" class="ar" marker-end="url(#a8)"/>
+          <text x="304" y="42" text-anchor="middle" font-size="12" class="m s">merge</text>
+          <path d="M212,173 L396,173" class="ar" marker-end="url(#a8)"/>
+          <text x="304" y="164" text-anchor="middle" font-size="12" class="m s">merge</text>
+          <path d="M125,80 L125,144" class="ar" marker-start="url(#a8)" marker-end="url(#a8)"/>
+          <text x="137" y="116" font-size="12" class="s">交换 L、R</text>
+          <line x1="491" y1="80" x2="491" y2="144" class="lp"/>
+          <line x1="499" y1="80" x2="499" y2="144" class="lp"/>
+          <text x="514" y="102" font-size="12" class="s">成功：语义等价</text>
+          <text x="514" y="122" font-size="12" class="s">冲突：集合归一化后相等，</text>
+          <text x="514" y="140" font-size="12" class="s">三方值中的左右值互换</text>
+          <text x="360" y="224" text-anchor="middle" font-size="12" class="f">§6.4 Symmetry；§7 说明实现验证了对称性</text>
+        </svg>
+        </div>
+        <figcaption><b>图 8</b>　交换图：merge(B, L, R) ≡ merge(B, R, L)。参数化运行时，每组 corpus 都按正常顺序与左右交换顺序各运行一次。</figcaption>
+      </figure>
+
+      <h3>基本恒等关系</h3>
+      <table class="spec code">
+        <tr><td>merge(B, B, B)</td><td>= B</td><td>左右均未修改</td></tr>
+        <tr><td>merge(B, L, B)</td><td>= L</td><td>只有左侧修改</td></tr>
+        <tr><td>merge(B, B, R)</td><td>= R</td><td>只有右侧修改</td></tr>
+        <tr><td>merge(B, L, L)</td><td>= L</td><td>两侧修改相同</td></tr>
+      </table>
+      <p>以上关系适用于正常输入、已声明策略及忽略字段约定内的语义比较，是由论文模型导出的基础检查。</p>
+
+      <h3>编辑保留：断言最终文档</h3>
+      <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 720 188" role="img" aria-label="编辑保留：E ⊂ Δ 与 E ⊂ Tm">
+          <defs>
+            <pattern id="h9" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" class="ht"/></pattern>
+            <marker id="a9" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+          </defs>
+          <text x="16" y="22" font-size="13" class="b">一般情况：E ⊂ Δ</text>
+          <rect x="16" y="36" width="300" height="124" rx="12" class="dl"/>
+          <text x="28" y="58" font-size="13" class="m b">Δ</text>
+          <rect x="44" y="48" width="176" height="100" rx="8" class="tmo"/>
+          <text x="54" y="70" font-size="12" class="m b km">Tm</text>
+          <rect x="228" y="46" width="80" height="104" rx="8" fill="url(#h9)"/>
+          <circle cx="110" cy="112" r="6" class="d1"/>
+          <circle cx="168" cy="98" r="6" class="d2"/>
+          <circle cx="268" cy="98" r="6" class="d2"/>
+          <circle cx="268" cy="98" r="11" class="nx"/>
+          <text x="268" y="180" text-anchor="middle" font-size="11.5" class="kd">编辑留在被删子树</text>
+
+          <path d="M326,98 L378,98" class="ar" marker-end="url(#a9)"/>
+
+          <text x="390" y="22" font-size="13" class="b">启用 Delete/Edit 检查：E ⊂ Tm</text>
+          <rect x="390" y="36" width="314" height="124" rx="12" class="dl"/>
+          <text x="402" y="58" font-size="13" class="m b">Δ</text>
+          <rect x="418" y="48" width="208" height="100" rx="8" class="tmo"/>
+          <text x="428" y="70" font-size="12" class="m b km">Tm</text>
+          <rect x="634" y="46" width="62" height="104" rx="8" fill="url(#h9)"/>
+          <circle cx="486" cy="112" r="6" class="d1"/>
+          <circle cx="546" cy="96" r="6" class="d2"/>
+          <circle cx="596" cy="118" r="6" class="d2"/>
+          <text x="652" y="180" text-anchor="middle" font-size="11.5" class="f">被删子树中不含编辑</text>
+        </svg>
+        </div>
+        <figcaption><b>图 9</b>　§6.4：一般情况下编辑保留在关系森林 Δ 中；启用被删子树编辑检查后，编辑进入最终的 Tm。断言对象是最终可达树中的修改。圆点颜色表示编辑来自 T1 或 T2。</figcaption>
+      </figure>
+      <div class="note"><span class="lbl">不凭空创造结构和内容</span>§6（第 6 页）要求 E ⊂ Δ ⊂ T*：合并器不为消除矛盾而制造三方都没有的关系，也不任意选择新值。项目采用属性级协调时，不同分支的属性值可以组合成新的元素整体，测试按每个属性值的来源验证。</div>
+    </section>
+
+    <!-- ===== 七 现有用例 ===== -->
+    <section id="corpus">
+      <span class="sec-tag">七 · 测试计划第七部分</span>
+      <h2>现有 15 组用例的依据追溯</h2>
+      <p class="lead">按测试计划的建议，为每组用例标注依据层级与补充动作。线型与全页记号一致。</p>
+
+      <figure>
+        <div class="fig-scroll">
+        <table class="trace">
+          <thead><tr><th>用例</th><th>预期依据</th><th>补充动作</th></tr></thead>
+          <tbody>
+            <tr><td class="id">01—05</td><td><span class="src">论文 · 规则 5–7、§6.3</span></td><td>作为插入、删除、移动与结构冲突的基础回归</td></tr>
+            <tr><td class="id">06-delete-vs-modify</td><td><span class="src">论文 · §6.3 Delete/Edit（O）</span><span class="src j">项目 · 严格策略</span></td><td>明确采用严格 Delete/Edit 策略</td></tr>
+            <tr><td class="id">06b</td><td><span class="src i">IDML · 领域策略</span></td><td>补充明确的业务理由</td></tr>
+            <tr><td class="id">07-same-story-diff-para</td><td><span class="src">论文 · 规则 4、§4</span></td><td>同时验证两个段落修改均保留，以及段落匹配正确</td></tr>
+            <tr><td class="id">08-same-para-overlap</td><td><span class="src">论文 · §6.3 Update/Update</span></td><td>作为文本冲突测试</td></tr>
+            <tr><td class="id">08b-same-para-disjoint</td><td><span class="src j">项目 · 原子模式或 token 模式</span></td><td>明确所用模式，两种预期不混用（§2.3、§7）</td></tr>
+            <tr><td class="id">09-zorder</td><td><span class="src">论文 · 规则 7、7d</span></td><td>成功例之外，补真正矛盾与 guards 过近案例</td></tr>
+            <tr><td class="id">10-group-ungroup</td><td><span class="src">论文 · §5 唯一父节点、前驱、后继</span></td><td>根据实际 parent 与邻接约束证明冲突，不因操作名直接判冲突</td></tr>
+            <tr><td class="id">11-thread-insert</td><td><span class="src">论文 · 规则 5</span><span class="src i">IDML · 串联引用</span></td><td>额外验证串联引用的业务一致性</td></tr>
+            <tr><td class="id">12-next-divergent</td><td><span class="src">论文 · §6.3 Update/Update</span><span class="src i">IDML · 线程合法性</span></td><td>分开测同一属性三方分歧与线程业务合法性</td></tr>
+            <tr><td class="id">13</td><td><span class="src i">IDML · 领域策略</span></td><td>补充明确的业务理由</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <figcaption><b>图 10</b>　需求追溯矩阵。全部用例按正常顺序与左右交换顺序各运行一次。01—05、06b、13 的具体内容以 three-way-corpus 的 README 为准。</figcaption>
+      </figure>
+      <div class="note o"><span class="lbl">06b 与 13</span>一侧改 TextFrame 结构或引用、另一侧改 Story 正文时，论文的通用树模型不会自动认定冲突。产品要求冲突时，由业务规则说明可能丢失或改变的用户意图。ThreeWayMerger 组合了属性协调与 PCS 结构协调，跨 part 的语义依赖检查以独立测试确认。</div>
+    </section>
+
+    <!-- ===== 八 IDML 端到端 ===== -->
+    <section id="idml">
+      <span class="sec-tag">八 · IDML 与工程验收</span>
+      <h2>完整 IDML 包的端到端检查</h2>
+      <p class="lead">成功输出重新打开并逐项检查，冲突输出验证 ours 保持不变。这些检查属于 IDML 和工程验收要求，不是论文逐项规定的内容。</p>
+
+      <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 720 356" role="img" aria-label="IDML 包内的引用关系">
+          <defs>
+            <marker id="a11" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+          </defs>
+          <!-- nodes -->
+          <rect x="16" y="152" width="150" height="44" rx="9" class="bx"/>
+          <text x="91" y="175" text-anchor="middle" dominant-baseline="central" font-size="13" class="m b">designmap.xml</text>
+
+          <rect x="250" y="24" width="210" height="104" rx="12" class="bx2"/>
+          <text x="264" y="44" font-size="11.5" class="m s">Spreads/Spread_1.xml</text>
+          <rect x="290" y="62" width="130" height="40" rx="8" class="b0"/>
+          <text x="355" y="83" text-anchor="middle" dominant-baseline="central" font-size="12" class="m k0">TextFrame tf1</text>
+
+          <rect x="250" y="172" width="210" height="104" rx="12" class="bx2"/>
+          <text x="264" y="192" font-size="11.5" class="m s">Spreads/Spread_2.xml</text>
+          <rect x="290" y="210" width="130" height="40" rx="8" class="b0"/>
+          <text x="355" y="231" text-anchor="middle" dominant-baseline="central" font-size="12" class="m k0">TextFrame tf2</text>
+
+          <rect x="548" y="118" width="156" height="60" rx="10" class="bx"/>
+          <text x="626" y="141" text-anchor="middle" font-size="11.5" class="m s">Stories/</text>
+          <text x="626" y="161" text-anchor="middle" font-size="12.5" class="m b">Story_s1.xml</text>
+
+          <rect x="250" y="300" width="210" height="46" rx="10" class="bx2"/>
+          <text x="355" y="319" text-anchor="middle" font-size="11.5" class="m s">Resources/…　MasterSpreads/…</text>
+          <text x="355" y="337" text-anchor="middle" font-size="11.5" class="f">未编辑的资源与资产</text>
+
+          <!-- designmap references -->
+          <path d="M166,164 C210,164 214,76 246,76" class="ar" marker-end="url(#a11)"/>
+          <path d="M166,184 C210,184 214,224 246,224" class="ar" marker-end="url(#a11)"/>
+          <path d="M120,196 C120,290 200,323 246,323" class="ar" marker-end="url(#a11)"/>
+          <path d="M91,152 L91,10 L626,10 L626,114" class="ar" marker-end="url(#a11)"/>
+          <text x="100" y="26" font-size="11" class="m f">src</text>
+
+          <!-- threading -->
+          <path d="M340,102 L340,206" class="ar" marker-end="url(#a11)"/>
+          <path d="M380,210 L380,106" class="ar" marker-end="url(#a11)"/>
+          <text x="332" y="154" text-anchor="end" font-size="11" class="m s">NextTextFrame</text>
+          <text x="388" y="154" font-size="11" class="m s">PreviousTextFrame</text>
+
+          <!-- ParentStory -->
+          <path d="M420,82 C480,82 500,134 544,134" class="ar" marker-end="url(#a11)"/>
+          <path d="M420,230 C480,230 500,162 544,162" class="ar" marker-end="url(#a11)"/>
+          <text x="470" y="72" font-size="11" class="m s">ParentStory</text>
+          <text x="470" y="258" font-size="11" class="m s">ParentStory</text>
+
+          <!-- check numbers -->
+          <circle cx="198" cy="172" r="10" class="ck"/><text x="198" y="173" text-anchor="middle" dominant-baseline="central" font-size="11" class="m b k1">4</text>
+          <circle cx="536" cy="104" r="10" class="ck"/><text x="536" y="105" text-anchor="middle" dominant-baseline="central" font-size="11" class="m b k1">5</text>
+          <circle cx="360" cy="150" r="10" class="ck"/><text x="360" y="151" text-anchor="middle" dominant-baseline="central" font-size="11" class="m b k1">6</text>
+          <circle cx="482" cy="323" r="10" class="ck"/><text x="482" y="324" text-anchor="middle" dominant-baseline="central" font-size="11" class="m b k1">7</text>
+        </svg>
+        </div>
+        <figcaption><b>图 11</b>　有向依赖图，文件名为示意。编号对应下方清单的第 4—7 项。</figcaption>
+      </figure>
+
+      <p>成功输出的检查清单：</p>
+      <ol class="steps chk">
+        <li>重新打开输出 IDML</li>
+        <li>检查所有预期 part 的存在与删除</li>
+        <li>解析相关 XML，比较完整语义结果</li>
+        <li>检查 designmap.xml 的 part 引用与实际文件一致</li>
+        <li>按项目定义的引用范围，检查目标身份存在</li>
+        <li>检查 TextFrame 的前后引用互相一致，没有非法环</li>
+        <li>检查未编辑的资源和二进制资产完整保留</li>
+        <li>选取代表性真实样本，用 InDesign 打开、保存并检查预期行为</li>
+      </ol>
+
+      <h3>冲突输出：输入保持不变</h3>
+      <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 720 120" role="img" aria-label="冲突输出时的输入保护">
+          <defs>
+            <marker id="a12" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker>
+          </defs>
+          <rect x="16" y="22" width="200" height="76" rx="10" class="fp le"/><rect x="20" y="26" width="192" height="68" rx="8" class="fn le"/>
+          <text x="116" y="52" text-anchor="middle" font-size="13" class="b">调用前</text>
+          <text x="116" y="76" text-anchor="middle" font-size="12" class="s">记录 ours 的字节或哈希 <tspan class="m">h₀</tspan></text>
+          <rect x="260" y="22" width="200" height="76" rx="10" class="fp le"/><rect x="264" y="26" width="192" height="68" rx="8" class="fn le"/>
+          <text x="360" y="52" text-anchor="middle" font-size="13" class="m b">IdmlMergeDriver</text>
+          <text x="360" y="76" text-anchor="middle" font-size="12" class="s">发生冲突：输出冲突报告</text>
+          <rect x="504" y="22" width="200" height="76" rx="10" class="fp le"/><rect x="508" y="26" width="192" height="68" rx="8" class="fn le"/>
+          <text x="604" y="52" text-anchor="middle" font-size="13" class="b">调用后</text>
+          <text x="604" y="76" text-anchor="middle" font-size="12" class="s">校验冲突报告；ours 仍为 <tspan class="m">h₀</tspan></text>
+          <path d="M218,60 L256,60" class="ar" marker-end="url(#a12)"/>
+          <path d="M462,60 L500,60" class="ar" marker-end="url(#a12)"/>
+        </svg>
+        </div>
+        <figcaption><b>图 12</b>　流程图，双线表示工程契约。该行为对应 IdmlMergeDriver 的接口契约，作为回归测试固定下来。</figcaption>
+      </figure>
+    </section>
+
+    <!-- ===== 九 实施顺序 ===== -->
+    <section id="plan">
+      <span class="sec-tag">九 · 论文 §6.5、§7</span>
+      <h2>实施顺序与规模测试</h2>
+      <p class="lead">按依赖关系排列：先补依据与核心场景，再提升断言，最后做整包验收与规模测试。</p>
+
+      <ol class="steps">
+        <li>给现有 15 组样本补齐预期依据：论文规则、项目细化或 IDML 规则<a class="to" href="#corpus">见第七部分</a></li>
+        <li>补论文核心场景：移动与内容更新、父移动与子重排、guards、删除祖先与编辑后代<a class="to" href="#matrix">见第四部分</a></li>
+        <li>补完整结果断言：从 conflicts.isEmpty 提升到完整树比较<a class="to" href="#assert">见第五部分</a></li>
+        <li>参数化运行全部 corpus：每组运行正常顺序和左右交换顺序<a class="to" href="#props">见第六部分</a></li>
+        <li>补无 Self 匹配与混排文本测试<a class="to" href="#matrix">见第四部分</a></li>
+        <li>补整包引用校验和真实 InDesign 验收样本<a class="to" href="#idml">见第八部分</a></li>
+        <li>规模测试：分别统计解析、匹配、合并、写包耗时</li>
+      </ol>
+
+      <figure>
+        <div class="fig-scroll">
+        <svg viewBox="0 0 720 172" role="img" aria-label="端到端耗时的四段计时">
+          <path d="M360,62 L360,52 L520,52 L520,62" class="bk"/>
+          <text x="440" y="40" text-anchor="middle" font-size="12" class="km">论文图 6 的计时范围：不含解析与匹配</text>
+          <rect x="40" y="70" width="160" height="38" class="bx2"/>
+          <rect x="200" y="70" width="160" height="38" class="bx2"/>
+          <rect x="360" y="70" width="160" height="38" class="bm"/>
+          <rect x="520" y="70" width="160" height="38" class="bx2"/>
+          <text x="120" y="90" text-anchor="middle" dominant-baseline="central" font-size="13">解析 XML</text>
+          <text x="280" y="90" text-anchor="middle" dominant-baseline="central" font-size="13">匹配</text>
+          <text x="440" y="90" text-anchor="middle" dominant-baseline="central" font-size="13" class="km">合并</text>
+          <text x="600" y="90" text-anchor="middle" dominant-baseline="central" font-size="13">写包</text>
+          <line x1="40" y1="108" x2="40" y2="117" class="lp"/>
+          <line x1="200" y1="108" x2="200" y2="117" class="lp"/>
+          <line x1="360" y1="108" x2="360" y2="117" class="lp"/>
+          <line x1="520" y1="108" x2="520" y2="117" class="lp"/>
+          <line x1="680" y1="108" x2="680" y2="117" class="lp"/>
+          <text x="40" y="134" text-anchor="middle" font-size="12" class="m f">t₀</text>
+          <text x="200" y="134" text-anchor="middle" font-size="12" class="m f">t₁</text>
+          <text x="360" y="134" text-anchor="middle" font-size="12" class="m f">t₂</text>
+          <text x="520" y="134" text-anchor="middle" font-size="12" class="m f">t₃</text>
+          <text x="680" y="134" text-anchor="middle" font-size="12" class="m f">t₄</text>
+          <text x="360" y="162" text-anchor="middle" font-size="11.5" class="f">分段宽度为示意，不代表耗时比例</text>
+        </svg>
+        </div>
+        <figcaption><b>图 13</b>　耗时分段示意图。§6.5 的 O(n log n) 假设单节点内容大小有界，整包端到端耗时与该结论分开比较。</figcaption>
+      </figure>
+      <div class="note info"><span class="lbl">规模测试的设计依据</span>§7（第 9 页）使用节点数与编辑数各不相同的生成树，insert、delete、move、update 等概率出现，并以 <span class="nt">t = c₀ + c₁n + c₂e</span> 拟合执行时间。规模测试可沿用这一设计。</div>
+
+      <h3>回归入口</h3>
+<pre class="algo"><span class="cm"># 单元与集成测试</span>
+sbt "core/test" "idml/test"
+
+<span class="cm"># 按生成规则重建并验证样本</span>
+python3 idml/tools/generate_three_way_corpus.py --verify</pre>
+      <p>第二条命令证明样本能按生成规则重建并通过验证；合并器对全部样本的结果测试另行运行。</p>
+    </section>
+
+  </main>
+</div>
+
+<footer class="foot">
+  依据：T. Lindholm, “A Three-way Merge for XML Documents”, DocEng ’04；测试计划原文。图中的示例值与文件名为示意。版式与配色沿用 Three-way_XML_Merge.html。
+</footer>
+
+<script>
+(function(){
+  // scroll-spy for the table of contents
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var map = {};
+  links.forEach(function(a){
+    var id = a.getAttribute('href').slice(1);
+    if(document.getElementById(id)) map[id] = a;
+  });
+  if('IntersectionObserver' in window){
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){
+          links.forEach(function(l){ l.classList.remove('active'); });
+          var a = map[e.target.id];
+          if(a) a.classList.add('active');
+        }
+      });
+    },{rootMargin:'-20% 0px -70% 0px',threshold:0});
+    Object.keys(map).forEach(function(id){ obs.observe(document.getElementById(id)); });
+  }
+
+  // tabs
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab-btn'));
+  function activate(btn, focus){
+    tabs.forEach(function(b){
+      var on = (b === btn);
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+      b.setAttribute('tabindex', on ? '0' : '-1');
+      var p = document.getElementById(b.getAttribute('data-tab'));
+      if(p) p.classList.toggle('active', on);
+    });
+    if(focus) btn.focus();
+  }
+  tabs.forEach(function(btn, i){
+    btn.addEventListener('click', function(){ activate(btn, false); });
+    btn.addEventListener('keydown', function(ev){
+      if(ev.key === 'ArrowRight' || ev.key === 'ArrowLeft'){
+        ev.preventDefault();
+        var n = (i + (ev.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length;
+        activate(tabs[n], true);
+      }
+    });
+  });
+
+  // mobile table of contents
+  var toc = document.getElementById('toc');
+  var tt = document.getElementById('tocToggle');
+  if(tt){
+    tt.addEventListener('click', function(){
+      var open = toc.classList.toggle('open');
+      tt.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+  links.forEach(function(a){
+    a.addEventListener('click', function(){
+      toc.classList.remove('open');
+      if(tt) tt.setAttribute('aria-expanded', 'false');
+    });
+  });
+})();
+</script>
+</body>
+</html>

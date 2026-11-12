@@ -18,6 +18,21 @@ See [DESIGN.md](DESIGN.md) for how the extraction/rendering framework actually w
 class hierarchy, the field-naming conventions, the combinator "arity ladder," and the escape
 hatches for irregular real-world XML. This README covers what the modules are and how to use them.
 
+## Local Git workflow
+
+Use `/Users/lady_penguin/Documents/3-way-merge` as the shared project working directory.
+Keep each task or MR on a Git branch and switch branches here with `git switch`.
+New task branches use the `kaining/` prefix unless another name is requested.
+Create an additional folder, clone, or worktree only when the user explicitly requests one.
+
+Check `git status` and preserve uncommitted work before switching branches. Coordinate tasks
+sequentially so that branch changes in this shared directory happen one at a time. When
+consolidating an old directory, preserve its commits and local files after checking active tasks.
+The detailed agent instructions are in [AGENTS.md](AGENTS.md).
+
+The former `Documents/3 way merge paper` materials are now in
+[`doc/3-way-merge-paper/`](doc/3-way-merge-paper/).
+
 ## Modules
 
 | Module | Artifact | Status |

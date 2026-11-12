@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg
+  PUBLIC '-//W3C//DTD SVG 1.0//EN'
+  'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
+<svg width="720" height="205" preserveAspectRatio="xMinYMin meet" viewBox="0 0 720 205" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<title>...</title>
+	<desc>...</desc>
+	<clipPath id="clip">
+		<rect x="0" y="0" width="720" height="205"/>
+	</clipPath>
+	<g id="group" transform="scale(1,-1) translate(0,-205)" style="clip-path: url(#clip)">
+		<g transform="">
+			<rect x="5" y="94" width="165" height="91" style="stroke: rgb(54%,61%,66%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(94%,96%,97%); fill-rule: evenodd;"/>
+			<text x="33.8645" y="160" style="font-family: Helvetica-Bold; font-size: 13.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,320) scale(1,-1)">Correspondence</text>
+			<text x="14.792000000000002" y="137" style="font-family: Helvetica; font-size: 12px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,274) scale(1,-1)">Self and anonymous nodes</text>
+			<text x="29.137999999999998" y="119" style="font-family: Helvetica; font-size: 12px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,238) scale(1,-1)">Identity and ambiguity</text>
+			<path d="M 170,138 L 182,138 Z" style="stroke: rgb(25%,32%,38%); stroke-linecap: butt; stroke-width: 1;"/>
+			<polygon points="178 141, 184 138, 178 135" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(25%,32%,38%); fill-rule: evenodd;"/>
+			<rect x="185" y="94" width="165" height="91" style="stroke: rgb(54%,61%,66%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(94%,96%,97%); fill-rule: evenodd;"/>
+			<text x="207.479" y="160" style="font-family: Helvetica-Bold; font-size: 13.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,320) scale(1,-1)">Tree reconciliation</text>
+			<text x="217.142" y="137" style="font-family: Helvetica; font-size: 12px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,274) scale(1,-1)">PCS and attributes</text>
+			<text x="193.13" y="119" style="font-family: Helvetica; font-size: 12px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,238) scale(1,-1)">Reachable edits and rebuild</text>
+			<path d="M 350,138 L 362,138 Z" style="stroke: rgb(25%,32%,38%); stroke-linecap: butt; stroke-width: 1;"/>
+			<polygon points="358 141, 364 138, 358 135" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(25%,32%,38%); fill-rule: evenodd;"/>
+			<rect x="365" y="94" width="165" height="91" style="stroke: rgb(54%,61%,66%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(94%,96%,97%); fill-rule: evenodd;"/>
+			<text x="386.723" y="160" style="font-family: Helvetica-Bold; font-size: 13.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,320) scale(1,-1)">Package validation</text>
+			<text x="382.148" y="137" style="font-family: Helvetica; font-size: 12px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,274) scale(1,-1)">Frame / story references</text>
+			<text x="378.8" y="119" style="font-family: Helvetica; font-size: 12px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,238) scale(1,-1)">Concurrent dependencies</text>
+			<path d="M 530,138 L 542,138 Z" style="stroke: rgb(25%,32%,38%); stroke-linecap: butt; stroke-width: 1;"/>
+			<polygon points="538 141, 544 138, 538 135" style="stroke: none; stroke-linecap: butt; stroke-width: 1; fill: rgb(25%,32%,38%); fill-rule: evenodd;"/>
+			<rect x="545" y="94" width="165" height="91" style="stroke: rgb(54%,61%,66%); stroke-linecap: butt; stroke-width: 0.8; fill: rgb(94%,96%,97%); fill-rule: evenodd;"/>
+			<text x="567.12125" y="160" style="font-family: Helvetica-Bold; font-size: 13.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,320) scale(1,-1)">Output transaction</text>
+			<text x="577.802" y="137" style="font-family: Helvetica; font-size: 12px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,274) scale(1,-1)">Stage and re-open</text>
+			<text x="574.484" y="119" style="font-family: Helvetica; font-size: 12px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,238) scale(1,-1)">Atomic replacement</text>
+			<path d="M 15,67 L 705,67 Z" style="stroke: rgb(60%,65%,68%); stroke-linecap: butt; stroke-width: 1; stroke-dasharray: 4, 3;"/>
+			<text x="150.92099999999996" y="43" style="font-family: Helvetica; font-size: 13px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,86) scale(1,-1)">Additional observation boundary  |  InDesign open / save / close / reopen</text>
+			<text x="237.954" y="22" style="font-family: Helvetica-Oblique; font-size: 12px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,44) scale(1,-1)">Real application evidence remains incomplete</text>
+		</g>
+	</g>
+</svg>

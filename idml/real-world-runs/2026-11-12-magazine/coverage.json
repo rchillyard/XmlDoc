@@ -1,0 +1,429 @@
+[
+  {
+    "case": "01-single-add",
+    "covered": true,
+    "checks": {
+      "left_label_identity": true,
+      "left_story_and_thread_integrity": true,
+      "right_label_identity": true,
+      "right_story_and_thread_integrity": true,
+      "left_insertion": true
+    },
+    "identities": {
+      "r1": "u2aa",
+      "g1": "u169d",
+      "r3": "u2ab",
+      "r4": "u2ac",
+      "r2": "u2ae",
+      "tfA": "u794",
+      "tfB": "u7aa",
+      "story2frame": "u7c0",
+      "tf1": "u7d6",
+      "tf2": "u7ec",
+      "g2": "u169f",
+      "r6": "u2ad",
+      "r7": "u169e"
+    }
+  },
+  {
+    "case": "02-single-delete",
+    "covered": true,
+    "checks": {
+      "left_label_identity": true,
+      "left_story_and_thread_integrity": true,
+      "right_label_identity": true,
+      "right_story_and_thread_integrity": true,
+      "r2_deleted_left": true
+    },
+    "identities": {
+      "r1": "u2aa",
+      "g1": "u169d",
+      "r3": "u2ab",
+      "r4": "u2ac",
+      "r2": "u2ae",
+      "tfA": "u794",
+      "tfB": "u7aa",
+      "story2frame": "u7c0",
+      "tf1": "u7d6",
+      "tf2": "u7ec",
+      "g2": "u169f",
+      "r6": "u2ad",
+      "r7": "u169e"
+    }
+  },
+  {
+    "case": "03-single-move",
+    "covered": true,
+    "checks": {
+      "left_label_identity": true,
+      "left_story_and_thread_integrity": true,
+      "right_label_identity": true,
+      "right_story_and_thread_integrity": true,
+      "order_changed": true
+    },
+    "identities": {
+      "r1": "u2aa",
+      "g1": "u169d",
+      "r3": "u2ab",
+      "r4": "u2ac",
+      "r2": "u2ae",
+      "tfA": "u794",
+      "tfB": "u7aa",
+      "story2frame": "u7c0",
+      "tf1": "u7d6",
+      "tf2": "u7ec",
+      "g2": "u169f",
+      "r6": "u2ad",
+      "r7": "u169e"
+    }
+  },
+  {
+    "case": "04-both-add-diff-pos",
+    "covered": true,
+    "checks": {
+      "left_label_identity": true,
+      "left_story_and_thread_integrity": true,
+      "right_label_identity": true,
+      "right_story_and_thread_integrity": true,
+      "left_insertion": true,
+      "right_insertion": true,
+      "distinct_insert_id": true
+    },
+    "identities": {
+      "r1": "u2aa",
+      "g1": "u169d",
+      "r3": "u2ab",
+      "r4": "u2ac",
+      "r2": "u2ae",
+      "tfA": "u794",
+      "tfB": "u7aa",
+      "story2frame": "u7c0",
+      "tf1": "u7d6",
+      "tf2": "u7ec",
+      "g2": "u169f",
+      "r6": "u2ad",
+      "r7": "u169e"
+    }
+  },
+  {
+    "case": "05-move-move-divergent",
+    "covered": true,
+    "checks": {
+      "left_label_identity": true,
+      "left_story_and_thread_integrity": true,
+      "right_label_identity": true,
+      "right_story_and_thread_integrity": true,
+      "left_move": true,
+      "right_move": true,
+      "divergent_order": true
+    },
+    "identities": {
+      "r1": "u2aa",
+      "g1": "u169d",
+      "r3": "u2ab",
+      "r4": "u2ac",
+      "r2": "u2ae",
+      "tfA": "u794",
+      "tfB": "u7aa",
+      "story2frame": "u7c0",
+      "tf1": "u7d6",
+      "tf2": "u7ec",
+      "g2": "u169f",
+      "r6": "u2ad",
+      "r7": "u169e"
+    }
+  },
+  {
+    "case": "06-delete-vs-modify",
+    "covered": true,
+    "checks": {
+      "left_label_identity": true,
+      "left_story_and_thread_integrity": true,
+      "right_label_identity": true,
+      "right_story_and_thread_integrity": true,
+      "r2_deleted_left": true,
+      "right_fill_changed": true
+    },
+    "identities": {
+      "r1": "u2aa",
+      "g1": "u169d",
+      "r3": "u2ab",
+      "r4": "u2ac",
+      "r2": "u2ae",
+      "tfA": "u794",
+      "tfB": "u7aa",
+      "story2frame": "u7c0",
+      "tf1": "u7d6",
+      "tf2": "u7ec",
+      "g2": "u169f",
+      "r6": "u2ad",
+      "r7": "u169e"
+    }
+  },
+  {
+    "case": "06b-delete-thread-vs-content",
+    "covered": true,
+    "checks": {
+      "left_label_identity": true,
+      "left_story_and_thread_integrity": true,
+      "right_label_identity": true,
+      "right_story_and_thread_integrity": true,
+      "tf2_deleted": true,
+      "story_edited": true
+    },
+    "identities": {
+      "r1": "u2aa",
+      "g1": "u169d",
+      "r3": "u2ab",
+      "r4": "u2ac",
+      "r2": "u2ae",
+      "tfA": "u794",
+      "tfB": "u7aa",
+      "story2frame": "u7c0",
+      "tf1": "u7d6",
+      "tf2": "u7ec",
+      "g2": "u169f",
+      "r6": "u2ad",
+      "r7": "u169e"
+    }
+  },
+  {
+    "case": "07-same-story-diff-para",
+    "covered": true,
+    "checks": {
+      "left_label_identity": true,
+      "left_story_and_thread_integrity": true,
+      "right_label_identity": true,
+      "right_story_and_thread_integrity": true,
+      "paragraph_edits": true
+    },
+    "identities": {
+      "r1": "u2aa",
+      "g1": "u169d",
+      "r3": "u2ab",
+      "r4": "u2ac",
+      "r2": "u2ae",
+      "tfA": "u794",
+      "tfB": "u7aa",
+      "story2frame": "u7c0",
+      "tf1": "u7d6",
+      "tf2": "u7ec",
+      "g2": "u169f",
+      "r6": "u2ad",
+      "r7": "u169e"
+    }
+  },
+  {
+    "case": "08-same-para-overlap",
+    "covered": true,
+    "checks": {
+      "left_label_identity": true,
+      "left_story_and_thread_integrity": true,
+      "right_label_identity": true,
+      "right_story_and_thread_integrity": true,
+      "overlap": true
+    },
+    "identities": {
+      "r1": "u2aa",
+      "g1": "u169d",
+      "r3": "u2ab",
+      "r4": "u2ac",
+      "r2": "u2ae",
+      "tfA": "u794",
+      "tfB": "u7aa",
+      "story2frame": "u7c0",
+      "tf1": "u7d6",
+      "tf2": "u7ec",
+      "g2": "u169f",
+      "r6": "u2ad",
+      "r7": "u169e"
+    }
+  },
+  {
+    "case": "08b-same-para-disjoint",
+    "covered": true,
+    "checks": {
+      "left_label_identity": true,
+      "left_story_and_thread_integrity": true,
+      "right_label_identity": true,
+      "right_story_and_thread_integrity": true,
+      "disjoint": true
+    },
+    "identities": {
+      "r1": "u2aa",
+      "g1": "u169d",
+      "r3": "u2ab",
+      "r4": "u2ac",
+      "r2": "u2ae",
+      "tfA": "u794",
+      "tfB": "u7aa",
+      "story2frame": "u7c0",
+      "tf1": "u7d6",
+      "tf2": "u7ec",
+      "g2": "u169f",
+      "r6": "u2ad",
+      "r7": "u169e"
+    }
+  },
+  {
+    "case": "09-zorder",
+    "covered": true,
+    "checks": {
+      "left_label_identity": true,
+      "left_story_and_thread_integrity": true,
+      "right_label_identity": true,
+      "right_story_and_thread_integrity": true,
+      "left_order_changed": true,
+      "right_order_changed": true,
+      "compatible_pair_order": true
+    },
+    "identities": {
+      "r1": "u2aa",
+      "g1": "u169d",
+      "r3": "u2ab",
+      "r4": "u2ac",
+      "r2": "u2ae",
+      "tfA": "u794",
+      "tfB": "u7aa",
+      "story2frame": "u7c0",
+      "tf1": "u7d6",
+      "tf2": "u7ec",
+      "g2": "u169f",
+      "r6": "u2ad",
+      "r7": "u169e"
+    }
+  },
+  {
+    "case": "10-group-ungroup",
+    "covered": true,
+    "checks": {
+      "left_label_identity": true,
+      "left_story_and_thread_integrity": true,
+      "right_label_identity": true,
+      "right_story_and_thread_integrity": true,
+      "ungrouped": true,
+      "retained_group_right": true,
+      "transform_changed": true
+    },
+    "identities": {
+      "r1": "u2aa",
+      "g1": "u169d",
+      "r3": "u2ab",
+      "r4": "u2ac",
+      "r2": "u2ae",
+      "tfA": "u794",
+      "tfB": "u7aa",
+      "story2frame": "u7c0",
+      "tf1": "u7d6",
+      "tf2": "u7ec",
+      "g2": "u169f",
+      "r6": "u2ad",
+      "r7": "u169e"
+    }
+  },
+  {
+    "case": "10b-divergent-parent",
+    "covered": true,
+    "checks": {
+      "left_label_identity": true,
+      "left_story_and_thread_integrity": true,
+      "right_label_identity": true,
+      "right_story_and_thread_integrity": true,
+      "two_new_parents": true
+    },
+    "identities": {
+      "r1": "u2aa",
+      "g1": "u169d",
+      "r3": "u2ab",
+      "r4": "u2ac",
+      "r2": "u2ae",
+      "tfA": "u794",
+      "tfB": "u7aa",
+      "story2frame": "u7c0",
+      "tf1": "u7d6",
+      "tf2": "u7ec",
+      "g2": "u169f",
+      "r6": "u2ad",
+      "r7": "u169e"
+    }
+  },
+  {
+    "case": "11-thread-insert",
+    "covered": true,
+    "checks": {
+      "left_label_identity": true,
+      "left_story_and_thread_integrity": true,
+      "right_label_identity": true,
+      "right_story_and_thread_integrity": true,
+      "insert_thread": true
+    },
+    "identities": {
+      "r1": "u2aa",
+      "g1": "u169d",
+      "r3": "u2ab",
+      "r4": "u2ac",
+      "r2": "u2ae",
+      "tfA": "u794",
+      "tfB": "u7aa",
+      "story2frame": "u7c0",
+      "tf1": "u7d6",
+      "tf2": "u7ec",
+      "g2": "u169f",
+      "r6": "u2ad",
+      "r7": "u169e"
+    }
+  },
+  {
+    "case": "12-next-divergent",
+    "covered": true,
+    "checks": {
+      "left_label_identity": true,
+      "left_story_and_thread_integrity": true,
+      "right_label_identity": true,
+      "right_story_and_thread_integrity": true,
+      "divergent_thread": true
+    },
+    "identities": {
+      "r1": "u2aa",
+      "g1": "u169d",
+      "r3": "u2ab",
+      "r4": "u2ac",
+      "r2": "u2ae",
+      "tfA": "u794",
+      "tfB": "u7aa",
+      "story2frame": "u7c0",
+      "tf1": "u7d6",
+      "tf2": "u7ec",
+      "g2": "u169f",
+      "r6": "u2ad",
+      "r7": "u169e"
+    }
+  },
+  {
+    "case": "13-parentstory-vs-content",
+    "covered": true,
+    "checks": {
+      "left_label_identity": true,
+      "left_story_and_thread_integrity": true,
+      "right_label_identity": true,
+      "right_story_and_thread_integrity": true,
+      "story_reassigned": true,
+      "old_story_edit": true
+    },
+    "identities": {
+      "r1": "u2aa",
+      "g1": "u169d",
+      "r3": "u2ab",
+      "r4": "u2ac",
+      "r2": "u2ae",
+      "tfA": "u794",
+      "tfB": "u7aa",
+      "story2frame": "u7c0",
+      "tf1": "u7d6",
+      "tf2": "u7ec",
+      "g2": "u169f",
+      "r6": "u2ad",
+      "r7": "u169e"
+    }
+  }
+]
