@@ -18,13 +18,12 @@ object FP {
   /**
    * Sequence method to combine elements of Try.
    *
-   * TESTME (#106)
-   *
    * @param xys an Iterator of Try[X]
    * @tparam X the underlying type
    * @return a Try of Iterator[X]
    */
-  def sequence[X](xys: Iterator[Try[X]]): Try[Iterator[X]] = sequence(xys.to(List)).map(_.iterator)
+  def sequence[X](xys: Iterator[Try[X]]): Try[Iterator[X]] = 
+    sequence(xys.to(List)).map(_.iterator)
 
   /**
    * Method to transform a Seq of Try[X] into a Try of Seq[X].
@@ -87,8 +86,6 @@ object FP {
   /**
    * Sequence method to combine elements of Try.
    *
-   * TESTME (#106)
-   *
    * @param xys       an Iterable of Try[X].
    * @param fSuccess  a function of type X => Try of Option[X].
    * @param pfFailure a partial function of type Throwable => Try of Option[X].
@@ -104,8 +101,6 @@ object FP {
   /**
    * Method to partition an  method to combine elements of Try as an Iterator.
    *
-   * TESTME (#106)
-   *
    * @param xys an Iterator of Try[X].
    * @tparam X the underlying type.
    * @return a tuple of two iterators of Try[X], the first one being successes, the second one being failures.
@@ -114,8 +109,6 @@ object FP {
 
   /**
    * Method to partition an  method to combine elements of Try.
-   *
-   * TESTME (#106)
    *
    * @param xys a Seq of Try[X].
    * @tparam X the underlying type.
@@ -126,13 +119,12 @@ object FP {
   /**
    * Method to yield a URL for a given resourceForClass in the classpath for C.
    *
-   * TESTME (#106)
-   *
    * @param resourceName the name of the resourceForClass.
    * @tparam C a class of the package containing the resourceForClass.
    * @return a Try[URL].
    */
-  def resource[C: ClassTag](resourceName: String): Try[URL] = resourceForClass(resourceName, implicitly[ClassTag[C]].runtimeClass)
+  def resource[C: ClassTag](resourceName: String): Try[URL] = 
+    resourceForClass(resourceName, implicitly[ClassTag[C]].runtimeClass)
 
   /**
    * Method to yield a Try[URL] for a resource name and a given class.
@@ -227,8 +219,6 @@ object FP {
    * Applies a transformation function to the successful value of a Try if the value satisfies a predicate.
    * If the predicate fails, it returns a Failure with an exception indicating the reason.
    *
-   * TESTME (#106)
-   *
    * @param p         a predicate function to test the successful value of the input Try.
    * @param predicate a descriptive string used in the exception message if the predicate fails. Default is "predicate".
    * @param f         a transformation function applied to the value if the predicate passes.
@@ -266,15 +256,14 @@ object TryUsing {
    * This method is similar to `apply(r)` but it takes a `Try[R]` as its parameter.
    * The definition of `f` is the same as in the other apply, however.
    *
-   * TESTME (#106)
-   *
    * @param ry a Try[R] which is passed into f and will be managed via `Using.apply`
    * @param f  a function of R => Try[A].
    * @tparam R the resource type.
    * @tparam A the underlying type of the result.
    * @return a Try[A]
    */
-  def apply[R: Releasable, A](ry: Try[R])(f: R => Try[A]): Try[A] = for (r <- ry; a <- apply(r)(f)) yield a
+  def apply[R: Releasable, A](ry: Try[R])(f: R => Try[A]): Try[A] = 
+    for (r <- ry; a <- apply(r)(f)) yield a
 }
 
 /**
