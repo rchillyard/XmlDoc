@@ -54,7 +54,7 @@ trait NamedFunction[E] {
  */
 object NamedFunction {
     private def assertNamedNotNullMember[N: NamedFunction, T: ClassTag](caller: String, member: String): Unit = {
-        // NOTE: for now we do nothing to actually evaluate the implicit evidence of NamedFunction[N].
+        // TODO for now we do nothing to actually evaluate the implicit evidence of NamedFunction[N]. (#163)
 //        Option(implicitly[NamedFunction[N]]) match {
 //            case None =>
 //                val kml: KmlRenderers.type = KmlRenderers
