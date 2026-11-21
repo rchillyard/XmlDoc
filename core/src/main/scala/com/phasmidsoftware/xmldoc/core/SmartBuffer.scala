@@ -20,7 +20,7 @@ case class SmartBuffer(sb: StringBuilder) {
     if (delimAppend) trim: Unit
     sb.append(s)
     if (sb.result().contains(" \n"))
-      println(s"SmartBuffer: ${sb.result()}") // XXX what's going on here?
+      println(s"SmartBuffer: ${sb.result()}") // ASIDE what's going on here?
     this
   }
 
@@ -115,7 +115,7 @@ object SmartBuffer {
 
   /**
    * Trims trailing spaces from the given StringBuilder instance.
-   * CONSIDER a faster way to do this
+   * CONSIDER a faster way to do this (#127)
    *
    * @param sb the StringBuilder instance to modify by removing trailing spaces
    * @return Unit

@@ -53,7 +53,7 @@ trait Extractor[T] extends NamedFunction[Extractor[T]] {
   /**
    * Method to create an `Extractor[T]` such that, if this `Extractor[T]` fails, then we invoke the (implicit) `Extractor[P]` instead.
    *
-   * TESTME
+   * TESTME (#107)
    *
    * @tparam P the type of the alternative `Extractor`.
    *           `P` must provide implicit evidence of `Extractor[P]`, and `P` must be a subclass of `T`.
@@ -290,7 +290,7 @@ object Extractor {
   /**
    * Method to extract child elements from a node.
    *
-   * CONSIDER rewriting this method: it has ended up being a huge a hack and needs work!!
+   * CONSIDER rewriting this method: it has ended up being a huge a hack and needs work!! (#110)
    * NOTE: There are four different ways to get a successful result:
    * (1) node / member yields a non-empty result which is passed into extractMulti;
    * (2) TagProperties.mustMatch(member) in which case the result will be empty;
@@ -308,7 +308,7 @@ object Extractor {
       case Plural(tag) =>
         logger.debug(s"extractChildren with tag=$tag (where member=$member) for ${renderNode(node)}")
         val explicitChildren: NodeSeq = node / tag
-        if (explicitChildren.nonEmpty || TagProperties.mustMatch(tag)) // TODO unite Plural and TagProperties
+        if (explicitChildren.nonEmpty || TagProperties.mustMatch(tag)) // TODO unite Plural and TagProperties (#111)
           extractMulti(explicitChildren) // requires implicit MultiExtractor[P]
         else Failure(XmlException(s"extractChildren: no children matched any of $tag (singular of $member) in ${renderNode(node)}"))
       case _ =>
@@ -335,7 +335,7 @@ object Extractor {
    * @tparam P the type of elements to extract, enabled by the context-bound `MultiExtractor`
    */
   private def extractChildless[P: MultiExtractor](node: Node, member: String): Try[P] = {
-    // CONSIDER use Flog logging
+    // CONSIDER use Flog logging (#112)
     val ts = ChildNames.translate(member)
     logger.debug(s"extractChildren(${name[MultiExtractor[P]]})($member)(${renderNode(node)}): get $ts")
     if (ts.isEmpty) logger.warn(s"extractChildren: logic error: no suitable tags found for children of member $member in ${renderNode(node)}")
@@ -385,7 +385,7 @@ object Extractor {
   /**
    * Extracts a field value from a given XML node based on the specified field name.
    *
-   * CONSIDER improving the model on which this extraction is based. It's messy!
+   * CONSIDER improving the model on which this extraction is based. It's messy! (#113)
    *
    * @param field The name of the field to extract. This may represent different types
    *              of elements or attributes, such as node content, attributes, optional attributes,
@@ -422,7 +422,7 @@ object Extractor {
         val nodeSeq = node / x
         val capitalized = if (nodeSeq.isEmpty) node / s"${x.head.toUpper}${x.tail}" else nodeSeq
         val fallback = if (capitalized.isEmpty) TagProperties.aliases(x).flatMap(node / _) else capitalized
-        s"optional: $x" -> extractOptional[P](fallback) // CONSIDER using \\ like singleton below
+        s"optional: $x" -> extractOptional[P](fallback) // CONSIDER using \\ like singleton below (#114)
       // NOTE this is the default case which is used for a singleton entity (plural entities would be extracted using extractChildren).
       case x =>
         s"singleton: $x" -> (extractSingleton[P](node / x) orElse extractSingleton[P](node \\ x))
@@ -468,7 +468,7 @@ object Extractor {
   /**
    * Extracts text content from the provided Node and attempts to parse it into a value of type `P`.
    *
-   * CONSIDER what's the point of this method? Couldn't we just inline it as `extract`?
+   * CONSIDER what's the point of this method? Couldn't we just inline it as `extract`? (#115)
    *
    * @param node The `Node` from which text content is to be extracted.
    * @tparam P The expected type of the extracted content, which must have an associated `Extractor`.
@@ -526,7 +526,7 @@ object Extractor {
 
   /**
    * Boolean extractor.
-   * TODO use NodeParser.tryParse
+   * TODO use NodeParser.tryParse (#116)
    */
   implicit val booleanExtractor: Extractor[Boolean] = (charSequenceExtractor flatMap {
     case "1" | "true" | "T" | "Y" => Success(true)
@@ -544,7 +544,7 @@ object Extractor {
 
   /**
    * Long extractor.
-   * TODO use NodeParser.tryParse
+   * TODO use NodeParser.tryParse (#116)
    */
   implicit val longExtractor: Extractor[Long] = (charSequenceExtractor flatMap {
     case w: String => Success(w.toLong)
@@ -631,7 +631,7 @@ object MultiExtractor {
    * Method to create an MultiExtractor[T] from a NodeSeq => Try[T] function.
    * Note that this isn't strictly necessary because of the SAM conversion mechanism which turns a Node => Try[T] function into an Extractor[T].
    *
-   * TESTME
+   * TESTME (#107)
    *
    * @param f a NodeSeq => Try[T] function.
    * @tparam T the underlying type of the resulting MultiExtractor.
@@ -749,7 +749,7 @@ object MultiExtractorBase {
  * Trait which extends a function of type String => Extractor[T].
  * When the apply method is invoked with a particular label, an appropriate Extractor[T] is returned.
  *
- * CONSIDER renaming this because it isn't an extractor, but a function which creates an extractor from a String.
+ * CONSIDER renaming this because it isn't an extractor, but a function which creates an extractor from a String. (#117)
  *
  * @tparam T the underlying type of the result of invoking apply. T may be an Iterable type.
  */
@@ -810,7 +810,7 @@ trait TagToSequenceExtractorFunc[T] extends TagToExtractorFunc[Seq[T]] {
  */
 class SubclassExtractor[T](val labels: Seq[String])(implicit tsm: MultiExtractor[Seq[T]]) extends Extractor[Seq[T]] {
   /**
-   * TESTME in particular regarding the use of sequenceForgiving
+   * TESTME in particular regarding the use of sequenceForgiving (#107)
    *
    * @param node a Node.
    * @return a Try[T].
@@ -824,11 +824,11 @@ class SubclassExtractor[T](val labels: Seq[String])(implicit tsm: MultiExtractor
 /**
  * Object to manage translation of a name to a Seq of names.
  *
- * CONSIDER removing this altogether because there is another mechanism (Feature.multiExtractor) which does something similar.
+ * CONSIDER removing this altogether because there is another mechanism (Feature.multiExtractor) which does something similar. (#118)
  *
  */
 object ChildNames {
-  // CONSIDER make this immutable.
+  // CONSIDER make this immutable. (#119)
   val map: mutable.HashMap[String, Seq[String]] = new mutable.HashMap()
 
   /**
@@ -940,7 +940,7 @@ object Plural extends JavaTokenParsers {
 
   /**
    * Matches specific singular terms that end in the character "s".
-   * TODO coordinate this with TagProperties
+   * TODO coordinate this with TagProperties (#111)
    *
    * This method defines a parser that matches predefined strings commonly
    * recognized as singular but ending in "s". These include specific terms

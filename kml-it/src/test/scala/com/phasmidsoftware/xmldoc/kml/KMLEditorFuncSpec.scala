@@ -37,7 +37,7 @@ class KMLEditorFuncSpec extends AnyFlatSpec with should.Matchers {
                 lineString match {
                   case LineString(_, cs) =>
                     cs.head.coordinates.size shouldBe 163
-                  // TODO check the ordering of the Coordinate values.
+                  // TODO check the ordering of the Coordinate values. (#142)
                   case x => fail(s"unexpected: $x")
                 }
               case x => fail(s"unexpected: $x")
@@ -70,7 +70,7 @@ class KMLEditorFuncSpec extends AnyFlatSpec with should.Matchers {
                 lineString match {
                   case LineString(_, cs) =>
                     cs.head.coordinates.size shouldBe 163
-                  // TODO check the ordering of the Coordinate values.
+                  // TODO check the ordering of the Coordinate values. (#142)
                   case x => fail(s"unexpected: $x")
                 }
               case x => fail(s"unexpected: $x")

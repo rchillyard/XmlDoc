@@ -33,7 +33,7 @@ trait Extractors {
    * NOTE This method is used to create an extractor that will extract an `Iterable` from a `Node`,
    * whereas we use `MultiExtractor` to extract an `Iterable` from a `NodeSeq`.
    *
-   * CONSIDER there must be an alternative to this code.
+   * CONSIDER there must be an alternative to this code. (#120)
    *
    * @param label the label of each of the child nodes to be extracted.
    * @tparam P the underlying type of the result.
@@ -132,7 +132,7 @@ trait Extractors {
   /**
    * Method to yield a MultiExtractor of `Seq[T]` such that T is the super-type of P0.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function whose sole purpose is to enable type inference (construct is never referenced in the code).
    * @param labels    the label of the elements we wish to extract (wrapped in Seq). The one label must correspond to P0.
@@ -271,9 +271,9 @@ trait Extractors {
    * This will occur when we have a case class with an additional parameter set
    * including one parameter of type B.
    *
-   * CONSIDER rename this (compose? or extractorCompose?) and couldn't it go inside Extractor?
+   * CONSIDER rename this (compose? or extractorCompose?) and couldn't it go inside Extractor? (#121)
    *
-   * CONSIDER inverting the parametric types so that the resulting type (T) is first.
+   * CONSIDER inverting the parametric types so that the resulting type (T) is first. (#122)
    *
    * @param extractorBtoT an extractor for the type B => T.
    * @tparam B the type of the value in the additional parameter set of T,
@@ -320,7 +320,7 @@ trait Extractors {
    * Extractor which will convert an Xml Node into an instance of a case class with one member.
    *
    * NOTE: this specific extractor provides logging.
-   * CONSIDER adding logging to the other extractors.
+   * CONSIDER adding logging to the other extractors. (#112)
    *
    * NOTE on naming P0's corresponding field in T: unless overridden via `fields`, the field
    * name is matched against the node according to `fieldExtractor`'s convention - a leading
@@ -436,7 +436,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with two members.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0,P1) => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -530,7 +530,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with three members.
    *
-   * CONSIDER re-implement all similar extractors using extractorPartial30, etc.
+   * CONSIDER re-implement all similar extractors using extractorPartial30, etc. (#123)
    * This can be done but requires turning dropLast to false when invoking extractorPartial30 (which doesn't currently have such a parameter).
    * See the commented code for how this should be done (but with the change mentioned).
    *
@@ -584,7 +584,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with three members.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0,P1,P2) => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -611,7 +611,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with three members.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0,P1,P2) => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -709,7 +709,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with three members and one auxiliary (non-member) parameter.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0, P1, P2) => B => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -761,7 +761,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with four members.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0,P1,P2,P3) => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -789,7 +789,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with four members.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0,P1,P2,P3) => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -817,7 +817,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with four members.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0,P1,P2,P3) => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -845,7 +845,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with four members.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0,P1,P2,P3) => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -898,7 +898,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with four members and one auxiliary (non-member) parameter.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0, P1, P2, P3) => B => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -950,7 +950,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with four members and one auxiliary (non-member) parameter.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0, P1, P2, P3) => B => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -977,7 +977,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with four members and one auxiliary (non-member) parameter.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0, P1, P2, P3) => B => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -1031,7 +1031,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with five members.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0,P1,P2,P3,P4) => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -1086,7 +1086,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with five members.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0,P1,P2,P3,P4) => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -1115,7 +1115,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with five members.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0,P1,P2,P3,P4) => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -1144,7 +1144,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with five members.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0,P1,P2,P3,P4) => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -1199,7 +1199,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with five members and one auxiliary (non-member) parameter.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0, P1, P2, P3, P4) => B => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -1253,7 +1253,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with five members and one auxiliary (non-member) parameter.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0, P1, P2, P3, P4) => B => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -1281,7 +1281,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with five members and one auxiliary (non-member) parameter.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0, P1, P2, P3, P4) => B => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -1309,7 +1309,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with five members and one auxiliary (non-member) parameter.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0, P1, P2, P3, P4) => B => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -1337,7 +1337,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with six members.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0,P1,P2,P3,P4,P5) => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -1367,7 +1367,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with six members.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0,P1,P2,P3,P4,P5) => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -1397,7 +1397,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with six members.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0,P1,P2,P3,P4,P5) => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -1455,7 +1455,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with six members.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0,P1,P2,P3,P4,P5) => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -1485,7 +1485,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with six members.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0,P1,P2,P3,P4,P5) => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -1515,7 +1515,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with six members.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0,P1,P2,P3,P4,P5) => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -1570,7 +1570,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with six members and one auxiliary (non-member) parameter.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0, P1, P2, P3, P4, P5) => B => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -1676,7 +1676,7 @@ trait Extractors {
   /**
    * Extractor which will convert an Xml Node into an instance of a case class with seven members and one auxiliary (non-member) parameter.
    *
-   * TESTME
+   * TESTME (#104)
    *
    * @param construct a function (P0, P1, P2, P3, P4, P5, P6) => B => T, usually the apply method of a case class.
    * @param fields    an optional sequence of field names to guide the extraction process,
@@ -2180,28 +2180,28 @@ object Extractors extends Extractors {
   /**
    * Int multi extractor.
    *
-   * TESTME
+   * TESTME (#104)
    */
   implicit object IntMultiExtractor extends MultiExtractorBase[Int](0 to Int.MaxValue)
 
   /**
    * Boolean multi extractor.
    *
-   * TESTME
+   * TESTME (#104)
    */
   implicit object BooleanMultiExtractor extends MultiExtractorBase[Boolean](0 to Int.MaxValue)
 
   /**
    * Double multi extractor.
    *
-   * TESTME
+   * TESTME (#104)
    */
   implicit object DoubleMultiExtractor extends MultiExtractorBase[Double](0 to Int.MaxValue)
 
   /**
    * Long multi extractor.
    *
-   * TESTME
+   * TESTME (#104)
    */
   implicit object LongMultiExtractor extends MultiExtractorBase[Long](0 to Int.MaxValue)
 
@@ -2225,7 +2225,7 @@ object Extractors extends Extractors {
    * If the `NodeSeq` is empty, it returns a `Success` containing `None` as `P`.
    * If the `NodeSeq` contains nodes, it uses the implicit `Extractor[P]` to attempt to extract the value.
    *
-   * TODO this method is incorrect. Fix it.
+   * TODO this method is incorrect. Fix it. (#124)
    *
    * @param nodeSeq the sequence of XML nodes from which the extraction is performed.
    * @tparam P the type of form Option[T] extracted value.
@@ -2242,7 +2242,7 @@ object Extractors extends Extractors {
   /**
    * Method to create a sequence extractor for type T.
    *
-   * TESTME: not currently used.
+   * TESTME: not currently used. (#104)
    *
    * @param fExtractor a `TagToSequenceExtractorFunc[T]`
    * @tparam T an iterable type.
@@ -2255,7 +2255,7 @@ object Extractors extends Extractors {
    * Return the field names as Seq[String], from either the fields parameter or by reflection into T.
    * Note that fields takes precedence and ClassTag[T] is ignored if fields is used.
    *
-   * TODO understand why this no longer seems to be used. It SHOULD be used. Sometimes we should be specifying false.
+   * TODO understand why this no longer seems to be used. It SHOULD be used. Sometimes we should be specifying false. (#125)
    *
    * @param fields a list of field names which, if not empty, is to be used instead of the reflected fields of T (defaults to Nil).
    * @tparam T the type (typically a case class) from which we will use reflection to get the field names (referred to only if fields is Nil)

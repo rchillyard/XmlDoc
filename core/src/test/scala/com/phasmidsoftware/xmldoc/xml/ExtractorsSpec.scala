@@ -93,7 +93,7 @@ class ExtractorsSpec extends AnyFlatSpec with should.Matchers with PrivateMethod
 
   object MyExtractors extends Extractors {
 
-    // XXX this is to demonstrate the usage of the ChildNames object.
+    // ASIDE this is to demonstrate the usage of the ChildNames object.
     ChildNames.addTranslation("empties", Seq("empty"))
 
     implicit val extractEmpty: Extractor[Empty.type] = extractor0[Empty.type](_ => Empty)
@@ -271,7 +271,7 @@ class ExtractorsSpec extends AnyFlatSpec with should.Matchers with PrivateMethod
     extracted shouldBe Success(Document3(1, None, List(Empty, Empty)))
   }
 
-  // TODO Issue #22 this should be just like the previous test
+  // TODO Issue #22 this should be just like the previous test (#140)
   ignore should "extractor3B" in {
     val xml: Elem = <xml id="1">
       <empty></empty> <empty></empty>
@@ -363,7 +363,7 @@ class ExtractorsSpec extends AnyFlatSpec with should.Matchers with PrivateMethod
 
   behavior of "Extractors"
 
-  // CONSIDER add tests for extractor1, etc.
+  // CONSIDER add tests for extractor1, etc. (#104)
 
   it should "extractorIterable" in {
     implicit val ee: Extractor[Empty.type] = MyExtractors.extractor0[Empty.type](_ => Empty)

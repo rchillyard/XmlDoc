@@ -10,7 +10,7 @@ import scala.reflect.ClassTag
  *
  * The name is held as a var. It is updated by the ^^ method.
  *
- * CONSIDER having a method which adds to the name but doesn't replace it.
+ * CONSIDER having a method which adds to the name but doesn't replace it. (#137)
  *
  * @tparam E the type of the function to be named.
  */

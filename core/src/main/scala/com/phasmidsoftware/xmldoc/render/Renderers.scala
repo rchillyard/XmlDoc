@@ -62,7 +62,7 @@ trait Renderers {
       r.productElement(0) match {
         case p0: P0 @unchecked =>
           for {
-            // XXX See renderer1 for better way to get a P0 parameter
+            // ASIDE See renderer1 for better way to get a P0 parameter
             wOuter <- renderOuter(r, p0, 0, format.indent)
             result <- doNestedRender(format, stateR, "", wOuter, r.productElementName(0))
           } yield prefix + result
@@ -282,7 +282,7 @@ trait Renderers {
   /**
    * Alternative method to create a renderer for a Product (e.g., case class) with one member but also an auxiliary object in a second parameter set.
    *
-   * CONSIDER rename each of theses renderXSuper methods to renderXAux.
+   * CONSIDER rename each of theses renderXSuper methods to renderXAux. (#134)
    *
    * @param construct a function which takes a P0 and yields a function of B => R
    *                  (this is usually the apply method of a case class that has a second parameter set with one parameter of type B).
@@ -315,7 +315,7 @@ trait Renderers {
       val b = lens(r)
       val constructOuter: P0 => R = construct(_)(b)
       for {
-        // CONSIDER not invoking recurse here.
+        // CONSIDER not invoking recurse here. (#135)
         wInner <- Renderer.render(b, format, stateR.recurse)
         wOuter <- renderer1(constructOuter).render(r, format, stateR.recurse)
         result <- doNestedRender(format, stateR, wInner, wOuter, r.productElementName(0))
@@ -789,7 +789,7 @@ object Renderers {
     (x, format, stateR) =>
       (x, format) match {
         case (c: CDATA, _) => c.toXML
-        // CONSIDER turning all other CharSequence into CDATA if appropriate.
+        // CONSIDER turning all other CharSequence into CDATA if appropriate. (#136)
         case _ => renderAttribute(scrub(x), stateR.maybeName)
       }
   } ^^ "charSequenceRenderer"

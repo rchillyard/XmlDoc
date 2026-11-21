@@ -98,7 +98,7 @@ class RenderersSpec extends AnyFlatSpec with should.Matchers {
     wy shouldBe Success("42")
   }
 
-  // CONSIDER eliminating this test
+  // CONSIDER eliminating this test (#138)
   it should "sequenceRenderer" in {
     object MyRenderers extends Renderers {
       implicit val rendererIntSeq: Renderer[Seq[Int]] = sequenceRenderer[Int]
@@ -165,7 +165,7 @@ class RenderersSpec extends AnyFlatSpec with should.Matchers {
     wy shouldBe Success("<Greeting>Hello</Greeting>")
   }
 
-  // TODO we should render empty id values invisibly.
+  // TODO we should render empty id values invisibly. (#139)
   it should "renderer1A" in {
     object MyRenderers extends Renderers {
       implicit val rendererOptionString: Renderer[Option[String]] = optionRenderer
@@ -235,7 +235,7 @@ class RenderersSpec extends AnyFlatSpec with should.Matchers {
     wy shouldBe Success("42")
   }
 
-  // CONSIDER eliminating this test
+  // CONSIDER eliminating this test (#138)
   it should "sequenceRenderer" in {
     object MyRenderers extends Renderers {
       implicit val rendererIntSeq: Renderer[Seq[Int]] = sequenceRenderer[Int]

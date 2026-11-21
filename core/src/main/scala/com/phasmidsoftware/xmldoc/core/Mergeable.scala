@@ -3,7 +3,7 @@ package com.phasmidsoftware.xmldoc.core
 /**
  * Hierarchical trait to satisfy merging.
  *
- * CONSIDER making it a typeclass instead.
+ * CONSIDER making it a typeclass instead. (#126)
  *
  * @tparam T the underlying type.
  */

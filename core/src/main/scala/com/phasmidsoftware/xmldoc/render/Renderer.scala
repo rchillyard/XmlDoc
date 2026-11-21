@@ -233,10 +233,10 @@ object Renderer {
    * @return a String.
    */
   private[render] def doNestedRender[R: ClassTag](formatIn: Format, stateR: StateR, wInner: String, wOuter: String, attributeName: String): Try[String] = {
-    // XXX: determine if attributeName corresponds to an optional attribute--Some(true), an attribute--Some(false), or a non-attribute: None.
+    // ASIDE: determine if attributeName corresponds to an optional attribute--Some(true), an attribute--Some(false), or a non-attribute: None.
     val maybeAttribute = Extractor.inferAttributeType(attributeName)
     val format = if (maybeAttribute.isDefined || attributeName == "$" || attributeName == "") formatIn.flatten else formatIn
-    // XXX: if maybeAttribute is defined, then isInternal will usually be true
+    // ASIDE: if maybeAttribute is defined, then isInternal will usually be true
     //      (the exception being for the last attribute of an all-attribute element).
     if (maybeAttribute.isDefined)
       stateR.addAttribute(wOuter): Unit
@@ -336,7 +336,7 @@ case class StateR(maybeName: Option[String], private val attributes: SmartBuffer
 
   /**
    * Mutating method to create a this StateR but with attrString appended to the attributes.
-   * CONSIDER why is this a mutating method?
+   * CONSIDER why is this a mutating method? (#132)
    *
    * @param attrString an attribute to add to this StateR.
    * @return a mutated version of this StateR.
@@ -378,7 +378,7 @@ case class StateR(maybeName: Option[String], private val attributes: SmartBuffer
    * @return Unit. The method does not return a value.
    */
   def close(): Unit = {
-    // CONSIDER we shouldn't need to trim
+    // CONSIDER we shouldn't need to trim (#133)
     if (attributes.result.trim.nonEmpty) {
       logger.warn(s"StateR.close: attributes not empty: '$attributes'")
     }
@@ -695,7 +695,7 @@ case class FormatText(indents: Int) extends BaseFormat(indents) {
   }
 }
 
-// TESTME
+// TESTME (#108)
 case class FormatIndented(indents: Int) extends BaseFormat(indents) {
   val name: String = "FormatIndented"
 
