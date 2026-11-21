@@ -178,7 +178,36 @@ class ExtractorsSpec extends AnyFlatSpec with should.Matchers with PrivateMethod
     val xml: Elem = <xml>
     </xml>
     import MyExtractors.*
+    // NOTE Empty.type is not an Option, so an absent element cannot be represented as one.
+    // This used to yield Success(None) -- a None disguised as a Try[Empty.type] (#124).
     val extracted = extractOptional[Empty.type](xml / "empty")
+    extracted should matchPattern { case Failure(_) => }
+  }
+
+  it should "extractOptional for an absent element of Option type" in {
+    val xml: Elem = <xml>
+    </xml>
+    import MyExtractors.*
+    val extracted = extractOptional[Option[Empty.type]](xml / "empty")
+    extracted shouldBe Success(None)
+  }
+
+  it should "extractOptional for a present element of Option type" in {
+    val xml: Elem = <xml>
+      <empty></empty>
+    </xml>
+    import MyExtractors.*
+    val extracted = extractOptional[Option[Empty.type]](xml / "empty")
+    extracted shouldBe Success(Some(Empty))
+  }
+
+  it should "extractOptional for an absent element whose extractor was built by flatMap" in {
+    val xml: Elem = <xml>
+    </xml>
+    // NOTE extractorOptionalString is extractorOption[CharSequence] flatMapped to String, so this
+    // passes only because flatMap carries emptyValue through (#124).
+    import Extractors.extractorOptionalString
+    val extracted = extractOptional[Option[String]](xml / "absent")
     extracted shouldBe Success(None)
   }
 
