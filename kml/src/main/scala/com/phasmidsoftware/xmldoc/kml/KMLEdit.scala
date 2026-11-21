@@ -361,7 +361,7 @@ class KMLEditParser(enclosures: String, listSeparator: Char, quote: Char, verbos
    */
   private def formException(indexedString: (String, Int), x: String) = ParserException(s"Cannot parse line ${indexedString._2}: '${indexedString._1}' due to: $x")
 
-  // XXX used only for debugging
+  // ASIDE used only for debugging
   override def toString: String = s"""LineParser: listSeparator='$listSeparator', enclosures='$enclosures', quote="$quote""""
 
   /**

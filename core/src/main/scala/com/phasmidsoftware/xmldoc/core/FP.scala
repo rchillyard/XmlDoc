@@ -18,7 +18,7 @@ object FP {
   /**
    * Sequence method to combine elements of Try.
    *
-   * TESTME
+   * TESTME (#106)
    *
    * @param xys an Iterator of Try[X]
    * @tparam X the underlying type
@@ -87,7 +87,7 @@ object FP {
   /**
    * Sequence method to combine elements of Try.
    *
-   * TESTME
+   * TESTME (#106)
    *
    * @param xys       an Iterable of Try[X].
    * @param fSuccess  a function of type X => Try of Option[X].
@@ -104,7 +104,7 @@ object FP {
   /**
    * Method to partition an  method to combine elements of Try as an Iterator.
    *
-   * TESTME
+   * TESTME (#106)
    *
    * @param xys an Iterator of Try[X].
    * @tparam X the underlying type.
@@ -115,7 +115,7 @@ object FP {
   /**
    * Method to partition an  method to combine elements of Try.
    *
-   * TESTME
+   * TESTME (#106)
    *
    * @param xys a Seq of Try[X].
    * @tparam X the underlying type.
@@ -126,7 +126,7 @@ object FP {
   /**
    * Method to yield a URL for a given resourceForClass in the classpath for C.
    *
-   * TESTME
+   * TESTME (#106)
    *
    * @param resourceName the name of the resourceForClass.
    * @tparam C a class of the package containing the resourceForClass.
@@ -227,7 +227,7 @@ object FP {
    * Applies a transformation function to the successful value of a Try if the value satisfies a predicate.
    * If the predicate fails, it returns a Failure with an exception indicating the reason.
    *
-   * TESTME
+   * TESTME (#106)
    *
    * @param p         a predicate function to test the successful value of the input Try.
    * @param predicate a descriptive string used in the exception message if the predicate fails. Default is "predicate".
@@ -266,7 +266,7 @@ object TryUsing {
    * This method is similar to `apply(r)` but it takes a `Try[R]` as its parameter.
    * The definition of `f` is the same as in the other apply, however.
    *
-   * TESTME
+   * TESTME (#106)
    *
    * @param ry a Try[R] which is passed into f and will be managed via `Using.apply`
    * @param f  a function of R => Try[A].

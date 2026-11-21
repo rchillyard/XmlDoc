@@ -34,7 +34,7 @@ def TestKML(): Unit = {
  * Provides utility methods for loading, rendering,
  * and manipulating KML objects and their features.
  *
- * CONSIDER merging this with object `KML`.
+ * CONSIDER merging this with object `KML`. (#156)
  * NOTE that this object depends on cats effect `IO`.
  */
 object KMLCompanion {

@@ -9,14 +9,14 @@ import scala.xml.{Elem, Node, NodeSeq}
 /**
  * Object containing various utility methods for sequence filtering, XML parsing,
  * and rendering XML nodes as strings.
- * CONSIDER splitting this object among FP and XML.
+ * CONSIDER splitting this object among FP and XML. (#128)
  */
 object Utilities {
 
   /**
    * Method to filter a sequence of object according to a value and a lens function.
    *
-   * CONSIDER is there a method in the standard library which does this?
+   * CONSIDER is there a method in the standard library which does this? (#129)
    *
    * @param lens the function which will extract an A from a T.
    * @param a    the value that must be matched.
@@ -47,7 +47,7 @@ object Utilities {
    * @return a string containing the rendered representation of the XML node.
    */
   def renderNode(node: Node, deep: Boolean = false): String = {
-    // CONSIDER use SmartBuffer
+    // CONSIDER use SmartBuffer (#130)
     val result = new mutable.StringBuilder("node: ")
     result.append(s"label=${node.label}, ")
     result.append(s"length=${node.length}, ")

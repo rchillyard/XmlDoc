@@ -447,7 +447,7 @@ case class ColorMode($: ColorModeEnum.Value) derives Extractor, Renderer
  * Class to define ColorStyle which extends SubStyle.
  * See [[https://developers.google.com/kml/documentation/kmlreference#colorstyle ColorStyle]]
  *
- * TODO add ColorStyleData
+ * TODO add ColorStyleData (#145)
  *
  */
 sealed trait ColorStyle extends SubStyle
@@ -457,8 +457,8 @@ sealed trait ColorStyle extends SubStyle
  * Its `MultiExtractor[Seq[ColorStyle]]` and `Renderer[ColorStyle]` are derived from its (sealed) subtypes,
  * with the class name of each subtype as its tag.
  *
- * TODO BalloonStyle and ListStyle don't belong here according to the KML Reference. ColorStyle is a sub-class of SubStyle.
- * TESTME
+ * TODO BalloonStyle and ListStyle don't belong here according to the KML Reference. ColorStyle is a sub-class of SubStyle. (#145)
+ * TESTME (#105)
  */
 object ColorStyle {
 
@@ -531,7 +531,7 @@ case class Coordinates(coordinates: Seq[Coordinate]) extends Mergeable[Coordinat
    * This value is computed lazily and is wrapped in an `Option`.
    * The computation involves retrieving the first and last coordinates from the sequence of coordinates within the `Coordinates` instance.
    * If either the first or last coordinate is missing, or if the distance between them cannot be computed, the result will be `None`.
-   * TESTME
+   * TESTME (#105)
    *
    * @return an `Option` containing the computed distance as a `Double`, or `None` if the distance cannot be determined.
    */
@@ -574,7 +574,7 @@ case class Coordinates(coordinates: Seq[Coordinate]) extends Mergeable[Coordinat
 
   /**
    * Reverses the order of the coordinates contained in this `Coordinates` instance.
-   * TESTME
+   * TESTME (#105)
    *
    * @return a new `Coordinates` instance with the coordinates in reversed order.
    */
@@ -664,7 +664,7 @@ case class DisplayMode($: DisplayModeEnum.Value) derives Extractor, Renderer
  * Case class Document: sub-element of Container.
  * See [[https://developers.google.com/kml/documentation/kmlreference#document Document]].
  *
- * TODO add Schemas to this case class
+ * TODO add Schemas to this case class (#145)
  *
  * @param features      a sequence of Features.
  * @param containerData ContainerData (auxiliary property).
@@ -713,13 +713,13 @@ case class Extrude($: Boolean) derives Extractor, Renderer
  * Feature is a sub-type of Object and a super-type of Placemark, Container.
  * See [[https://developers.google.com/kml/documentation/kmlreference#feature Feature]].
  *
- * TODO add Overlay, NetworkLink.
+ * TODO add Overlay, NetworkLink. (#145)
  */
 sealed trait Feature extends KmlObject {
 
   /**
    * Method to edit this Feature, given a sequence of sibling Features such that we may be able to combine features.
-   * TESTME
+   * TESTME (#105)
    *
    * @param e  the edit to apply.
    * @param fs the siblings (which actually do include this itself).
@@ -727,10 +727,10 @@ sealed trait Feature extends KmlObject {
    */
   def editToOption(e: KmlEdit, fs: Seq[Feature]): Option[Feature] =
     this match {
-      case p: Placemark => p.editToOptionOption(e, fs).getOrElse(Some(this)) // CONSIDER returning None
+      case p: Placemark => p.editToOptionOption(e, fs).getOrElse(Some(this)) // CONSIDER returning None (#146)
       case d: Document => editHasFeaturesToOption(d)(e)(_fs => d.copy(features = _fs)(d.containerData))
       case x: Folder => editHasFeaturesToOption(x)(e)(_fs => x.copy(features = _fs)(x.containerData))
-      case _ => Some(this) // Container // CONSIDER returning None
+      case _ => Some(this) // Container // CONSIDER returning None (#146)
     }
 
 }
@@ -749,7 +749,7 @@ object Feature {
 /**
  * Properties of a Feature (and therefore all its sub-types).
  *
- * CONSIDER redefining abstractView so that it can have only one optional AbstractView (according to KML spec.)
+ * CONSIDER redefining abstractView so that it can have only one optional AbstractView (according to KML spec.) (#147)
  *
  * @param name             the name (a Text).
  * @param maybeDescription an optional description: Option[Text].
@@ -770,12 +770,12 @@ case class FeatureData(name: Text, maybeDescription: Option[Text], maybeStyleUrl
    * @return the merged value of FeatureData.
    */
   def merge(f: FeatureData, mergeName: Boolean = true): Option[FeatureData] = {
-    // TODO warn if styles are not the same.
+    // TODO warn if styles are not the same. (#148)
     for {
       n <- if (mergeName) name merge f.name else Some(name)
       d = mergeOptions(maybeDescription, f.maybeDescription)((t1, t2) => t1 merge t2)
       z <- kmlData merge f.kmlData
-    } yield FeatureData(n, d, maybeStyleUrl, maybeOpen, maybeVisibility, maybeExtendedData, maybeTimePrimitive, StyleSelectors, abstractView)(z) // TODO: not all fields are properly merged
+    } yield FeatureData(n, d, maybeStyleUrl, maybeOpen, maybeVisibility, maybeExtendedData, maybeTimePrimitive, StyleSelectors, abstractView)(z) // TODO: not all fields are properly merged (#149)
   }
 }
 
@@ -800,7 +800,7 @@ case class Fill(boolean: Boolean) derives Extractor, Renderer
 
 /**
  * A case class representing FlyToView in KML documents.
- * TESTME
+ * TESTME (#105)
  *
  * This case class encapsulates a `Boolean` value that signifies FlyToView attributes in KML data.
  * FlyToView settings often dictate A value of 1 causes Google Earth to fly to the view of the LookAt or Camera in the NetworkLinkControl (if it exists).
@@ -1092,7 +1092,7 @@ object KML {
 
   /**
    * Method to create a new instance of `StateR` with a pre-configured state.
-   * XXX Ensure that this remains a def
+   * NOTE Ensure that this remains a def
    *
    * This method initializes a `StateR` object with the following:
    * - `maybeName` set to `Some("kml")` to use "kml" as the default name for the state.
@@ -1536,7 +1536,7 @@ case class PhotoOverlay(rotation: Rotation, ViewVolume: ViewVolume, ImagePyramid
  * Placemark: subtype of Feature.
  * See [[https://developers.google.com/kml/documentation/kmlreference#placemark Placemark]].
  *
- * CONSIDER restricting the number of Geometry elements to one.
+ * CONSIDER restricting the number of Geometry elements to one. (#150)
  *
  * @param Geometry    a sequence of Geometry elements (where Geometry is an abstract super-type).
  * @param featureData the (auxiliary) FeatureData, shared by sub-elements.
@@ -1547,7 +1547,7 @@ case class Placemark(Geometry: Seq[Geometry])(val featureData: FeatureData) exte
    * Inverts the current Placemark instance by reversing the orientation or nature
    * of its underlying geometric structure, if applicable.
    * This is achieved by attempting to invert each associated Geometry.
-   * TESTME
+   * TESTME (#105)
    *
    * @return an Option containing a new Placemark with inverted Geometries,
    *         or None if inversion is not possible.
@@ -1582,7 +1582,7 @@ case class Placemark(Geometry: Seq[Geometry])(val featureData: FeatureData) exte
 
   /**
    * Method to edit this Feature, given a sequence of sibling Features such that we may be able to combine features.
-   * TESTME
+   * TESTME (#105)
    *
    * @param e  the edit which may (or may not) apply to <code>this</code>.
    * @param fs a sequence of Features which are the children of <code>this</code>'s family (including <code>p</code> itself).
@@ -1595,7 +1595,7 @@ case class Placemark(Geometry: Seq[Geometry])(val featureData: FeatureData) exte
 
   /**
    * Method to edit the given Placemark with zero additional Features.
-   * TESTME
+   * TESTME (#105)
    *
    * @param e the edit which may (or may not) apply to <code>this</code>.
    * @return an optional Feature.
@@ -1862,7 +1862,7 @@ case class ScreenXY(_x:Double, _y:Double, _xunits:UnitsEnum.Value, _yunits: Unit
  * The `shape` parameter is of type `Shapes.Value`,
  * which is a value from the `Shapes` enumeration.
  *
- * CONSIDER renaming shape as $ (for consistency with other similar Kml objects).
+ * CONSIDER renaming shape as $ (for consistency with other similar Kml objects). (#151)
  *
  * Its `Extractor` and `Renderer` are derived.
  */
@@ -1892,7 +1892,7 @@ case class SimpleData(_name: CharSequence, $: CharSequence) derives Extractor, R
 case class Size(_x:Double, _y:Double, _xunits:UnitsEnum.Value, _yunits: UnitsEnum.Value) derives Extractor, Renderer
 /**
  * State
- * CONSIDER this should be an enumerated type with values: open, closed, error, fetching0, fetching1, or fetching2
+ * CONSIDER this should be an enumerated type with values: open, closed, error, fetching0, fetching1, or fetching2 (#152)
  *
  * @param $ the value.
  */
@@ -1907,7 +1907,7 @@ case class State($: ItemIconModeEnum.Value) derives Extractor, Renderer
  * Type B has LineStyle.
  *
  * @param Styles a set of different types of Style.
- *               CONSIDER constraining this set to be distinct.
+ *               CONSIDER constraining this set to be distinct. (#153)
  */
 case class Style(Styles: Seq[SubStyle])(val styleSelectorData: StyleSelectorData) extends StyleSelector derives Extractor, Renderer
 
@@ -1999,7 +1999,7 @@ sealed trait SubStyle extends KmlObject
  */
 object SubStyle {
 
-  // CONSIDER invoking ColorStyle
+  // CONSIDER invoking ColorStyle (#154)
   implicit val extractorSeq: MultiExtractor[Seq[SubStyle]] = MultiExtractor.derived ^^ "multiExtractorSubStyle"
   implicit val renderer: Renderer[SubStyle] = Renderer.derived ^^ "rendererSubStyle"
 }
@@ -2031,7 +2031,7 @@ object SubStyleData {
  * Boolean state is compatible. The merge operation will return a new Tessellate instance
  * encapsulated in an Option if the merge criteria are satisfied, otherwise it returns None.
  *
- * CONSIDER making this part of GeometryData.
+ * CONSIDER making this part of GeometryData. (#155)
  *
  * @param $ a Boolean value encapsulated by the Tessellate instance.
  */

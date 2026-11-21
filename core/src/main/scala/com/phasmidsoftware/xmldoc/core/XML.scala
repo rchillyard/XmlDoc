@@ -300,7 +300,7 @@ object PCData {
 class XmlBaseException(message: String, cause: Throwable) extends Exception(message, cause)
 
 /**
- * CONSIDER renaming as ExtractorException.
+ * CONSIDER renaming as ExtractorException. (#131)
  *
  * @param message the message.
  * @param cause   the cause (or null).

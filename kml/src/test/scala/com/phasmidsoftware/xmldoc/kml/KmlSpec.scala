@@ -55,7 +55,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     val containerData: ContainerData = ContainerData(featureData2)
     val folder = Folder(Seq(placemark))(containerData)
     val wy = TryUsing(StateR())(sr => Renderer.render[Folder](folder, FormatXML(), sr))
-    // TODO remove the extra padding in front of the <name> tags
+    // TODO remove the extra padding in front of the <name> tags (#158)
     wy shouldBe Success("<Folder>\n  <name>Goodbye</name>\n  <Placemark>\n    <name>Hello</name>\n    <Point>\n      <coordinates>\n        -72,0,0\n      </coordinates>\n    </Point>\n  </Placemark>\n</Folder>")
   }
 
@@ -69,7 +69,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     scale.$ shouldBe 2.0
     val wy = TryUsing(StateR())(sr => Renderer.render[Scale](scale, FormatXML(), sr))
     wy.isSuccess shouldBe true
-    // CONSIDER should we force this result to have tag of "scale" instead of "Scale"?
+    // CONSIDER should we force this result to have tag of "scale" instead of "Scale"? (#157)
     wy.get shouldBe "<Scale id=\"Hello\">2</Scale>"
   }
 
@@ -1163,7 +1163,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     }
   }
 
-  // TODO Issue #38
+  // TODO Issue #38 (#141)
   it should "extract PhotoOverlay" in {
     val xml = <PhotoOverlay>
       <!-- inherited from Feature element -->
@@ -1245,7 +1245,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     po.isSuccess shouldBe true
     val p = po.get
     p.$ shouldBe ShapeEnum.rectangle
-    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"?
+    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"? (#157)
     val triedString = Renderer.render[Shape](p, FormatXML(), StateR())
     triedString.isSuccess shouldBe true
     triedString.get shouldBe "<Shape>rectangle</Shape>"
@@ -1258,7 +1258,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     val p = po.get
     p.isDefined shouldBe true
     p.get.$ shouldBe AltitudeModeEnum.clampToGround
-    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"?
+    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"? (#157)
     val triedString = Renderer.render[Option[AltitudeMode]](p, FormatXML(), StateR())
     triedString.isSuccess shouldBe true
     triedString.get shouldBe "<AltitudeMode>clampToGround</AltitudeMode>"
@@ -1271,7 +1271,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     val p = po.get
     p.isDefined shouldBe true
     p.get.$ shouldBe ColorModeEnum.random
-    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"?
+    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"? (#157)
     val triedString = Renderer.render[Option[ColorMode]](p, FormatXML(), StateR())
     triedString.isSuccess shouldBe true
     triedString.get shouldBe "<ColorMode>random</ColorMode>"
@@ -1284,7 +1284,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     val p = po.get
     p.isDefined shouldBe true
     p.get.$ shouldBe DisplayModeEnum.default
-    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"?
+    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"? (#157)
     val triedString = Renderer.render[Option[DisplayMode]](p, FormatXML(), StateR())
     triedString.isSuccess shouldBe true
     triedString.get shouldBe "<DisplayMode>default</DisplayMode>"
@@ -1297,7 +1297,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     val p = po.get
     p.isDefined shouldBe true
     p.get.$ shouldBe ListItemTypeEnum.checkOffOnly
-    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"?
+    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"? (#157)
     val triedString = Renderer.render[Option[ListItemType]](p, FormatXML(), StateR())
     triedString.isSuccess shouldBe true
     triedString.get shouldBe "<ListItemType>checkOffOnly</ListItemType>"
@@ -1310,7 +1310,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     val p = po.get
     p.isDefined shouldBe true
     p.get.$ shouldBe RefreshModeEnum.onChange
-    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"?
+    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"? (#157)
     val triedString = Renderer.render[Option[RefreshMode]](p, FormatXML(), StateR())
     triedString.isSuccess shouldBe true
     triedString.get shouldBe "<RefreshMode>onChange</RefreshMode>"
@@ -1322,7 +1322,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     po.isSuccess shouldBe true
     val p = po.get
     p.$ shouldBe StyleStateEnum.highlight
-    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"?
+    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"? (#157)
     val triedString = Renderer.render[Key](p, FormatXML(), StateR())
     triedString.isSuccess shouldBe true
     triedString.get shouldBe "<Key>highlight</Key>"
@@ -1334,7 +1334,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     po.isSuccess shouldBe true
     val p = po.get
     p.$ shouldBe ItemIconModeEnum.open
-    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"?
+    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"? (#157)
     val triedString = Renderer.render[State](p, FormatXML(), StateR())
     triedString.isSuccess shouldBe true
     triedString.get shouldBe "<State>open</State>"
@@ -1347,7 +1347,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     val p = po.get
     p.isDefined shouldBe true
     p.get.$ shouldBe ViewRefreshEnum.onRequest
-    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"?
+    // CONSIDER how can we make the rendered string flat (no newline) and also with lower case tag "scale"? (#157)
     val triedString = Renderer.render[Option[ViewRefreshMode]](p, FormatXML(), StateR())
     triedString.isSuccess shouldBe true
     triedString.get shouldBe "<ViewRefreshMode>onRequest</ViewRefreshMode>"
@@ -1365,12 +1365,12 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     Extractor.extract[HotSpot](nodeSeq.head) match {
       case Success(hotSpot) =>
         hotSpot shouldBe HotSpot(16, UnitsEnum.pixels, 32, UnitsEnum.insetPixels)
-        // XXX we test two versions of rendering here:
-        // XXX the first is simply rendering a HotSpot object as is.
+        // ASIDE we test two versions of rendering here:
+        // ASIDE the first is simply rendering a HotSpot object as is.
         val wy1 = TryUsing(StateR())(sr => Renderer.render[HotSpot](hotSpot, FormatXML(), sr))
         wy1.isSuccess shouldBe true
         wy1.get shouldBe """<HotSpot x="16" xunits="pixels" y="32" yunits="insetPixels"></HotSpot>"""
-        // XXX the second is rendering a HotSpot object as if it was in the context of its parent where the attribute name starts with lower case h.
+        // ASIDE the second is rendering a HotSpot object as if it was in the context of its parent where the attribute name starts with lower case h.
         val wy2 = TryUsing(StateR())(sr => Renderer.render[HotSpot](hotSpot, FormatXML(), sr.setName("hotSpot")))
         wy2.isSuccess shouldBe true
         wy2.get shouldBe """<hotSpot x="16" xunits="pixels" y="32" yunits="insetPixels"></hotSpot>"""
@@ -1390,12 +1390,12 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     Extractor.extract[OverlayXY](nodeSeq.head) match {
       case Success(overlayXY) =>
         overlayXY shouldBe OverlayXY(0.5, 0.5,UnitsEnum.fraction, UnitsEnum.fraction)
-        // XXX we test two versions of rendering here:
-        // XXX the first is simply rendering an OverlayXY object as is.
+        // ASIDE we test two versions of rendering here:
+        // ASIDE the first is simply rendering an OverlayXY object as is.
         val wy1 = TryUsing(StateR())(sr => Renderer.render[OverlayXY](overlayXY, FormatXML(), sr))
         wy1.isSuccess shouldBe true
         wy1.get shouldBe """<OverlayXY x="0.5" y="0.5" xunits="fraction" yunits="fraction"></OverlayXY>"""
-        // XXX the second is rendering an OverlayXY object as if it was in the context of its parent where the attribute name starts with lower case h.
+        // ASIDE the second is rendering an OverlayXY object as if it was in the context of its parent where the attribute name starts with lower case h.
         val wy2 = TryUsing(StateR())(sr => Renderer.render[OverlayXY](overlayXY, FormatXML(), sr.setName("overlayXY")))
         wy2.isSuccess shouldBe true
         wy2.get shouldBe """<overlayXY x="0.5" y="0.5" xunits="fraction" yunits="fraction"></overlayXY>"""
@@ -1415,12 +1415,12 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     Extractor.extract[ScreenXY](nodeSeq.head) match {
       case Success(screenXY) =>
         screenXY shouldBe ScreenXY(0.5, 0.5, UnitsEnum.fraction, UnitsEnum.fraction)
-        // XXX we test two versions of rendering here:
-        // XXX the first is simply rendering a ScreenXY object as is.
+        // ASIDE we test two versions of rendering here:
+        // ASIDE the first is simply rendering a ScreenXY object as is.
         val wy1 = TryUsing(StateR())(sr => Renderer.render[ScreenXY](screenXY, FormatXML(), sr))
         wy1.isSuccess shouldBe true
         wy1.get shouldBe """<ScreenXY x="0.5" y="0.5" xunits="fraction" yunits="fraction"></ScreenXY>"""
-        // XXX the second is rendering a ScreenXY object as if it was in the context of its parent where the attribute name starts with lower case h.
+        // ASIDE the second is rendering a ScreenXY object as if it was in the context of its parent where the attribute name starts with lower case h.
         val wy2 = TryUsing(StateR())(sr => Renderer.render[ScreenXY](screenXY, FormatXML(), sr.setName("screenXY")))
         wy2.isSuccess shouldBe true
         wy2.get shouldBe """<screenXY x="0.5" y="0.5" xunits="fraction" yunits="fraction"></screenXY>"""
@@ -1440,12 +1440,12 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     Extractor.extract[RotationXY](nodeSeq.head) match {
       case Success(rotationXY) =>
         rotationXY shouldBe RotationXY(0.5, 0.5,UnitsEnum.fraction, UnitsEnum.fraction)
-        // XXX we test two versions of rendering here:
-        // XXX the first is simply rendering a RotationXY object as is.
+        // ASIDE we test two versions of rendering here:
+        // ASIDE the first is simply rendering a RotationXY object as is.
         val wy1 = TryUsing(StateR())(sr => Renderer.render[RotationXY](rotationXY, FormatXML(), sr))
         wy1.isSuccess shouldBe true
         wy1.get shouldBe """<RotationXY x="0.5" y="0.5" xunits="fraction" yunits="fraction"></RotationXY>"""
-        // XXX the second is rendering a RotationXY object as if it was in the context of its parent where the attribute name starts with lower case r.
+        // ASIDE the second is rendering a RotationXY object as if it was in the context of its parent where the attribute name starts with lower case r.
         val wy2 = TryUsing(StateR())(sr => Renderer.render[RotationXY](rotationXY, FormatXML(), sr.setName("rotationXY")))
         wy2.isSuccess shouldBe true
         wy2.get shouldBe """<rotationXY x="0.5" y="0.5" xunits="fraction" yunits="fraction"></rotationXY>"""
@@ -1465,12 +1465,12 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
     Extractor.extract[Size](nodeSeq.head) match {
       case Success(size) =>
         size shouldBe Size(0, 0,UnitsEnum.pixels, UnitsEnum.pixels)
-        // XXX we test two versions of rendering here:
-        // XXX the first is simply rendering a Size object as is.
+        // ASIDE we test two versions of rendering here:
+        // ASIDE the first is simply rendering a Size object as is.
         val wy1 = TryUsing(StateR())(sr => Renderer.render[Size](size, FormatXML(), sr))
         wy1.isSuccess shouldBe true
         wy1.get shouldBe """<Size x="0" y="0" xunits="pixels" yunits="pixels"></Size>"""
-        // XXX the second is rendering a Size object as if it was in the context of its parent where the attribute name starts with lower case r.
+        // ASIDE the second is rendering a Size object as if it was in the context of its parent where the attribute name starts with lower case r.
         val wy2 = TryUsing(StateR())(sr => Renderer.render[Size](size, FormatXML(), sr.setName("size")))
         wy2.isSuccess shouldBe true
         wy2.get shouldBe """<size x="0" y="0" xunits="pixels" yunits="pixels"></size>"""
@@ -1514,7 +1514,7 @@ class KmlSpec extends AnyFlatSpec with should.Matchers {
 
   behavior of "Style"
 
-  // TODO resolve spacing issues
+  // TODO resolve spacing issues (#158)
   private val iconStyleText1 =
     """<IconStyle>
       |  <scale>1.1</scale>

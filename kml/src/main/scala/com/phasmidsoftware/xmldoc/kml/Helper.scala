@@ -65,7 +65,7 @@ case class Coordinate(long: String, lat: String, maybeAlt: Option[String]) {
  */
 object Coordinate {
 
-  // CONSIDER using Parser-combinators here.
+  // CONSIDER using Parser-combinators here. (#143)
   // NOTE: altitude is optional per the KML spec, so the third group is non-capturing-optional;
   // when it doesn't participate in the match, the corresponding capture group binds to null,
   // handled below via Option(alt).
@@ -307,7 +307,7 @@ object KmlRenderers extends Renderers {
     }
   }
 
-  // TODO refactor the sequenceRendererFormatted method so that its parameter is a Format=>Format function.
+  // TODO refactor the sequenceRendererFormatted method so that its parameter is a Format=>Format function. (#144)
 }
 
 /**
