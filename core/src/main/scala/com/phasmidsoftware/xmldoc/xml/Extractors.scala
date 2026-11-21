@@ -2268,17 +2268,9 @@ object Extractors extends Extractors {
    * Return the field names as Seq[String], from either the fields parameter or by reflection into T.
    * Note that fields takes precedence and ClassTag[T] is ignored if fields is used.
    *
-   * TODO understand why this no longer seems to be used. It SHOULD be used. Sometimes we should be specifying false. (#125)
-   *
-   * @param fields a list of field names which, if not empty, is to be used instead of the reflected fields of T (defaults to Nil).
-   * @tparam T the type (typically a case class) from which we will use reflection to get the field names (referred to only if fields is Nil)
-   * @return the field names to be used.
-   */
-  @unused private def fieldNames[T: ClassTag](fields: Seq[String]) = Extractors.fieldNamesMaybeDropLast(fields)
-
-  /**
-   * Return the field names as Seq[String], from either the fields parameter or by reflection into T.
-   * Note that fields takes precedence and ClassTag[T] is ignored if fields is used.
+   * NOTE every caller states `dropLast` explicitly: the `extractorNM` methods pass false because
+   * their type has no auxiliary parameter, the `extractorPartialNM` methods pass true because it has.
+   * There is deliberately no default, so that a new caller has to decide which it is (#125).
    *
    * @param fields   a list of field names which, if not empty, is to be used instead of the reflected fields of T (defaults to Nil).
    * @param dropLast true if we should drop the last field from the result of Reflection.extractFieldNames.
@@ -2286,7 +2278,7 @@ object Extractors extends Extractors {
    * @tparam T the type (typically a case class) from which we will use reflection to get the field names (referred to only if fields is Nil).
    * @return the field names to be used.
    */
-  private def fieldNamesMaybeDropLast[T: ClassTag](fields: Seq[String], dropLast: Boolean = false) =
+  private def fieldNamesMaybeDropLast[T: ClassTag](fields: Seq[String], dropLast: Boolean) =
     fields match {
       case Nil =>
         val result = Reflection.extractFieldNames(implicitly[ClassTag[T]], dropLast).toList
