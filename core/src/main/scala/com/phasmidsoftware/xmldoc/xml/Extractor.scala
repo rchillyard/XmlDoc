@@ -33,13 +33,34 @@ trait Extractor[T] extends NamedFunction[Extractor[T]] {
   def extract(node: Node): Try[T]
 
   /**
+   * The value this `Extractor` yields when the element it describes is absent, if it has one.
+   *
+   * NOTE: only an extractor whose `T` is an `Option` type has one, and it is `Some(None)`. For
+   * everything else there is no such value, and the result is `None` — meaning "absence is not
+   * representable as a `T`" rather than "the value is `None`".
+   *
+   * This exists because `extractOptional` must produce a `T` for an absent element and cannot ask
+   * the type system whether `T` is an `Option`: it is reached from `doExtractField`, whose `T` is
+   * the declared type of a case-class member and opaque to it. The extractor built by `lift` does
+   * know, so it says so here (#124).
+   *
+   * @return `Some(None)` for an extractor produced by `lift` (or derived from one), otherwise `None`.
+   */
+  def emptyValue: Option[T] = None
+
+  /**
    * Method to map this `Extractor[T]` into an `Extractor[U]`.
    *
    * @param f a `T => U`.
    * @tparam U the underlying type of the result.
    * @return an `Extractor[U]`.
    */
-  def map[U](f: T => U): Extractor[U] = Extractor { (node: Node) => self.extract(node) map f } ^^ s"map of $self"
+  def map[U](f: T => U): Extractor[U] = new Extractor[U] {
+    def extract(node: Node): Try[U] = self.extract(node) map f
+
+    // NOTE carried through, so that a mapped optional extractor still knows its empty value (#124).
+    override def emptyValue: Option[U] = self.emptyValue map f
+  } ^^ s"map of $self"
 
   /**
    * Method to `flatMap` this `Extractor[T]` into an `Extractor[U]`.
@@ -48,7 +69,13 @@ trait Extractor[T] extends NamedFunction[Extractor[T]] {
    * @tparam U the underlying type of the result.
    * @return an `Extractor[U]`.
    */
-  def flatMap[U](f: T => Try[U]): Extractor[U] = Extractor { (node: Node) => self.extract(node) flatMap f } ^^ s"flatMap of $self"
+  def flatMap[U](f: T => Try[U]): Extractor[U] = new Extractor[U] {
+    def extract(node: Node): Try[U] = self.extract(node) flatMap f
+
+    // NOTE carried through: extractorOptionalString is built this way, so without it an absent
+    // optional String field would stop resolving (#124).
+    override def emptyValue: Option[U] = self.emptyValue flatMap (t => f(t).toOption)
+  } ^^ s"flatMap of $self"
 
   /**
    * Method to create an `Extractor[T]` such that, if this `Extractor[T]` fails, then we invoke the (implicit) `Extractor[P]` instead.
@@ -67,7 +94,12 @@ trait Extractor[T] extends NamedFunction[Extractor[T]] {
    *
    * @return an `Extractor[Option[T]]`, which extracts an `Option[T]` from a `Node`.
    */
-  def lift: Extractor[Option[T]] = Extractor { (node: Node) => self.extract(node) map Some.apply } ^^ s"optional extractor of $self"
+  def lift: Extractor[Option[T]] = new Extractor[Option[T]] {
+    def extract(node: Node): Try[Option[T]] = self.extract(node) map Some.apply
+
+    // NOTE this is the one place that knows an absent element is representable, as None (#124).
+    override def emptyValue: Option[Option[T]] = Some(None)
+  } ^^ s"optional extractor of $self"
 
   /**
    * Method to create an `Extractor[P]` which instantiates a `Try[T]` but treats it as a `Try[P]` where `P` is a super-class of `T`.

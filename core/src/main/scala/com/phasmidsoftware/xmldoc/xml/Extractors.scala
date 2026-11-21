@@ -2222,21 +2222,34 @@ object Extractors extends Extractors {
 
   /**
    * Method to extract an optional value of type `P` from the provided `NodeSeq`.
-   * If the `NodeSeq` is empty, it returns a `Success` containing `None` as `P`.
-   * If the `NodeSeq` contains nodes, it uses the implicit `Extractor[P]` to attempt to extract the value.
+   * If the `NodeSeq` contains exactly one node, it uses the implicit `Extractor[P]` to attempt to
+   * extract the value. If the `NodeSeq` is empty, the result is the extractor's `emptyValue`.
    *
-   * TODO this method is incorrect. Fix it. (#124)
+   * NOTE: `P` must be an `Option` type, since that is the only way an absent element can yield a
+   * `P`. The type system cannot express that here, because this is reached from `doExtractField`,
+   * whose `P` is the declared type of a case-class member and opaque to it. So the question is put
+   * to the `Extractor` instead: `lift` knows that it produces an `Option` and says so through
+   * `emptyValue`, and `map`/`flatMap` carry that through.
+   *
+   * This method used to return `None.asInstanceOf[P]` for an absent element, which is a `None`
+   * disguised as whatever `P` happened to be — sound only because the sole production caller is
+   * `doExtractField`'s `optional` case, which fires for members named "maybe..." by convention
+   * rather than by any guarantee. A violation now fails rather than propagating (#124).
    *
    * @param nodeSeq the sequence of XML nodes from which the extraction is performed.
-   * @tparam P the type of form Option[T] extracted value.
+   * @tparam P the type of the extracted value, which must be of the form `Option[T]`.
    *           Requires implicit evidence of an `Extractor[P]`.
-   * @return a `Try[P]` containing the extracted value or an error if extraction fails.
+   * @return a `Try[P]` containing the extracted value, or a `Failure` if extraction fails, if there
+   *         is more than one element, or if an absent element cannot be represented as a `P`.
    */
   def extractOptional[P: Extractor](nodeSeq: NodeSeq): Try[P] =
     nodeSeq.headOption map extract[P] match { // ASP violation
       case Some(value) if nodeSeq.tail.isEmpty => value
       case Some(_) => Failure(XmlException(s"extractOptional: logic error: too many elements for optional value"))
-      case None => Success(None.asInstanceOf[P])
+      case None => implicitly[Extractor[P]].emptyValue match {
+        case Some(p) => Success(p)
+        case None => Failure(XmlException(s"extractOptional: no element found, and ${implicitly[Extractor[P]].name} cannot represent an absent element: an optional field must be declared as Option[...]"))
+      }
     }
 
   /**
