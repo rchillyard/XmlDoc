@@ -47,4 +47,37 @@ class TreeMatcherSpec extends AnyFlatSpec with should.Matchers {
     val m = TreeMatcher.matchBySelf(left, right)
     m.matched.map { case (l, _) => l.path } shouldBe Seq(NodePath(Vector(0, 1)))
   }
+
+  private def item(id: String, value: String = "old"): GenericElement =
+    GenericElement("Item", Seq("Self" -> id, "value" -> value), Nil)
+
+  it should "preserve every identity across moves, updates, insertion and deletion" in {
+    val base = GenericElement("Root", Nil, Seq(item("a"), item("b"), item("deleted")))
+    val modified = GenericElement("Root", Nil, Seq(
+      item("new"), GenericElement("Group", Nil, Seq(item("b", "updated"))), item("a")))
+    val m = TreeMatcher.matchBySelf(base, modified)
+    m.matched.map { case (b, r) => (b.self.get, b.path, r.self.get, r.path) } shouldBe Seq(
+      ("a", NodePath(Vector(0)), "a", NodePath(Vector(2))),
+      ("b", NodePath(Vector(1)), "b", NodePath(Vector(1, 0))))
+    m.matched(1)._2.element.attributes.toMap.apply("value") shouldBe "updated"
+    m.onlyInLeft.map(_.self) shouldBe Seq(Some("deleted"))
+    m.onlyInRight.map(_.self) shouldBe Seq(Some("new"))
+    for ((matched, unmatched) <- Seq(m.matched.map(_._1) -> m.onlyInLeft, m.matched.map(_._2) -> m.onlyInRight)) {
+      matched.map(_.path).distinct.size shouldBe matched.size
+      (matched.map(_.path).toSet intersect unmatched.map(_.path).toSet) shouldBe empty
+      (matched ++ unmatched).size shouldBe 3
+    }
+  }
+
+  it should "reject duplicate Self on either side, including ancestor and descendant collisions" in {
+    val valid = GenericElement("Root", Nil, Seq(item("x")))
+    val duplicate = GenericElement("Root", Seq("Self" -> "x"), Seq(item("x")))
+    for ((left, right, side) <- Seq((duplicate, valid, "left"), (valid, duplicate, "right"))) {
+      val error = intercept[IllegalArgumentException](TreeMatcher.matchBySelf(left, right))
+      error.getMessage should include ("Duplicate Self 'x'")
+      error.getMessage should include (side)
+      error.getMessage should include ("/, /0")
+    }
+    TreeMatcher.matchBySelf(valid, valid).matched.size shouldBe 1
+  }
 }

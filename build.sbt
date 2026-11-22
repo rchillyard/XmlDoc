@@ -73,7 +73,8 @@ lazy val idml = (project in file("idml"))
   .settings(commonSettings)
   .settings(
     mimaSettings,
-    name := "xmldoc-idml"
+    name := "xmldoc-idml",
+    libraryDependencies += "com.lihaoyi" %% "ujson" % "4.4.3" % Test
   )
 
 lazy val circeVersion = "0.14.17"
@@ -144,8 +145,3 @@ lazy val root = (project in file("."))
     addMappingsToSiteDir(ScalaUnidoc / packageDoc / mappings, ScalaUnidoc / siteSubdirName),
     git.remoteRepo := "git@github.com:rchillyard/XmlDoc.git"
   )
-
-// TEMPORARY, until V1_1_3-Kaining-2 is merged: ThreeWayMerger.scala imports NodePath and NodeRef, which only that branch
-// uses (PR #84 restored the import so that the branch merges cleanly). Silence just those unused-import warnings, so that
-// -Werror doesn't fail the build. Delete this once the branch is merged.
-idml / Compile / scalacOptions += "-Wconf:src=.*/ThreeWayMerger\\.scala&msg=unused import:s"

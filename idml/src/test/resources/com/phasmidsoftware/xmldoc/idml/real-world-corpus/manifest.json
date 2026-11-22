@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "profile": "strict-text-node-v1",
+  "minimumCases": 4,
+  "releaseReady": false,
+  "cases": [
+    {
+      "name": "real-01-text-move",
+      "expectedStatus": "accept",
+      "sourceType": "real-indesign-export",
+      "status": "awaiting-input",
+      "authorization": {
+        "status": "missing",
+        "basis": null
+      },
+      "indesignVersion": null,
+      "operations": {
+        "left": null,
+        "right": null
+      },
+      "artifacts": {}
+    },
+    {
+      "name": "real-02-ungroup-style",
+      "expectedStatus": "accept",
+      "sourceType": "real-indesign-export",
+      "status": "awaiting-input",
+      "authorization": {
+        "status": "missing",
+        "basis": null
+      },
+      "indesignVersion": null,
+      "operations": {
+        "left": null,
+        "right": null
+      },
+      "artifacts": {}
+    },
+    {
+      "name": "real-03-thread-delete-edit",
+      "expectedStatus": "conflict",
+      "sourceType": "real-indesign-export",
+      "status": "awaiting-input",
+      "authorization": {
+        "status": "missing",
+        "basis": null
+      },
+      "indesignVersion": null,
+      "operations": {
+        "left": null,
+        "right": null
+      },
+      "artifacts": {}
+    },
+    {
+      "name": "real-04-thread-assets",
+      "expectedStatus": "accept",
+      "sourceType": "real-indesign-export",
+      "status": "awaiting-input",
+      "authorization": {
+        "status": "missing",
+        "basis": null
+      },
+      "indesignVersion": null,
+      "operations": {
+        "left": null,
+        "right": null
+      },
+      "artifacts": {}
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "frozen": true,
+  "date": "2026-11-06",
+  "maxTotalMs": 250,
+  "maxMergeMs": 100,
+  "maxHeapMiB": 960,
+  "maxMedianMergeRatio": 4,
+  "medianBaselineFloorMs": 1,
+  "calibrationSha256": "93c0b571159d53dd72f1f044ac58dbb45dea5c043d2dc11345a9532bbd5453ff",
+  "environment": {
+    "java": "21.0.12.1",
+    "vm": "OpenJDK 64-Bit Server VM",
+    "os": "Mac OS X",
+    "arch": "aarch64",
+    "processors": 10,
+    "maxHeapMiB": 1024,
+    "jvmArguments": [
+      "-Dfile.encoding=UTF-8",
+      "-Xms1024m",
+      "-Xmx1024m",
+      "-Xss4M",
+      "-XX:ReservedCodeCacheSize=128m",
+      "-Dsbt.script=/opt/homebrew/Cellar/sbt/2.0.8/libexec/bin/sbt",
+      "-Dscala.ext.dirs=/Users/lady_penguin/.sbt/1.0/java9-rt-ext-homebrew_21_0_12_1"
+    ]
+  }
+}

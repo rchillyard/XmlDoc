@@ -39,6 +39,11 @@ object PcsEditDetector {
   def detectEdits(base: GenericElement, modified: GenericElement, ignoredAttributes: Set[String] = Set.empty, modifiedLabel: NodeRef => String = Pcs.label): RelationSet = {
     val t0 = Pcs.relations(base)
     val tPrime = Pcs.relations(modified, modifiedLabel)
+    detectEdits(t0, tPrime, ignoredAttributes)
+  }
+
+  /** Same edit calculation for callers that supply already matched relation identities. */
+  def detectEdits(t0: RelationSet, tPrime: RelationSet, ignoredAttributes: Set[String]): RelationSet = {
     val baseContentByLabel = t0.content.map(c => c.label -> c).toMap
     val contentEdits = tPrime.content.filterNot(c => baseContentByLabel.get(c.label).exists(sameContent(_, c, ignoredAttributes)))
     RelationSet(tPrime.pcs -- t0.pcs, contentEdits)
