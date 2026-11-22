@@ -1,0 +1,134 @@
+{
+  "source": "../evidence/mr13-formal.json",
+  "sourceSha256": "729c010427f74e25e08973267871747a4b68ccb595084fc6cd3421dff8cd92c3",
+  "sourceCommit": "969666658930d34a5bb743781ab7ad0735dcaf3e",
+  "aggregation": "Pool seeds within size/budget/text group; nearest-rank p95",
+  "groups": [
+    {
+      "nodes": 32,
+      "operationBudget": 0,
+      "textBytesPerLeaf": 0,
+      "observations": 15,
+      "mergeMs": {
+        "median": 0.750209,
+        "p95": 2.807666
+      },
+      "totalMs": {
+        "median": 4.95025,
+        "p95": 10.89275
+      }
+    },
+    {
+      "nodes": 32,
+      "operationBudget": 4,
+      "textBytesPerLeaf": 0,
+      "observations": 15,
+      "mergeMs": {
+        "median": 0.904917,
+        "p95": 1.567792
+      },
+      "totalMs": {
+        "median": 4.111875,
+        "p95": 6.57925
+      }
+    },
+    {
+      "nodes": 128,
+      "operationBudget": 0,
+      "textBytesPerLeaf": 0,
+      "observations": 15,
+      "mergeMs": {
+        "median": 2.118708,
+        "p95": 2.844708
+      },
+      "totalMs": {
+        "median": 7.276375,
+        "p95": 8.47325
+      }
+    },
+    {
+      "nodes": 128,
+      "operationBudget": 4,
+      "textBytesPerLeaf": 0,
+      "observations": 15,
+      "mergeMs": {
+        "median": 1.849417,
+        "p95": 2.332166
+      },
+      "totalMs": {
+        "median": 6.697041,
+        "p95": 8.415125
+      }
+    },
+    {
+      "nodes": 128,
+      "operationBudget": 16,
+      "textBytesPerLeaf": 0,
+      "observations": 15,
+      "mergeMs": {
+        "median": 1.904875,
+        "p95": 2.802
+      },
+      "totalMs": {
+        "median": 6.334334,
+        "p95": 18.206833
+      }
+    },
+    {
+      "nodes": 512,
+      "operationBudget": 0,
+      "textBytesPerLeaf": 0,
+      "observations": 15,
+      "mergeMs": {
+        "median": 4.675959,
+        "p95": 6.258667
+      },
+      "totalMs": {
+        "median": 10.480875,
+        "p95": 14.263459
+      }
+    },
+    {
+      "nodes": 512,
+      "operationBudget": 4,
+      "textBytesPerLeaf": 0,
+      "observations": 15,
+      "mergeMs": {
+        "median": 4.76025,
+        "p95": 7.280209
+      },
+      "totalMs": {
+        "median": 10.922583,
+        "p95": 13.609625
+      }
+    },
+    {
+      "nodes": 512,
+      "operationBudget": 16,
+      "textBytesPerLeaf": 0,
+      "observations": 15,
+      "mergeMs": {
+        "median": 4.739791,
+        "p95": 5.228542
+      },
+      "totalMs": {
+        "median": 10.987333,
+        "p95": 13.939208
+      }
+    },
+    {
+      "nodes": 32,
+      "operationBudget": 4,
+      "textBytesPerLeaf": 65536,
+      "observations": 5,
+      "mergeMs": {
+        "median": 0.885667,
+        "p95": 1.002458
+      },
+      "totalMs": {
+        "median": 25.733209,
+        "p95": 26.960167
+      }
+    }
+  ]
+}

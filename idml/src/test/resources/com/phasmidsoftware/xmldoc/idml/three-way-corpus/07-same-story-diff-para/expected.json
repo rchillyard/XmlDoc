@@ -1,5 +1,157 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 3,
+  "policyProfile": "strict-text-node-v1",
+  "provenance": {
+    "layers": [
+      "paper"
+    ],
+    "reference": "§3.1 rule 4, p4; §4 matching, p5",
+    "construction": "xml-derived",
+    "oracle": "reviewed-target-recipe-no-merger"
+  },
+  "targets": [
+    {
+      "part": "Stories/Story_story1.xml",
+      "self": "story1"
+    }
+  ],
+  "identity": {
+    "strategy": "stable-Self-plus-explicit-paragraph-ordinal",
+    "baseSelfByPart": {
+      "Spreads/Spread_ud1.xml": [
+        "g1",
+        "r1",
+        "r2",
+        "r3",
+        "r4",
+        "tf1",
+        "tf2",
+        "tfA",
+        "tfB",
+        "ud1",
+        "ud6"
+      ],
+      "Stories/Story_story1.xml": [
+        "story1"
+      ],
+      "Stories/Story_story2.xml": [
+        "story2"
+      ]
+    },
+    "selflessMatches": [
+      {
+        "part": "Stories/Story_story1.xml",
+        "selector": "Story[@Self='story1']/ParagraphStyleRange[1]",
+        "baseOrdinal": 1,
+        "leftOrdinal": 1,
+        "rightOrdinal": 1
+      },
+      {
+        "part": "Stories/Story_story1.xml",
+        "selector": "Story[@Self='story1']/ParagraphStyleRange[2]",
+        "baseOrdinal": 2,
+        "leftOrdinal": 2,
+        "rightOrdinal": 2
+      },
+      {
+        "part": "Stories/Story_story1.xml",
+        "selector": "Story[@Self='story1']/ParagraphStyleRange[3]",
+        "baseOrdinal": 3,
+        "leftOrdinal": 3,
+        "rightOrdinal": 3
+      },
+      {
+        "part": "Stories/Story_story1.xml",
+        "selector": "Story[@Self='story1']/ParagraphStyleRange[4]",
+        "baseOrdinal": 4,
+        "leftOrdinal": 4,
+        "rightOrdinal": 4
+      }
+    ],
+    "note": "Paragraph order is unchanged in these 16 cases; this is not a general position matching rule."
+  },
+  "oracle": {
+    "kind": "package",
+    "assertions": [],
+    "entries": {
+      "META-INF/container.xml": {
+        "sha256": "49eb05741b0f14a2c740e67c87717ee6f00f2814aca8253198a9c70ebbcee12e",
+        "bytes": 253,
+        "source": "base"
+      },
+      "META-INF/metadata.xml": {
+        "sha256": "f87608cfde06fef2adf0c2abb55eac3aaf805e6218d2d44394c7422ad1db7474",
+        "bytes": 18825,
+        "source": "base"
+      },
+      "MasterSpreads/MasterSpread_ud8.xml": {
+        "sha256": "cc4af998fa6fc0e29a9b319264d7502aa10fa777057fef912d41b1088082f2e3",
+        "bytes": 1485,
+        "source": "base"
+      },
+      "Resources/Fonts.xml": {
+        "sha256": "314b318239f1d361b8ee4af5011ffd5093108a3cab3148c905080f12eac1a109",
+        "bytes": 6616,
+        "source": "base"
+      },
+      "Resources/Graphic.xml": {
+        "sha256": "8bdd882a6b94ed14f582a2c99817cb1d76e064aa93f8c8ce8c3631a7c4421366",
+        "bytes": 7820,
+        "source": "base"
+      },
+      "Resources/Preferences.xml": {
+        "sha256": "826719acb4de1d9d1bff7361b659d19bef998c92bbc05c2f80bf61e8ecef72d5",
+        "bytes": 80255,
+        "source": "base"
+      },
+      "Resources/Styles.xml": {
+        "sha256": "0422ae92f4f85f4123c554a28351cd585df098e122cb62310881df1c7272b831",
+        "bytes": 44669,
+        "source": "base"
+      },
+      "Spreads/Spread_ud1.xml": {
+        "sha256": "a2394662a3b9dc65103b7382452615a59dcee638e82288538805e5e92fb687bf",
+        "bytes": 28132,
+        "source": "base"
+      },
+      "Stories/Story_story1.xml": {
+        "sha256": "0357a06eec768d00008146e71afd7e030101450ecc77336188b966bc059b6d5a",
+        "bytes": 1861,
+        "source": "snapshot",
+        "path": "expected/Stories/Story_story1.xml"
+      },
+      "Stories/Story_story2.xml": {
+        "sha256": "2b9bd06f4398116efed861035c8d6e0823c8363986f34061eef902f787207f9e",
+        "bytes": 882,
+        "source": "base"
+      },
+      "XML/BackingStory.xml": {
+        "sha256": "dd6e51808e2d3554c3e42c308c5026534cbedc1ba3252348d2261f4a5a258824",
+        "bytes": 647,
+        "source": "base"
+      },
+      "XML/Tags.xml": {
+        "sha256": "3421c69b489b8b565d2c84405a8ab301630b1a62fd4c79b8a630df1d3d1345b3",
+        "bytes": 303,
+        "source": "base"
+      },
+      "designmap.xml": {
+        "sha256": "bb4afc398fbc5f82094ef12b520bf0f5000afd9c10fb886bcbd7fed2cfa22e59",
+        "bytes": 31562,
+        "source": "base"
+      },
+      "mimetype": {
+        "sha256": "127a4c4308435b6fa6435093a8a3fd94bbd642951f3f59622b005af4c3090f2a",
+        "bytes": 43,
+        "source": "base"
+      }
+    }
+  },
+  "migration": {
+    "fromSchemaVersion": 2,
+    "date": "2026-11-06",
+    "reason": "Schema 3 paper-based correction: case10 accepts reparenting plus content update; add case10b genuine divergent-parent conflict; withdraw forced local-coordinate policy. New case10b has no prior schema; preserve strict-text-node-v1 (including 08b conflict)."
+  },
   "case": "07-same-story-diff-para",
   "requirement": "Different paragraphs in the same Story",
   "expectedStatus": "accept",

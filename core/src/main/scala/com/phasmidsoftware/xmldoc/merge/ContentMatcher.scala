@@ -11,8 +11,9 @@ import com.phasmidsoftware.xmldoc.xml.GenericElement
  * an already-matched parent's remaining children.
  *
  * Deliberately simpler than 3dm's own algorithm: no fuzzy content similarity (q-gram distance) for
- * the positional fallback - it just pairs whatever's left, in order - and no real "copy resolution"
- * for duplicate content (see `matchByExactContent`). It also never looks *across* an unmatched
+ * the positional fallback - it just pairs whatever's left, in order - and conservative failure
+ * for duplicate content whose multiplicity changes (see `matchByExactContent`).
+ * It also never looks *across* an unmatched
  * parent: a node moved to a genuinely different parent shows up as a plain delete-from-the-old-
  * parent plus insert-into-the-new-one, not a recognized move - a real, known scope limit, not a bug.
  *
@@ -66,8 +67,11 @@ object ContentMatcher {
     val (positionalPairs, baseRemainder2, modifiedRemainder2) = matchByPosition(baseRemainder1, modifiedRemainder1)
     val here = exactPairs ++ positionalPairs
     val below = here.map { case (b, m) => matchChildren(b, m, ignoredAttributes) }
-    (here ++ below.flatMap(_._1), baseRemainder2 ++ below.flatMap(_._2), modifiedRemainder2 ++ below.flatMap(_._3))
+    (here ++ below.flatMap(_._1), baseRemainder2.flatMap(subtree) ++ below.flatMap(_._2), modifiedRemainder2.flatMap(subtree) ++ below.flatMap(_._3))
   }
+
+  private def subtree(ref: NodeRef): Seq[NodeRef] =
+    ref +: childrenOf(ref).flatMap(subtree)
 
   private def childrenOf(ref: NodeRef): Seq[NodeRef] = ref.element.childElements.zipWithIndex.map { case (c, i) => NodeRef(ref.path.child(i), c) }
 
@@ -80,13 +84,19 @@ object ContentMatcher {
       case other => other
     })
 
-  // Whole-subtree equality (GenericElement's own structural equality, recursively, modulo
-  // ignoredAttributes) - greedy, document-order pairing within each content-identical group. Two
-  // distinct base nodes with identical content but only one modified counterpart will have the
-  // earlier one matched and the later one fall through to the positional pass below - a real
-  // simplification of 3dm's own "copy resolution" phase, not a full solution to duplicate content.
+  // Repeated equal siblings with different multiplicities have no recoverable identity.
+  // Fail conservatively rather than claim to know which copy was deleted or inserted.
+  // Equal multiplicities retain document-order correspondence (no inferred edit history).
   private def matchByExactContent(baseKids: Seq[NodeRef], modifiedKids: Seq[NodeRef], ignoredAttributes: Set[String]): (Seq[(NodeRef, NodeRef)], Seq[NodeRef], Seq[NodeRef]) = {
     val initialByContent = modifiedKids.groupBy(k => normalized(k.element, ignoredAttributes))
+    val baseByContent = baseKids.groupBy(k => normalized(k.element, ignoredAttributes))
+    baseKids.foreach { b =>
+      val key = normalized(b.element, ignoredAttributes)
+      val bs = baseByContent(key)
+      val ms = initialByContent.getOrElse(key, Seq.empty)
+      require(ms.isEmpty || bs.size == ms.size,
+        s"Ambiguous content matching at ${b.path}: ${bs.size} base and ${ms.size} modified copies")
+    }
     val (pairs, _) = baseKids.foldLeft((Vector.empty[(NodeRef, NodeRef)], initialByContent)) { case ((acc, byContent), b) =>
       val key = normalized(b.element, ignoredAttributes)
       byContent.get(key).filter(_.nonEmpty) match {

@@ -1,6 +1,6 @@
 package com.phasmidsoftware.xmldoc.idml
 
-import com.phasmidsoftware.xmldoc.merge.TreeMatcher
+import com.phasmidsoftware.xmldoc.merge.{Matching, TreeMatcher}
 import com.phasmidsoftware.xmldoc.xml.GenericElement
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
@@ -23,6 +23,7 @@ class TreeMatcherIdmlSpec extends AnyFlatSpec with should.Matchers {
     val base = spread("HelloWorld2.idml", "Spreads/Spread_ud1.xml")
     val d = spread("HelloWorld2D.idml", "Spreads/Spread_ud1.xml")
     val m = TreeMatcher.matchBySelf(base, d)
+    assertPartition(m)
     val matchedSelves = m.matched.map(_._1.self).flatten.toSet
     matchedSelves should contain allOf("uf8", "u10d", "u122", "u13a", "u13e")
     m.onlyInLeft shouldBe Nil // nothing was removed from the base
@@ -33,6 +34,7 @@ class TreeMatcherIdmlSpec extends AnyFlatSpec with should.Matchers {
     val a = spread("HelloWorld2A.idml", "Spreads/Spread_ue6.xml")
     val b = spread("HelloWorld2B.idml", "Spreads/Spread_ue6.xml")
     val m = TreeMatcher.matchBySelf(a, b)
+    assertPartition(m)
     val matchedSelves = m.matched.map(_._1.self).flatten.toSet
     matchedSelves should contain allOf("uff", "u102", "u124", "u13a", "u13d")
     // the moved-in-A/restyled-in-B Rectangle: same identity (matched), different content each side
@@ -49,7 +51,34 @@ class TreeMatcherIdmlSpec extends AnyFlatSpec with should.Matchers {
     val base = spread("Magazine.idml", "Spreads/Spread_uc6.xml")
     val v1 = spread("Magazine-1.idml", "Spreads/Spread_uc6.xml")
     val m = TreeMatcher.matchBySelf(base, v1)
+    assertPartition(m)
     // 52 Self-bearing elements exist in the base's copy of this one spread alone
     m.matched.size should be > 10
+  }
+
+  private def assertPartition(m: Matching): Unit = {
+    m.matched.foreach { case (base, modified) => base.self shouldBe modified.self }
+    for ((matched, unmatched) <- Seq(m.matched.map(_._1) -> m.onlyInLeft,
+      m.matched.map(_._2) -> m.onlyInRight)) {
+      val all = matched ++ unmatched
+      all.map(_.path).distinct.size shouldBe all.size
+      all.flatMap(_.self).distinct.size shouldBe all.size
+    }
+  }
+
+  it should "reject duplicate identities in a loaded part at the matcher boundary" in {
+    val base = spread("HelloWorld2.idml", "Spreads/Spread_ud1.xml")
+    val identified = base.childElements.find(_.attributes.exists(_._1 == "Self")).get
+    val invalid = GenericElement(base.tag, base.attributes, base.children :+ identified)
+    for ((left, right) <- Seq(base -> invalid, invalid -> base)) {
+      val error = intercept[IllegalArgumentException](TreeMatcher.matchBySelf(left, right))
+      error.getMessage should include ("Duplicate Self")
+      error.getMessage should include (identified.attributes.toMap.apply("Self"))
+    }
+    // A normal part still has exactly one counterpart for every shared identity.
+    val unchanged = TreeMatcher.matchBySelf(base, base)
+    assertPartition(unchanged)
+    unchanged.onlyInLeft shouldBe empty
+    unchanged.onlyInRight shouldBe empty
   }
 }
