@@ -106,16 +106,49 @@ class PcsTreeBuilderSpec extends AnyFlatSpec with should.Matchers {
     t.getMessage should include("no content recorded for u1")
   }
 
-  behavior of "PcsTreeBuilder.build, the unique-parent rule (Kaining's 10-group-ungroup)"
+  behavior of "PcsTreeBuilder.build, genuinely divergent parents (10b)"
 
-  it should "refuse to build when left ungroups a node right takes as its new home" in {
-    val g1 = GenericElement("Group", Seq("Self" -> "g1"), Seq(rect("x")))
-    val y = rect("y")
-    val base = spreadOf("us", g1, y)
-    val left = spreadOf("us", rect("x"), y) // left ungroups g1: x is promoted, g1 vanishes
-    val right = spreadOf("us", GenericElement("Group", Seq("Self" -> "g1"), Seq(rect("x"), y))) // right moves y inside g1
+  it should "refuse to build when both branches impose different new parents" in {
+    val base = spreadOf("us", GenericElement("Group", Seq("Self" -> "g1"), Seq(rect("x"))),
+      GenericElement("Group", Seq("Self" -> "g2"), Nil))
+    val left = spreadOf("us", rect("x"), GenericElement("Group", Seq("Self" -> "g2"), Nil))
+    val right = spreadOf("us", GenericElement("Group", Seq("Self" -> "g1"), Nil),
+      GenericElement("Group", Seq("Self" -> "g2"), Seq(rect("x"))))
     val result = PcsMerger.merge(base, left, right)
-    result.conflicts.map(_.slot) should (contain("parent of x") and contain("parent of y"))
+    MergeAssertions.assertConflictsEqual(result.conflicts,
+      Seq(StructuralConflict("parent of x", Some("g1"), Some("us"), Some("g2"))))
     PcsTreeBuilder.build(result) shouldBe a[Failure[?]]
   }
+
+  it should "preserve adjacent text nodes, empty elements, CDATA and surrounding whitespace" in {
+    val tree = GenericElement("p", Nil, Seq(GenericText("  "), GenericText("one"),
+      GenericElement("empty", Nil, Nil), GenericCData("<two>"), GenericText("\n")))
+    PcsTreeBuilder.build(Pcs.relations(tree), "/") shouldBe Success(tree)
+  }
+
+  it should "reject malformed reachable relations instead of choosing a map entry or omitting nodes" in {
+    val r = Content.element("r", "Root", Nil)
+    val a = Content.element("a", "A", Nil)
+    val b = Content.element("b", "B", Nil)
+    val valid = RelationSet(Set(Pcs("r", ListStart, SiblingNode("a")),
+      Pcs("r", SiblingNode("a"), ListEnd), Pcs("a", ListStart, ListEnd)), Set(r, a))
+    val malformed = Seq(
+      valid.copy(content = Set(r)),
+      valid.copy(content = valid.content + Content.element("a", "Other", Nil)),
+      valid.copy(pcs = valid.pcs + Pcs("r", ListStart, ListEnd)),
+      valid.copy(pcs = valid.pcs - Pcs("r", SiblingNode("a"), ListEnd)),
+      valid.copy(pcs = valid.pcs - Pcs("r", SiblingNode("a"), ListEnd) + Pcs("r", SiblingNode("a"), SiblingNode("a"))),
+      valid.copy(pcs = valid.pcs + Pcs("r", SiblingNode("b"), SiblingNode("b")), content = Set(r, a, b)),
+      RelationSet(Set(Pcs("r", ListStart, SiblingNode("a")), Pcs("r", SiblingNode("a"), SiblingNode("b")),
+        Pcs("r", SiblingNode("b"), ListEnd), Pcs("a", ListStart, SiblingNode("b")),
+        Pcs("a", SiblingNode("b"), ListEnd), Pcs("b", ListStart, ListEnd)), Set(r, a, b)),
+      RelationSet(Set(Pcs("r", ListStart, SiblingNode("a")), Pcs("r", SiblingNode("a"), ListEnd),
+        Pcs("a", ListStart, SiblingNode("r")), Pcs("a", SiblingNode("r"), ListEnd)), Set(r, a)))
+    malformed.zipWithIndex.foreach { case (relations, i) =>
+      withClue(s"malformed case $i: ") { PcsTreeBuilder.build(relations, "r").isFailure shouldBe true }
+    }
+    val unresolved = StructuralMergeResult(valid, "r", Seq(StructuralConflict("parent of a", None, Some("r"), Some("b"))))
+    PcsTreeBuilder.build(unresolved).isFailure shouldBe true
+  }
+
 }

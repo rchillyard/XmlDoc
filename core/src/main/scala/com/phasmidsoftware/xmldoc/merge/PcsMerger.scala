@@ -40,7 +40,7 @@ case class StructuralMergeResult(relations: RelationSet, rootLabel: String, conf
  * Checks all three of Lindholm's structural consistency rules: "unique successor" and "unique
  * predecessor" (a node's position *within* its current parent's child list), and "unique parent" -
  * a node claimed as a child by two genuinely different parents (e.g. Kaining's
- * `10-group-ungroup`), which the first two can't see: they only compare values sharing the same
+ * `10b-divergent-parent`), which the first two can't see: they only compare values sharing the same
  * `(parent, ...)` key, but a node moved to a different parent changes which *key* it appears
  * under at all, not the value at a shared one.
  */
@@ -67,15 +67,32 @@ object PcsMerger {
     leftLabel: NodeRef => String = Pcs.label,
     rightLabel: NodeRef => String = Pcs.label
   ): StructuralMergeResult = {
-    val baseRelations = Pcs.relations(base)
-    val leftEdits = PcsEditDetector.detectEdits(base, left, ignoredAttributes, leftLabel)
-    val rightEdits = PcsEditDetector.detectEdits(base, right, ignoredAttributes, rightLabel)
+    mergeRelations(Pcs.relations(base), Pcs.relations(left, leftLabel), Pcs.relations(right, rightLabel),
+      Pcs.label(NodeRef(NodePath.root, base)), ignoredAttributes)
+  }
+
+  /** Reconcile pre-matched relations without changing the default XML identity policy. */
+  def mergeRelations(baseRelations: RelationSet, leftRelations: RelationSet, rightRelations: RelationSet,
+                     rootLabel: String, ignoredAttributes: Set[String]): StructuralMergeResult = {
+    val leftEdits = PcsEditDetector.detectEdits(baseRelations, leftRelations, ignoredAttributes)
+    val rightEdits = PcsEditDetector.detectEdits(baseRelations, rightRelations, ignoredAttributes)
 
     val baseContent = baseRelations.content.map(c => c.label -> c).toMap
     val (contentEdits, contentConflicts) = reconcile(
       baseContent,
-      leftEdits.content.map(c => c.label -> c).toMap,
-      rightEdits.content.map(c => c.label -> c).toMap
+      leftEdits.content.map(c => c.label -> preserveIgnored(c, baseContent.get(c.label), ignoredAttributes)).toMap,
+      rightEdits.content.map(c => c.label -> preserveIgnored(c, baseContent.get(c.label), ignoredAttributes)).toMap,
+      (a: Content, b: Content) => a.copy(attributes = Nil) == b.copy(attributes = Nil) &&
+        a.attributes.filterNot(x => ignoredAttributes(x._1)).toMap == b.attributes.filterNot(x => ignoredAttributes(x._1)).toMap,
+      (a: Content, b: Content) => {
+        def bytes(c: Content) = {
+          val value = if (c.kind == ElementNode)
+            GenericElement.toXmlString(GenericElement("Attributes", c.attributes.sortBy(_._1), Nil))
+          else render(c)
+          value.getBytes(java.nio.charset.StandardCharsets.UTF_8)
+        }
+        if (java.util.Arrays.compareUnsigned(bytes(a), bytes(b)) <= 0) a else b
+      }
     )
     val mergedContent = (baseContent ++ contentEdits).values.toSet
     val contentReports = contentConflicts.map { case (label, b, l, r) =>
@@ -104,11 +121,15 @@ object PcsMerger {
     // goes - the predecessor/successor maps above already own that), only that two sides disagree
     // about which parent a node belongs to at all.
     val baseParent = parentOf(baseRelations.pcs)
-    val (_, parentConflicts) = reconcile(baseParent, parentOf(leftEdits.pcs), parentOf(rightEdits.pcs))
+    // New adjacency under an unchanged parent is not a new parent requirement.
+    val leftParents = parentOf(leftRelations.pcs)
+    val rightParents = parentOf(rightRelations.pcs)
+    def parentEdits(parents: Map[String, String]): Map[String, String] =
+      parents.filter { case (label, parent) => !baseParent.get(label).contains(parent) }
+    val (_, parentConflicts) = reconcile(baseParent, parentEdits(leftParents), parentEdits(rightParents))
     val parentReports = parentConflicts.map { case (label, b, l, r) => StructuralConflict(s"parent of $label", b, l, r) }
 
-    val rootLabel = Pcs.label(NodeRef(NodePath.root, base))
-    StructuralMergeResult(RelationSet(mergedPcs, mergedContent), rootLabel, contentReports ++ predReports ++ succReports ++ parentReports)
+    StructuralMergeResult(RelationSet(withoutObsoleteBaseLinks(mergedPcs, baseRelations.pcs, rootLabel), mergedContent), rootLabel, contentReports ++ predReports ++ succReports ++ parentReports)
   }
 
   /**
@@ -131,6 +152,38 @@ object PcsMerger {
   def mergeByContent(base: GenericElement, left: GenericElement, right: GenericElement, ignoredAttributes: Set[String] = Set.empty): StructuralMergeResult =
     merge(base, left, right, ignoredAttributes, ContentMatcher.matchedLabel(base, left, ignoredAttributes), ContentMatcher.matchedLabel(base, right, ignoredAttributes))
 
+  // The reconciler retains old base slots even after a new link bypasses them. Remove
+  // only those untraversed BASE links, never an untraversed edit, before strict rebuilding.
+  private def withoutObsoleteBaseLinks(pcs: Set[Pcs], base: Set[Pcs], root: String): Set[Pcs] = {
+    val bySlot = pcs.groupBy(p => (p.parent, p.predecessor))
+    val used = scala.collection.mutable.Set.empty[Pcs]
+    val visited = scala.collection.mutable.Set.empty[String]
+    def visit(parent: String): Unit = if (visited.add(parent)) {
+      var current: Sibling = ListStart
+      val seen = scala.collection.mutable.Set.empty[Sibling]
+      var running = true
+      while (running && seen.add(current)) {
+        bySlot.get(parent -> current) match {
+          case Some(links) if links.size == 1 =>
+            val link = links.head
+            used += link
+            link.successor match {
+              case child @ SiblingNode(label) => visit(label); current = child
+              case _ => running = false
+            }
+          case _ => running = false // strict builder reports missing/ambiguous slots
+        }
+      }
+    }
+    visit(root)
+    pcs -- (base -- used)
+  }
+
+  private def preserveIgnored(content: Content, base: Option[Content], ignored: Set[String]): Content =
+    if (ignored.isEmpty || base.isEmpty) content
+    else content.copy(attributes = content.attributes.filterNot(x => ignored(x._1)) ++
+      base.get.attributes.filter(x => ignored(x._1)))
+
   private def byPredecessor(pcs: Set[Pcs]): Map[(String, Sibling), Sibling] = pcs.map(p => (p.parent, p.predecessor) -> p.successor).toMap
 
   private def bySuccessor(pcs: Set[Pcs]): Map[(String, Sibling), Sibling] = pcs.map(p => (p.parent, p.successor) -> p.predecessor).toMap
@@ -150,11 +203,13 @@ object PcsMerger {
    * fall back on). A slot neither side touched needs no entry at all - the caller already has
    * `base`'s own map for that.
    */
-  private def reconcile[K, V](base: Map[K, V], left: Map[K, V], right: Map[K, V]): (Map[K, V], Seq[(K, Option[V], Option[V], Option[V])]) = {
+  private def reconcile[K, V](base: Map[K, V], left: Map[K, V], right: Map[K, V],
+                              equivalent: (V, V) => Boolean = (a: V, b: V) => a == b,
+                              choose: (V, V) => V = (a: V, _: V) => a): (Map[K, V], Seq[(K, Option[V], Option[V], Option[V])]) = {
     val touched = left.keySet ++ right.keySet
     val resolved = touched.flatMap { k =>
       (left.get(k), right.get(k)) match {
-        case (Some(l), Some(r)) if l == r => Some(k -> l)
+        case (Some(l), Some(r)) if equivalent(l, r) => Some(k -> choose(l, r))
         case (Some(l), None) => Some(k -> l)
         case (None, Some(r)) => Some(k -> r)
         case _ => None
@@ -162,7 +217,7 @@ object PcsMerger {
     }.toMap
     val conflicts = touched.toSeq.flatMap { k =>
       (left.get(k), right.get(k)) match {
-        case (Some(l), Some(r)) if l != r => Some((k, base.get(k), Some(l), Some(r)))
+        case (Some(l), Some(r)) if !equivalent(l, r) => Some((k, base.get(k), Some(l), Some(r)))
         case _ => None
       }
     }

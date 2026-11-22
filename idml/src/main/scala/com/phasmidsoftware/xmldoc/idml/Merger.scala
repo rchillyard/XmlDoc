@@ -73,7 +73,7 @@ object Merger {
         case (Some(u: Updated), Some(_: Deleted)) => Seq(deleteUpdateConflict(self, u, deletedIsLeft = false))
         case (Some(_: Deleted), Some(u: Updated)) => Seq(deleteUpdateConflict(self, u, deletedIsLeft = true))
         case (Some(l: Updated), Some(r: Updated)) => reconcileUpdates(self, l, r)
-        case (Some(l: Inserted), Some(r: Inserted)) => reconcileInserts(self, l, r)
+        case (Some(l: Inserted), Some(r: Inserted)) => reconcileInserts(self, l, r, ignoredAttributes)
         // Insert+Delete or Insert+Update for the same Self can't happen: Inserted implies absent
         // from base, while Deleted/Updated both imply present in (and matched against) base.
         case _ => Nil
@@ -114,13 +114,19 @@ object Merger {
     else Conflict(self, "(deleted vs updated)", None, Some(updateSummary), Some("(deleted)"))
   }
 
-  private def reconcileInserts(self: String, left: Inserted, right: Inserted): Seq[MergeOutcome] = {
+  private def reconcileInserts(self: String, left: Inserted, right: Inserted, ignored: Set[String]): Seq[MergeOutcome] = {
     // Both sides independently created a node with the same Self - genuinely rare (independent
     // insertions were confirmed empirically not to collide), but handled defensively rather than
     // just picking one side silently.
     val leftAttrs = left.node.element.attributes.toMap
     val rightAttrs = right.node.element.attributes.toMap
-    if (leftAttrs == rightAttrs) Seq(MergedInsert(left.node))
+    if (left.node.element.tag == right.node.element.tag &&
+      leftAttrs.filterNot(x => ignored(x._1)) == rightAttrs.filterNot(x => ignored(x._1))) {
+      def bytes(insert: Inserted): Array[Byte] = GenericElement.toXmlString(
+        GenericElement("Attributes", insert.node.element.attributes.sortBy(_._1), Nil)).getBytes(java.nio.charset.StandardCharsets.UTF_8)
+      val selected = if (java.util.Arrays.compareUnsigned(bytes(left), bytes(right)) <= 0) left else right
+      Seq(MergedInsert(selected.node))
+    }
     else Seq(Conflict(self, "(whole inserted node)", None, Some(left.node.element.toString), Some(right.node.element.toString)))
   }
 }

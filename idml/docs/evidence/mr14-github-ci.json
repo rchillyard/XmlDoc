@@ -1,0 +1,175 @@
+{
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "completedAt": "2026-11-06T15:45:23Z",
+      "conclusion": "success",
+      "databaseId": 127987176523,
+      "name": "automated-regressions",
+      "startedAt": "2026-11-06T15:43:31Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-11-06T15:43:35Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-11-06T15:43:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-06T15:43:36Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-11-06T15:43:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-06T15:43:36Z",
+          "conclusion": "success",
+          "name": "Run actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3",
+          "number": 3,
+          "startedAt": "2026-11-06T15:43:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-06T15:43:41Z",
+          "conclusion": "success",
+          "name": "Run sbt/setup-sbt@c6bd01274abceb9dd5bd9f1a336c2a26c259de69",
+          "number": 4,
+          "startedAt": "2026-11-06T15:43:36Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-06T15:45:05Z",
+          "conclusion": "success",
+          "name": "Scala unit, corpus, acceptance and KML regressions",
+          "number": 5,
+          "startedAt": "2026-11-06T15:43:41Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-06T15:45:05Z",
+          "conclusion": "success",
+          "name": "Read-only corpus verification",
+          "number": 6,
+          "startedAt": "2026-11-06T15:45:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-06T15:45:15Z",
+          "conclusion": "success",
+          "name": "Corpus corruption and real-evidence gate tests",
+          "number": 7,
+          "startedAt": "2026-11-06T15:45:05Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-06T15:45:16Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 8,
+          "startedAt": "2026-11-06T15:45:15Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-06T15:45:18Z",
+          "conclusion": "success",
+          "name": "Post Run sbt/setup-sbt@c6bd01274abceb9dd5bd9f1a336c2a26c259de69",
+          "number": 14,
+          "startedAt": "2026-11-06T15:45:16Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-06T15:45:21Z",
+          "conclusion": "success",
+          "name": "Post Run actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3",
+          "number": 15,
+          "startedAt": "2026-11-06T15:45:18Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-06T15:45:21Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 16,
+          "startedAt": "2026-11-06T15:45:21Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-06T15:45:21Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 17,
+          "startedAt": "2026-11-06T15:45:21Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/rchillyard/XmlDoc/actions/runs/42245687017/job/127987176523"
+    },
+    {
+      "completedAt": "2026-11-06T15:43:36Z",
+      "conclusion": "failure",
+      "databaseId": 127987177040,
+      "name": "release-evidence",
+      "startedAt": "2026-11-06T15:43:31Z",
+      "status": "completed",
+      "steps": [
+        {
+          "completedAt": "2026-11-06T15:43:32Z",
+          "conclusion": "success",
+          "name": "Set up job",
+          "number": 1,
+          "startedAt": "2026-11-06T15:43:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-06T15:43:33Z",
+          "conclusion": "success",
+          "name": "Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 2,
+          "startedAt": "2026-11-06T15:43:32Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-06T15:43:34Z",
+          "conclusion": "failure",
+          "name": "Strict real-world evidence gate (missing records must fail)",
+          "number": 3,
+          "startedAt": "2026-11-06T15:43:33Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-06T15:43:35Z",
+          "conclusion": "success",
+          "name": "Run actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "number": 4,
+          "startedAt": "2026-11-06T15:43:34Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-06T15:43:35Z",
+          "conclusion": "success",
+          "name": "Post Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+          "number": 8,
+          "startedAt": "2026-11-06T15:43:35Z",
+          "status": "completed"
+        },
+        {
+          "completedAt": "2026-11-06T15:43:35Z",
+          "conclusion": "success",
+          "name": "Complete job",
+          "number": 9,
+          "startedAt": "2026-11-06T15:43:35Z",
+          "status": "completed"
+        }
+      ],
+      "url": "https://github.com/rchillyard/XmlDoc/actions/runs/42245687017/job/127987177040"
+    }
+  ],
+  "status": "completed",
+  "url": "https://github.com/rchillyard/XmlDoc/actions/runs/42245687017",
+  "headSha": "84343cb8833a58dbb76ac783c9ed15d43d6b25f9",
+  "runId": 42245687017
+}

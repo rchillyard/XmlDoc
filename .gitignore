@@ -23,3 +23,14 @@ work
 
 doc/Lindholm.pdf
 .DS_Store
+
+# Real-world InDesign merge evidence (~109 MB of .indd/.idml/.ai binaries), kept out of
+# main's history. It lives on the kaining/real-world-idml-tests branch; restore a copy with
+# `git checkout kaining/real-world-idml-tests -- idml/real-world-runs`. This rule only stops
+# an untracked copy being committed here again: it does not keep the files in a working tree
+# that switches to main, since ignore rules never apply to files already tracked elsewhere.
+idml/real-world-runs/
+
+# Audio reference material for the merge paper, left out of main at 11.18 MiB. Its
+# provenance and how to restore a local copy are in doc/3-way-merge-paper/README.md.
+doc/3-way-merge-paper/*.mp3

@@ -114,4 +114,53 @@ class PcsSpec extends AnyFlatSpec with should.Matchers {
       Content.text("/::text[1]", "!")
     )
   }
+
+  // The project stores the root's own content and child chain, without the paper's
+  // artificial parent above it. Equivalence is limited to a fixed, known root label.
+  private def node(id: String, kids: GenericElement*): GenericElement =
+    GenericElement("N", Seq("Self" -> id), kids)
+  private def c(id: String): Content = Content.element(id, "N", Seq("Self" -> id))
+  private def leaf(id: String): Pcs = Pcs(id, ListStart, ListEnd)
+  private def edge(p: String, a: String, b: String): Pcs = Pcs(p, SiblingNode(a), SiblingNode(b))
+  private def start(p: String, a: String): Pcs = Pcs(p, ListStart, SiblingNode(a))
+  private def end(p: String, a: String): Pcs = Pcs(p, SiblingNode(a), ListEnd)
+
+  it should "encode complete relation sets for all list boundaries and structural states" in {
+    val cases = Seq(
+      ("empty", node("r"), Set(leaf("r")), Set(c("r"))),
+      ("single", node("r", node("a")), Set(start("r", "a"), end("r", "a"), leaf("a")), Set(c("r"), c("a"))),
+      ("two children", node("r", node("a"), node("b")),
+        Set(start("r", "a"), edge("r", "a", "b"), end("r", "b"), leaf("a"), leaf("b")), Set(c("r"), c("a"), c("b"))),
+      ("before middle delete", node("r", node("a"), node("b"), node("c")),
+        Set(start("r", "a"), edge("r", "a", "b"), edge("r", "b", "c"), end("r", "c"), leaf("a"), leaf("b"), leaf("c")),
+        Set(c("r"), c("a"), c("b"), c("c"))),
+      ("before cross parent", node("r", node("p", node("a")), node("q")),
+        Set(start("r", "p"), edge("r", "p", "q"), end("r", "q"), start("p", "a"), end("p", "a"), leaf("a"), leaf("q")),
+        Set(c("r"), c("p"), c("q"), c("a"))),
+      ("head insert", node("r", node("x"), node("a"), node("b")),
+        Set(start("r", "x"), edge("r", "x", "a"), edge("r", "a", "b"), end("r", "b"), leaf("x"), leaf("a"), leaf("b")),
+        Set(c("r"), c("x"), c("a"), c("b"))),
+      ("tail insert", node("r", node("a"), node("b"), node("x")),
+        Set(start("r", "a"), edge("r", "a", "b"), edge("r", "b", "x"), end("r", "x"), leaf("a"), leaf("b"), leaf("x")),
+        Set(c("r"), c("a"), c("b"), c("x"))),
+      ("middle delete", node("r", node("a"), node("c")),
+        Set(start("r", "a"), edge("r", "a", "c"), end("r", "c"), leaf("a"), leaf("c")), Set(c("r"), c("a"), c("c"))),
+      ("reorder", node("r", node("b"), node("a")),
+        Set(start("r", "b"), edge("r", "b", "a"), end("r", "a"), leaf("a"), leaf("b")), Set(c("r"), c("a"), c("b"))),
+      ("cross parent", node("r", node("p"), node("q", node("a"))),
+        Set(start("r", "p"), edge("r", "p", "q"), end("r", "q"), leaf("p"), start("q", "a"), end("q", "a"), leaf("a")),
+        Set(c("r"), c("p"), c("q"), c("a"))))
+    cases.foreach { case (name, tree, pcs, content) =>
+      withClue(name) { Pcs.relations(tree) shouldBe RelationSet(pcs, content) }
+    }
+  }
+
+  it should "encode the complete mixed text and CDATA chain including every leaf boundary" in {
+    val tree = GenericElement("p", Nil, Seq(GenericText(" before "), node("a"), GenericCData("after")))
+    Pcs.relations(tree) shouldBe RelationSet(
+      Set(start("/", "/::text[0]"), edge("/", "/::text[0]", "a"), edge("/", "a", "/::text[1]"),
+        end("/", "/::text[1]"), leaf("/::text[0]"), leaf("a"), leaf("/::text[1]")),
+      Set(Content.element("/", "p", Nil), Content.text("/::text[0]", " before "), c("a"), Content.cdata("/::text[1]", "after")))
+  }
+
 }
