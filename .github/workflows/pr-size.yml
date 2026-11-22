@@ -1,0 +1,39 @@
+# Guards the size of main's history. GitHub rejects a single file over 100 MB but
+# places no limit on a push as a whole, so without this a pull request can multiply
+# the size of the repository permanently. See .github/scripts/check_pr_size.py.
+name: Pull request size
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  pr-size-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      MAX_TOTAL_MIB: '25'
+      MAX_FILE_MIB: '5'
+    steps:
+      # Full history: the script needs the merge base of the pull request, which a
+      # shallow clone does not have.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - name: Measure what this pull request adds
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          EXEMPT: ${{ contains(github.event.pull_request.labels.*.name, 'large-files-ok') }}
+        run: |
+          # The check runs either way and always reports, so that it can be a required
+          # check: the label downgrades a failure to a warning rather than skipping the
+          # job, since a job that never reports leaves a required check pending forever.
+          if [ "$EXEMPT" = 'true' ]; then
+            echo "::warning::Label 'large-files-ok' is set, so size limits are not enforced on this pull request."
+            python3 .github/scripts/check_pr_size.py "$BASE_SHA" "$HEAD_SHA" \
+              --max-total "$MAX_TOTAL_MIB" --max-file "$MAX_FILE_MIB" || true
+            exit 0
+          fi
+          python3 .github/scripts/check_pr_size.py "$BASE_SHA" "$HEAD_SHA" \
+            --max-total "$MAX_TOTAL_MIB" --max-file "$MAX_FILE_MIB"
