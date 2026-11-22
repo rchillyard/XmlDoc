@@ -71,7 +71,13 @@ object MergeBenchmark {
     val memoryPools = ManagementFactory.getMemoryPoolMXBeans.asScala.filter(_.isValid)
     memoryPools.foreach(_.resetPeakUsage())
     val peak = new java.util.concurrent.atomic.AtomicLong(heap)
-    val sampler = java.util.concurrent.Executors.newSingleThreadScheduledExecutor()
+    // A daemon thread, as the hand-rolled sampler used to be: a sampler which outlives
+    // shutdownNow must not keep the JVM alive, since this object has a main.
+    val sampler = java.util.concurrent.Executors.newSingleThreadScheduledExecutor { (r: Runnable) =>
+      val t = new Thread(r, "heap-sampler")
+      t.setDaemon(true)
+      t
+    }
     sampler.scheduleAtFixedRate(() => peak.accumulateAndGet(heap, (a, b) => math.max(a, b)): Unit,
       0, 1, java.util.concurrent.TimeUnit.MILLISECONDS): Unit
     val start = System.nanoTime()
