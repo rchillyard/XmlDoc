@@ -10,3 +10,9 @@ exclude_paths:
   # figures, and the rest is prose and figures. Its subprocess use is list-form with a
   # hardcoded script, so the findings here were Bandit's blanket advisories.
   - "idml/docs/paper/**"
+  # CI tooling, on the same footing as idml/tools/**. check_pr_size.py calls git through
+  # subprocess, which Bandit reports on sight; the calls are list-form with git as a fixed
+  # first element, never a shell, and the only external input is two refs passed as argv.
+  # Because this path is excluded, that reasoning is not rechecked automatically: a change
+  # here introducing shell=True or an interpolated command string needs review by hand.
+  - ".github/scripts/**"
