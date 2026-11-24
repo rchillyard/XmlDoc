@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets.UTF_8
 import java.util.zip.{ZipEntry, ZipOutputStream}
 import scala.jdk.CollectionConverters.*
 import scala.util.Random
+import scala.util.control.NonFatal
 
 /** Explicit runMain only: no ScalaTest registration and no long-running default tests. */
 object MergeBenchmark {
@@ -78,7 +79,15 @@ object MergeBenchmark {
       t.setDaemon(true)
       t
     }
-    sampler.scheduleAtFixedRate(() => peak.accumulateAndGet(heap, (a, b) => math.max(a, b)): Unit,
+    // scheduleAtFixedRate cancels every later run if the task throws, and reports nothing.
+    // Sampling would stop and sampledHeapPeakMiB would be published low rather than failing, which
+    // in a formal measurement is worse than no figure at all. Record the throwable and fail on it
+    // below, where the figure is read.
+    val samplerFailure = new java.util.concurrent.atomic.AtomicReference[Throwable]()
+    sampler.scheduleAtFixedRate(
+      () =>
+        try peak.accumulateAndGet(heap, (a, b) => math.max(a, b)): Unit
+        catch { case NonFatal(t) => samplerFailure.compareAndSet(null, t): Unit },
       0, 1, java.util.concurrent.TimeUnit.MILLISECONDS): Unit
     val start = System.nanoTime()
     try {
@@ -104,6 +113,7 @@ object MergeBenchmark {
       val l = PcsEditDetector.detectEdits(relations(0), relations(1), Set.empty)
       val r = PcsEditDetector.detectEdits(relations(0), relations(2), Set.empty)
       val e = (l.pcs ++ r.pcs).size + (l.content ++ r.content).size
+      require(samplerFailure.get == null, s"heap sampler stopped early: ${samplerFailure.get}")
       ujson.Obj("parseMs" -> parseMs, "matchMs" -> matchMs, "mergeMs" -> mergeMs,
         "writeMs" -> writeMs, "totalMs" -> totalMs, "E" -> e,
         "sampledHeapPeakMiB" -> (peak.get.toDouble / 1048576),
