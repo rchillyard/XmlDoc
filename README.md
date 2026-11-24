@@ -37,7 +37,7 @@ Full Scaladoc is at <https://rchillyard.github.io/XmlDoc/latest/api/>.
 
 ## Getting started
 
-This version of the README.md file refers to version: 1.2.1.
+This version of the README.md file refers to version: 1.2.2.
 
 Add the modules you need to your _build.sbt_,
 where `x.y.z` is the latest version on Maven Central: it's shown on the [Sonatype Central](https://central.sonatype.com/artifact/com.phasmidsoftware/xmldoc-core_3) badge at the top of this page.
@@ -193,7 +193,48 @@ A record which needs something from outside its element (e.g. a `Style` defined 
 
 ## Versions
 
-Not yet released: `ZIOXmlStream` reads the selected elements 64 at a time, like `IOXmlStream`, rather than ZIO's default chunk of 4096: Issue #101.
+Version 1.2.2 Hardens the 3-way merge that 1.1.3 introduced. A systematic test campaign against a
+sixteen-case corpus of InDesign edits found eight defects in it, all of which could lose or misplace
+an edit without saying so:
+
+- A node with no `Self` was identified by its path, so deleting an earlier sibling could move an edit
+  onto the wrong node, or lose it. Anonymous nodes are now matched within their corresponding
+  identified parent, and an inserted one is scoped to its nearest `Self`-bearing ancestor: Issue #67.
+- Duplicate `Self` values were silently collapsed by `.toMap`, so the merge continued against wrong
+  matches. `TreeMatcher` now rejects them, naming the paths: Issue #68.
+- A parent relationship inherited from the base was read as a move by one side, giving false
+  "both sides reparented" conflicts: Issue #71.
+- Stale adjacency relations could survive reconciliation, and reconstruction could then yield an
+  incomplete tree and call it a success. `PcsTreeBuilder` now rejects duplicate content, a conflicting
+  or disconnected child chain, and a node reached through two parents: Issue #73.
+- An edit deep inside a subtree the other side deleted could vanish without a conflict. The candidate
+  relation graph is now walked rather than the original ancestry, so an edited child moved out of a
+  deleted group keeps its edit and anything genuinely unreachable is reported: Issue #74.
+- Indentation and text-node positions caused false conflicts. In a strictly alternating
+  whitespace/element list, whitespace is now identified by the element that follows it rather than by
+  an absolute ordinal, so an independent insert on one side no longer reads as an edit of the other's
+  formatting: Issue #75.
+- Each XML part of an `.idml` package could be valid on its own while the Story and frame references
+  between them were not. `IdmlReferenceValidator` checks candidate references and story
+  dependencies: Issue #76.
+- A failure partway through writing the merged package could corrupt the original. The package is now
+  written atomically, so a conflict or an I/O failure leaves "ours" intact: Issue #77.
+
+Real-world acceptance of the IDML merge is not complete: none of the four planned InDesign sample
+cases has been supplied, so the `release-evidence` CI job fails by design. The merge is verified
+against the synthetic corpus and the property tests, not against documents round-tripped through
+InDesign itself.
+
+Elsewhere, `extractOptional` returned `None.asInstanceOf[P]` for an absent element — a `None`
+disguised as whatever `P` was, sound only by convention. `Extractor` gains `emptyValue: Option[T]`,
+which `lift` defines and `map`/`flatMap` carry through, and `extractOptional` now fails with a clear
+message when the extractor has no empty value: Issue #124.
+`ZIOXmlStream` reads the selected elements 64 at a time, like `IOXmlStream`, rather than ZIO's default
+chunk of 4096, so its memory is bounded by a chunk: Issue #101.
+`Extractors.fieldNames` is gone: it was `fieldNamesMaybeDropLast(fields, false)` and nothing had
+called it since `dropLast` became an explicit parameter, which it now always is: Issue #125.
+Every tagged comment in the project names the issue that tracks it, and `XXX` is renamed `ASIDE`:
+Issues #159, #164.
 
 Version 1.2.1 Fixes `KMLCompanion.loadKML(URL)`, which loaded the URL's path as a local file name, so that it failed for a resource
 in a jar (that is, whenever `xmldoc-kml` was a dependency), for an `http:` URL, and for a `file:` URL whose path has a space;
