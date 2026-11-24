@@ -277,4 +277,47 @@ class RenderersSpec extends AnyFlatSpec with should.Matchers {
     val wy = TryUsing(StateR())(sr => KVVRenderers.rendererKVV.render(KVV("a", -1, _b = false), FormatXML(), sr))
     wy shouldBe Success("""<KVV k="a" v="-1" b="0"></KVV>""")
   }
+
+  // FormatIndented was the one Format with no test at all (#108). Unlike FormatText it drops the
+  // class name from formatName, and unlike both others its sequencer separates with ", " rather
+  // than a newline - so the two tests below pin exactly the things that distinguish it.
+  behavior of "FormatIndented"
+
+  it should "name its brackets and separators" in {
+    val target = FormatIndented(0)
+    target.name shouldBe "FormatIndented"
+    target.formatName[Greeting](Some(true), StateR(None)) shouldBe "{"
+    target.formatName[Greeting](Some(false), StateR(None)) shouldBe "}"
+    // None is the empty string, not the class name: this is what differs from FormatText.
+    target.formatName[Greeting](None, StateR(None)) shouldBe ""
+    target.sequencer(Some(true)) shouldBe "["
+    target.sequencer(Some(false)) shouldBe "]"
+    target.sequencer(None) shouldBe ", "
+  }
+
+  it should "indent, and flatten to itself" in {
+    val target = FormatIndented(0)
+    target.newline shouldBe "\n"
+    target.indent shouldBe FormatIndented(1)
+    target.indent.newline shouldBe "\n  "
+    target.indent.indent.newline shouldBe "\n    "
+    target.flatten shouldBe target
+  }
+
+  it should "render a case class, without its name" in {
+    object MyRenderers extends Renderers {
+      val rendererGreeting: Renderer[Greeting] = renderer1.apply(Greeting.apply)
+    }
+    val wy = TryUsing(StateR())(sr => MyRenderers.rendererGreeting.render(Greeting("Hello"), FormatIndented(0), sr))
+    wy shouldBe Success("{Hello}")
+  }
+
+  it should "render a sequence on one line" in {
+    object MyRenderers extends Renderers {
+      implicit val rendererIntSeq: Renderer[Seq[Int]] = sequenceRenderer[Int]
+    }
+    import MyRenderers.*
+    val wy = TryUsing(StateR())(sr => rendererIntSeq.render(Seq(42, 99, 1), FormatIndented(0), sr))
+    wy shouldBe Success("[42, 99, 1]")
+  }
 }

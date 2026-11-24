@@ -8,9 +8,16 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 
 import scala.util.{Failure, Success, Try}
-import scala.xml.Node
+import scala.xml.{Node, NodeSeq}
 
 class ExtractorSpec extends AnyFlatSpec with should.Matchers {
+
+  // Local to this spec, so that the implicit Extractor in scope is always the one the test defines.
+  sealed trait Shape
+
+  case class Circle(radius: Int) extends Shape
+
+  case class Square(side: Int) extends Shape
 
   behavior of "Extractor"
 
@@ -176,6 +183,67 @@ class ExtractorSpec extends AnyFlatSpec with should.Matchers {
     "mice" match {
       case Plural(s) => s shouldBe "mouse"
     }
+  }
+
+  // The three members #107 listed. Local types are used throughout, so that implicit resolution
+  // picks up exactly the Extractor each test defines and nothing from Extractor's companion.
+  behavior of "Extractor.|"
+
+  it should "fall back to the alternative when this extractor fails" in {
+    implicit val circleExtractor: Extractor[Circle] = (node: Node) => Try(Circle(node.text.toInt))
+    val failing: Extractor[Shape] = (_: Node) => Failure(new NoSuchElementException("not a Shape"))
+    val target: Extractor[Shape] = failing.|[Circle]()
+    target.extract(<junk>3</junk>) shouldBe Success(Circle(3))
+  }
+
+  it should "not consult the alternative when this extractor succeeds" in {
+    implicit val circleExtractor: Extractor[Circle] = (_: Node) => fail("the alternative should not have been consulted")
+    val primary: Extractor[Shape] = (node: Node) => Try(Square(node.text.toInt))
+    primary.|[Circle]().extract(<junk>3</junk>) shouldBe Success(Square(3))
+  }
+
+  it should "fail when both fail" in {
+    implicit val circleExtractor: Extractor[Circle] = (_: Node) => Failure(new NoSuchElementException("no Circle"))
+    val failing: Extractor[Shape] = (_: Node) => Failure(new NoSuchElementException("not a Shape"))
+    // the alternative's failure is the one reported, orElse having discarded the first
+    failing.|[Circle]().extract(<junk>3</junk>) should matchPattern { case Failure(_) => }
+  }
+
+  behavior of "MultiExtractor.apply"
+
+  it should "build a MultiExtractor from a NodeSeq => Try function" in {
+    val target: MultiExtractor[Seq[Int]] = MultiExtractor[Seq[Int]](ns => Try(ns.map(_.text.toInt)))
+    target.extract(<xml><a>1</a><a>2</a></xml> \ "a") shouldBe Success(Seq(1, 2))
+  }
+
+  it should "propagate the function's failure" in {
+    val target: MultiExtractor[Seq[Int]] = MultiExtractor[Seq[Int]](ns => Try(ns.map(_.text.toInt)))
+    target.extract(<xml><a>one</a></xml> \ "a") should matchPattern { case Failure(_) => }
+  }
+
+  behavior of "SubclassExtractor"
+
+  // The point of the TESTME: extract uses sequenceForgiving, so a label which fails is logged and
+  // dropped rather than failing the whole extraction.
+  it should "keep the labels which extract and forgive the one which does not" in {
+    implicit val tsm: MultiExtractor[Seq[Int]] = (nodeSeq: NodeSeq) =>
+      if (nodeSeq.exists(_.text == "bad")) Failure(new NoSuchElementException("bad"))
+      else Try(nodeSeq.map(_.text.toInt))
+    val target = new SubclassExtractor[Int](Seq("good", "rotten"))
+    target.extract(<xml><good>1</good><good>2</good><rotten>bad</rotten></xml>) shouldBe Success(Seq(1, 2))
+  }
+
+  it should "succeed with nothing when every label fails" in {
+    implicit val tsm: MultiExtractor[Seq[Int]] = (_: NodeSeq) => Failure(new NoSuchElementException("always"))
+    val target = new SubclassExtractor[Int](Seq("good", "rotten"))
+    // sequenceForgiving forgives them all, so this is a Success of no elements, not a Failure
+    target.extract(<xml><good>1</good></xml>) shouldBe Success(Nil)
+  }
+
+  it should "flatten the results of several labels" in {
+    implicit val tsm: MultiExtractor[Seq[Int]] = (nodeSeq: NodeSeq) => Try(nodeSeq.map(_.text.toInt))
+    val target = new SubclassExtractor[Int](Seq("a", "b"))
+    target.extract(<xml><a>1</a><b>2</b><a>3</a></xml>) shouldBe Success(Seq(1, 3, 2))
   }
   //  it should "extractMulti" in {
   //    val xml = <xml><junk>1</junk></xml>
