@@ -235,6 +235,10 @@ chunk of 4096, so its memory is bounded by a chunk: Issue #101.
 called it since `dropLast` became an explicit parameter, which it now always is: Issue #125.
 Every tagged comment in the project names the issue that tracks it, and `XXX` is renamed `ASIDE`:
 Issues #159, #164.
+Trimming trailing spaces, on the rendering path, now scans back and truncates once rather than
+removing one character per call to `endsWith`: Issue #127.
+For anyone building from source, `sbt testAll` reports one grand total across all eight modules —
+including `kml-it` and `kafka-it`, which CI runs but the root project does not aggregate: Issue #102.
 
 Version 1.2.1 Fixes `KMLCompanion.loadKML(URL)`, which loaded the URL's path as a local file name, so that it failed for a resource
 in a jar (that is, whenever `xmldoc-kml` was a dependency), for an `http:` URL, and for a `file:` URL whose path has a space;
