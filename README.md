@@ -235,7 +235,10 @@ chunk of 4096, so its memory is bounded by a chunk: Issue #101.
 called it since `dropLast` became an explicit parameter, which it now always is: Issue #125.
 Every tagged comment in the project names the issue that tracks it, and `XXX` is renamed `ASIDE`:
 Issues #159, #164.
-Trimming trailing spaces, on the rendering path, now scans back and truncates once rather than
+`SmartBuffer` no longer writes to standard output. A debug `println` on the rendering path reached
+any application rendering KML through this library, and the test guarding it copied the whole buffer
+up to three times per append, which made rendering quadratic in the size of the document: Issue #175.
+Trimming trailing spaces, on the same path, now scans back and truncates once rather than
 removing one character per call to `endsWith`: Issue #127.
 For anyone building from source, `sbt testAll` reports one grand total across all eight modules —
 including `kml-it` and `kafka-it`, which CI runs but the root project does not aggregate: Issue #102.
