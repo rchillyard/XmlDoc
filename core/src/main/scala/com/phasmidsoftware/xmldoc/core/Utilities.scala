@@ -16,7 +16,11 @@ object Utilities {
   /**
    * Method to filter a sequence of object according to a value and a lens function.
    *
-   * CONSIDER is there a method in the standard library which does this? (#129)
+   * Issue #129, settled: no, there is no standard-library equivalent. The body is
+   * `ts.filter(lens(_) == a)`, so the method earns only its name and its curried shape, which can be
+   * partially applied to give a `Seq[T] =&gt; Seq[T]`. Its one caller (`Extractor.extractElementsByLabel`)
+   * applies it fully, so that shape is unused; the method is kept because removing it would break
+   * binary compatibility for no gain.
    *
    * @param lens the function which will extract an A from a T.
    * @param a    the value that must be matched.
@@ -47,7 +51,10 @@ object Utilities {
    * @return a string containing the rendered representation of the XML node.
    */
   def renderNode(node: Node, deep: Boolean = false): String = {
-    // CONSIDER use SmartBuffer (#130)
+    // Issue #130, settled: no. SmartBuffer exists for rendering - it pads between appends, trims
+    // trailing spaces, and its `result` collapses <tag ...></tag> into <tag .../>. That last one
+    // would corrupt this string, which is a diagnostic dump and not XML. A plain StringBuilder is
+    // what this wants.
     val result = new mutable.StringBuilder("node: ")
     result.append(s"label=${node.label}, ")
     result.append(s"length=${node.length}, ")

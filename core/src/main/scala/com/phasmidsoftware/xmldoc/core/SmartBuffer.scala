@@ -115,13 +115,19 @@ object SmartBuffer {
 
   /**
    * Trims trailing spaces from the given StringBuilder instance.
-   * CONSIDER a faster way to do this (#127)
+   *
+   * Scans back for the last non-space character and truncates once, rather than calling
+   * `endsWith(" ")` and `setLength` per space. `endsWith` takes an `IterableOnce[Char]`, so each
+   * call wrapped the literal and compared it as a collection; this does n character reads and one
+   * truncation. Issue #127.
    *
    * @param sb the StringBuilder instance to modify by removing trailing spaces
    * @return Unit
    */
   def trimStringBuilder(sb: StringBuilder): Unit = {
-    while (sb.endsWith(" ")) sb.setLength(sb.length() - 1)
+    var end = sb.length
+    while (end > 0 && sb.charAt(end - 1) == ' ') end -= 1
+    if (end < sb.length) sb.setLength(end)
   }
 
 }
