@@ -145,3 +145,37 @@ lazy val root = (project in file("."))
     addMappingsToSiteDir(ScalaUnidoc / packageDoc / mappings, ScalaUnidoc / siteSubdirName),
     git.remoteRepo := "git@github.com:rchillyard/XmlDoc.git"
   )
+
+// ============================================================================
+// ONE GRAND TOTAL ACROSS EVERY MODULE (Issue #102)
+// ============================================================================
+// `sbt test` prints a summary per module and no overall total, so the modules have to be added up
+// by hand. Nothing can sum them because `test` returns Unit: the counts are logged and discarded.
+// `Test / executeTests`, the task sitting underneath `test`, returns a `Tests.Output`, so one per
+// module can be collected and folded.
+//
+// The filter names kmlIt and kafkaIt as well as the aggregate. They are deliberately outside the
+// root aggregate, so that `sbt test` stays fast, but CircleCI runs both of them explicitly
+// (`sbt kmlIt/test`, `sbt kafkaIt/test`). A total built from `inAggregates` alone would therefore
+// omit two modules while looking authoritative, which is the one thing a summary line must not do.
+// The cost is that `sbt testAll` is the slow, complete run: kafkaIt starts a Kafka broker in the JVM.
+//
+// Note that `executeTests` does not fail the build - that is `test`'s job - so this task has to do
+// it itself, or a red suite would exit 0.
+
+lazy val testAll = taskKey[Unit]("Run every module's tests, the unaggregated integration ones included, and report one grand total.")
+
+testAll := {
+  val log = streams.value.log
+  // includeRoot = false: the root aggregates but has no tests of its own, and counting it would
+  // make the line say nine modules where there are eight.
+  val outputs = (Test / executeTests).all(ScopeFilter(inAggregates(LocalRootProject, includeRoot = false) || inProjects(kmlIt, kafkaIt))).value
+  // `testResultLogger` never runs for executeTests, so the per-module lines are printed here or not at all.
+  outputs.flatMap(_.summaries).foreach(summary => log.info(s"${summary.name}: ${summary.summaryText}"))
+  val total = outputs.flatMap(_.events.values).foldLeft(SuiteResult.Empty)(_ + _)
+  val failed = total.failureCount + total.errorCount
+  log.info(s"TOTAL over ${outputs.size} modules: ${total.passedCount} passed, ${total.failureCount} failed, " +
+    s"${total.errorCount} errors, ${total.skippedCount} skipped, ${total.ignoredCount} ignored, " +
+    s"${total.canceledCount} canceled, ${total.pendingCount} pending")
+  if (failed > 0) sys.error(s"$failed test(s) did not pass")
+}
