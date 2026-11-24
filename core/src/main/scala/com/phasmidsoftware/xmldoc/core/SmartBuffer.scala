@@ -16,11 +16,10 @@ case class SmartBuffer(sb: StringBuilder) {
    * @param s the String to be appended.
    */
   def append(s: String): SmartBuffer = {
-    val delimAppend = s.startsWith("\n")
-    if (delimAppend) trim: Unit
+    // A string beginning with a newline ends the current line, so any spaces already at the end of
+    // the buffer would be trailing whitespace.
+    if (s.startsWith("\n")) trim: Unit
     sb.append(s)
-    if (sb.result().contains(" \n"))
-      println(s"SmartBuffer: ${sb.result()}") // ASIDE what's going on here?
     this
   }
 
@@ -90,10 +89,13 @@ case class SmartBuffer(sb: StringBuilder) {
    *
    * @return
    */
-  private def delimExist: Boolean = {
-    val result = sb.result()
-    result.endsWith(">") || result.endsWith("{")
-  }
+  private def delimExist: Boolean =
+    // One character, read in place. `sb.result().endsWith(...)` copied the whole buffer to look at
+    // its last character, and appendPadded calls this on every append. Issue #175.
+    sb.nonEmpty && (sb.charAt(sb.length - 1) match {
+      case '>' | '{' => true
+      case _ => false
+    })
 
 }
 
