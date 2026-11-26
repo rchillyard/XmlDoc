@@ -1,6 +1,6 @@
 ThisBuild / organization := "com.phasmidsoftware"
 
-ThisBuild / version := "1.2.2"
+ThisBuild / version := "1.2.3"
 
 ThisBuild / scalaVersion := "3.9.0" // the current LTS
 
@@ -23,7 +23,11 @@ lazy val testScalacOptions = Test / scalacOptions ~= (_.filterNot(_ == "-Wnonuni
 // MiMa checks each published module for binary compatibility with the last release: `sbt mimaReportBinaryIssues`.
 // The version scheme is PVP (see publish.sbt): a patch release must pass; a minor release may break compatibility,
 // on purpose and with a release note, by listing the breaks in mimaBinaryIssueFilters (or, after the release, by moving previousRelease on).
-val previousRelease = "1.2.1"
+// A filter is a permanent, unconditional exemption for the symbol it names: it stays in force until the line is deleted by hand.
+// Moving previousRelease on does not retire it, and neither does the version in the name of a mima-filters file (sbt-mima reads
+// every *.backwards.excludes in that directory whatever it is called). So deleting the filters for release N, once previousRelease
+// has reached N, is a required step and not tidying. See rchillyard/Visitor#50. There are no filters here, and 1.2.2 needed none.
+val previousRelease = "1.2.2"
 lazy val mimaSettings = mimaPreviousArtifacts := Set(organization.value %% name.value % previousRelease)
 // For the projects which aren't published, so there's nothing to compare.
 lazy val noMimaSettings = mimaFailOnNoPrevious := false
